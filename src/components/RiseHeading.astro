@@ -51,12 +51,9 @@ const classes = [
   .filter(Boolean)
   .join(" ");
 ---
-<Tag
-  id={id}
-  aria-label={label}
-  class={classes || undefined}
-  data-reveal-lines={reveal ? true : undefined}
->
+<Tag id={id} class={classes || undefined} data-reveal-lines={reveal ? true : undefined}>
+  {/* accessible name (aria-label is prohibited on a <p>); visual lines are hidden */}
+  <span class="sr-only">{label}</span>
   {
     lines.map((line: Line, n: number) => (
       <span class="l" aria-hidden="true">
