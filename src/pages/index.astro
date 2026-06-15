@@ -1,0 +1,112 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import RiseHeading from "../components/RiseHeading.astro";
+import FaceChip from "../components/FaceChip.astro";
+import ServiceRows from "../components/ServiceRows.astro";
+import type { RowData } from "../components/ServiceRow.astro";
+import PrinciplesChapter from "../components/PrinciplesChapter.astro";
+import PhotoChapter from "../components/PhotoChapter.astro";
+import StatementChapter from "../components/StatementChapter.astro";
+import AboutTeaser from "../components/AboutTeaser.astro";
+import type { Line } from "../components/RiseHeading.astro";
+import { flags } from "../config/flags";
+
+const heroLabel = "when ai does more of the work, what's still your job?";
+const heroLines: Line[] =
+  flags.heroItalic === "still"
+    ? ["when ai does", "more of the work,", { before: "what's ", em: "still" }, "your job?"]
+    : ["when ai does", "more of the work,", "what's still", { before: "your ", em: "job", after: "?" }];
+
+const serviceRows: RowData[] = [
+  {
+    n: "01",
+    href: "/ai-fit-for-teams/",
+    title: { before: "ai ", em: "fit", after: " for teams" },
+    body: "A short piece of work, with a beginning and an end. I get to know how your team actually works, then map where AI helps — and where it might be making things worse. You leave with a fit map: what to change, what to leave alone, and what to stop worrying about.",
+  },
+  {
+    n: "02",
+    href: "/power-bi/",
+    title: { before: "power bi, done ", em: "with", after: " you" },
+    body: "Strategy, architecture review, and ongoing work inside Power BI and Fabric teams. You do as much of the work as possible; I work out how to accelerate it — so the know-how stays with you when I leave.",
+  },
+];
+
+const howHeading: Line[] = [
+  "something like coaching,",
+  { before: "with subject-matter ", em: "depth", after: "." },
+];
+const principles = [
+  {
+    title: "the answers are yours",
+    body: "I help you arrive at the right answers for your team, rather than turning up with mine. When a team understands something, they can own it.",
+  },
+  {
+    title: "what not to automate",
+    body: "Knowing what not to automate matters as much as knowing what to. The discipline is in choosing which decisions you hand over, and being conscious of where and when you've made that choice.",
+  },
+  {
+    title: "mental models first",
+    body: "AI literacy is a mental model of how these tools ‘think’. I go deep on things, then bring them out in a way other people can understand.",
+  },
+];
+
+const statementLines: Line[] = [
+  "implementation can go to the ai.",
+  "responsibility for its outputs",
+  { before: "stays with ", em: "you", after: "." },
+];
+---
+
+<BaseLayout
+  title="burningsuit — ai adaptation, done with you"
+  description="I help teams make AI fit how they actually work — at the moment, mostly Power BI teams. AI fit for teams, and Power BI done with you."
+>
+  <section class="hero" data-ground="aubergine">
+    <div class="wrap hero-meta meta enter appear-600">
+      <span>ai adaptation, done with you</span>
+      <span>west sussex — <span id="clock">uk</span></span>
+    </div>
+    <div class="wrap hero-inner">
+      <RiseHeading as="h1" kind="hero" label={heroLabel} lines={heroLines} />
+      <p class="sub enter appear-300">
+        <strong
+          >I'm Alan <FaceChip />
+          <span class="meta thatsme">(that's me)</span> — I run burningsuit.</strong
+        > I help teams make AI fit how they actually work. At the moment, that's mostly
+        Power BI teams.
+      </p>
+      <a class="cta enter appear-450" href="mailto:alan@burningsuit.co.uk">email me</a>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-labelledby="what" data-ground="aubergine">
+    <div class="wrap what">
+      <p class="label kicker meta" id="what" data-reveal>what i do</p>
+      <ServiceRows rows={serviceRows} />
+    </div>
+  </section>
+
+  <PrinciplesChapter
+    kicker="how i work"
+    headingId="how"
+    headingLabel="something like coaching, with subject-matter depth."
+    headingLines={howHeading}
+    principles={principles}
+  />
+
+  <PhotoChapter />
+
+  <StatementChapter
+    kicker="the principle underneath"
+    label="implementation can go to the ai. responsibility for its outputs stays with you."
+    lines={statementLines}
+  />
+
+  <AboutTeaser />
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div id="talk" class="talk-spacer" data-ground="aubergine"></div>
+</BaseLayout>

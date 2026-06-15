@@ -1,0 +1,17 @@
+# Normalise line endings to LF in the repo so the build is byte-identical on
+# Windows (local) and Linux (CI). This matters for Astro's CSP feature, which
+# hashes the exact bytes of inline scripts/styles — a CRLF/LF mismatch between
+# environments would otherwise change the hash and break the policy.
+* text=auto eol=lf
+
+# Binary assets — never touch.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.avif  binary
+*.ico   binary
+*.pdf   binary
+*.woff  binary
+*.woff2 binary

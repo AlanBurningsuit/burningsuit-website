@@ -1,0 +1,17 @@
+---
+/**
+ * The face-chip: the page's lone circle (and its entire bounce budget). One
+ * photo, imported once and rendered small; CSS (.chip img) crops it to the
+ * circle with object-fit cover + object-position. Decorative by default — the
+ * surrounding sentence provides the name — so alt is empty unless passed.
+ */
+import { Image } from "astro:assets";
+import face from "../assets/photos/DSC09247-Edit.jpg";
+
+interface Props {
+  alt?: string;
+  loading?: "eager" | "lazy";
+}
+const { alt = "", loading = "eager" } = Astro.props;
+---
+<span class="chip"><Image src={face} alt={alt} width={192} loading={loading} /></span>

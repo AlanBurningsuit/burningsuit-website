@@ -1,0 +1,32 @@
+---
+/**
+ * The basement: main scrolls up off this fixed footer to reveal the
+ * viewport-scale mailto (two-pass underline), the chip (winks when the mailto
+ * is hovered — the system's second and final --spring use), the plain © line,
+ * and the full-width lockup signing the page.
+ *
+ * The invitation line is a named slot so each page can supply its own CTA copy
+ * while keeping the chip + period consistent. Default = the homepage line.
+ */
+import FaceChip from "./FaceChip.astro";
+---
+<footer aria-labelledby="talk-h">
+  <div class="wrap outro">
+    <p class="kicker meta">one action, no funnel</p>
+    <h2 id="talk-h">let's <em>talk</em>.</h2>
+    <p class="sub">
+      <slot name="invitation"
+        >Tell me what your team is wrestling with. Replies come from me</slot
+      > <FaceChip loading="lazy" />.
+    </p>
+    <a class="mail" href="mailto:alan@burningsuit.co.uk">alan@burningsuit.co.uk</a>
+    <div class="foot-meta meta">
+      <span>© 2026 burningsuit ltd</span>
+      <span>west sussex, england</span>
+      <span>local time — <span id="clock2">gmt</span></span>
+    </div>
+  </div>
+  <div class="lockup">
+    <img src="/logos/burningsuit-white.svg" alt="burningsuit" width="285" height="52" />
+  </div>
+</footer>

@@ -1,0 +1,49 @@
+---
+/**
+ * About teaser on a contained bone surface (not a full-bleed white ground —
+ * that read as the rejected white concept). Stance-led: what Alan is thinking
+ * about, with one line of history-as-colour pointing onward. Plain unmasked
+ * <h2> (magenta italic accent — orange fails on bone), fade-up reveals.
+ *
+ * INTERIM LINK: "the longer story" points at LinkedIn until /about ships, since
+ * publishing the unsigned /about copy this pass would be a leak. Re-point to
+ * "/about/" once that page is signed and built.
+ */
+import { Picture } from "astro:assets";
+import about from "../assets/photos/DSC09290-Edit.jpg";
+
+const longerStoryHref = "https://www.linkedin.com/in/alan-harman-box/"; // EDIT: → "/about/" when about ships
+---
+<section class="about" id="about" aria-labelledby="who" data-ground="aubergine">
+  <div class="wrap">
+    <figure data-reveal>
+      <Picture
+        src={about}
+        alt="Alan on a stone bench, leaning forward, laughing at something off-camera"
+        formats={["avif"]}
+        fallbackFormat="webp"
+        widths={[400, 600, 800]}
+        sizes="(min-width: 52rem) 45vw, 100vw"
+        quality={66}
+        loading="lazy"
+      />
+    </figure>
+    <div>
+      <p class="kicker meta" data-reveal>the thread</p>
+      <h2 id="who" class="stagger-1" data-reveal>what i'm <em>thinking</em> about.</h2>
+      <p class="stagger-2" data-reveal>
+        Most of what's written about AI at work is about the tools. I think the
+        more interesting question is what happens to the people using them — what
+        people still need to understand, own, and verify when the tools do more.
+        That's the thread through everything I do now.
+      </p>
+      <p class="stagger-3" data-reveal>
+        burningsuit began as my parents' Power BI training business; these days
+        it's me. The longer story — a decade in software delivery, a talk called
+        we're all middle management now, an MA in AI ethics on the way — is on
+        the about page.
+      </p>
+      <a class="u stagger-4" href={longerStoryHref} data-reveal>the longer story ↗</a>
+    </div>
+  </div>
+</section>

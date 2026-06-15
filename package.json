@@ -1,0 +1,38 @@
+{
+  "name": "burningsuit-website",
+  "type": "module",
+  "version": "2.0.0",
+  "private": true,
+  "description": "burningsuit.co.uk — Phase 2 site (Astro 6 + Tailwind v4, static, GitHub Pages)",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "prep:images": "node scripts/prep-images.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "serve": "http-server dist -p 4321 -s -c-1",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "test:links": "linkinator dist --recurse --silent --skip \"^mailto:|^https?://(?!localhost)\"",
+    "test:lh": "lhci autorun"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^6.4.7",
+    "sharp": "^0.35.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.61.0",
+    "@tailwindcss/postcss": "^4.3.1",
+    "http-server": "^14.1.1",
+    "linkinator": "^7.6.1",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^5.9.0"
+  }
+}

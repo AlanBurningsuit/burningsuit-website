@@ -1,0 +1,48 @@
+import { test, expect, type Page } from "@playwright/test";
+
+/**
+ * Visual regression tripwire. Region snapshots (not whole-page) so a local
+ * layout regression can't hide under a loose full-page threshold. These
+ * baselines are the Astro build itself: they protect Phase B refinements from
+ * silently breaking structure. Fidelity vs the B5 source is a separate,
+ * human-signed comparison (scripts/shoot.mjs), not asserted here.
+ */
+async function prepare(page: Page, path: string) {
+  await page.goto(path);
+  await page.evaluate(() => document.fonts.ready);
+  // fire every reveal, then settle at the top
+  await page.evaluate(async () => {
+    const step = Math.round(window.innerHeight * 0.6);
+    for (let y = 0; y <= document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => setTimeout(r, 80));
+    }
+    window.scrollTo(0, 0);
+    await new Promise((r) => setTimeout(r, 200));
+  });
+}
+
+test("home — regions", async ({ page }, testInfo) => {
+  await prepare(page, "/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".hero")).toHaveScreenshot(`home-hero-${tag}.png`);
+  await expect(page.locator(".what")).toHaveScreenshot(`home-services-${tag}.png`);
+  await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
+  await expect(page.locator(".about")).toHaveScreenshot(`home-about-${tag}.png`);
+  await expect(page.locator("footer")).toHaveScreenshot(`home-footer-${tag}.png`);
+});
+
+test("ai-fit-for-teams — regions", async ({ page }, testInfo) => {
+  await prepare(page, "/ai-fit-for-teams/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".page-hero")).toHaveScreenshot(`aifit-hero-${tag}.png`);
+  await expect(page.locator(".movements")).toHaveScreenshot(`aifit-movements-${tag}.png`);
+  await expect(page.locator(".fitmap")).toHaveScreenshot(`aifit-fitmap-${tag}.png`);
+});
+
+test("power-bi — regions", async ({ page }, testInfo) => {
+  await prepare(page, "/power-bi/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".page-hero")).toHaveScreenshot(`pbi-hero-${tag}.png`);
+  await expect(page.locator(".proof")).toHaveScreenshot(`pbi-proof-${tag}.png`);
+});

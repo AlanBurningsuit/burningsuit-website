@@ -1,0 +1,35 @@
+---
+/**
+ * The magenta chapter (ground morph). A kicker, a masked line-rise heading, and
+ * three principles. data-ground="magenta" tells enhance.ts to morph the whole
+ * page ground to magenta as this section crosses the viewport middle; the
+ * no-JS fallback paints the section magenta directly (app.css).
+ */
+import RiseHeading from "./RiseHeading.astro";
+import Principle from "./Principle.astro";
+import type { Line } from "./RiseHeading.astro";
+
+interface Props {
+  kicker: string;
+  headingId: string;
+  headingLabel: string;
+  headingLines: Line[];
+  principles: { title: string; body: string }[];
+}
+const { kicker, headingId, headingLabel, headingLines, principles } = Astro.props;
+---
+<section class="chapter principles-ch" aria-labelledby={headingId} data-ground="magenta">
+  <div class="wrap">
+    <p class="kicker meta" data-reveal>{kicker}</p>
+    <RiseHeading
+      as="h2"
+      kind="section"
+      id={headingId}
+      label={headingLabel}
+      lines={headingLines}
+    />
+    <div class="principles">
+      {principles.map((p, i) => <Principle title={p.title} body={p.body} index={i} />)}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,76 @@
+---
+/**
+ * The document shell. Renders <head> (meta/OG, self-hosted <Font> tags, the
+ * first-paint html.js script, the bundled enhancement module), the sticky
+ * Header, the page's <main>, and the fixed basement Footer.
+ *
+ * The CSP <meta http-equiv> is injected automatically by Astro's `security.csp`
+ * feature (it hashes the is:inline script + framework styles) — do NOT add one
+ * here by hand.
+ */
+import { Font } from "astro:assets";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/app.css";
+
+interface Props {
+  title: string;
+  description: string;
+  /** OG/twitter image, served from the site root. */
+  ogImage?: string;
+}
+const { title, description, ogImage = "/og-image.png" } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const hasFooterInvitation = Astro.slots.has("footer-invitation");
+---
+<!doctype html>
+<html lang="en-GB" data-theme="aubergine">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- first paint: mark JS so reveal-hidden states only exist with JS on -->
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="burningsuit" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- self-hosted fonts (subset + preloaded at build) -->
+    <Font cssVariable="--font-manrope" preload />
+    <Font cssVariable="--font-albert" preload />
+    <Font cssVariable="--font-fraunces" preload />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer>
+      {
+        hasFooterInvitation && (
+          <Fragment slot="invitation">
+            <slot name="footer-invitation" />
+          </Fragment>
+        )
+      }
+    </Footer>
+
+    <!-- progressive enhancement, bundled to an external module (script-src 'self') -->
+    <script>
+      import "../scripts/enhance.ts";
+    </script>
+  </body>
+</html>

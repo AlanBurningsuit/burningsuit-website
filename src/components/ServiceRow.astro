@@ -1,0 +1,26 @@
+---
+/**
+ * One service row. The whole row is the link. On hover/focus the magenta flood
+ * enters from the bottom and exits through the top (never rewinds), siblings dim
+ * via :has(), and the arrow departs up-right while a clone arrives from
+ * down-left — all in app.css (.row / .rows / .arr). The two ↗ glyphs are the
+ * original and its replacement.
+ */
+export interface RowData {
+  /** Two-digit index, e.g. "01". */
+  n: string;
+  href: string;
+  title: { before?: string; em?: string; after?: string };
+  body: string;
+}
+type Props = RowData;
+const { n, href, title, body } = Astro.props;
+---
+<a class="row" href={href}>
+  <span class="n" aria-hidden="true">{n}</span>
+  <div>
+    <h3>{title.before}<em>{title.em}</em>{title.after}</h3>
+    <p>{body}</p>
+  </div>
+  <span class="arr" aria-hidden="true"><span>↗</span><span>↗</span></span>
+</a>

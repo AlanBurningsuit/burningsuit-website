@@ -1,3 +1,20 @@
-Burningsuit Brand Guidelines V1.pdf
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# test artifacts
+playwright-report/
+test-results/
+/playwright/.cache/
+
+# os / editor cruft
+.DS_Store
+Thumbs.db
+*.local
+
+# kept out of the (public) repo: internal orientation doc + brand source PDF
 claude.md
-_headers
+Burningsuit Brand Guidelines V1.pdf

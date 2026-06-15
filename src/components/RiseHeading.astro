@@ -1,0 +1,77 @@
+---
+/**
+ * Masked line-rise heading. Each hand-split line sits in a clip-path mask and
+ * rises from 110% with an 80ms stagger. Two modes:
+ *   - kind="hero": animates on load (the `.hero .l>.i` context in app.css).
+ *   - kind="section" | "statement": gets `.lines` + data-reveal-lines so the
+ *     IntersectionObserver triggers the rise on scroll.
+ *
+ * Lines are STRUCTURED fragments — a plain string, or { before, em, after } to
+ * embed one real <em> (the serif-italic accent). No set:html anywhere.
+ *
+ * The statement is a <p> (`as="p"`), never a <blockquote>: the source copy is a
+ * plain statement, not a quotation.
+ */
+export interface LineFragment {
+  before?: string;
+  em?: string;
+  after?: string;
+}
+export type Line = string | LineFragment;
+
+interface Props {
+  /** Accessible text for the whole heading (the visible spans are aria-hidden). */
+  label: string;
+  lines: Line[];
+  as?: "h1" | "h2" | "p";
+  kind?: "hero" | "section" | "statement";
+  id?: string;
+  /** First stagger index; subsequent lines increment from here. */
+  startIndex?: number;
+  class?: string;
+}
+
+const {
+  label,
+  lines,
+  as = "h2",
+  kind = "section",
+  id,
+  startIndex = 0,
+  class: extra = "",
+} = Astro.props;
+
+const Tag = as;
+const reveal = kind !== "hero";
+const classes = [
+  reveal ? "lines" : "",
+  kind === "statement" ? "statement" : "",
+  extra,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+<Tag
+  id={id}
+  aria-label={label}
+  class={classes || undefined}
+  data-reveal-lines={reveal ? true : undefined}
+>
+  {
+    lines.map((line: Line, n: number) => (
+      <span class="l" aria-hidden="true">
+        <span class:list={["i", `stagger-${startIndex + n}`]}>
+          {typeof line === "string" ? (
+            line
+          ) : (
+            <Fragment>
+              {line.before}
+              <em>{line.em}</em>
+              {line.after}
+            </Fragment>
+          )}
+        </span>
+      </span>
+    ))
+  }
+</Tag>

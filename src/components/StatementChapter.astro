@@ -1,0 +1,22 @@
+---
+/**
+ * The statement chapter. NOT a pull-quote and NOT a self-quote (Alan killed
+ * that): a plain statement, so it is a <p> with no quote marks. Masked
+ * line-rise on scroll, one serif-italic accent word.
+ */
+import RiseHeading from "./RiseHeading.astro";
+import type { Line } from "./RiseHeading.astro";
+
+interface Props {
+  kicker: string;
+  label: string;
+  lines: Line[];
+}
+const { kicker, label, lines } = Astro.props;
+---
+<section class="chapter statement-ch" aria-label={kicker} data-ground="aubergine">
+  <div class="wrap">
+    <p class="kicker meta" data-reveal>{kicker}</p>
+    <RiseHeading as="p" kind="statement" label={label} lines={lines} />
+  </div>
+</section>
