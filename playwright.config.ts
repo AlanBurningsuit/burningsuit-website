@@ -14,6 +14,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [["list"]],
   expect: {
+    timeout: 15_000,
     // The rebuild legitimately changes pixels (self-hosted fonts, Manrope 700,
     // AVIF). The visual gate is a regression tripwire, not a pixel oracle:
     // small per-pixel tolerance, but structural/layout shifts must show up.

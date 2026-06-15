@@ -19,6 +19,8 @@ async function prepare(page: Page, path: string) {
     }
     window.scrollTo(0, 0);
     await new Promise((r) => setTimeout(r, 200));
+    // pin the live clock so the hero-meta / footer snapshots are deterministic
+    document.querySelectorAll("#clock, #clock2").forEach((el) => (el.textContent = "10:30"));
   });
 }
 

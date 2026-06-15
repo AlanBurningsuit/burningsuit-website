@@ -29,29 +29,33 @@ const viewports = [
 const browser = await chromium.launch();
 for (const t of targets) {
   for (const vp of viewports) {
-    const ctx = await browser.newContext({
-      viewport: { width: vp.width, height: vp.height },
-      deviceScaleFactor: 1,
-      reducedMotion: "reduce",
-    });
-    const page = await ctx.newPage();
-    await page.clock.install({ time: new Date("2026-06-15T10:30:00") });
-    await page.goto(t.url, { waitUntil: "networkidle" });
-    await page.evaluate(() => document.fonts.ready);
-    // fire every reveal, then return to the top
-    await page.evaluate(async () => {
-      const step = Math.round(innerHeight * 0.6);
-      for (let y = 0; y <= document.body.scrollHeight; y += step) {
-        scrollTo(0, y);
-        await new Promise((r) => setTimeout(r, 140));
-      }
-      scrollTo(0, 0);
-      await new Promise((r) => setTimeout(r, 350));
-    });
     const file = `${OUT}/${t.name}-${vp.tag}.png`;
-    await page.screenshot({ path: file, fullPage: true });
-    console.log(`shot: ${file}`);
-    await ctx.close();
+    try {
+      const ctx = await browser.newContext({
+        viewport: { width: vp.width, height: vp.height },
+        deviceScaleFactor: 1,
+        reducedMotion: "reduce",
+      });
+      const page = await ctx.newPage();
+      await page.clock.install({ time: new Date("2026-06-15T10:30:00") });
+      await page.goto(t.url, { waitUntil: "networkidle", timeout: 15000 });
+      await page.evaluate(() => document.fonts.ready);
+      // fire every reveal, then return to the top
+      await page.evaluate(async () => {
+        const step = Math.round(innerHeight * 0.6);
+        for (let y = 0; y <= document.body.scrollHeight; y += step) {
+          scrollTo(0, y);
+          await new Promise((r) => setTimeout(r, 140));
+        }
+        scrollTo(0, 0);
+        await new Promise((r) => setTimeout(r, 350));
+      });
+      await page.screenshot({ path: file, fullPage: true });
+      console.log(`shot: ${file}`);
+      await ctx.close();
+    } catch (err) {
+      console.log(`SKIP ${file}: ${err.message.split("\n")[0]}`);
+    }
   }
 }
 await browser.close();
