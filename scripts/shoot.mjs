@@ -38,7 +38,8 @@ for (const t of targets) {
       });
       const page = await ctx.newPage();
       await page.clock.install({ time: new Date("2026-06-15T10:30:00") });
-      await page.goto(t.url, { waitUntil: "networkidle", timeout: 15000 });
+      await page.goto(t.url, { waitUntil: "load", timeout: 20000 });
+      await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
       await page.evaluate(() => document.fonts.ready);
       // fire every reveal, then return to the top
       await page.evaluate(async () => {

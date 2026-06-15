@@ -471,6 +471,11 @@ html[data-theme="magenta"] {
       top: 96px;
     }
   }
+  /* two-column sections: align the content column's first line with the label
+     (the list/prose blocks carry top margins meant for the old stacked layout) */
+  .what > div > :first-child {
+    margin-top: 0;
+  }
   .rows {
     display: block;
   }

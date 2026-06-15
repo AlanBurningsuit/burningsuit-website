@@ -11,6 +11,9 @@ test-results/
 /playwright/.cache/
 .lighthouseci/
 
+# QA screenshot artifacts (regenerate with `node scripts/shoot.mjs`)
+design/_astro-shots/
+
 # os / editor cruft
 .DS_Store
 Thumbs.db

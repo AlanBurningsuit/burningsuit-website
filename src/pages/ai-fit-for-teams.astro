@@ -70,89 +70,105 @@ const door: RowData[] = [
     </div>
   </section>
 
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
   <section class="chapter" data-ground="aubergine" aria-labelledby="worries">
-    <div class="wrap">
-      <p class="kicker meta" id="worries" data-reveal>the questions that tend to be in the room</p>
-      <ul class="qlist">
-        {worries.map((q) => <li data-reveal>{q}</li>)}
-      </ul>
+    <div class="wrap what">
+      <p class="label kicker meta" id="worries" data-reveal>the questions that tend to be in the room</p>
+      <div>
+        <ul class="qlist">
+          {worries.map((q) => <li data-reveal>{q}</li>)}
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="how-it-works">
-    <div class="wrap">
-      <p class="kicker meta" id="how-it-works" data-reveal>how it works</p>
-      <ol class="movements">
-        {
-          movements.map((m, i) => (
-            <li class="movement" data-reveal>
-              <span class="n" aria-hidden="true">{String(i + 1)}</span>
-              <div>
-                <h3>{m.title}</h3>
-                <p>{m.body}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
+    <div class="wrap what">
+      <p class="label kicker meta" id="how-it-works" data-reveal>how it works</p>
+      <div>
+        <ol class="movements">
+          {
+            movements.map((m, i) => (
+              <li class="movement" data-reveal>
+                <span class="n" aria-hidden="true">{String(i + 1)}</span>
+                <div>
+                  <h3>{m.title}</h3>
+                  <p>{m.body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
     </div>
   </section>
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="fitmap">
-    <div class="wrap">
-      <p class="kicker meta" id="fitmap" data-reveal>what's in the fit map</p>
-      <ul class="fitmap">
-        {fitmap.map((item) => <li data-reveal>{item}</li>)}
-      </ul>
+    <div class="wrap what">
+      <p class="label kicker meta" id="fitmap" data-reveal>what's in the fit map</p>
+      <div>
+        <ul class="fitmap">
+          {fitmap.map((item) => <li data-reveal>{item}</li>)}
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="afterwards">
-    <div class="wrap prose">
-      <p class="kicker meta" id="afterwards" data-reveal>afterwards</p>
-      <p data-reveal>
-        The difference is in the decisions: you make them knowing where AI helps your team,
-        where it hinders them — and how you'd know.
-      </p>
-      <p data-reveal>
-        When the next big model launch lands, the team doesn't panic — they know what their
-        work actually is, and it isn't the clicks. The work isn't the output; it's
-        everything else around it. The aim, longer term, is a team that's resilient to the
-        tools changing, more engaged with the work, and prouder of it.
-      </p>
+    <div class="wrap what">
+      <p class="label kicker meta" id="afterwards" data-reveal>afterwards</p>
+      <div class="prose">
+        <p data-reveal>
+          The difference is in the decisions: you make them knowing where AI helps your team,
+          where it hinders them — and how you'd know.
+        </p>
+        <p data-reveal>
+          When the next big model launch lands, the team doesn't panic — they know what their
+          work actually is, and it isn't the clicks. The work isn't the output; it's
+          everything else around it. The aim, longer term, is a team that's resilient to the
+          tools changing, more engaged with the work, and prouder of it.
+        </p>
+      </div>
     </div>
   </section>
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="engagement">
-    <div class="wrap prose">
-      <p class="kicker meta" id="engagement" data-reveal>the engagement, practically</p>
-      <p data-reveal>
-        A few days of my time, spread over two or three weeks, fitted around the team's
-        actual work. It starts with a conversation.
-      </p>
+    <div class="wrap what">
+      <p class="label kicker meta" id="engagement" data-reveal>the engagement, practically</p>
+      <div class="prose">
+        <p data-reveal>
+          A few days of my time, spread over two or three weeks, fitted around the team's
+          actual work. It starts with a conversation.
+        </p>
+      </div>
     </div>
   </section>
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="copilot">
-    <div class="wrap prose">
-      <p class="kicker meta" id="copilot" data-reveal>already rolled out copilot?</p>
-      <p data-reveal>
-        Good — that's a start, but it's only licences. How is it being used? Is anyone
-        faster? Have the outputs improved? Who's checking what it writes? If those questions
-        are easy to answer, you don't need me. If they're not, that's what the fit map is
-        for.
-      </p>
+    <div class="wrap what">
+      <p class="label kicker meta" id="copilot" data-reveal>already rolled out copilot?</p>
+      <div class="prose">
+        <p data-reveal>
+          Good — that's a start, but it's only licences. How is it being used? Is anyone
+          faster? Have the outputs improved? Who's checking what it writes? If those questions
+          are easy to answer, you don't need me. If they're not, that's what the fit map is
+          for.
+        </p>
+      </div>
     </div>
   </section>
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="belief">
-    <div class="wrap">
-      <p class="kicker meta" id="belief" data-reveal>the one belief underneath</p>
-      <p class="belief" data-reveal>
-        Every piece of work is a stack of decisions. Hand a problem to AI without specifying
-        them, and it makes them for you — and a tool can't take <em>responsibility</em> for a
-        decision.
-      </p>
+    <div class="wrap what">
+      <p class="label kicker meta" id="belief" data-reveal>the one belief underneath</p>
+      <div>
+        <p class="belief" data-reveal>
+          Every piece of work is a stack of decisions. Hand a problem to AI without specifying
+          them, and it makes them for you — and a tool can't take <em>responsibility</em> for a
+          decision.
+        </p>
+      </div>
     </div>
   </section>
 
