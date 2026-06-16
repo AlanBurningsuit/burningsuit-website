@@ -49,8 +49,9 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- self-hosted fonts (subset + preloaded at build) -->
-    <Font cssVariable="--font-manrope" preload />
+    <Font cssVariable="--font-grotesk" preload />
     <Font cssVariable="--font-albert" preload />
+    <Font cssVariable="--font-commit" preload />
     <Font cssVariable="--font-fraunces" preload />
   </head>
   <body>
@@ -68,7 +69,10 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
       }
     </Footer>
 
-    <!-- progressive enhancement, bundled to an external module (script-src 'self') -->
+    <!-- progressive enhancement, bundled to an external module (script-src
+         'self'). Also carries the console greeting for anyone reading the
+         source — kept in the bundled module (not a second inline script) so the
+         meta-CSP covers it without an extra hash to keep in sync. -->
     <script>
       import "../scripts/enhance.ts";
     </script>

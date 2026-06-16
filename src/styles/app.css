@@ -30,9 +30,9 @@
    at those vars rather than snapshotting a value. Default sans = body (Albert). */
 @theme inline {
   --font-sans: var(--font-albert);
-  --font-display: var(--font-manrope);
+  --font-display: var(--font-grotesk);
   --font-accent: var(--font-fraunces);
-  --font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+  --font-mono: var(--font-commit), ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
 }
 
 /* ============ the motion constitution + design tokens ============ */
@@ -58,10 +58,10 @@
   --fg-56: rgb(235 235 235 / 0.56);
   --rule-c: rgb(235 235 235 / 0.16);
 
-  --ff-display: var(--font-manrope);
+  --ff-display: var(--font-grotesk);
   --ff-body: var(--font-albert);
   --ff-serif: var(--font-fraunces);
-  --ff-mono: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+  --ff-mono: var(--font-commit), ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
 
   --bg: var(--aubergine);
   --display-lh: 0.95;
@@ -116,18 +116,26 @@ html[data-theme="magenta"] {
   h2,
   h3 {
     font-family: var(--ff-display);
-    font-weight: 800;
+    font-weight: 700;
     line-height: var(--display-lh);
     letter-spacing: var(--display-ls);
   }
+  /* The accent word OUTSIDE heroes: a quiet orange colour-emphasis, no
+     type-switch. The serif italic is one of three expressive devices now and
+     is banned from spreading (A′) — it lives only in the hero rule below. */
   h1 em,
   h2 em,
   h3 em {
+    color: var(--orange);
+    font-style: normal;
+  }
+  /* The surviving serif accent: ONE orange word per hero / page-hero heading. */
+  .hero h1 em,
+  .page-hero h1 em {
     font-family: var(--ff-serif);
     font-style: italic;
     font-weight: 470;
     font-size: 1.02em;
-    color: var(--orange);
   }
   img {
     max-width: 100%;
@@ -197,6 +205,8 @@ html[data-theme="magenta"] {
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--rule-c);
     transition: transform var(--t-ui) var(--ease-out);
+    /* hold the chrome steady across cross-document navigations (D) */
+    view-transition-name: site-header;
   }
   header.hh {
     transform: translateY(-100%);
@@ -477,6 +487,35 @@ html[data-theme="magenta"] {
   .what > div > :first-child {
     margin-top: 0;
   }
+
+  /* ============ asides: the margin that talks back (signature, task B) ============ */
+  /* Mono, mauve, hairline-tied line of Alan's real voice. Inline under the
+     section label on a phone; rides up into the sticky left-margin column at
+     >=56rem — it lives in the .what label column, which IS the left margin.
+     AUBERGINE GROUNDS ONLY: mauve is illegible on magenta/bone (see the asides
+     deck). In reading order + announced (rendered as a <p>); only the hairline
+     tie is decorative. Additive + deletable — remove one and nothing breaks. */
+  .aside {
+    font-family: var(--ff-mono);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    color: var(--mauve);
+    max-width: 26rem;
+    margin-top: 1rem;
+    padding-left: 0.85rem;
+    border-left: 1px solid color-mix(in srgb, var(--mauve) 55%, transparent);
+    text-wrap: pretty;
+  }
+  .aside-muted {
+    color: var(--fg-56);
+  }
+  @media (min-width: 56rem) {
+    .what .label .aside {
+      margin-top: 1.35rem; /* a little air below the label, in the margin */
+    }
+  }
   .rows {
     display: block;
   }
@@ -525,7 +564,7 @@ html[data-theme="magenta"] {
     display: inline-grid;
     overflow: clip;
     font-family: var(--ff-display);
-    font-weight: 800;
+    font-weight: 700;
     font-size: clamp(1.5rem, 3vw, 2.2rem);
     color: var(--orange);
   }
@@ -544,9 +583,12 @@ html[data-theme="magenta"] {
       transform: scaleY(1);
       transform-origin: 50% 100%;
     }
+    .row:hover h3,
+    .row:hover h3 em {
+      color: var(--aubergine);
+    }
     .row:hover h3 {
       transform: translateX(0.5ch);
-      color: var(--aubergine);
     }
     .row:hover p {
       color: var(--bone);
@@ -568,7 +610,8 @@ html[data-theme="magenta"] {
     transform: scaleY(1);
     transform-origin: 50% 100%;
   }
-  .row:focus-visible h3 {
+  .row:focus-visible h3,
+  .row:focus-visible h3 em {
     color: var(--aubergine);
   }
   .row:focus-visible p,
@@ -625,7 +668,7 @@ html[data-theme="magenta"] {
   }
   .principle h3 {
     font-family: var(--ff-display);
-    font-weight: 800;
+    font-weight: 700;
     font-size: 1.15rem;
     line-height: 1.2;
     letter-spacing: normal;
@@ -660,21 +703,15 @@ html[data-theme="magenta"] {
     height: 100%;
     object-fit: cover;
     object-position: 50% 32%;
-    filter: grayscale(1) contrast(1.08);
-    mix-blend-mode: screen; /* shadows ARE the page ground */
+    /* Colour at rest (C): warmth is GIVEN, not hidden behind a hover. Graded
+       a touch down in saturation + up in contrast so it sits on the aubergine
+       ground instead of shouting off it. The clip-path curtain is the reveal. */
+    filter: saturate(0.94) contrast(1.04);
     transform: scale(1.06);
-    transition:
-      transform 1.2s var(--ease-out),
-      filter 0.75s var(--ease-inout);
+    transition: transform 1.2s var(--ease-out);
   }
   .js .photo-ch figure.show img {
     transform: scale(1);
-  }
-  @media (hover: hover) {
-    .photo-ch .ph:hover img {
-      filter: grayscale(0) contrast(1);
-      mix-blend-mode: normal;
-    } /* humanity on demand */
   }
   .photo-ch figcaption {
     display: flex;
@@ -687,18 +724,16 @@ html[data-theme="magenta"] {
   /* ============ statement chapter (NOT a quote: <p>, no quote marks) ============ */
   .statement-ch .statement {
     font-family: var(--ff-display);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.08;
     letter-spacing: -0.02em;
     font-size: clamp(1.7rem, 4.2vw, 3.2rem);
     margin-top: 1rem;
   }
   .statement-ch .statement em {
-    font-family: var(--ff-serif);
-    font-style: italic;
-    font-weight: 470;
     color: var(--orange);
-  }
+    font-style: normal;
+  } /* serif demoted to heroes only (A′) — colour accent in the display face */
 
   /* ============ about: contained bone surface ============ */
   .about {
@@ -782,7 +817,7 @@ html[data-theme="magenta"] {
     position: relative;
     margin-top: clamp(1.2rem, 3vh, 2rem);
     font-family: var(--ff-display);
-    font-weight: 800;
+    font-weight: 700;
     font-size: clamp(1.5rem, 6.2vw, 5.2rem);
     letter-spacing: -0.04em;
     line-height: 1.1;
@@ -834,6 +869,10 @@ html[data-theme="magenta"] {
     padding-block: 1.1rem;
     margin-top: clamp(2rem, 5vh, 3.5rem);
   }
+  .foot-meta a {
+    color: inherit; /* quiet mauve furniture, not a default-blue link */
+    text-decoration: none;
+  }
   .lockup {
     width: 100%;
     padding: 0 clamp(1.25rem, 4vw, 3.5rem) clamp(1rem, 2.5vh, 2rem);
@@ -841,6 +880,7 @@ html[data-theme="magenta"] {
   .lockup img {
     width: 100%;
     height: auto;
+    view-transition-name: site-lockup; /* the signature holds across navigations (D) */
   }
 
   /* ============ service pages (B5 language, new content shapes) ============ */
@@ -857,11 +897,9 @@ html[data-theme="magenta"] {
     font-size: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
   }
   .lead em {
-    font-family: var(--ff-serif);
-    font-style: italic;
-    font-weight: 470;
     color: var(--orange);
-  }
+    font-style: normal;
+  } /* colour accent only — Albert italic dropped from the font budget (A) */
   .prose {
     max-width: 42rem;
   }
@@ -873,6 +911,21 @@ html[data-theme="magenta"] {
     max-width: 42rem;
   }
 
+  /* the /404 way-back links */
+  .notfound-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.8rem;
+    margin-top: clamp(1.6rem, 4vw, 2.6rem);
+  }
+  .notfound-links a {
+    font-family: var(--ff-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--orange);
+    text-decoration: none;
+  }
+
   /* the worry block — questions only, never assertions */
   .qlist {
     list-style: none;
@@ -881,7 +934,7 @@ html[data-theme="magenta"] {
   }
   .qlist li {
     font-family: var(--ff-display);
-    font-weight: 800;
+    font-weight: 700;
     font-size: clamp(1.2rem, 3vw, 1.9rem);
     line-height: 1.18;
     letter-spacing: -0.01em;
@@ -990,7 +1043,7 @@ html[data-theme="magenta"] {
   .belief {
     margin-top: clamp(1.4rem, 3.5vw, 2.2rem);
     font-family: var(--ff-display);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.12;
     letter-spacing: -0.015em;
     font-size: clamp(1.5rem, 3.6vw, 2.6rem);
@@ -998,11 +1051,9 @@ html[data-theme="magenta"] {
     color: var(--bone);
   }
   .belief em {
-    font-family: var(--ff-serif);
-    font-style: italic;
-    font-weight: 470;
     color: var(--orange);
-  }
+    font-style: normal;
+  } /* serif demoted to heroes only (A′) — colour accent in the display face */
 }
 
 /* ============ keyframes (global) ============ */
@@ -1025,6 +1076,20 @@ html[data-theme="magenta"] {
   to {
     transform: scale(1);
   }
+}
+
+/* ============ cross-document view transitions (unlayered: progressive) ============ */
+/* Native MPA view transitions: the named chrome (header + lockup) holds while
+   the page content cross-fades. No JS, no CSP allowance needed. Browsers
+   without support fall back to a hard cut — the prior behaviour, untouched. */
+@view-transition {
+  navigation: auto;
+}
+/* keep the morph quick and on-brand (two-speed constitution: this is a ui move) */
+::view-transition-group(site-header),
+::view-transition-group(site-lockup) {
+  animation-duration: var(--t-ui);
+  animation-timing-function: var(--ease-out);
 }
 
 /* ============ scroll-scrub enhancement layer (unlayered: progressive) ============ */
@@ -1085,6 +1150,7 @@ html[data-theme="magenta"] {
   .js [data-reveal] {
     transform: none;
     transition-duration: 0.3s;
+    transition-delay: 0s; /* no staggered cascade under reduced motion — a plain fade */
   }
   .js .rule {
     transform: none;
@@ -1104,7 +1170,7 @@ html[data-theme="magenta"] {
   }
   .photo-ch img {
     transform: none;
-    transition: filter 0.3s ease;
+    transition: none;
   }
   .row::before,
   .arr span,
@@ -1120,5 +1186,17 @@ html[data-theme="magenta"] {
   }
   .outro:has(a.mail:hover) .chip {
     rotate: 0deg;
+  }
+  /* view transitions off entirely under reduced motion — a hard cut, with no
+     transition created at all (D). The pseudo animation:none below is a
+     belt-and-suspenders guard for engines that don't honour @view-transition
+     nested in @media. */
+  @view-transition {
+    navigation: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

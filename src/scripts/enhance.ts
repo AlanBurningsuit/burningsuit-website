@@ -11,6 +11,12 @@
  * (`documentElement.style.setProperty`), which CSP's style-src does NOT govern,
  * so `style-src 'self'` holds without an inline-style allowance.
  */
+/* ---- a hello for anyone reading the source (engineers, mostly) ---- */
+console.log(
+  "%cif you're poking around in here — hello.\nhand-built: self-hosted fonts, no trackers, no cookies, a strict CSP.\nthe rest of the story → /colophon",
+  "color:#f3a44c",
+);
+
 const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
 /* ---- scroll reveals: fire once at ~85% viewport, never un-reveal ---- */

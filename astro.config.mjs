@@ -18,20 +18,25 @@ export default defineConfig({
   },
 
   integrations: [
-    // Lists only the real, indexable pages. /about + /contact are NOT emitted
-    // this pass (unsigned copy), so they can't leak into the sitemap.
+    // Auto-discovers built pages. /, /ai-fit-for-teams, /power-bi and
+    // /colophon are indexable; 404 is excluded by the integration. /about is
+    // NOT emitted until its copy is signed (no unsigned copy leaks via sitemap).
     sitemap(),
   ],
 
-  // --- Self-hosted fonts (downloaded + subset at build; no Google CDN runtime) ---
-  // Manrope proxies Objektiv Mk1 (display/UI). 700 added for nav/cta/kicker.
-  // Albert Sans proxies Bilo (body). Fraunces proxies a future brand serif italic.
+  // --- Self-hosted fonts (downloaded + subset at build; no CDN at runtime) ---
+  // Space Grotesk = the v2 display face (chosen from the rendered specimen test,
+  //   design/v2). Its heaviest weight is 700, so the display bold IS 700.
+  // Albert Sans proxies Bilo (body).
+  // Commit Mono = the utility/voice face (the asides + footer furniture); not on
+  //   Google, so self-hosted via Fontsource. The wink lives in this layer.
+  // Fraunces = the one serif-italic accent, heroes only (A′); 470 interpolates.
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Manrope",
-      cssVariable: "--font-manrope",
-      weights: [500, 700, 800],
+      name: "Space Grotesk",
+      cssVariable: "--font-grotesk",
+      weights: [500, 700],
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["Arial", "sans-serif"],
@@ -41,16 +46,29 @@ export default defineConfig({
       name: "Albert Sans",
       cssVariable: "--font-albert",
       weights: [400, 500],
-      styles: ["normal", "italic"],
+      // normal only — the one body italic use (.lead em) is now a colour accent,
+      // consistent with the other demoted ems (A′). Saves ~32KB (funds the mono).
+      styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["Arial", "sans-serif"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Commit Mono",
+      cssVariable: "--font-commit",
+      weights: [400],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: ["ui-monospace", "monospace"],
     },
     {
       provider: fontProviders.google(),
       name: "Fraunces",
       cssVariable: "--font-fraunces",
-      // Variable range so the design weight 470 interpolates; italic only.
-      weights: ["400 500"],
+      // Heroes-only accent, a handful of words — a single static italic instance
+      // (no variable axes) is much smaller than the range. CSS weight 470 maps to
+      // this 500 instance. This is A′'s deferred byte-tuning, forced by the gate.
+      weights: [500],
       styles: ["italic"],
       subsets: ["latin"],
       fallbacks: ["Georgia", "serif"],
