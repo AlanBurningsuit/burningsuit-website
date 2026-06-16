@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ServiceRows from "../components/ServiceRows.astro";
+import Aside from "../components/Aside.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import { flags } from "../config/flags";
 
@@ -86,7 +87,10 @@ const dontDo = flags.sheepDip
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="proof">
     <div class="wrap what">
-      <h2 class="label kicker meta" id="proof" data-reveal>how it tends to go</h2>
+      <div class="label">
+        <h2 class="kicker meta" id="proof" data-reveal>how it tends to go</h2>
+        <Aside data-reveal>data problems are people problems.</Aside>
+      </div>
       <div>
         <div class="proof" data-reveal>
           <p>
@@ -115,7 +119,11 @@ const dontDo = flags.sheepDip
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="dont">
     <div class="wrap what">
-      <h2 class="label kicker meta" id="dont" data-reveal>what i don't do</h2>
+      <div class="label">
+        <h2 class="kicker meta" id="dont" data-reveal>what i don't do</h2>
+        {/* EDIT: drafted aside, a faithful compression of Alan's stance — needs his nod (design/copy/asides.md #5) */}
+        <Aside data-reveal>if you just want it quick and cheap, that's not what i'm selling.</Aside>
+      </div>
       <div class="prose">
         <p data-reveal>{dontDo}</p>
       </div>

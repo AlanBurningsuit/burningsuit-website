@@ -8,6 +8,7 @@ import PrinciplesChapter from "../components/PrinciplesChapter.astro";
 import PhotoChapter from "../components/PhotoChapter.astro";
 import StatementChapter from "../components/StatementChapter.astro";
 import AboutTeaser from "../components/AboutTeaser.astro";
+import Aside from "../components/Aside.astro";
 import type { Line } from "../components/RiseHeading.astro";
 import { flags } from "../config/flags";
 
@@ -84,7 +85,10 @@ const statementLines: Line[] = [
 
   <section class="chapter" aria-labelledby="what" data-ground="aubergine">
     <div class="wrap what">
-      <h2 class="label kicker meta" id="what" data-reveal>what i do</h2>
+      <div class="label">
+        <h2 class="kicker meta" id="what" data-reveal>what i do</h2>
+        <Aside data-reveal>any proposal's somewhere on a done-with-you spectrum.</Aside>
+      </div>
       <ServiceRows rows={serviceRows} />
     </div>
   </section>

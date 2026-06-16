@@ -1,0 +1,32 @@
+---
+/**
+ * An aside — the margin that talks back (the v2.0 signature, plan task B).
+ *
+ * One of Alan's real signed lines (see design/copy/asides.md), set as mono,
+ * mauve, hairline-tied furniture beside the formal copy. It CARRIES MEANING,
+ * so it renders as a <p> in reading order and is announced to assistive tech —
+ * NOT aria-hidden decoration. Only the hairline tie (a CSS border) is
+ * decorative. The styling (.aside) lives in app.css and is mobile-first: inline
+ * under the section label on a phone, promoted into the sticky left-margin
+ * column at >=56rem. Additive + deletable — remove one and nothing breaks.
+ *
+ * Aubergine grounds only: mauve is illegible on the magenta / bone surfaces
+ * (see the asides deck). Never place on a hero, an offer card, or the CTA.
+ *
+ * Extra attributes (e.g. data-reveal) pass straight through to the element so
+ * an aside can opt into the section's reveal choreography.
+ */
+interface Props {
+  /** Element to render. Default <p> keeps it in reading order + announced. */
+  as?: "p" | "aside" | "span";
+  /** Voice (mauve, the default) or a quieter muted grey. */
+  tone?: "voice" | "muted";
+  class?: string;
+  [key: string]: unknown;
+}
+const { as = "p", tone = "voice", class: extra, ...rest } = Astro.props;
+const Tag = as;
+---
+<Tag class:list={["aside", tone === "muted" ? "aside-muted" : null, extra]} {...rest}>
+  <slot />
+</Tag>

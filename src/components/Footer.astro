@@ -9,6 +9,7 @@
  * while keeping the chip + period consistent. Default = the homepage line.
  */
 import FaceChip from "./FaceChip.astro";
+import { commitHash } from "../lib/commit";
 ---
 <footer aria-labelledby="talk-h">
   <div class="wrap outro">
@@ -24,6 +25,7 @@ import FaceChip from "./FaceChip.astro";
       <span>© 2026 burningsuit ltd</span>
       <span>west sussex, england</span>
       <span>local time — <span id="clock2">gmt</span></span>
+      <a class="u" href="/colophon/">build <span id="commit">{commitHash}</span> ↗</a>
     </div>
   </div>
   <div class="lockup">

@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import ServiceRows from "../components/ServiceRows.astro";
+import Aside from "../components/Aside.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import type { Line } from "../components/RiseHeading.astro";
 
@@ -106,7 +107,10 @@ const door: RowData[] = [
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="fitmap">
     <div class="wrap what">
-      <h2 class="label kicker meta" id="fitmap" data-reveal>what's in the fit map</h2>
+      <div class="label">
+        <h2 class="kicker meta" id="fitmap" data-reveal>what's in the fit map</h2>
+        <Aside data-reveal>the tools are just a means to an end.</Aside>
+      </div>
       <div>
         <ul class="fitmap">
           {fitmap.map((item) => <li data-reveal>{item}</li>)}
@@ -117,7 +121,10 @@ const door: RowData[] = [
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="afterwards">
     <div class="wrap what">
-      <h2 class="label kicker meta" id="afterwards" data-reveal>afterwards</h2>
+      <div class="label">
+        <h2 class="kicker meta" id="afterwards" data-reveal>afterwards</h2>
+        <Aside data-reveal>i don't have a thermometer up here — i don't want to know.</Aside>
+      </div>
       <div class="prose">
         <p data-reveal>
           The difference is in the decisions: you make them knowing where AI helps your team,
