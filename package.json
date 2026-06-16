@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npm run check:budget",
+    "check:budget": "node scripts/check-budget.mjs",
     "prep:images": "node scripts/prep-images.mjs",
     "preview": "astro preview",
     "check": "astro check",

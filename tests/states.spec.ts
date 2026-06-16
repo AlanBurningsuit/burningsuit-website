@@ -49,14 +49,26 @@ test.describe("reduced motion: the revealed state is visible", () => {
     test(`reduced-motion revealed content is opaque: ${path}`, async ({ page }) => {
       await page.goto(path);
       await page.evaluate(() => document.fonts.ready);
-      await page.evaluate(() =>
+      await page.evaluate(() => {
+        // Disable each element's transition/animation FIRST (via CSSOM property
+        // writes — style-src does NOT govern those, so the meta-CSP can't block
+        // them the way it blocks an injected <style>), then reveal: opacity:1
+        // applies with no transition to race or cancel. This tests the invariant
+        // "nothing stays reveal-hidden" — the .show end-state — independent of
+        // transition timing and of the staggered delays that otherwise race a
+        // fixed wait on the longest page.
         document
           .querySelectorAll(
             "[data-reveal], [data-reveal-lines], [data-reveal-raw], [data-reveal-fig]",
           )
-          .forEach((el) => el.classList.add("show")),
-      );
-      await page.waitForTimeout(500);
+          .forEach((el) => {
+            const s = el as HTMLElement;
+            s.style.transition = "none";
+            s.style.animation = "none";
+            s.classList.add("show");
+          });
+      });
+      await page.waitForTimeout(50);
       const reveals = page.locator("[data-reveal], [data-reveal-lines]");
       const count = await reveals.count();
       expect(count).toBeGreaterThan(0);

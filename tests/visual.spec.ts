@@ -19,8 +19,10 @@ async function prepare(page: Page, path: string) {
     }
     window.scrollTo(0, 0);
     await new Promise((r) => setTimeout(r, 200));
-    // pin the live clock so the hero-meta / footer snapshots are deterministic
+    // pin the live clock + the build commit hash so the hero-meta / footer
+    // snapshots are deterministic across commits (both are dynamic).
     document.querySelectorAll("#clock, #clock2").forEach((el) => (el.textContent = "10:30"));
+    document.querySelectorAll("#commit").forEach((el) => (el.textContent = "abc1234"));
   });
 }
 
