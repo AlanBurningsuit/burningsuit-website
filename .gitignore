@@ -13,6 +13,8 @@ test-results/
 
 # QA screenshot artifacts (regenerate with `node scripts/shoot.mjs`)
 design/_astro-shots/
+# v2 type/brand specimen renders (regenerate with `node scripts/shoot-fonts.mjs`)
+design/v2/specimen-shots/
 
 # os / editor cruft
 .DS_Store
