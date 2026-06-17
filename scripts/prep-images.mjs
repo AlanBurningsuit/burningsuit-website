@@ -18,17 +18,24 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const from = (p) => join(root, "resources/photos", p);
 const to = (p) => join(root, "src/assets/photos", p);
 
-// [source, output, maxWidth] — maxWidth = the largest the layout ever renders.
+// [source, output, maxWidth, crop?] — maxWidth = the largest the layout ever
+// renders. Optional `crop` ({left,top,width,height}, in post-rotate source px)
+// pre-extracts a region before the downscale — used to frame a landscape
+// original into a portrait centred on the subject's eyes.
 const jobs = [
   ["DSC08670-Edit.jpg", "DSC08670-Edit.jpg", 1000], // hero portrait (4:5, ~40vw right column)
   ["DSC09119-2-Edit-Edit.jpg", "DSC09119-2-Edit-Edit.jpg", 1600], // material photo band
   ["DSC09290-Edit.jpg", "DSC09290-Edit.jpg", 900], // about portrait (~45vw)
   ["DSC09247-Edit.jpg", "DSC09247-Edit.jpg", 384], // face chip (2× of 192px)
+  // /power-bi hero: landscape original (6000×4000) cropped to a 4:5 portrait
+  // framed with Alan's eyes near centre, then downscaled.
+  ["DSC08846-Edit.jpg", "DSC08846-Edit.jpg", 800, { left: 2340, top: 0, width: 2880, height: 3600 }],
 ];
 
-for (const [src, out, width] of jobs) {
-  const info = await sharp(from(src))
-    .rotate() // respect EXIF orientation
+for (const [src, out, width, crop] of jobs) {
+  let pipe = sharp(from(src)).rotate(); // respect EXIF orientation
+  if (crop) pipe = pipe.extract(crop);
+  const info = await pipe
     .resize({ width, withoutEnlargement: true })
     .jpeg({ quality: 90, mozjpeg: true })
     .toFile(to(out));

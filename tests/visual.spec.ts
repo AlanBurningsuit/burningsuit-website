@@ -53,3 +53,15 @@ test("power-bi — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".page-hero")).toHaveScreenshot(`pbi-hero-${tag}.png`);
   await expect(page.locator(".proof")).toHaveScreenshot(`pbi-proof-${tag}.png`);
 });
+
+test("about — regions", async ({ page }, testInfo) => {
+  await prepare(page, "/about/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".page-hero")).toHaveScreenshot(`about-hero-${tag}.png`);
+  // chapters scoped by their heading id so each `.chapter` locator is unambiguous.
+  await expect(page.locator(".chapter:has(#capable)")).toHaveScreenshot(`about-capable-${tag}.png`);
+  await expect(page.locator(".chapter:has(#human)")).toHaveScreenshot(`about-human-${tag}.png`);
+  // origin + dog are text-only for now; regenerate these when the photos land.
+  await expect(page.locator(".chapter:has(#origin)")).toHaveScreenshot(`about-origin-${tag}.png`);
+  await expect(page.locator(".chapter:has(#dog)")).toHaveScreenshot(`about-dog-${tag}.png`);
+});

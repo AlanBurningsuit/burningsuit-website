@@ -10,13 +10,16 @@ const contactSubject = "AI in Power BI & Fabric";
 const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
 
 const heroLines: Line[] = [{ before: "make ai ", em: "fit", after: " the team." }];
+// Hero-left visual: the buyer's own sharpest worry, set as a carved-cream
+// terminal readout — an object (not bare type) so it separates cleanly from the
+// headline and mirrors /power-bi's photo. It pays off in the Copilot section
+// below, so it's deliberately NOT repeated in the worry list.
 
 const worries = [
   "Is the team actually getting much out of AI, or just licensed for it?",
   "Is there more you could be doing with it — or less?",
   "Is your data going somewhere it shouldn't?",
-  "Are you being handed DAX and models nobody can vouch for?",
-  "Who's checking the DAX?",
+  "Are you being handed work nobody can quite vouch for?",
 ];
 
 const movements = [
@@ -45,10 +48,9 @@ const fitmap = [
 const door: RowData[] = [
   {
     n: "→",
-    tab: "home base",
     href: "/power-bi/",
     title: { before: "power bi & fabric, done ", em: "with", after: " you" },
-    body: "This is the bridge; the Power BI & Fabric work is home base. When it's the bottleneck, the model nobody quite trusts, or the architecture question, that's the page — embedded advisory, strategy and review, done with you.",
+    body: "When the work is specifically Power BI or Fabric — the bottleneck, the model nobody quite trusts, the architecture question — that's the page. Embedded advisory, strategy and review, done with you.",
     cta: "see power bi, done with you",
   },
 ];
@@ -64,18 +66,33 @@ const door: RowData[] = [
     I'll give you a straight, useful answer either way</Fragment
   >
 
-  <section class="page-hero" data-ground="aubergine">
-    <div class="wrap">
-      <p class="kicker meta enter">ai fit for teams</p>
-      <RiseHeading as="h1" kind="hero" label="make ai fit the team." lines={heroLines} />
-      <p class="lead enter appear-300">
-        This is the bridge from the Power BI &amp; Fabric work: the part about what AI means
-        for your team. AI readiness asks how to make your team ready for the tools; I think
-        that's the wrong way round — the tools should fit the team. AI fit is making that
-        happen deliberately: working out where AI helps your team, where it might be making
-        things worse, and which decisions should stay yours — without promising you 10x
-        speed-ups.
-      </p>
+  <section class="page-hero aifit-hero" data-ground="aubergine">
+    <div class="wrap aifit-hero-grid">
+      <div class="hero-copy">
+        <p class="kicker meta enter">ai fit for teams</p>
+        <RiseHeading as="h1" kind="hero" label="make ai fit the team." lines={heroLines} />
+        <p class="lead enter appear-300">
+          AI readiness asks how to make your team ready for the tools; I think that's the wrong
+          way round — the tools should fit the team. AI fit is making that happen deliberately:
+          working out where AI helps your team, where it might be making things worse, and which
+          decisions should stay yours — without promising you 10x speed-ups.
+        </p>
+      </div>
+      {/* The buyer's own question as a carved terminal readout: claim (h1, right)
+          faces question (left). Real line, no fabricated log/metrics. */}
+      <figure class="hero-ask">
+        <div class="panel ask-panel">
+          <div class="body">
+            <p class="ask-line" data-ask-rotate>
+              <span class="sr-only">who's checking the dax?</span>
+              <span class="ask-pre" aria-hidden="true">›</span><span class="ask-text"
+                aria-hidden="true">who's checking the dax?</span><span class="cursor" aria-hidden="true"
+              ></span>
+            </p>
+            <p class="ask-note">the questions i end up asking, every engagement.</p>
+          </div>
+        </div>
+      </figure>
     </div>
   </section>
 
@@ -131,7 +148,6 @@ const door: RowData[] = [
     <div class="wrap what">
       <div class="label">
         <h2 class="kicker meta" id="afterwards" data-reveal>afterwards</h2>
-        <Aside data-reveal>i don't have a thermometer up here — i don't want to know.</Aside>
       </div>
       <div class="prose">
         <p data-reveal>
@@ -177,12 +193,11 @@ const door: RowData[] = [
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="belief">
     <div class="wrap what">
-      <h2 class="label kicker meta" id="belief" data-reveal>the one belief underneath</h2>
+      <h2 class="label kicker meta" id="belief" data-reveal>what it comes down to</h2>
       <div>
         <p class="belief" data-reveal>
-          Every piece of work is a stack of decisions. Hand a problem to AI without specifying
-          them, and it makes them for you — and a tool can't take <em>responsibility</em> for a
-          decision.
+          Every piece of work is a stack of decisions. Hand it to AI without naming them and it
+          makes them for you — and a tool can't take <em>responsibility</em> for a decision.
         </p>
       </div>
     </div>
@@ -190,7 +205,7 @@ const door: RowData[] = [
 
   <section class="chapter" data-ground="aubergine" aria-labelledby="door">
     <div class="wrap what">
-      <h2 class="label kicker meta" id="door" data-reveal>the work this feeds</h2>
+      <h2 class="label kicker meta" id="door" data-reveal>the main work</h2>
       <ServiceRows rows={door} />
     </div>
   </section>

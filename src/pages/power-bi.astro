@@ -2,29 +2,30 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ServiceRows from "../components/ServiceRows.astro";
 import Aside from "../components/Aside.astro";
+import RiseHeading from "../components/RiseHeading.astro";
 import type { RowData } from "../components/ServiceRow.astro";
+import type { Line } from "../components/RiseHeading.astro";
 import { flags } from "../config/flags";
+import { Picture } from "astro:assets";
+import pbiHero from "../assets/photos/DSC08846-Edit.jpg";
 
 const contactSubject = "Power BI & Fabric — where it's stuck";
 const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
+
+// Same headline as the home hero; display grotesque, masked-rise, amber "with".
+const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you" }];
 
 // The bridge: the AI page, pointed at from the front door. The compact AI-pressure
 // section below carries the substance; this card is the quiet door onward.
 const aiDoor: RowData[] = [
   {
     n: "→",
-    tab: "the pressure",
     href: "/ai-fit-for-teams/",
     title: { before: "ai ", em: "fit", after: " for teams" },
     body: "When the question is what AI means for the team — what to hand over, what to keep, who checks what — that's its own piece of work, on its own page. Judgement and fit, not a promise to show you how.",
     cta: "see ai fit for teams",
   },
 ];
-
-// "what i don't do" — the sheep-dip clause is gated (Alan's call); the rest ships.
-const dontDo = flags.sheepDip
-  ? "I don't run public courses any more, and I don't do sheep-dip training — people in a room for a day to tick a box. If the team's going to learn something, it'll be on your data, inside your actual problems, because that's where it sticks. And if what you need is a single report built and handed over, there are faster, cheaper people for that — I'm happy to point you their way."
-  : "I don't run public courses any more. If the team's going to learn something, it'll be on your data, inside your actual problems, because that's where it sticks. And if what you need is a single report built and handed over, there are faster, cheaper people for that — I'm happy to point you their way.";
 ---
 
 <BaseLayout
@@ -38,23 +39,38 @@ const dontDo = flags.sheepDip
     I'll tell you that too</Fragment
   >
 
-  <section class="page-hero" data-ground="aubergine">
-    <div class="wrap">
-      <h1 class="kicker meta enter">power bi &amp; fabric, done with you</h1>
-      <p class="lead enter appear-300">
-        <strong
-          >I've spent five years working with organisations adopting Power BI — long enough
-          to have seen the pattern:</strong
-        > a team gets the licences, builds the first reports, and <em>then</em> the difficult
-        part starts. The one person who really knows the model becomes the bottleneck. Things
-        break when anyone else touches them. The training course made sense until you tried it
-        on your own data.
-      </p>
-      <p class="lead enter appear-450">
-        Now there's more of it — Fabric to move onto, Copilot writing DAX, agents building
-        whole reports — and the question underneath gets sharper: who still understands the
-        work well enough to own it? That's the question I'm here for.
-      </p>
+  <section class="page-hero pbi-hero" data-ground="aubergine">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <RiseHeading as="h1" kind="hero" label="power bi and fabric, done with you" lines={heroLines} />
+        <p class="lead enter appear-300">
+          <strong>I've spent five years with teams adopting Power BI</strong>, long enough to
+          know the pattern. A team gets the licences, builds the first reports, and
+          <em>then</em> the difficult part starts:
+        </p>
+        <ul class="beats enter appear-450">
+          <li>the one person who really knows the model becomes the bottleneck;</li>
+          <li>things break when anyone else touches them;</li>
+          <li>the training course made sense until you tried it on your own data.</li>
+        </ul>
+        <p class="lead enter appear-600">
+          Now there's more of it — Fabric to move onto, Copilot writing DAX, agents building
+          whole reports — and the question underneath gets sharper: who owns the outcome?
+          That's the question I'm here for.
+        </p>
+      </div>
+      <figure class="hero-photo enter appear-300">
+        <Picture
+          src={pbiHero}
+          alt="Alan in a checked shirt, leaning against a dark doorway in an alley, smiling"
+          formats={["avif"]}
+          fallbackFormat="webp"
+          widths={[400, 600, 800]}
+          sizes="(min-width: 62rem) 36vw, 100vw"
+          quality={70}
+          loading="eager"
+        />
+      </figure>
     </div>
   </section>
 
@@ -65,11 +81,11 @@ const dontDo = flags.sheepDip
       <h2 class="label kicker meta" id="whatido" data-reveal>what i do</h2>
       <div>
         <p class="lead" data-reveal>
-          You do as much of the work as possible; I work out how to <em>accelerate</em> it.
+          Whatever the shape of the work, the aim is the same: your team ends up more
+          <em>capable</em> of owning it — with or without me.
         </p>
 
-        <div class="offer" data-reveal>
-          <p class="meta tag">the lead offer</p>
+        <div class="offer offer-lead" data-reveal>
           <h3>embedded advisory</h3>
           <p>
             The work I rate most highly: I join your team for a stretch — office hours,
@@ -170,31 +186,21 @@ const dontDo = flags.sheepDip
   <section class="chapter" data-ground="aubergine" aria-labelledby="aipressure">
     <div class="wrap what">
       <h2 class="label kicker meta" id="aipressure" data-reveal>what ai's already touching</h2>
-      <div class="prose">
-        <p data-reveal>
-          AI agents can build your reports, write your DAX, structure your models — I've been
-          using them seriously for over a year, and they're genuinely capable, and will only get
-          more so. But capable isn't the same as <em>safe</em> to rely on. The more your team
-          hands over, the more it matters that someone still understands the model well enough to
-          check it — that the work stays yours to own and verify.
-        </p>
-        <p data-reveal>
-          Working out what to hand over, what to keep, and who checks what is its own piece of
-          work — and it's the other thing I do.
-        </p>
-      </div>
-      <ServiceRows rows={aiDoor} />
-    </div>
-  </section>
-
-  <section class="chapter" data-ground="aubergine" aria-labelledby="dont">
-    <div class="wrap what">
-      <div class="label">
-        <h2 class="kicker meta" id="dont" data-reveal>what i don't do</h2>
-        <Aside data-reveal>i'm not the fastest or cheapest — i'm the one that leaves your team able to do it without me.</Aside>
-      </div>
-      <div class="prose">
-        <p data-reveal>{dontDo}</p>
+      <div>
+        <div class="prose">
+          <p data-reveal>
+            AI agents can build your reports, write your DAX, structure your models — I've been
+            using them seriously for over a year, and they're genuinely capable, and will only
+            get more so. But capable isn't the same as <em>safe</em> to rely on. The more your
+            team hands over, the more it matters that someone still understands the model well
+            enough to check it — that the work stays yours to own and verify.
+          </p>
+          <p data-reveal>
+            Working out what to hand over, what to keep, and who checks what is its own piece of
+            work — and it's the other thing I do.
+          </p>
+        </div>
+        <ServiceRows rows={aiDoor} />
       </div>
     </div>
   </section>

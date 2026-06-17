@@ -8,15 +8,17 @@ import RiseHeading from "./RiseHeading.astro";
 import type { Line } from "./RiseHeading.astro";
 
 interface Props {
-  kicker: string;
+  /** Optional eyebrow. Omit it to let the statement stand without a label
+   *  (Alan: the statement speaks for itself; don't title everything). */
+  kicker?: string;
   label: string;
   lines: Line[];
 }
 const { kicker, label, lines } = Astro.props;
 ---
-<section class="chapter statement-ch" aria-label={kicker} data-ground="aubergine">
+<section class="chapter statement-ch" aria-label={kicker || undefined} data-ground="aubergine">
   <div class="wrap">
-    <p class="kicker meta" data-reveal>{kicker}</p>
+    {kicker && <p class="kicker meta" data-reveal>{kicker}</p>}
     <RiseHeading as="p" kind="statement" label={label} lines={lines} />
   </div>
 </section>

@@ -8,6 +8,7 @@ module.exports = {
         "http://localhost/index.html",
         "http://localhost/ai-fit-for-teams/index.html",
         "http://localhost/power-bi/index.html",
+        "http://localhost/about/index.html",
         "http://localhost/colophon/index.html",
       ],
       numberOfRuns: 1,

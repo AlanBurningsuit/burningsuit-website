@@ -16,15 +16,6 @@ export const flags = {
    * the same evidence at an altitude that needs no sign-off.
    */
   proofNamed: false,
-
-  /**
-   * /power-bi "what i don't do" (§6): include the "sheep-dip training" line.
-   * Default OFF pending Alan's call — it lightly disparages a training format
-   * his parents' business was known for, so it sits awkwardly. The rest of the
-   * section (no public courses; learning sticks on real data) ships regardless.
-   * power-bi.md §6 / ROUND 2 #2.
-   */
-  sheepDip: false,
 } as const;
 
 export type Flags = typeof flags;

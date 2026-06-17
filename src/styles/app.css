@@ -227,7 +227,7 @@
   .bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding-block: 0.85rem;
     gap: 1.2rem;
   }
@@ -237,7 +237,15 @@
   nav {
     display: flex;
     align-items: center;
-    gap: clamp(0.9rem, 2.4vw, 1.8rem);
+    flex-wrap: wrap;
+    margin-left: auto; /* push the nav + the CTA after it to the right */
+  }
+  /* a quiet middot divides each menu item; the spacing lives in the divider's
+     margins (no flex gap) so the dot sits centred between links */
+  nav a + a::before {
+    content: "·";
+    margin-inline: clamp(0.7rem, 2vw, 1.1rem);
+    color: var(--fg-dim);
   }
   nav a {
     color: var(--fg);
@@ -246,15 +254,34 @@
     font-size: 0.85rem;
     text-transform: lowercase;
     letter-spacing: 0.02em;
+    white-space: nowrap; /* a label wraps as a whole unit, never mid-word */
   }
   nav a:hover,
   nav a:focus-visible {
     color: var(--amber);
   }
-  /* condense to the CTA on small screens */
+  /* mobile: the nav drops to its own full-width row (logo + CTA stay on row 1)
+     so every page stays reachable without a JS menu. */
   @media (max-width: 47.99rem) {
-    nav a.u {
-      display: none;
+    .bar {
+      flex-wrap: wrap;
+      justify-content: space-between;
+      row-gap: 0.7rem;
+    }
+    nav {
+      order: 3;
+      flex-basis: 100%;
+      margin-left: 0;
+      justify-content: center;
+      row-gap: 0.3rem;
+    }
+    /* shrink a touch so all three + their dividers hold one centred row down to
+       ~340px (no dangling divider at a wrap) */
+    nav a {
+      font-size: 0.75rem;
+    }
+    nav a + a::before {
+      margin-inline: 0.45rem;
     }
   }
   /* drawn underline: in from the left, out to the right — never rewinds */
@@ -328,7 +355,7 @@
   .ghost:focus-visible {
     background: #343f44;
   }
-  nav .cta {
+  .bar .cta {
     padding: 0.55em 0.95em;
     font-size: 0.9rem;
   }
@@ -489,8 +516,16 @@
   }
 
   /* ============ hero (confident type, does a job, no mascot) ============ */
+  /* The hero holds a full screen and centres its content, so the page opens as
+     one composed view and the "what i do" scroll-link delivers a fresh screen
+     rather than nudging a few pixels. 3.6rem ≈ the sticky header, so the centre
+     reads true below it. min-height (not height) lets a tall stacked phone hero
+     grow past the fold. */
   .hero {
-    padding-block: clamp(2.2rem, 5vw, 3.6rem) clamp(2.6rem, 6vw, 4.6rem);
+    min-height: calc(100svh - 3.6rem);
+    display: grid;
+    align-content: center;
+    padding-block: clamp(1.5rem, 4vh, 3rem);
   }
   .hero-grid {
     display: grid;
@@ -790,13 +825,16 @@
       0 0 0 var(--px) var(--paper-edge),
       7px 7px 0 0 rgb(8 20 12 / 0.5);
   }
-  /* the clip-path curtain reveal (kept; flat photo — no grayscale/blend grade) */
+  /* the clip-path curtain reveal (kept; flat photo — no grayscale/blend grade).
+     `round var(--r)` keeps the clip region's corners matched to the frame's
+     border-radius — without it the sharp inset clipped the rounded corners
+     square (the corner glitch). */
   .js .photo-ch .ph {
-    clip-path: inset(0 0 100% 0);
+    clip-path: inset(0 0 100% 0 round var(--r));
     transition: clip-path 1.1s var(--ease-out);
   }
   .js .photo-ch figure.show .ph {
-    clip-path: inset(0);
+    clip-path: inset(0 round var(--r));
   }
   .photo-ch img {
     width: 100%;
@@ -1016,6 +1054,91 @@
     margin-top: clamp(1.2rem, 3.5vw, 2.2rem);
     max-width: 18ch;
   }
+  /* /power-bi hero reuses the home hero-grid (copy + portrait at hero level).
+     The headline is the display grotesque, sized to the narrower column — NOT
+     the big mono kicker the page used before. Photo top-aligns beside the
+     headline; the copy runs on below it. */
+  .pbi-hero .hero-grid {
+    align-items: start;
+  }
+  .pbi-hero h1 {
+    margin-top: 0;
+    font-size: clamp(2.2rem, 5vw, 4.2rem);
+    max-width: 16ch;
+  }
+  /* the bottleneck beats — body-weight, dim, amber dash; deliberately lighter
+     than the .qlist worry list so they don't out-shout the lead copy. */
+  .beats {
+    list-style: none;
+    margin-top: clamp(1rem, 2.5vw, 1.4rem);
+    display: grid;
+    gap: 0.55rem;
+    max-width: 42rem;
+  }
+  .beats li {
+    position: relative;
+    padding-left: 1.2em;
+    color: var(--fg-dim);
+    font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+    line-height: 1.45;
+  }
+  .beats li::before {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: var(--amber);
+  }
+
+  /* /ai-fit hero: the buyer's own question as the LEFT visual (variety vs
+     /power-bi's right-hand portrait). Bare display type — the question answers
+     the headline's claim across the grid; "checking" takes the one amber word.
+     Reuses RiseHeading's masked rise, so it needs no new motion or JS. */
+  .aifit-hero-grid {
+    display: grid;
+    gap: clamp(1.6rem, 4vw, 3rem);
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+  @media (min-width: 62rem) {
+    .aifit-hero-grid {
+      grid-template-columns: 0.82fr 1.25fr;
+    }
+    .aifit-hero-grid > .hero-ask {
+      order: -1; /* the question sits in the left column; copy leads in source for mobile */
+    }
+  }
+  .hero-ask {
+    margin: 0;
+  }
+  .ask-panel {
+    height: auto;
+    width: 100%;
+    max-width: 24rem;
+  }
+  .ask-panel .body {
+    padding: clamp(1.5rem, 3.2vw, 2.1rem); /* roomier than the default card padding */
+  }
+  .ask-line {
+    font-family: var(--ff-mono);
+    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+    line-height: 1.55;
+    color: var(--ink);
+    /* hold a stable height so the panel doesn't jump as the rolling questions
+       (different lengths) type and delete */
+    min-height: 3.4em;
+  }
+  .ask-pre {
+    color: var(--spark); /* magenta prompt — the constant cream-panel accent across all questions */
+    margin-right: 0.5ch;
+  }
+  .ask-note {
+    margin-top: 1.1rem;
+    padding-top: 1rem;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+    font-family: var(--ff-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
   .lead {
     margin-top: clamp(1.4rem, 3vw, 2rem);
     max-width: 42rem;
@@ -1141,6 +1264,13 @@
   }
   .offer > .tag {
     color: var(--amber);
+  }
+  /* the lead offer (embedded advisory) gets a quiet amber spine instead of a
+     floating "the lead offer" label — it marks primacy without reading as a
+     heading for the whole list. */
+  .offer-lead {
+    border-left: 2px solid var(--amber);
+    padding-left: clamp(0.9rem, 2vw, 1.4rem);
   }
   .offer h3 {
     font-family: var(--ff-display);

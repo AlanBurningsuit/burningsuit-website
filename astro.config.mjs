@@ -18,9 +18,8 @@ export default defineConfig({
   },
 
   integrations: [
-    // Auto-discovers built pages. /, /ai-fit-for-teams, /power-bi and
-    // /colophon are indexable; 404 is excluded by the integration. /about is
-    // NOT emitted until its copy is signed (no unsigned copy leaks via sitemap).
+    // Auto-discovers built pages. /, /about, /ai-fit-for-teams, /power-bi and
+    // /colophon are indexable; 404 is excluded by the integration.
     sitemap(),
   ],
 

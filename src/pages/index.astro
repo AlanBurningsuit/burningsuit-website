@@ -7,7 +7,6 @@ import PrinciplesChapter from "../components/PrinciplesChapter.astro";
 import PhotoChapter from "../components/PhotoChapter.astro";
 import StatementChapter from "../components/StatementChapter.astro";
 import AboutTeaser from "../components/AboutTeaser.astro";
-import Aside from "../components/Aside.astro";
 import type { Line } from "../components/RiseHeading.astro";
 import { Picture } from "astro:assets";
 import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
@@ -21,15 +20,13 @@ const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", 
 const serviceRows: RowData[] = [
   {
     n: "01",
-    tab: "the work",
     href: "/power-bi/",
     title: { before: "power bi & fabric, done ", em: "with", after: " you" },
-    body: "Embedded advisory, strategy and architecture review, and team enablement inside Power BI and Fabric teams. You do as much of the work as possible; I work out how to accelerate it — so the know-how stays with your team when I leave.",
+    body: "Embedded advisory, strategy and architecture review, and team enablement inside Power BI and Fabric teams. You stay close to the work; I help your team get more capable at it — so the know-how stays with you when I leave.",
     cta: "see how it works",
   },
   {
     n: "02",
-    tab: "the pressure",
     href: "/ai-fit-for-teams/",
     title: { before: "ai ", em: "fit", after: " for teams" },
     body: "Copilot, agents and AI-generated DAX can already build a lot of what a Power BI or Fabric team builds — but capable isn't the same as safe to rely on. I help your team work out what to hand over, what to keep, and who checks what, so the work stays yours to own and verify.",
@@ -40,21 +37,21 @@ const serviceRows: RowData[] = [
 const principles = [
   {
     title: "the answers are yours",
-    body: "I help your team arrive at the right answers for how you work, rather than turning up with mine. When a team understands its own models and data, it can own them — and own what it hands to a tool.",
+    body: "I help your team reach the right answers for how you actually work, instead of arriving with mine. Understand your own models and data, and you can own them — and own what you hand to a tool.",
   },
   {
     title: "what not to automate",
-    body: "Knowing what not to automate matters as much as knowing what to. As AI takes on more of the build, the discipline is choosing which decisions you hand over — and staying conscious of where and when you made that choice.",
+    body: "Knowing what not to automate matters as much as knowing what to. As the tools take on more of the build, that line is the job.",
   },
   {
     title: "mental models first",
-    body: "Real AI literacy is a mental model of how these tools ‘think’ — and where they help your work or quietly hinder it. I go deep on things, then bring them out so your team can too.",
+    body: "Real AI literacy is a feel for how these tools think, and where they help your work or quietly mislead it. I go deep on that, then make it something your team can hold too.",
   },
 ];
 
 const statementLines: Line[] = [
-  "implementation can go to the ai.",
-  "responsibility for its outputs",
+  "the work can go to ai.",
+  "the responsibility for it",
   { before: "stays with ", em: "you", after: "." },
 ];
 ---
@@ -80,8 +77,8 @@ const statementLines: Line[] = [
         </p>
         <RiseHeading as="h1" kind="hero" label={heroLabel} lines={heroLines} />
         <p class="lede enter appear-300">
-          <strong>I'm Alan — I run burningsuit.</strong> I help Power BI and Fabric teams get
-          past the bottleneck and stay in control of the work as AI changes how it's built.
+          <strong>I help Power BI and Fabric teams get past the bottleneck</strong> and keep
+          ownership of the work as AI starts to build more of it.
         </p>
         <div class="cta-row enter appear-450">
           <a class="cta" href={contactMailto}>email me</a>
@@ -109,7 +106,6 @@ const statementLines: Line[] = [
     <div class="wrap what">
       <div class="label">
         <h2 class="kicker meta" id="what" data-reveal>what i do</h2>
-        <Aside data-reveal>any proposal's somewhere on a done-with-you spectrum.</Aside>
       </div>
       <ServiceRows rows={serviceRows} />
     </div>
@@ -120,8 +116,7 @@ const statementLines: Line[] = [
   <PhotoChapter />
 
   <StatementChapter
-    kicker="the principle underneath"
-    label="implementation can go to the ai. responsibility for its outputs stays with you."
+    label="the work can go to ai. the responsibility for it stays with you."
     lines={statementLines}
   />
 

@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
  * nothing may stay hidden under reduced motion. These are functional assertions
  * (computed opacity, visibility, fallback grounds), not pixel comparisons.
  */
-const pages = ["/", "/ai-fit-for-teams/", "/power-bi/"];
+const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/"];
 
 test.describe("no-JS: everything is visible, nothing reveal-hidden", () => {
   test.use({ javaScriptEnabled: false });

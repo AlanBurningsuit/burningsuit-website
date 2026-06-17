@@ -83,3 +83,40 @@ if (motionOK) {
     );
   }
 }
+
+/* ---- /ai-fit hero: the rolling "questions in the room" readout (type/delete).
+   Enhancement only — the static first question is server-rendered and the
+   accessible name is a separate sr-only line, so screen readers, no-JS, and
+   reduced-motion all get one stable, readable question. ---- */
+const askText = document.querySelector("[data-ask-rotate] .ask-text");
+if (askText && motionOK) {
+  const qs = [
+    "who's checking the dax?",
+    "is anyone actually faster?",
+    "is your data going where it shouldn't?",
+    "are the outputs any better?",
+  ];
+  let qi = 0;
+  let ci = qs[0].length; // start fully typed, matching the server-rendered text
+  let mode: "hold" | "deleting" | "typing" = "hold";
+  const step = () => {
+    let delay = 70;
+    if (mode === "hold") {
+      mode = "deleting";
+      delay = 2400; // dwell on the finished question
+    } else if (mode === "deleting") {
+      askText.textContent = qs[qi].slice(0, --ci);
+      delay = 38;
+      if (ci <= 0) {
+        mode = "typing";
+        qi = (qi + 1) % qs.length;
+        delay = 320; // beat before the next question
+      }
+    } else {
+      askText.textContent = qs[qi].slice(0, ++ci);
+      if (ci >= qs[qi].length) mode = "hold";
+    }
+    setTimeout(step, delay);
+  };
+  setTimeout(step, 2400);
+}
