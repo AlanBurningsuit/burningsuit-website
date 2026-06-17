@@ -24,3 +24,5 @@ Thumbs.db
 # kept out of the (public) repo: internal orientation doc + brand source PDF
 claude.md
 Burningsuit Brand Guidelines V1.pdf
+.agents/
+.claude/
