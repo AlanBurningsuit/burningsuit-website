@@ -28,13 +28,13 @@ test.describe("no-JS: everything is visible, nothing reveal-hidden", () => {
     });
   }
 
-  test("no-JS: principles chapter keeps its magenta fallback ground", async ({ page }) => {
+  test("no-JS: the about teaser sits on a cream entry panel", async ({ page }) => {
     await page.goto("/");
     const bg = await page
-      .locator(".principles-ch")
+      .locator(".about .panel")
       .evaluate((el) => getComputedStyle(el).backgroundColor);
-    // #D90148
-    expect(bg).toBe("rgb(217, 1, 72)");
+    // #f1ecd9 — the Everforest-light cream paper surface (set in CSS, no JS)
+    expect(bg).toBe("rgb(241, 236, 217)");
   });
 });
 

@@ -1,17 +1,17 @@
 ---
 /**
- * One principle in the magenta "how i work" chapter. A drawn rule, a Manrope
- * sub-head, and a line of body. Reveal + draw are staggered by `index`.
+ * One principle in the homepage "how i work" spine. These are three PARALLEL
+ * principles, NOT sequential steps, so they carry no 01/02/03 numerals
+ * (numbering would imply an order that isn't there). A Mona-600 title + an
+ * fg-dim body; the hairline-separated list styling (.principle) is in app.css.
  */
 interface Props {
   title: string;
   body: string;
-  index?: number;
 }
-const { title, body, index = 0 } = Astro.props;
+const { title, body } = Astro.props;
 ---
-<div class:list={["principle", `stagger-${index}`]} data-reveal>
-  <hr class:list={["rule", `stagger-${index}`]} data-reveal-raw />
+<div class="principle" data-reveal>
   <h3>{title}</h3>
   <p>{body}</p>
 </div>

@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import RiseHeading from "../components/RiseHeading.astro";
-import FaceChip from "../components/FaceChip.astro";
 import ServiceRows from "../components/ServiceRows.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import PrinciplesChapter from "../components/PrinciplesChapter.astro";
@@ -10,45 +9,46 @@ import StatementChapter from "../components/StatementChapter.astro";
 import AboutTeaser from "../components/AboutTeaser.astro";
 import Aside from "../components/Aside.astro";
 import type { Line } from "../components/RiseHeading.astro";
-import { flags } from "../config/flags";
+import { Picture } from "astro:assets";
+import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
 
-const heroLabel = "when ai does more of the work, what's still your job?";
-const heroLines: Line[] =
-  flags.heroItalic === "still"
-    ? ["when ai does", "more of the work,", { before: "what's ", em: "still" }, "your job?"]
-    : ["when ai does", "more of the work,", "what's still", { before: "your ", em: "job", after: "?" }];
+const contactSubject = "Power BI & Fabric";
+const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
+
+const heroLabel = "power bi and fabric, done with you.";
+const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
 
 const serviceRows: RowData[] = [
   {
     n: "01",
-    href: "/ai-fit-for-teams/",
-    title: { before: "ai ", em: "fit", after: " for teams" },
-    body: "A short piece of work, with a beginning and an end. I get to know how your team actually works, then map where AI helps — and where it might be making things worse. You leave with a fit map: what to change, what to leave alone, and what to stop worrying about.",
+    tab: "the work",
+    href: "/power-bi/",
+    title: { before: "power bi & fabric, done ", em: "with", after: " you" },
+    body: "Embedded advisory, strategy and architecture review, and team enablement inside Power BI and Fabric teams. You do as much of the work as possible; I work out how to accelerate it — so the know-how stays with your team when I leave.",
+    cta: "see how it works",
   },
   {
     n: "02",
-    href: "/power-bi/",
-    title: { before: "power bi, done ", em: "with", after: " you" },
-    body: "Strategy, architecture review, and ongoing work inside Power BI and Fabric teams. You do as much of the work as possible; I work out how to accelerate it — so the know-how stays with you when I leave.",
+    tab: "the pressure",
+    href: "/ai-fit-for-teams/",
+    title: { before: "ai ", em: "fit", after: " for teams" },
+    body: "Copilot, agents and AI-generated DAX can already build a lot of what a Power BI or Fabric team builds — but capable isn't the same as safe to rely on. I help your team work out what to hand over, what to keep, and who checks what, so the work stays yours to own and verify.",
+    cta: "see how it works",
   },
 ];
 
-const howHeading: Line[] = [
-  "something like coaching,",
-  { before: "with subject-matter ", em: "depth", after: "." },
-];
 const principles = [
   {
     title: "the answers are yours",
-    body: "I help you arrive at the right answers for your team, rather than turning up with mine. When a team understands something, they can own it.",
+    body: "I help your team arrive at the right answers for how you work, rather than turning up with mine. When a team understands its own models and data, it can own them — and own what it hands to a tool.",
   },
   {
     title: "what not to automate",
-    body: "Knowing what not to automate matters as much as knowing what to. The discipline is in choosing which decisions you hand over, and being conscious of where and when you've made that choice.",
+    body: "Knowing what not to automate matters as much as knowing what to. As AI takes on more of the build, the discipline is choosing which decisions you hand over — and staying conscious of where and when you made that choice.",
   },
   {
     title: "mental models first",
-    body: "AI literacy is a mental model of how these tools ‘think’. I go deep on things, then bring them out in a way other people can understand.",
+    body: "Real AI literacy is a mental model of how these tools ‘think’ — and where they help your work or quietly hinder it. I go deep on things, then bring them out so your team can too.",
   },
 ];
 
@@ -60,30 +60,52 @@ const statementLines: Line[] = [
 ---
 
 <BaseLayout
-  title="burningsuit — ai adaptation, done with you"
-  description="I help teams make AI fit how they actually work — at the moment, mostly Power BI teams. AI fit for teams, and Power BI done with you."
+  title="Power BI & Fabric advisory, done with you — burningsuit"
+  description="Embedded Power BI and Fabric advisory, done with you — strategy, architecture review, and team capability — with a clear-eyed take on what AI means for how the work gets built."
+  contactSubject={contactSubject}
 >
-  <section class="hero" data-ground="aubergine">
-    <div class="wrap hero-meta meta enter appear-600">
-      <span>ai adaptation, done with you</span>
-      <span>west sussex — <span id="clock">uk</span></span>
-    </div>
-    <div class="wrap hero-inner">
-      <RiseHeading as="h1" kind="hero" label={heroLabel} lines={heroLines} />
-      <p class="sub enter appear-300">
-        <strong
-          >I'm Alan <FaceChip />
-          <span class="meta thatsme">(that's me)</span> — I run burningsuit.</strong
-        > I help teams make AI fit how they actually work. At the moment, that's mostly
-        Power BI teams.
-      </p>
-      <a class="cta enter appear-450" href="mailto:alan@burningsuit.co.uk">email me</a>
+  <Fragment slot="footer-invitation"
+    >Tell me where Power BI or Fabric is getting stuck — the bottleneck, the model nobody
+    quite trusts, the bit AI's about to change. If I can help, I'll tell you how; if I
+    can't, I'll tell you that too. Replies come from me</Fragment
+  >
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="kicker hero-prompt">
+          <span class="pre" aria-hidden="true">›</span><span class="kt"
+            >power bi &amp; fabric advisory</span
+          ><span class="cursor" aria-hidden="true"></span>
+        </p>
+        <RiseHeading as="h1" kind="hero" label={heroLabel} lines={heroLines} />
+        <p class="lede enter appear-300">
+          <strong>I'm Alan — I run burningsuit.</strong> I help Power BI and Fabric teams get
+          past the bottleneck and stay in control of the work as AI changes how it's built.
+        </p>
+        <div class="cta-row enter appear-450">
+          <a class="cta" href={contactMailto}>email me</a>
+          <a class="cta ghost" href="#what">what i do</a>
+        </div>
+      </div>
+      <figure class="hero-photo enter appear-300">
+        <Picture
+          src={heroPhoto}
+          alt="Alan, who runs burningsuit, sitting outdoors and smiling"
+          formats={["avif"]}
+          fallbackFormat="webp"
+          widths={[400, 600, 800]}
+          sizes="(min-width: 62rem) 40vw, 100vw"
+          quality={66}
+          loading="eager"
+        />
+      </figure>
     </div>
   </section>
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  <section class="chapter" aria-labelledby="what" data-ground="aubergine">
+  <section class="chapter" aria-labelledby="what">
     <div class="wrap what">
       <div class="label">
         <h2 class="kicker meta" id="what" data-reveal>what i do</h2>
@@ -93,13 +115,7 @@ const statementLines: Line[] = [
     </div>
   </section>
 
-  <PrinciplesChapter
-    kicker="how i work"
-    headingId="how"
-    headingLabel="something like coaching, with subject-matter depth."
-    headingLines={howHeading}
-    principles={principles}
-  />
+  <PrinciplesChapter kicker="how i work" headingId="how" principles={principles} />
 
   <PhotoChapter />
 
@@ -112,5 +128,5 @@ const statementLines: Line[] = [
   <AboutTeaser />
 
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
-  <div id="talk" class="talk-spacer" data-ground="aubergine"></div>
+  <div id="talk" class="talk-spacer"></div>
 </BaseLayout>

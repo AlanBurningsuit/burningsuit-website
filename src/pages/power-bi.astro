@@ -5,33 +5,42 @@ import Aside from "../components/Aside.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import { flags } from "../config/flags";
 
+const contactSubject = "Power BI & Fabric — where it's stuck";
+const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
+
+// The bridge: the AI page, pointed at from the front door. The compact AI-pressure
+// section below carries the substance; this card is the quiet door onward.
 const aiDoor: RowData[] = [
   {
     n: "→",
+    tab: "the pressure",
     href: "/ai-fit-for-teams/",
     title: { before: "ai ", em: "fit", after: " for teams" },
-    body: "AI agents can build your Power BI reports, write your DAX, structure your models. I've been using them seriously for over a year now and they're genuinely capable — and they will only get more so. But capable isn't the same as safe to rely on. Working out what that means for your team — what to hand over, what to keep, who checks what — is the other thing I do.",
+    body: "When the question is what AI means for the team — what to hand over, what to keep, who checks what — that's its own piece of work, on its own page. Judgement and fit, not a promise to show you how.",
+    cta: "see ai fit for teams",
   },
 ];
 
 // "what i don't do" — the sheep-dip clause is gated (Alan's call); the rest ships.
 const dontDo = flags.sheepDip
-  ? "I don't run public courses any more, and I don't do sheep-dip training — people in a room for a day to tick a box. If the team's going to learn something, it'll be on your data, inside your actual problems, because that's where it sticks."
-  : "I don't run public courses any more. If the team's going to learn something, it'll be on your data, inside your actual problems, because that's where it sticks.";
+  ? "I don't run public courses any more, and I don't do sheep-dip training — people in a room for a day to tick a box. If the team's going to learn something, it'll be on your data, inside your actual problems, because that's where it sticks. And if what you need is a single report built and handed over, there are faster, cheaper people for that — I'm happy to point you their way."
+  : "I don't run public courses any more. If the team's going to learn something, it'll be on your data, inside your actual problems, because that's where it sticks. And if what you need is a single report built and handed over, there are faster, cheaper people for that — I'm happy to point you their way.";
 ---
 
 <BaseLayout
-  title="power bi, done with you · burningsuit"
-  description="Embedded advisory, strategy, and architecture review inside Power BI and Fabric teams. You do as much of the work as possible; I work out how to accelerate it — so the know-how stays with you."
+  title="Power BI & Fabric advisory: embedded, review, capability — burningsuit"
+  description="Embedded advisory, strategy and architecture review, and team capability inside Power BI and Fabric teams. You do as much of the work as possible; I work out how to accelerate it — so the know-how stays with your team."
+  contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
-    >Tell me where Power BI is grinding — the bottleneck, the model nobody quite trusts. If I
-    can help, I'll tell you how; if I can't, I'll tell you that too</Fragment
+    >Tell me where Power BI or Fabric is grinding — the bottleneck, the model nobody quite
+    trusts, the bit AI's about to change. If I can help, I'll tell you how; if I can't,
+    I'll tell you that too</Fragment
   >
 
   <section class="page-hero" data-ground="aubergine">
     <div class="wrap">
-      <h1 class="kicker meta enter">power bi, done with you</h1>
+      <h1 class="kicker meta enter">power bi &amp; fabric, done with you</h1>
       <p class="lead enter appear-300">
         <strong
           >I've spent five years working with organisations adopting Power BI — long enough
@@ -40,6 +49,11 @@ const dontDo = flags.sheepDip
         part starts. The one person who really knows the model becomes the bottleneck. Things
         break when anyone else touches them. The training course made sense until you tried it
         on your own data.
+      </p>
+      <p class="lead enter appear-450">
+        Now there's more of it — Fabric to move onto, Copilot writing DAX, agents building
+        whole reports — and the question underneath gets sharper: who still understands the
+        work well enough to own it? That's the question I'm here for.
       </p>
     </div>
   </section>
@@ -59,18 +73,30 @@ const dontDo = flags.sheepDip
           <h3>embedded advisory</h3>
           <p>
             The work I rate most highly: I join your team for a stretch — office hours,
-            workshops, one-on-ones — working on your real problems, in your real workspace. It
-            runs as a working relationship rather than a scheduled course, and over a few months
-            the team gets steadily more confident handling it themselves.
+            workshops, one-on-ones — working on your real problems, in your real workspace,
+            across Power BI and Fabric. It runs as a working relationship rather than a
+            scheduled course, and over a few months the team gets steadily more confident
+            handling it themselves.
           </p>
         </div>
 
         <div class="offer" data-reveal>
           <h3>strategy &amp; architecture review</h3>
           <p>
-            Before anything gets built: what are we measuring, really? Is the model carrying the
-            business logic it should? I'll tell you what it's going to cost and what you're going
-            to get — including when the honest answer is that a Power BI model won't fix this.
+            Before anything gets built: what are we measuring, really? Is the model carrying
+            the business logic it should? Does the move onto Fabric earn its keep, and where?
+            I'll tell you what it's going to cost and what you're going to get — including when
+            the honest answer is that a new model won't fix this.
+          </p>
+        </div>
+
+        <div class="offer" data-reveal>
+          <h3>team enablement</h3>
+          <p>
+            The point of all of it is capability: a team that can build, change and verify the
+            work without waiting on one person. The learning lands on your own data, inside
+            your actual problems, because that's where it sticks — so when I leave, the know-how
+            stays with your team.
           </p>
         </div>
 
@@ -92,28 +118,72 @@ const dontDo = flags.sheepDip
         <Aside data-reveal>data problems are people problems.</Aside>
       </div>
       <div>
-        <div class="proof" data-reveal>
-          <p>
-            One data team I work with — inside an international law firm — started from “fear of
-            breaking”: production models nobody dared touch, external help needed for minor
-            changes. A few months of working together, and they were running their own diagnostic
-            sessions, tracing data lineage end to end, and challenging their vendor's deliverables
-            with technical evidence they'd gathered themselves.
-          </p>
-          {
-            flags.proofNamed && (
-              <>
-                <p class="attr meta">[client redacted]</p>
-                <blockquote>
-                  “[quote redacted] the
-                  [quote redacted]”
-                  <cite class="meta">[attribution redacted]</cite>
-                </blockquote>
-              </>
-            )
-          }
+        <div class="proof panel casefile" data-reveal>
+          <span class="tab"><span class="sp" aria-hidden="true"></span>case file</span>
+          <div class="body">
+            <p class="src">a data team · international law firm</p>
+            <p>
+              One data team I work with — inside an international law firm — started from “fear of
+              breaking”: production models nobody dared touch, external help needed for the
+              smallest change, the whole thing resting on one or two people. A few months of
+              working together, and they were running their own diagnostic sessions, tracing data
+              lineage end to end, and challenging their vendor's deliverables with technical
+              evidence they'd gathered themselves. The reliance moved from a single expert to the
+              team — which is also what makes them ready for what AI is starting to add to the job.
+            </p>
+            {
+              flags.proofNamed && (
+                <>
+                  <p class="attr meta">[client redacted]</p>
+                  <blockquote>
+                    “[quote redacted] the
+                    [quote redacted]”
+                    <cite class="meta">[attribution redacted]</cite>
+                  </blockquote>
+                </>
+              )
+            }
+          </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="chapter" data-ground="aubergine" aria-labelledby="engagement">
+    <div class="wrap what">
+      <h2 class="label kicker meta" id="engagement" data-reveal>the engagement, practically</h2>
+      <div class="prose">
+        <p data-reveal>
+          Embedded advisory runs as a working relationship, sized to your team and fitted around
+          the work you're already doing. Reviews are a fixed, shorter piece. I'll scope and price
+          it with you up front, and we go month-to-month — no lock-in. The point is for your team
+          to need me less over time, not more.
+        </p>
+        <p data-reveal>
+          It starts with a conversation: <a class="u" href={contactMailto}>tell me where it's
+          stuck</a> and I'll tell you whether I can help — and if I can't, I'll tell you that too.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" data-ground="aubergine" aria-labelledby="aipressure">
+    <div class="wrap what">
+      <h2 class="label kicker meta" id="aipressure" data-reveal>what ai's already touching</h2>
+      <div class="prose">
+        <p data-reveal>
+          AI agents can build your reports, write your DAX, structure your models — I've been
+          using them seriously for over a year, and they're genuinely capable, and will only get
+          more so. But capable isn't the same as <em>safe</em> to rely on. The more your team
+          hands over, the more it matters that someone still understands the model well enough to
+          check it — that the work stays yours to own and verify.
+        </p>
+        <p data-reveal>
+          Working out what to hand over, what to keep, and who checks what is its own piece of
+          work — and it's the other thing I do.
+        </p>
+      </div>
+      <ServiceRows rows={aiDoor} />
     </div>
   </section>
 
@@ -121,19 +191,11 @@ const dontDo = flags.sheepDip
     <div class="wrap what">
       <div class="label">
         <h2 class="kicker meta" id="dont" data-reveal>what i don't do</h2>
-        {/* EDIT: drafted aside, a faithful compression of Alan's stance — needs his nod (design/copy/asides.md #5) */}
-        <Aside data-reveal>if you just want it quick and cheap, that's not what i'm selling.</Aside>
+        <Aside data-reveal>i'm not the fastest or cheapest — i'm the one that leaves your team able to do it without me.</Aside>
       </div>
       <div class="prose">
         <p data-reveal>{dontDo}</p>
       </div>
-    </div>
-  </section>
-
-  <section class="chapter" data-ground="aubergine" aria-labelledby="aidoor">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="aidoor" data-reveal>the other thing i do</h2>
-      <ServiceRows rows={aiDoor} />
     </div>
   </section>
 

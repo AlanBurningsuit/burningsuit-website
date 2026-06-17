@@ -10,6 +10,12 @@
  */
 import FaceChip from "./FaceChip.astro";
 import { commitHash } from "../lib/commit";
+interface Props {
+  /** The mailto (with optional prefilled ?subject=) built per-page in
+   *  BaseLayout; defaults to a bare mailto. */
+  mailtoHref?: string;
+}
+const { mailtoHref = "mailto:alan@burningsuit.co.uk" } = Astro.props;
 ---
 <footer aria-labelledby="talk-h">
   <div class="wrap outro">
@@ -20,15 +26,21 @@ import { commitHash } from "../lib/commit";
         >Tell me what your team is wrestling with. Replies come from me</slot
       > <FaceChip loading="lazy" />.
     </p>
-    <a class="mail" href="mailto:alan@burningsuit.co.uk">alan@burningsuit.co.uk</a>
+    <a class="mail" href={mailtoHref}>alan@burningsuit.co.uk</a>
     <div class="foot-meta meta">
-      <span>© 2026 burningsuit ltd</span>
-      <span>west sussex, england</span>
       <span>local time — <span id="clock2">gmt</span></span>
       <a class="u" href="/colophon/">build <span id="commit">{commitHash}</span> ↗</a>
     </div>
+    <p class="legal">
+      burningsuit ltd &middot; registered in england &amp; wales &middot; west sussex, england &middot; &copy; 2026{
+        /* Company-number fragment removed in the Phase A hygiene patch: the
+           placeholder was a trust leak, and the rest of the legal line is
+           credible without it. Re-add `· company no. <n>` once Alan confirms
+           the real Companies House number (Stage 0). */
+      }
+    </p>
   </div>
   <div class="lockup">
-    <img src="/logos/burningsuit-white.svg" alt="burningsuit" width="285" height="52" />
+    <img src="/logos/burningsuit-on-green.svg" alt="burningsuit" width="285" height="52" />
   </div>
 </footer>

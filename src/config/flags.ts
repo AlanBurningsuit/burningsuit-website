@@ -10,14 +10,6 @@
  */
 export const flags = {
   /**
-   * Hero emphasis word on the homepage: which word takes the serif-italic.
-   * B5 re-fit (15 Jun) currently italicises "still" — it softens the edge Alan
-   * flagged. Alternative under test is "job". Decide on the screenshot.
-   * home.md §2 / STILL OPEN #2.
-   */
-  heroItalic: "still" as "still" | "job",
-
-  /**
    * /power-bi proof block (§5): name the anchor client and show the
    * quote. Default OFF — the anonymous version ships until written permission
    * lands (design/copy/03-permissions-to-seek.md). The anonymous paragraph is

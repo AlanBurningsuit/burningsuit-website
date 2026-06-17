@@ -1,10 +1,11 @@
 /**
- * Progressive enhancement for the burningsuit homepage.
+ * Progressive enhancement for the burningsuit site.
  *
- * Ported unchanged in behaviour from the B5 concept. Everything here is an
- * enhancement on top of a page that is already complete and readable without
- * JS: scroll reveals, the whole-page ground morph, the fixed-footer basement
- * height, the live clock, and the auto-hiding header.
+ * Everything here is an enhancement on top of a page that is already complete
+ * and readable without JS: scroll reveals, the fixed-footer basement height,
+ * the live clock, and the auto-hiding header. (The v3 instrument skin is flat,
+ * so the old whole-page ground-morph observer is gone; the typewriter is pure
+ * CSS.)
  *
  * NOTE on CSP: this script is bundled to an external module (script-src 'self').
  * The only DOM-style writes it makes go through the CSSOM
@@ -14,7 +15,7 @@
 /* ---- a hello for anyone reading the source (engineers, mostly) ---- */
 console.log(
   "%cif you're poking around in here — hello.\nhand-built: self-hosted fonts, no trackers, no cookies, a strict CSP.\nthe rest of the story → /colophon",
-  "color:#f3a44c",
+  "color:#e69875",
 );
 
 const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
@@ -40,22 +41,6 @@ if ("IntersectionObserver" in window) {
   });
 } else {
   targets.forEach((el) => el.classList.add("show"));
-}
-
-/* ---- whole-page ground morph: section crossing mid-viewport sets the theme ---- */
-const grounds = document.querySelectorAll<HTMLElement>("[data-ground]");
-if ("IntersectionObserver" in window) {
-  const tio = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          const ground = (e.target as HTMLElement).dataset.ground;
-          if (ground) document.documentElement.dataset.theme = ground;
-        }
-      }),
-    { rootMargin: "-45% 0% -45% 0%" },
-  );
-  grounds.forEach((s) => tio.observe(s));
 }
 
 /* ---- basement: main's bottom margin must equal the footer's real height ---- */

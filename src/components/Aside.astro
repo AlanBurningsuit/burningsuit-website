@@ -10,8 +10,9 @@
  * under the section label on a phone, promoted into the sticky left-margin
  * column at >=56rem. Additive + deletable — remove one and nothing breaks.
  *
- * Aubergine grounds only: mauve is illegible on the magenta / bone surfaces
- * (see the asides deck). Never place on a hero, an offer card, or the CTA.
+ * v3 colour: the aside text is --fg-dim (#9da9a0, ~5:1 on the dark green
+ * grounds — clears AA, unlike the concept's #859289). Only the hairline tie
+ * borrows the comment-grey --voice. Never place on a cream panel or the CTA.
  *
  * Extra attributes (e.g. data-reveal) pass straight through to the element so
  * an aside can opt into the section's reveal choreography.
@@ -19,7 +20,7 @@
 interface Props {
   /** Element to render. Default <p> keeps it in reading order + announced. */
   as?: "p" | "aside" | "span";
-  /** Voice (mauve, the default) or a quieter muted grey. */
+  /** Voice (fg-dim, the default) or a quieter muted grey. */
   tone?: "voice" | "muted";
   class?: string;
   [key: string]: unknown;

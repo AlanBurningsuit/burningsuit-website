@@ -1,27 +1,31 @@
 ---
 /**
- * Photo as material: one full-bleed candid, graded into the page. CSS grades it
- * grayscale over flat aubergine via mix-blend screen (shadows ARE the page
- * ground); hover restores true colour; a clip-path curtain reveals it on scroll.
- * No caption (Alan didn't want captions). astro:assets emits AVIF/WebP — no
- * inline style, so style-src 'self' holds; object-fit/position are in app.css.
+ * Photo as material: one candid, framed like an entry in the log. The .ph is a
+ * cream-matted carved frame (border + paper-edge ring + hard shadow); a
+ * clip-path curtain reveals it on scroll (kept from v2, gated off under reduced
+ * motion in app.css). The old grayscale / mix-blend grade is dropped — the
+ * green skin shows the photo in honest colour. No caption (Alan didn't want
+ * captions). astro:assets emits AVIF/WebP; no inline style, so style-src 'self'
+ * holds — object-fit/position live in app.css.
  */
 import { Picture } from "astro:assets";
 import material from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
 ---
-<section class="photo-ch" data-ground="aubergine">
-  <figure data-reveal-fig>
-    <div class="ph">
-      <Picture
-        src={material}
-        alt="Alan writing at a café table outdoors, coffee beside him"
-        formats={["avif"]}
-        fallbackFormat="webp"
-        widths={[768, 1280, 1600]}
-        sizes="100vw"
-        quality={52}
-        loading="lazy"
-      />
-    </div>
-  </figure>
+<section class="photo-ch">
+  <div class="wrap">
+    <figure data-reveal-fig>
+      <div class="ph">
+        <Picture
+          src={material}
+          alt="Alan writing at a café table outdoors, coffee beside him"
+          formats={["avif"]}
+          fallbackFormat="webp"
+          widths={[768, 1280, 1600]}
+          sizes="(min-width: 84rem) 1312px, 100vw"
+          quality={52}
+          loading="lazy"
+        />
+      </div>
+    </figure>
+  </div>
 </section>

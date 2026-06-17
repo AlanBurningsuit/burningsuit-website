@@ -1,26 +1,42 @@
 ---
 /**
- * One service row. The whole row is the link. On hover/focus the magenta flood
- * enters from the bottom and exits through the top (never rewinds), siblings dim
- * via :has(), and the arrow departs up-right while a clone arrives from
- * down-left — all in app.css (.row / .rows / .arr). The two ↗ glyphs are the
- * original and its replacement.
+ * One offer, as a carved cream panel that is itself the link (the green
+ * instrument's "entry" plate). On hover/focus the card lifts toward the cursor,
+ * its hard shadow deepens, and the one quiet tell — the `cta` label, e.g.
+ * `see how it works ▸` — warms to the magenta spark and nudges right. The label
+ * names the destination rather than the old vague "look at this" (Phase A). The
+ * .panel / .tab / .go styling lives in app.css.
  */
 export interface RowData {
-  /** Two-digit index, e.g. "01". */
-  n: string;
+  /** Carried for callers from the row era; not rendered on the card. */
+  n?: string;
   href: string;
+  /** Journal-plate label, e.g. "offer i". Omit for a plain panel. */
+  tab?: string;
   title: { before?: string; em?: string; after?: string };
   body: string;
+  /** The quiet tell / affordance label. Names the action rather than the vague
+   *  "look at this"; defaults to "see how it works". */
+  cta?: string;
 }
-type Props = RowData;
-const { n, href, title, body } = Astro.props;
+interface Props extends RowData {
+  /** Reveal-stagger index within the grid. */
+  index?: number;
+}
+const { href, tab, title, body, cta = "see how it works", index = 0 } = Astro.props;
 ---
-<a class="row" href={href}>
-  <span class="n" aria-hidden="true">{n}</span>
-  <div>
+<a class:list={["panel", `stagger-${index}`]} href={href} data-reveal>
+  {
+    tab && (
+      <span class="tab">
+        <span class="sp" aria-hidden="true" />
+        {tab}
+      </span>
+    )
+  }
+  <div class="body">
     <h3>{title.before}<em>{title.em}</em>{title.after}</h3>
     <p>{body}</p>
+    <span class="go">{cta}</span>
   </div>
-  <span class="arr" aria-hidden="true"><span>↗</span><span>↗</span></span>
 </a>

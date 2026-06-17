@@ -30,7 +30,10 @@ test("home — regions", async ({ page }, testInfo) => {
   await prepare(page, "/");
   const tag = testInfo.project.name;
   await expect(page.locator(".hero")).toHaveScreenshot(`home-hero-${tag}.png`);
-  await expect(page.locator(".what")).toHaveScreenshot(`home-services-${tag}.png`);
+  // The "how i work" chapter now also rides the `.what` spine, so `.what`
+  // matches two sections on the homepage. Scope to the "what i do" services
+  // section (its heading carries id="what") so the region stays unambiguous.
+  await expect(page.locator(".what:has(#what)")).toHaveScreenshot(`home-services-${tag}.png`);
   await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
   await expect(page.locator(".about")).toHaveScreenshot(`home-about-${tag}.png`);
   await expect(page.locator("footer")).toHaveScreenshot(`home-footer-${tag}.png`);

@@ -1,9 +1,10 @@
 ---
 /**
- * The service-rows instrument: rows separated by self-drawing hairlines. There
- * is one rule above, between, and below the rows (rows.length + 1), each with a
- * staggered draw-in. The :has() dim / magenta flood / arrow-swap live in
- * app.css; this component is just the structure.
+ * The offers grid: carved cream panels, two-up on desktop and equal height
+ * (no clever stagger — that read as broken), stacked on mobile. A single offer
+ * ("the other thing i do" door on a service page) gets the `.single`
+ * full-width treatment. The panel/lift/hover behaviour lives in app.css; this
+ * component is just the structure.
  */
 import ServiceRow from "./ServiceRow.astro";
 import type { RowData } from "./ServiceRow.astro";
@@ -13,14 +14,6 @@ interface Props {
 }
 const { rows } = Astro.props;
 ---
-<div class="rows">
-  {
-    rows.map((row, i) => (
-      <>
-        <hr class:list={["rule", `stagger-${i}`]} data-reveal-raw />
-        <ServiceRow {...row} />
-      </>
-    ))
-  }
-  <hr class:list={["rule", `stagger-${rows.length}`]} data-reveal-raw />
+<div class:list={["offers", rows.length === 1 ? "single" : null]}>
+  {rows.map((row, i) => <ServiceRow {...row} index={i} />)}
 </div>

@@ -1,20 +1,26 @@
 ---
 /**
  * Sticky header. Hides on scroll-down, returns on scroll-up (enhance.ts adds
- * `.hh`). Nav links only the pages that actually ship this pass — ai-fit and
- * power-bi. /about + /contact are not emitted yet; the footer mailto is the
- * contact path. The drawn underline (.u) and instant-flip CTA live in app.css.
+ * `.hh`). Nav links the pages that ship this pass — power-bi (the front door)
+ * first, then the ai-fit bridge. /about + /contact are not emitted yet; the
+ * mailto is the contact path. The drawn underline (.u) and instant-flip CTA
+ * live in app.css. `mailtoHref` carries the page's prefilled subject (built in
+ * BaseLayout); defaults to a bare mailto.
  */
+interface Props {
+  mailtoHref?: string;
+}
+const { mailtoHref = "mailto:alan@burningsuit.co.uk" } = Astro.props;
 const nav = [
+  { href: "/power-bi/", label: "power bi & fabric" },
   { href: "/ai-fit-for-teams/", label: "ai fit for teams" },
-  { href: "/power-bi/", label: "power bi" },
 ];
 ---
 <header id="hd">
   <div class="wrap bar">
     <a href="/"
       ><img
-        src="/logos/burningsuit-white.svg"
+        src="/logos/burningsuit-on-green.svg"
         alt="burningsuit — home"
         width="285"
         height="52"
@@ -22,7 +28,7 @@ const nav = [
     >
     <nav aria-label="Main">
       {nav.map((n) => <a class="u" href={n.href}>{n.label}</a>)}
-      <a class="cta" href="mailto:alan@burningsuit.co.uk">email me</a>
+      <a class="cta" href={mailtoHref}>email me</a>
     </nav>
   </div>
 </header>

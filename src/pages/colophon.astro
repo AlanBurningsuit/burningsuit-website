@@ -4,7 +4,7 @@ import { commitHash } from "../lib/commit";
 ---
 
 <BaseLayout
-  title="colophon · burningsuit"
+  title="Colophon — how this site is made · burningsuit"
   description="How this site is made: the type, the stack, the strict CSP, and why there are no trackers. The site is the work sample."
 >
   <Fragment slot="footer-invitation"
@@ -32,13 +32,13 @@ import { commitHash } from "../lib/commit";
       <h2 class="label kicker meta" id="type" data-reveal>the type</h2>
       <div class="prose">
         <p data-reveal>
-          Four roles. <strong>Space Grotesk</strong> for headings, nav and the
-          big moments — a grotesque with enough engineering in it to feel
-          technical, enough warmth to not feel cold. <strong>Albert Sans</strong>
-          for body, a warm humanist sans standing in for the brand's Bilo. A
-          single serif italic (<strong>Fraunces</strong>) for one accent word per
-          hero, and nowhere else. And <strong>Commit Mono</strong> carries the
-          small voice in the margins — the asides, the clock, this line.
+          Three roles. <strong>Mona Sans</strong> for headings, nav and the big
+          moments — GitHub's grotesque, with enough engineering in it to feel
+          technical and enough character to feel warm. <strong>Albert Sans</strong>
+          for body, a warm humanist sans standing in for the brand's Bilo. And
+          <strong>Commit Mono</strong> carries the small voice — the asides, the
+          labels, the clock, this line. Emphasis is a shift in colour, not a
+          change of typeface; there's no serif, and nothing leans into italic.
         </p>
         <p data-reveal>
           Every face is subset to the Latin characters the site actually uses,
@@ -104,7 +104,11 @@ import { commitHash } from "../lib/commit";
           me — that's a fair thing to hold me to.
         </p>
         <p class="meta" data-reveal>
-          this build: <span id="commit">{commitHash}</span> · west sussex, england
+          this build: <span>{commitHash}</span> · west sussex, england{
+            /* No id here: the Footer (rendered on every page) already carries
+               id="commit", so a second one collided on /colophon. This span is
+               purely decorative — nothing scripts it — so it just drops the id. */
+          }
         </p>
       </div>
     </div>

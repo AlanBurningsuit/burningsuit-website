@@ -25,29 +25,31 @@ export default defineConfig({
   ],
 
   // --- Self-hosted fonts (downloaded + subset at build; no CDN at runtime) ---
-  // Space Grotesk = the v2 display face (chosen from the rendered specimen test,
-  //   design/v2). Its heaviest weight is 700, so the display bold IS 700.
-  // Albert Sans proxies Bilo (body).
-  // Commit Mono = the utility/voice face (the asides + footer furniture); not on
-  //   Google, so self-hosted via Fontsource. The wink lives in this layer.
-  // Fraunces = the one serif-italic accent, heroes only (A′); 470 interpolates.
+  // v3 "the honest instrument" roster (Space Grotesk + Fraunces dropped):
+  // Mona Sans = the display face (GitHub's grotesque; developer-credible,
+  //   characterful). Not on Google, so self-hosted via Fontsource. 600 = the
+  //   chunky buttons / go-links / list titles; 800 = the headline weight.
+  // Albert Sans = body (a warm humanist sans standing in for the brand's Bilo);
+  //   600 carries the lede emphasis (strong) in the display-free skin.
+  // Commit Mono = all chrome / labels / asides / data — the instrument voice;
+  //   not on Google, so self-hosted via Fontsource.
+  // Emphasis is amber COLOUR, not a type-switch, so there is no serif/italic.
   fonts: [
     {
-      provider: fontProviders.google(),
-      name: "Space Grotesk",
-      cssVariable: "--font-grotesk",
-      weights: [500, 700],
+      provider: fontProviders.fontsource(),
+      name: "Mona Sans",
+      cssVariable: "--font-mona",
+      weights: [600, 800],
       styles: ["normal"],
       subsets: ["latin"],
-      fallbacks: ["Arial", "sans-serif"],
+      fallbacks: ["Trebuchet MS", "Arial", "sans-serif"],
     },
     {
       provider: fontProviders.google(),
       name: "Albert Sans",
       cssVariable: "--font-albert",
-      weights: [400, 500],
-      // normal only — the one body italic use (.lead em) is now a colour accent,
-      // consistent with the other demoted ems (A′). Saves ~32KB (funds the mono).
+      weights: [400, 500, 600],
+      // normal only — emphasis is an amber colour accent, never an italic.
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["Arial", "sans-serif"],
@@ -60,18 +62,6 @@ export default defineConfig({
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: ["ui-monospace", "monospace"],
-    },
-    {
-      provider: fontProviders.google(),
-      name: "Fraunces",
-      cssVariable: "--font-fraunces",
-      // Heroes-only accent, a handful of words — a single static italic instance
-      // (no variable axes) is much smaller than the range. CSS weight 470 maps to
-      // this 500 instance. This is A′'s deferred byte-tuning, forced by the gate.
-      weights: [500],
-      styles: ["italic"],
-      subsets: ["latin"],
-      fallbacks: ["Georgia", "serif"],
     },
   ],
 
