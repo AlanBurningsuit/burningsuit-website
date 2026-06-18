@@ -1,0 +1,17 @@
+# Dev / preview deploy of the Astro v3 site (the burningsuit redesign).
+# This config lives on the v3-green-instrument branch and is used ONLY by the
+# Netlify preview. Production is GitHub Pages serving main's root — nothing here
+# touches it. Set Netlify's production branch to v3-green-instrument (main has
+# no Astro project and would fail to build).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Keep the preview out of search engines so it never competes with the real site.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
