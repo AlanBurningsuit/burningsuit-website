@@ -29,11 +29,11 @@ const movements = [
   },
   {
     title: "conversations with the team",
-    body: "Then I sit with the team and get the real picture of how the work actually happens — what's frustrating, what's easy, what tools they're drawn to, what they want to be able to do. If AI is already in use, we look together at what it's really producing and how it's holding up.",
+    body: "Then I sit with the team and get the real picture of how the work actually happens — what's frustrating, what's easy, what tools they're drawn to, what they want to be able to do. If AI's already in use, we open up what it's actually producing — the DAX it wrote, the model it built — and I show you where it holds up and where it doesn't. That's the part that's hard to see from where you sit.",
   },
   {
     title: "the fit map",
-    body: "What you get is a map: how the team actually works today, the skills in the room, and a destination that holds up regardless of the tools. The tools are just a means to an end.",
+    body: "What you get is a map: how the team actually works today, the skills in the room, and a destination that holds up regardless of the tools.",
   },
 ];
 
@@ -50,7 +50,7 @@ const door: RowData[] = [
     n: "→",
     href: "/power-bi/",
     title: { before: "power bi & fabric, done ", em: "with", after: " you" },
-    body: "When the work is specifically Power BI or Fabric — the bottleneck, the model nobody quite trusts, the architecture question — that's the page. Embedded advisory, strategy and review, done with you.",
+    body: "When the work is specifically Power BI or Fabric — the bottleneck, the model nobody quite trusts, the architecture question — that's where to start. Embedded advisory, strategy and review, done with you.",
     cta: "see power bi, done with you",
   },
 ];
@@ -58,7 +58,7 @@ const door: RowData[] = [
 
 <BaseLayout
   title="AI for Power BI & Fabric teams — burningsuit"
-  description="The bridge for Power BI and Fabric teams: where AI helps the work, where it might be making things worse, and which decisions should stay yours. You leave with a fit map."
+  description="For Power BI and Fabric teams weighing up AI: working out what to hand over, what to keep, and who checks what — so the work stays yours. You leave with a fit map."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
@@ -72,10 +72,10 @@ const door: RowData[] = [
         <p class="kicker meta enter">ai fit for teams</p>
         <RiseHeading as="h1" kind="hero" label="make ai fit the team." lines={heroLines} />
         <p class="lead enter appear-300">
-          AI readiness asks how to make your team ready for the tools; I think that's the wrong
-          way round — the tools should fit the team. AI fit is making that happen deliberately:
-          working out where AI helps your team, where it might be making things worse, and which
-          decisions should stay yours — without promising you 10x speed-ups.
+          Most teams I meet have built something solid in Power BI and Fabric — and now AI can
+          write the DAX, build the model, even draft the report. I help your team work out where
+          that genuinely helps, where it's costing them more than it saves, and which decisions
+          should stay yours — without promising you 10x speed-ups.
         </p>
       </div>
       {/* The buyer's own question as a carved terminal readout: claim (h1, right)
@@ -89,7 +89,7 @@ const door: RowData[] = [
                 aria-hidden="true">who's checking the dax?</span><span class="cursor" aria-hidden="true"
               ></span>
             </p>
-            <p class="ask-note">the questions i end up asking, every engagement.</p>
+            <p class="ask-note">the questions i keep coming back to.</p>
           </div>
         </div>
       </figure>
@@ -105,6 +105,20 @@ const door: RowData[] = [
         <ul class="qlist">
           {worries.map((q) => <li data-reveal>{q}</li>)}
         </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" data-ground="aubergine" aria-labelledby="not-behind">
+    <div class="wrap what">
+      <h2 class="label kicker meta" id="not-behind" data-reveal>you're not behind</h2>
+      <div class="prose">
+        <p data-reveal>
+          I won't walk in assuming your team's fallen behind, or that the people are the problem.
+          Most teams I sit with are sharper than they've been given credit for — heads-down on the
+          day job, a bit wary of what the latest thing's really for, and just short of someone to
+          think it through with.
+        </p>
       </div>
     </div>
   </section>
@@ -156,21 +170,9 @@ const door: RowData[] = [
         </p>
         <p data-reveal>
           When the next big model launch lands, the team doesn't panic — they know what their
-          work actually is, and it isn't the clicks. The work isn't the output; it's
-          everything else around it. The aim, longer term, is a team that's resilient to the
-          tools changing, more engaged with the work, and prouder of it.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="chapter" data-ground="aubergine" aria-labelledby="engagement">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="engagement" data-reveal>the engagement, practically</h2>
-      <div class="prose">
-        <p data-reveal>
-          A few days of my time, spread over two or three weeks, fitted around the team's
-          actual work. It starts with a conversation.
+          work actually is, and it isn't the clicks. The aim, longer term, is a team that's
+          resilient to the tools changing, more engaged with the work, and prouder of what they
+          put out.
         </p>
       </div>
     </div>
@@ -198,6 +200,18 @@ const door: RowData[] = [
         <p class="belief" data-reveal>
           Every piece of work is a stack of decisions. Hand it to AI without naming them and it
           makes them for you — and a tool can't take <em>responsibility</em> for a decision.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" data-ground="aubergine" aria-labelledby="engagement">
+    <div class="wrap what">
+      <h2 class="label kicker meta" id="engagement" data-reveal>the engagement, practically</h2>
+      <div class="prose">
+        <p data-reveal>
+          A few days of my time, spread over two or three weeks, fitted around the team's
+          actual work. It starts with a conversation.
         </p>
       </div>
     </div>
