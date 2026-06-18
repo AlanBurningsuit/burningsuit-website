@@ -11,15 +11,20 @@ test-results/
 /playwright/.cache/
 .lighthouseci/
 
-# QA screenshot artifacts (regenerate with `node scripts/shoot.mjs`)
-design/_astro-shots/
-# v2 type/brand specimen renders (regenerate with `node scripts/shoot-fonts.mjs`)
-design/v2/specimen-shots/
+# design + source material — kept on disk locally, not tracked in the repo.
+# The built site only needs the optimised derivatives already committed under
+# src/assets; resources/ is the raw archive that prep-images.mjs draws from.
+design/
+resources/
 
 # os / editor cruft
 .DS_Store
 Thumbs.db
 *.local
+
+# tooling scratch
+.codex-serve*.log
+skills-lock.json
 
 # kept out of the (public) repo: internal orientation doc + brand source PDF
 claude.md

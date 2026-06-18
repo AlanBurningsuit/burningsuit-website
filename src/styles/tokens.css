@@ -1,0 +1,171 @@
+/* ===========================================================================
+   burningsuit — design tokens
+
+   The complete token layer, lifted out of app.css: the Tailwind v4 @theme
+   palette + font map, and the :root design-system scales (mono + type, motion,
+   radius/border, colour, spacing, line-height/letter-spacing, measures).
+   app.css @imports this first; component CSS only ever reads the var(--*) names.
+   =========================================================================== */
+
+/* ---- Everforest-derived palette → design tokens (no markup uses the brand
+   colour utilities; these document the palette + back @theme inline below) ---- */
+@theme {
+  --color-bg: #272e33; /* Everforest dark (hard) ground */
+  --color-bg-2: #2d353b; /* bg0 — raised surface */
+  --color-bg-dim: #232a2e; /* recessed (footer basement) */
+  --color-deep: #1c2226; /* carved border + hard shadow */
+  --color-fg: #d3c6aa; /* canonical Everforest foreground */
+  --color-fg-dim: #9da9a0; /* grey2 — muted (also the AA-safe aside tone) */
+  --color-paper: #f1ecd9; /* cream entry-panel surface (Everforest light bg) */
+  --color-ink: #3a444a; /* dark grey-green heading on cream */
+  --color-ink-soft: #5c6a72; /* Everforest light fg — body on cream */
+  --color-amber: #e69875; /* Everforest orange — links + warmth */
+  --color-moss: #a7c080; /* Everforest green — quiet positive, sparing */
+  --color-spark: #d90148; /* the logo magenta — THE pop (cursor, CTA, mark) */
+}
+
+/* ---- fonts: map semantic utilities to the Astro Fonts API css variables ----
+   <Font cssVariable="--font-mona"> (etc.) defines each full family stack (incl.
+   fallbacks) on :root at runtime. @theme inline keeps utilities pointing at
+   those vars rather than snapshotting a value. Default sans = body (Albert). */
+@theme inline {
+  --font-sans: var(--font-albert);
+  --font-display: var(--font-mona);
+  --font-mono: var(--font-commit), ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+}
+
+/* ============ the motion constitution + design tokens ============ */
+/* Short colour names alias the @theme tokens so the component CSS reads exactly
+   like the concept (concepts/concept-green-instrument.html). */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* entrances: rises, settles, draws-in */
+  --ease-draw: cubic-bezier(0.645, 0.045, 0.355, 1); /* hairline rules only */
+  --ease-step2: steps(2); /* the .cta press-in stutter */
+  --ease-step3: steps(3); /* the panel press-in stutter */
+  /* duration scale — every transition / animation timing maps to one of these,
+     so there are no loose magic durations. */
+  --t-tap: 0.1s; /* button + panel press-in */
+  --t-flip: 0.12s; /* quick colour / state flip */
+  --t-nudge: 0.2s; /* arrow nudge on hover */
+  --t-ui: 0.3s; /* default UI move + the reduced-motion fade */
+  --t-fade: 0.4s; /* opacity reveals */
+  --t-slide: 0.6s; /* mail underline sweep */
+  --t-draw: 0.65s; /* the thread grow */
+  --t-move: 0.9s; /* content rise / settle */
+  --t-rule: 1s; /* hairline self-draw */
+  --t-reveal: 1.1s; /* photo curtain */
+  --t-blink: 1.15s; /* cursor blink */
+  --t-type: 1.2s; /* typewriter */
+  --d-tap: 0.15s; /* second-pass underline offset */
+  --stagger-fast: 80ms; /* per-item reveal cadence — rises */
+  --stagger-slow: 120ms; /* per-item reveal cadence — rules / settles */
+  --rise: 24px;
+
+  --bg: var(--color-bg);
+  --bg-2: var(--color-bg-2);
+  --bg-3: #343f44; /* one step up from bg-2 — raised / hover ground (ghost button) */
+  --bg-dim: var(--color-bg-dim);
+  --deep: var(--color-deep);
+  --line: rgb(211 198 170 / 0.12); /* fg @ 12% — the hairline divider */
+  --shadow-ink: 8 20 12; /* near-black blue-green for carved drop-shadows; channels only — wrap as rgb(var(--shadow-ink) / α) */
+
+  --fg: var(--color-fg);
+  --fg-dim: var(--color-fg-dim);
+
+  --paper: var(--color-paper);
+  --paper-edge: #cfc6a8; /* the carved ring around a cream panel */
+  --ink: var(--color-ink);
+  --ink-soft: var(--color-ink-soft);
+
+  --amber: var(--color-amber);
+  --moss: var(--color-moss);
+  --spark: var(--color-spark);
+  --spark-press: #cf1149; /* darkened spark for the CTA press — keeps white text >5:1 AA */
+  --on-spark: #fff; /* text on a spark ground (5.18:1, passes AA) */
+  --voice: #859289; /* Everforest comment grey — the aside's decorative tie only */
+
+  --ff-display: var(--font-mona);
+  --ff-body: var(--font-albert);
+  --ff-mono: var(--font-commit), ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+
+  /* mono instrument-label scale — three deliberate steps; every mono label maps
+     to one of these, so there are no in-between magic sizes. (Mobile nav is the
+     one intentional exception: it shrinks below the scale to hold its row.) */
+  --mono-fine: 0.78rem; /* the quietest voice — footer fine print */
+  --mono-label: 0.82rem; /* default small label — meta, tabs, asides, citations */
+  --mono-lead: 0.86rem; /* labels that head a block — eyebrows, figures, nav */
+
+  /* text & display scale — a 1.25 major-third ramp on one fluid anchor
+     (20rem→80rem viewport), so every step grows in lockstep instead of each
+     clamp carrying its own ad-hoc vw. font-size ONLY — line-height and
+     letter-spacing stay per element. The --mono-* labels are a separate family.
+     The clean ÷1.25 ladder runs from the home hero (4.7rem) down; the outro is
+     the one bespoke "loud" size above it. */
+  /* display / hero — impact sizes */
+  --fs-display: clamp(2.8rem, 1.4rem + 7vw, 7rem); /* outro h2 (preserved) */
+  --fs-7: clamp(2.6rem, 1.5rem + 5.5vw, 5.9rem); /* page-hero h1 */
+  --fs-6: clamp(2.4rem, 1.633rem + 3.83vw, 4.7rem); /* home hero (preserved) */
+  --fs-5: clamp(2.1rem, 1.55rem + 2.75vw, 3.75rem); /* pbi-hero (narrower column) */
+  /* content headings — the clean ÷1.25 ramp */
+  --fs-4: clamp(1.8rem, 1.4rem + 2vw, 3rem); /* about h2 + statement + mail */
+  --fs-3: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem); /* belief */
+  --fs-2: clamp(1.3rem, 1.093rem + 1.03vw, 1.92rem); /* card / movement / offer / qlist h3 */
+  --fs-1: clamp(1.2rem, 1.087rem + 0.57vw, 1.54rem); /* principle h3 — smallest heading */
+  /* leads */
+  --fs-lead: clamp(1.1rem, 1.017rem + 0.42vw, 1.35rem); /* .lead + hero lede */
+  --fs-lead-sm: clamp(1.05rem, 1rem + 0.25vw, 1.2rem); /* bottleneck beats */
+  /* body + fixed UI / prose */
+  --fs-base: clamp(1.02rem, 0.98rem + 0.3vw, 1.15rem); /* body — the anchor */
+  --fs-sm: 0.98rem; /* secondary body — card + principle paragraphs */
+  --fs-rich: 1.05rem; /* display-font prose — pull quote, 404 link */
+  --fs-ui: 0.96rem; /* primary button */
+  --fs-ui-sm: 0.92rem; /* small UI — card arrow link, header button */
+
+  --px: 3px; /* carved-edge weight — also the focus-ring width */
+  --bw-hair: 1px; /* hairline dividers + list separators */
+  --bw-spine: 2px; /* accent spines — aside, offer-lead */
+  --r: 9px; /* carved-frame radius */
+  --r-sm: 6px; /* small radius — buttons, tab, framed thumb */
+  --r-xs: 2px; /* focus-ring inner radius */
+  --wrap: 78rem;
+  /* reading-measure scale — the common max-widths; genuinely one-off measures
+     (hero 15ch, page-hero 18ch, outro sub, aside, legal) stay literal. */
+  --measure-prose: 42rem; /* default reading measure */
+  --measure-wide: 46rem; /* wider lists / quotes */
+  --measure-statement: 22ch; /* big statement blocks */
+  --measure-head: 16ch; /* headline measure */
+  /* responsive breakpoint ladder — CSS @media can't read custom properties, so
+     these stay literal; keep every media query on these three rungs:
+       48rem → cards / offer grids go two-column
+       56rem → the logbook spine + about panel go two-column
+       62rem → hero copy + portrait split
+     (47.99 / 61.99 are the non-overlapping max-width boundary pairs.) */
+  /* line-height scale — keyed to type role */
+  --lh-display: 1.02; /* h1 / h2 / h3 */
+  --lh-tight: 1.1; /* statement, mail, belief */
+  --lh-snug: 1.2; /* qlist, principle h3 */
+  --lh-label: 1.3; /* mono eyebrow */
+  --lh-relaxed: 1.55; /* multi-line mono — aside, ask-line, beats */
+  --lh-body: 1.6; /* body copy */
+  --lh-loose: 1.7; /* footer fine print */
+  /* letter-spacing scale — negative tracks display, positive tracks mono */
+  --ls-display-loose: -0.04em; /* the outro headline */
+  --ls-display: -0.02em; /* h1 / h2 / h3, statement, mail */
+  --ls-display-tight: -0.01em; /* smaller headings — principle, qlist, belief */
+  --ls-mono: 0.02em; /* default mono tracking — nav, aside */
+  --ls-mono-wide: 0.04em; /* mono labels that lead — kicker, tab, movement index */
+  --ls-mono-xwide: 0.08em; /* the meta line */
+  /* spacing scale — fluid rhythm steps that collapse the bespoke per-block
+     clamps. --space-md is the default "space before a block"; --space-super is
+     the section step. Genuinely vh-based or one-off insets stay literal. */
+  --space-2xs: clamp(0.8rem, 2vw, 1.2rem); /* tight inset — list item padding */
+  --space-xs: clamp(1rem, 2.5vw, 1.5rem); /* small block gap / pad-top */
+  --space-sm: clamp(1.1rem, 2.4vw, 1.7rem); /* card body padding, column gap */
+  --space-md: clamp(1.4rem, 4vw, 2.4rem); /* DEFAULT space before a block + medium grid gap */
+  --space-lg: clamp(1.6rem, 4vw, 3rem); /* hero / ask grid gap, the .what gap */
+  --space-xl: clamp(2rem, 5vw, 3.5rem); /* page-hero end padding */
+  --space-super: clamp(2.6rem, 5.5vw, 4rem); /* the section step — padding-block of a band */
+  --space-block: 1.1rem; /* the common fixed margin above a sub-block */
+  --gutter: clamp(1.15rem, 4vw, 3rem); /* the page inline gutter */
+  --footer-h: clamp(540px, 80svh, 840px); /* CSS fallback; JS measures the real height */
+}
