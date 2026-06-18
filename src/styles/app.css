@@ -581,6 +581,13 @@
       grid-template-columns: 1fr 1fr;
       align-items: stretch; /* equal height — no clever stagger (it read broken) */
     }
+    /* reserve two title lines so a one-line card title ("ai fit for teams")
+       doesn't sit higher than a wrapping one ("power bi & fabric, done with
+       you"); keeps the two card bodies on the same baseline so the pair stops
+       feeling lopsided. Not on .single — a lone card has no sibling to match. */
+    .offers:not(.single) .panel h3 {
+      min-height: calc(2 * var(--lh-display) * 1em);
+    }
   }
   .offers.single {
     grid-template-columns: 1fr; /* the lone "door" card stays full width */
