@@ -13,16 +13,16 @@ const contactSubject = "Power BI & Fabric — where it's stuck";
 const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
 
 // Same headline as the home hero; display grotesque, masked-rise, amber "with".
-const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you" }];
+const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
 
-// The bridge: the AI page, pointed at from the front door. The compact AI-pressure
-// section below carries the substance; this card is the quiet door onward.
+// The bridge to the AI page. The prose that used to sit above this card duplicated the
+// hero's AI beat, so the card now carries the AI-pressure substance on its own.
 const aiDoor: RowData[] = [
   {
     n: "→",
     href: "/ai-fit-for-teams/",
     title: { before: "ai ", em: "fit", after: " for teams" },
-    body: "When the question is what AI means for the team — what to hand over, what to keep, who checks what — that's its own piece of work, on its own page. Judgement and fit, not a promise to show you how.",
+    body: "I've been building with AI agents seriously for over a year: genuinely capable, getting more so — but 'can' doesn't mean 'should'. Working out what to hand over, what to keep, and who checks what is the other thing I do, so the work stays yours to own and verify.",
     cta: "see ai fit for teams",
   },
 ];
@@ -30,7 +30,7 @@ const aiDoor: RowData[] = [
 
 <BaseLayout
   title="Power BI & Fabric advisory: embedded, review, capability — burningsuit"
-  description="Embedded advisory, strategy and architecture review, and team capability inside Power BI and Fabric teams. You do as much of the work as possible; I work out how to accelerate it — so the know-how stays with your team."
+  description="Embedded advisory, strategy and architecture review, and ongoing work inside Power BI and Fabric teams. You stay close to the work; I help your team feel like they've got it — so the know-how stays with you when I leave."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
@@ -42,7 +42,7 @@ const aiDoor: RowData[] = [
   <section class="page-hero pbi-hero" data-ground="aubergine">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <RiseHeading as="h1" kind="hero" label="power bi and fabric, done with you" lines={heroLines} />
+        <RiseHeading as="h1" kind="hero" label="power bi and fabric, done with you." lines={heroLines} />
         <p class="lead enter appear-300">
           <strong>I've spent five years with teams adopting Power BI</strong>, long enough to
           know the pattern. A team gets the licences, builds the first reports, and
@@ -54,9 +54,9 @@ const aiDoor: RowData[] = [
           <li>the training course made sense until you tried it on your own data.</li>
         </ul>
         <p class="lead enter appear-600">
-          Now there's more of it — Fabric to move onto, Copilot writing DAX, agents building
-          whole reports — and the question underneath gets sharper: who owns the outcome?
-          That's the question I'm here for.
+          And there's always more: Fabric to move onto, Copilot writing DAX, agents building
+          whole reports. The more the tools take on, the sharper one question gets: who owns
+          the outcome?
         </p>
       </div>
       <figure class="hero-photo enter appear-300">
@@ -107,7 +107,7 @@ const aiDoor: RowData[] = [
         </div>
 
         <div class="offer" data-reveal>
-          <h3>team enablement</h3>
+          <h3>ongoing work</h3>
           <p>
             The point of all of it is capability: a team that can build, change and verify the
             work without waiting on one person. The learning lands on your own data, inside
@@ -143,7 +143,7 @@ const aiDoor: RowData[] = [
               breaking”: production models nobody dared touch, external help needed for the
               smallest change, the whole thing resting on one or two people. A few months of
               working together, and they were running their own diagnostic sessions, tracing data
-              lineage end to end, and challenging their vendor's deliverables with technical
+              lineage end to end, and challenging what their vendor delivered with technical
               evidence they'd gathered themselves. The reliance moved from a single expert to the
               team — which is also what makes them ready for what AI is starting to add to the job.
             </p>
@@ -170,14 +170,13 @@ const aiDoor: RowData[] = [
       <h2 class="label kicker meta" id="engagement" data-reveal>the engagement, practically</h2>
       <div class="prose">
         <p data-reveal>
-          Embedded advisory runs as a working relationship, sized to your team and fitted around
-          the work you're already doing. Reviews are a fixed, shorter piece. I'll scope and price
-          it with you up front, and we go month-to-month — no lock-in. The point is for your team
-          to need me less over time, not more.
+          Embedded advisory is ongoing, sized to your team and fits around the work you're
+          already doing. Reviews are a fixed, shorter piece. I'll scope and price it with you up
+          front, and we go month-to-month. The point is for your team to need me less over time.
         </p>
         <p data-reveal>
           It starts with a conversation: <a class="u" href={contactMailto}>tell me where it's
-          stuck</a> and I'll tell you whether I can help — and if I can't, I'll tell you that too.
+          stuck</a>, and I'll tell you whether I can help.
         </p>
       </div>
     </div>
@@ -187,19 +186,6 @@ const aiDoor: RowData[] = [
     <div class="wrap what">
       <h2 class="label kicker meta" id="aipressure" data-reveal>what ai's already touching</h2>
       <div>
-        <div class="prose">
-          <p data-reveal>
-            AI agents can build your reports, write your DAX, structure your models — I've been
-            using them seriously for over a year, and they're genuinely capable, and will only
-            get more so. But capable isn't the same as <em>safe</em> to rely on. The more your
-            team hands over, the more it matters that someone still understands the model well
-            enough to check it — that the work stays yours to own and verify.
-          </p>
-          <p data-reveal>
-            Working out what to hand over, what to keep, and who checks what is its own piece of
-            work — and it's the other thing I do.
-          </p>
-        </div>
         <ServiceRows rows={aiDoor} />
       </div>
     </div>
