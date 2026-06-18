@@ -61,11 +61,7 @@ const classes = [
           {typeof line === "string" ? (
             line
           ) : (
-            <Fragment>
-              {line.before}
-              <em>{line.em}</em>
-              {line.after}
-            </Fragment>
+            <Fragment>{line.before}<em>{line.em}</em>{line.after}</Fragment>
           )}
         </span>
       </span>
