@@ -22,14 +22,14 @@ const serviceRows: RowData[] = [
     n: "01",
     href: "/power-bi/",
     title: { before: "power bi & fabric, done ", em: "with", after: " you" },
-    body: "Embedded advisory, strategy and architecture review, and team enablement inside Power BI and Fabric teams. You stay close to the work; I help your team get more capable at it — so the know-how stays with you when I leave.",
+    body: "Embedded advisory, strategy and architecture review, and ongoing work inside Power BI and Fabric teams. You stay close to the work; I help your team feel like they've got it — so the know-how stays with you when I leave.",
     cta: "see how it works",
   },
   {
     n: "02",
     href: "/ai-fit-for-teams/",
     title: { before: "ai ", em: "fit", after: " for teams" },
-    body: "Copilot, agents and AI-generated DAX can already build a lot of what a Power BI or Fabric team builds — but capable isn't the same as safe to rely on. I help your team work out what to hand over, what to keep, and who checks what, so the work stays yours to own and verify.",
+    body: "Copilot and agents can already write the DAX, build the model, even draft the whole report — but 'can' doesn't mean 'should'. I help your team work out what to hand over, what to keep, and who checks what, so the work stays yours to own and verify.",
     cta: "see how it works",
   },
 ];
@@ -41,17 +41,17 @@ const principles = [
   },
   {
     title: "what not to automate",
-    body: "Knowing what not to automate matters as much as knowing what to. As the tools take on more of the build, that line is the job.",
+    body: "Knowing what not to automate matters as much as knowing what to. As the tools take on more of the build, the discipline is choosing which decisions you let it make — and staying conscious of where you've made the call.",
   },
   {
     title: "mental models first",
-    body: "Real AI literacy is a feel for how these tools think, and where they help your work or quietly mislead it. I go deep on that, then make it something your team can hold too.",
+    body: "AI literacy is a feel for how these tools think, and where they help your work or quietly mislead it. I go deep on that, then make it something your team can hold too.",
   },
 ];
 
 const statementLines: Line[] = [
-  "the work can go to ai.",
-  "the responsibility for it",
+  "ai can make the things.",
+  "the responsibility for them",
   { before: "stays with ", em: "you", after: "." },
 ];
 ---
@@ -77,8 +77,8 @@ const statementLines: Line[] = [
         </p>
         <RiseHeading as="h1" kind="hero" label={heroLabel} lines={heroLines} />
         <p class="lede enter appear-300">
-          <strong>I help Power BI and Fabric teams get past the bottleneck</strong> and keep
-          ownership of the work as AI starts to build more of it.
+          I help your team get more capable with Power BI and Fabric, and
+          <strong>keep the work yours, even as AI takes on the typing</strong>.
         </p>
         <div class="cta-row enter appear-450">
           <a class="cta" href={contactMailto}>email me</a>
@@ -116,7 +116,7 @@ const statementLines: Line[] = [
   <PhotoChapter />
 
   <StatementChapter
-    label="the work can go to ai. the responsibility for it stays with you."
+    label="ai can make the things. the responsibility for them stays with you."
     lines={statementLines}
   />
 
