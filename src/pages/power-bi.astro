@@ -5,9 +5,15 @@ import Aside from "../components/Aside.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import type { Line } from "../components/RiseHeading.astro";
-import { flags } from "../config/flags";
+import { getEntry } from "astro:content";
 import { Picture } from "astro:assets";
 import pbiHero from "../assets/photos/DSC08846-Edit.jpg";
+
+// The proof panel is the law-firm case study at teaser length. Its naming gate is
+// the SAME `namePublished` the full /work/law-firm page uses, so the teaser and the
+// page can never disagree about naming the client.
+const lawFirm = await getEntry("work", "law-firm");
+const lawFirmNamed = lawFirm?.data.namePublished ? lawFirm.data.named : undefined;
 
 const contactSubject = "Power BI & Fabric — where it's stuck";
 const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
@@ -148,17 +154,19 @@ const aiDoor: RowData[] = [
               team — which is also what makes them ready for what AI is starting to add to the job.
             </p>
             {
-              flags.proofNamed && (
+              lawFirmNamed && (
                 <>
-                  <p class="attr meta">[client redacted]</p>
+                  <p class="attr meta">{lawFirmNamed.client}</p>
                   <blockquote>
-                    “[quote redacted] the
-                    [quote redacted]”
-                    <cite class="meta">[attribution redacted]</cite>
+                    {lawFirmNamed.quote}
+                    <cite class="meta">{lawFirmNamed.cite}</cite>
                   </blockquote>
                 </>
               )
             }
+            <p class="more">
+              <a class="u" href="/work/law-firm/">read the full story ▸</a>
+            </p>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import mdx from "@astrojs/mdx";
 // Tailwind v4 is wired through PostCSS (postcss.config.mjs), not the Vite
 // plugin: @tailwindcss/vite is currently incompatible with Astro 6's default
 // rolldown-vite (withastro/astro#16542). PostCSS is the same engine, same
@@ -18,8 +19,12 @@ export default defineConfig({
   },
 
   integrations: [
-    // Auto-discovers built pages. /, /about, /ai-fit-for-teams, /power-bi and
-    // /colophon are indexable; 404 is excluded by the integration.
+    // MDX powers the `work` case-study collection (and the future blog). The
+    // .mdx bodies render through the case-study component kit (Chapter/Snapshot/
+    // Offer); no client JS is shipped — it's a build-time transform only.
+    mdx(),
+    // Auto-discovers built pages. /, /about, /ai-fit-for-teams, /power-bi,
+    // /colophon and /work (+ /work/<slug>) are indexable; 404 is excluded.
     sitemap(),
   ],
 

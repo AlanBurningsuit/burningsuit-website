@@ -1,0 +1,39 @@
+---
+/**
+ * One case-study chapter — the site's logbook spine (`.what`) reused for MDX.
+ *
+ * Renders a `.chapter` on the dark ground with a sticky lowercase kicker in the
+ * left margin and the prose in the content column. An optional `aside` puts one
+ * of Alan's margin-voice lines under the label (dark-ground only — never cream).
+ * The body (markdown or <Offer> blocks) is passed as the default slot and reveals
+ * on scroll via `data-reveal`, matching every other chapter on the site.
+ *
+ * Authored from MDX, e.g.
+ *   <Chapter id="started" kicker="where they started">
+ *   …prose…
+ *   </Chapter>
+ */
+import Aside from "./Aside.astro";
+
+interface Props {
+  /** Unique id — used for the heading id and the section's aria-labelledby. */
+  id: string;
+  /** Lowercase kicker shown in the sticky margin. */
+  kicker: string;
+  /** Optional margin-voice aside (one of Alan's signed lines). */
+  aside?: string;
+}
+const { id, kicker, aside } = Astro.props;
+---
+
+<section class="chapter" data-ground="aubergine" aria-labelledby={id}>
+  <div class="wrap what">
+    <div class="label">
+      <h2 class="kicker meta" id={id} data-reveal>{kicker}</h2>
+      {aside && <Aside data-reveal>{aside}</Aside>}
+    </div>
+    <div class="prose" data-reveal>
+      <slot />
+    </div>
+  </div>
+</section>

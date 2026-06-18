@@ -1,0 +1,116 @@
+---
+order: 3
+title: "From a dashboard ask to a foundation they own — burningsuit"
+description: >-
+  A UK university's sustainability team asked for a dashboard. It was the wrong
+  place to start - so I wrote the business case and roadmap first, then built a
+  model their own team can run, validated to within rounding.
+kicker: "case file"
+heading:
+  before: "from a dashboard ask to a "
+  em: "foundation"
+  after: " they own."
+descriptor: "a UK university's sustainability team"
+lead: >-
+  Their whole carbon footprint rested largely on one self-taught person, days of
+  Excel per faculty report, a reporting cycle that ran to about eight days by
+  hand. The ask that came in was "help us get to a dashboard". The dashboard
+  wasn't the thing that was going to help him yet.
+tileOutcome: >-
+  They asked for a quick dashboard. I told them the dashboard was the wrong
+  place to start - and a few months later they had a proper model their own team
+  could run.
+contactSubject: "Power BI & Fabric"
+footerInvitation: >-
+  If something your organisation reports on is really running on one person and
+  one spreadsheet - or you've been asked to just build a dashboard on top of it
+  - that's worth a proper look first. I'll tell you what it needs.
+namePublished: false
+named:
+  client: "[client redacted]"
+  quote: >-
+    [quote redacted]
+    [quote redacted]
+  cite: "[attribution redacted]"
+---
+
+{/* Anonymised tier ships today. Named institution + role-attributed quote (frontmatter)
+render only when namePublished is true AND the lead/sponsor have signed off. NEVER name the
+summer student. Copy adapted from design/copy/case-studies/03; pending Alan's final voice sign-off. */}
+
+<Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
+<li><strong>who:</strong> the sustainability team at a UK university, whose whole carbon footprint rested largely on one self-taught person</li>
+<li><strong>the ask:</strong> "help us get to a dashboard" - and a budget that needed spending</li>
+<li><strong>what I did:</strong> reframed it from a dashboard into a business-risk problem, wrote the business case and roadmap, then built the foundation properly when a summer prototype proved the point</li>
+<li><strong>where it got to:</strong> a documented production model, validated to within rounding, that the lead can run and extend himself</li>
+</Snapshot>
+
+<Chapter id="started" kicker="where he was">
+
+The work came in as a referral: their sustainability team had budget to spend and wanted "some support working through how to get to a dashboard". Underneath that ask was one person carrying the university's whole carbon footprint more or less on his own - a heroic amount of manual work, days of Excel per faculty report, a reporting cycle that ran to about eight days by hand. He sent me four big projects, every one marked high priority, with the ultimate aim of a single dashboard showing the university's whole carbon footprint.
+
+He wasn't wrong to want it. But the dashboard wasn't the thing that was going to help him yet.
+
+</Chapter>
+
+<Chapter id="reframe" kicker="the reframe: too technical, too soon">
+
+My first real piece of work was to slow it down. Diving into Power Query and data sources was too technical, too soon. The thing actually hurting him was business risk and the sheer time going into manual processes - so I reframed the work that way, and proposed a minimum viable victory: automate the manual faculty reporting first, the part eating eight days, and use it to prove the approach. I wrote a business case the team could take to their director, and a roadmap from the manual present to an automated, governed future.
+
+When the sponsor pushed back - fair questions about value for money, and a preference for a menu of smaller decisions rather than one big proposal - I didn't dig in. I rebuilt the whole thing from a sales pitch into an analytical report with costed options they could choose from. The reframed version landed, and that phase closed with the team happy it had answered their concerns.
+
+</Chapter>
+
+<Chapter id="honest" kicker="the honest call: build it properly">
+
+Over the summer, a student on the team built a working prototype, and it did its job. It proved Power BI could handle the university's carbon data, and it turned vague requirements into concrete, working examples. I said that plainly, because it mattered: none of it was wrong. It's exactly what happens when a capable person builds something real without years of data architecture behind them.
+
+But it had the classic signs of a model grown bottom-up - everything in one wide table, the logic sitting in calculated columns, no real date or organisation dimensions - and left as it was, every new request would mean rework, and the reliance on one person would only deepen. So I wrote it up as two roads. Keep building on the prototype: cheaper now, but progressively more fragile and more dependent on him. Or pause and build the foundation properly: more upfront, but an asset that gets easier to extend as it grows. I recommended building it properly, in writing, and said plainly that the decision was theirs.
+
+</Chapter>
+
+<Chapter id="build" kicker="the build: a model that shows its own working">
+
+They chose to build it properly, and I did. I rebuilt the prototype as a production model with the heavy lifting moved into the data load, before the reports ever see it. The two very different kinds of activity - what the university buys, and how it travels - got their own fact tables, because they're measured differently and use different emissions methods. The carbon is worked out as the data loads, so the reports just add up a column and stay fast.
+
+If you're sceptical, this is the part I'd point you at - the bits that protect trust in the number:
+
+<Offer title="every working is kept" lead>
+
+Where a more precise figure is available - an actual product, a known supplier - it's used, but the cruder spend-based estimate is stored alongside it. So when someone asks why a line moved, the answer is visible.
+
+</Offer>
+
+<Offer title="the factors are pinned to the year they applied">
+
+When an emissions factor changes, the model holds the historic one in place, so a change in method never quietly shows up as a change in the footprint - which is exactly what wrecks confidence in sustainability reporting.
+
+</Offer>
+
+<Offer title="he can still fix data by hand">
+
+I added a plain override column so he can keep making the manual corrections he already makes, without going anywhere near the model's guts.
+
+</Offer>
+
+It validated against his own spreadsheet to within rounding.
+
+</Chapter>
+
+<Chapter id="wrong" kicker="when I got something wrong, I said so">
+
+Two things I'd flag. When he spotted, mid-hand-over, that I'd wired up calendar-year factors where it should have been the academic year, I confirmed it and fixed it before the next session rather than waving it away. If I get something wrong, I'd rather you heard it from me. And when a validation gap appeared against one of his travel totals, he asked me to hold off recalculating until he'd checked his own source's factors. So I held off, and we left his totals alone until he'd had the chance to check them himself.
+
+</Chapter>
+
+<Chapter id="handover" kicker="the hand-over: until he could run it himself">
+
+The point of all this was that he could run it. So the hand-over was two unhurried sessions with him driving on his own laptop - even on a machine that took a couple of minutes to open the model and kept freezing - because muscle memory only forms if your hands are on the keys. We went through Power Query versus DAX, publishing, splitting the model from the report, and the once-a-year refresh. He'd had a gap since his last training, so we started gently. By the end he could state the split back to me himself: Power Query transforms the data on the way in, DAX does the work inside the model.
+
+</Chapter>
+
+<Chapter id="got-to" kicker="where it got to">
+
+From a footprint resting on one person's heroic manual work and a fragile prototype, to a documented production model - built on a strategy and a business case that won the work, validated against his own figures to within rounding, and split so the faculty and whole-university reports draw on one trusted source. Most of all, understood and owned by the person who has to live with it. He's since come back for a follow-on piece of work.
+
+</Chapter>

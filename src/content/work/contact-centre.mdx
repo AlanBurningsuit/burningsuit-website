@@ -1,0 +1,86 @@
+---
+order: 2
+title: "The contact-centre lead who stopped passing it off — burningsuit"
+description: >-
+  A contact-centre team lead who'd given up on Power BI more than once - and how
+  she came to own a real star-schema dashboard on her own data, and opens it
+  most days.
+kicker: "case file"
+heading:
+  before: "the contact-centre lead who stopped passing it off."
+descriptor: "a national contact centre"
+lead: >-
+  She ran her team's reporting out of Excel and had worked through the Power BI
+  courses, but stalled the moment she swapped the sample data for her own. What
+  she wanted was to do something with her own data herself, and not feel like
+  she was failing a part of her job by handing it off.
+tileOutcome: >-
+  From giving up on Power BI more than once - to opening it most days, on her
+  own data, to keep her hand in.
+contactSubject: "Power BI & Fabric"
+footerInvitation: >-
+  If there's someone on your team who could be brilliant with this but keeps
+  bouncing off it, that's the work I like most. I won't make it scary, and
+  they'll own it at the end.
+namePublished: false
+named:
+  client: "[client redacted]"
+  quote: >-
+    [quote redacted]
+    my hand in.
+  cite: "[attribution redacted]"
+---
+
+{/* Anonymised tier ships today; sector held back from the descriptor.
+Named org + her verbatim quote (frontmatter) render only when namePublished is true AND
+she has signed off, attributed by role first. Copy adapted from design/copy/case-studies/02;
+pending Alan's final voice sign-off. */}
+
+<Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
+<li><strong>who:</strong> a contact-centre team lead - not a data person, and happy to say so</li>
+<li><strong>where she was:</strong> reporting out of Excel; she'd done the Power BI courses but stalled the moment she moved off training data onto her own</li>
+<li><strong>the worry:</strong> she leaned on the internal data team for fixes she didn't understand, and didn't want to keep handing her own data off</li>
+<li><strong>what I did:</strong> built her dashboard with her, on her real data, hands on the keyboard - paced to break the cycle of frustration she'd been stuck in</li>
+</Snapshot>
+
+<Chapter id="started" kicker="where she started">
+
+She got in touch through her organisation's learning partner - she'd put her hand up and said there was a gap in her Power BI she couldn't close on her own. Her team was about to grow from two to three, so she'd soon be bringing new people up to speed as well, and the whole thing had been sitting on her to-do list, and her performance review, for the best part of a year.
+
+She ran the team's reporting out of Excel. She'd worked through the online Power BI modules and could follow them fine, right up to the point where she swapped the sample data for her own: call stats, adherence, quality scores and messages from several systems, none of which agreed on how to spell an agent's name or which ID belonged to whom. When something broke, she'd take it to the internal data team, who'd do their bit and hand it back working - and she'd nod along without understanding what they'd done, aware she was leaning on their goodwill.
+
+So it went in cycles. She'd have a go, get frustrated, push it away, and come back to it a couple of months later. What she actually wanted was to do something with her own data herself, and not feel like she was failing a part of her job by handing it off.
+
+</Chapter>
+
+<Chapter id="turn" kicker="the turn was hers">
+
+She decided what she wanted was to do something with her own data herself, rather than take a report someone else had built. A classroom course was never going to get her there, because the wall she hit was the bit courses skip: her own data, in all its mess. So we worked the other way round. I built her actual dashboard with her, on her actual data, from the first session - me explaining the why, her doing the doing, the whole thing paced to break the cycle she'd kept getting stuck in.
+
+</Chapter>
+
+<Chapter id="built" kicker="what she built">
+
+First, the people. Her systems disagreed about who everyone was, so I built one trustworthy list of agents from the phone platform, and we used it to find the mismatches - leavers still in the call logs, the chatbot and her own name showing up where they shouldn't. From there it became a proper model: a clean set of fact tables for calls, time, messages, quality and sentiment, hung off shared agent and date tables, with the calculations written out explicitly so she could read them back.
+
+And she did the doing. She fixed a broken query herself mid-session, and reached for the right function before I got there, recognising it from Excel. The teaching was always on the symptom in front of her: when every agent showed the same total, I showed her why the number was wrong, so she'd recognise it herself next time.
+
+</Chapter>
+
+<Chapter id="life" kicker="life happened, and the work bent around it">
+
+This ran over a few months, and life happened in the middle of it - a busy seasonal peak, a colleague off for a long stretch and her covering the desk single-handed, a baby at my end. None of it derailed the work, because the pace bent around her, with the gaps built in. And the steer throughout was the same: get the smallest useful thing working and solid before making it bigger.
+
+</Chapter>
+
+<Chapter id="safe" kicker="the bad data I wouldn't hide">
+
+A couple of moments I'd point to. When a system outage left a 66-hour junk value in the data, I didn't quietly filter it out in the background. I removed the bad rows at source and wrote down why, so if it ever happens again it shows up instead of hiding. And when she asked about modelling agents who move between teams over time, I was straight that it was a real, hard problem and too big for where we were. Knowing what to leave for later is part of how she ends up with a model she can keep running herself.
+
+</Chapter>
+
+<Chapter id="got-to" kicker="where she got to">
+
+From Excel-only and a Power BI habit of starting and giving up, to a real, maintainable dashboard on live data that pulls together everything she used to stitch by hand - and a person who can keep it going and extend it. She left with the model documentation, a DAX reference, a refresh routine and a short list of places to keep learning. And she kept at it: she now opens Power BI most days to keep her hand in, and records short voice-notes to herself about it on the commute home.
+
+</Chapter>

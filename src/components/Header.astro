@@ -2,8 +2,8 @@
 /**
  * Sticky header. Hides on scroll-down, returns on scroll-up (enhance.ts adds
  * `.hh`). Nav links the pages that ship — power-bi (the front door) first, the
- * ai-fit bridge, then /about. /contact is not emitted; the mailto is the
- * contact path. The drawn underline (.u) and instant-flip CTA
+ * ai-fit bridge, then /work (the proof) and /about. /contact is not emitted; the
+ * mailto is the contact path. The drawn underline (.u) and instant-flip CTA
  * live in app.css. `mailtoHref` carries the page's prefilled subject (built in
  * BaseLayout); defaults to a bare mailto.
  */
@@ -14,6 +14,7 @@ const { mailtoHref = "mailto:alan@burningsuit.co.uk" } = Astro.props;
 const nav = [
   { href: "/power-bi/", label: "power bi & fabric" },
   { href: "/ai-fit-for-teams/", label: "ai fit for teams" },
+  { href: "/work/", label: "work" },
   { href: "/about/", label: "about" },
 ];
 ---

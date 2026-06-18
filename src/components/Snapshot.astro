@@ -1,0 +1,34 @@
+---
+/**
+ * The 60-second snapshot — the scannable opening beat of a case study.
+ *
+ * An outcome standfirst (`.lead`) over a dashed `.beats` list (the same list the
+ * /power-bi hero uses). Rides the `.what` spine like every other chapter. The
+ * `<li>` items are the default slot, authored in MDX with a bold label each:
+ *   <Snapshot kicker="the short version" outcome="…">
+ *   <li><strong>who:</strong> a small data team inside a large law firm</li>
+ *   …
+ *   </Snapshot>
+ */
+interface Props {
+  /** The one-line outcome hook (the draft's 60-second italic). */
+  outcome: string;
+  id?: string;
+  kicker?: string;
+}
+const { outcome, id = "snapshot", kicker = "the short version" } = Astro.props;
+---
+
+<section class="chapter" data-ground="aubergine" aria-labelledby={id}>
+  <div class="wrap what">
+    <div class="label">
+      <h2 class="kicker meta" id={id} data-reveal>{kicker}</h2>
+    </div>
+    <div>
+      <p class="lead" data-reveal>{outcome}</p>
+      <ul class="beats" data-reveal>
+        <slot />
+      </ul>
+    </div>
+  </div>
+</section>

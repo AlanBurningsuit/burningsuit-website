@@ -25,6 +25,7 @@ Thumbs.db
 # tooling scratch
 .codex-serve*.log
 skills-lock.json
+.case-study-work/
 
 # kept out of the (public) repo: internal orientation doc + brand source PDF
 claude.md

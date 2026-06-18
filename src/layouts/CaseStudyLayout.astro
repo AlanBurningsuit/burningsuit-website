@@ -1,0 +1,44 @@
+---
+/**
+ * /work/<slug> — a single case study.
+ *
+ * Wraps BaseLayout with the shared case-study shell: a text-led page-hero (kicker
+ * + lowercase H1 with one amber em + standfirst), the chaptered MDX body via the
+ * default slot, then the gated <Casefile> testimonial. Structure mirrors /about
+ * (no hero photo — "no real screenshots" is a hard rule and these are text pages).
+ * "The ask" is the footer invitation + the mailto CTA, the same one-action model
+ * every page uses.
+ */
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import Casefile from "../components/Casefile.astro";
+
+interface Props {
+  study: CollectionEntry<"work">["data"];
+}
+const { study } = Astro.props;
+const { kicker, heading, lead, title, description, contactSubject, footerInvitation } = study;
+---
+
+<BaseLayout title={title} description={description} contactSubject={contactSubject}>
+  <Fragment slot="footer-invitation">{footerInvitation}</Fragment>
+
+  <section class="page-hero" data-ground="aubergine">
+    <div class="wrap">
+      <p class="kicker meta enter">{kicker}</p>
+      <h1 class="enter appear-300">
+        {heading.before}{heading.em && <em>{heading.em}</em>}{heading.after}
+      </h1>
+      <p class="lead enter appear-450">{lead}</p>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <slot />
+
+  <Casefile study={study} />
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer" data-ground="aubergine"></div>
+</BaseLayout>

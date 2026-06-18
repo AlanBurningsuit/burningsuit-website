@@ -6,16 +6,15 @@
  * alternative is chosen here at build time — content is never rendered then
  * hidden (that would leak via "view source" and defeat the point of gating).
  *
- * See design/copy/{home,power-bi}.md "STILL OPEN" / "PERMISSION-PENDING".
+ * Case-study naming (the law firm and the rest) used to live here as
+ * `proofNamed`. It now lives per-study in the `work` content collection's
+ * `namePublished` frontmatter (src/content/work/*.mdx), so the /power-bi proof
+ * teaser and the full /work/<slug> page share one gate and can't drift. Same
+ * doctrine: the named client + verbatim quote are only rendered when the boolean
+ * is true AND written permission has landed.
+ *
+ * This object is kept (empty) as the home for any future build-time copy flag.
  */
-export const flags = {
-  /**
-   * /power-bi proof block (§5): name the anchor client and show the
-   * quote. Default OFF — the anonymous version ships until written permission
-   * lands (design/copy/03-permissions-to-seek.md). The anonymous paragraph is
-   * the same evidence at an altitude that needs no sign-off.
-   */
-  proofNamed: false,
-} as const;
+export const flags = {} as const;
 
 export type Flags = typeof flags;

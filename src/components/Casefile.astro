@@ -1,0 +1,49 @@
+---
+/**
+ * The gated testimonial — the carved "case file" panel reused from /power-bi.
+ *
+ * Rendered by CaseStudyLayout (NOT from the MDX body) so the gate lives in one
+ * audited place. The named client + verbatim quote render ONLY when the study's
+ * `namePublished` is true. While it's false (the anonymised default), nothing is
+ * emitted — the quote never reaches the build, so view-source can't leak it.
+ * The whole case-study page is the anonymised proof; this panel is the upgrade
+ * that appears once written permission lands.
+ */
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  study: CollectionEntry<"work">["data"];
+}
+const { study } = Astro.props;
+const show = study.namePublished && study.named;
+---
+
+{
+  show && study.named && (
+    <section class="chapter" data-ground="aubergine" aria-labelledby="words">
+      <div class="wrap what">
+        <div class="label">
+          <h2 class="kicker meta" id="words" data-reveal>
+            in their words
+          </h2>
+        </div>
+        <div>
+          <div class="proof panel casefile" data-reveal>
+            <span class="tab">
+              <span class="sp" aria-hidden="true" />
+              case file
+            </span>
+            <div class="body">
+              <p class="src">{study.descriptor}</p>
+              <p class="attr meta">{study.named.client}</p>
+              <blockquote>
+                {study.named.quote}
+                <cite class="meta">{study.named.cite}</cite>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

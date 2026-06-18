@@ -1,0 +1,24 @@
+---
+/**
+ * One parallel sub-point inside a chapter — the `.offer` block reused from
+ * /power-bi's "what i do". A display-weight h3 title over a paragraph or two.
+ * Use for the "what the team did / what I built" beats that list three or four
+ * concrete things side by side. `lead` adds the quiet amber spine (`.offer-lead`)
+ * to mark the primary one.
+ *
+ *   <Offer title="they ran their own diagnostics">
+ *   When a year-to-date number looked wrong, I didn't go and fix it…
+ *   </Offer>
+ */
+interface Props {
+  title: string;
+  /** Mark this as the lead item (amber spine). */
+  lead?: boolean;
+}
+const { title, lead = false } = Astro.props;
+---
+
+<div class:list={["offer", lead && "offer-lead"]} data-reveal>
+  <h3>{title}</h3>
+  <slot />
+</div>

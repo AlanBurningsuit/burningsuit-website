@@ -65,3 +65,21 @@ test("about — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#origin)")).toHaveScreenshot(`about-origin-${tag}.png`);
   await expect(page.locator(".chapter:has(#dog)")).toHaveScreenshot(`about-dog-${tag}.png`);
 });
+
+test("work index — regions", async ({ page }, testInfo) => {
+  await prepare(page, "/work/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".page-hero")).toHaveScreenshot(`work-hero-${tag}.png`);
+  // the four case-file tiles (scoped to the "case files" chapter heading)
+  await expect(page.locator(".what:has(#cases)")).toHaveScreenshot(`work-cases-${tag}.png`);
+});
+
+test("work case study — regions", async ({ page }, testInfo) => {
+  // law-firm is the flagship and exercises every kit component (Snapshot, Chapter,
+  // Offer). Chapters scoped by heading id so each `.chapter` locator is unambiguous.
+  await prepare(page, "/work/law-firm/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".page-hero")).toHaveScreenshot(`work-study-hero-${tag}.png`);
+  await expect(page.locator(".chapter:has(#snapshot)")).toHaveScreenshot(`work-study-snapshot-${tag}.png`);
+  await expect(page.locator(".chapter:has(#did)")).toHaveScreenshot(`work-study-did-${tag}.png`);
+});
