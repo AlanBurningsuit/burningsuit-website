@@ -31,11 +31,7 @@ const { mailtoHref = "mailto:alan@burningsuit.co.uk" } = Astro.props;
       <a class="u" href="/colophon/">build <span id="commit">{commitHash}</span> ↗</a>
     </div>
     <p class="legal">
-      burningsuit ltd &middot; registered in england &amp; wales &middot; west sussex, england &middot; &copy; 2026{
-        /* Company-number fragment removed in the Phase A hygiene patch: the
-           placeholder was a trust leak, and the rest of the legal line is
-           credible without it. Re-add `· company no. <n>` once Alan confirms
-           the real Companies House number (Stage 0). */
+      burningsuit ltd is a limited company registered in england &amp; wales&NewLine;registered number: 5738130 &middot; registered office: the courtyard, shoreham road, upper Beeding, west sussex, BN44 3TN &middot; &copy; 2026{
       }
     </p>
   </div>
