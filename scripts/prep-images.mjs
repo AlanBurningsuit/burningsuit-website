@@ -11,12 +11,23 @@
  * The originals in resources/photos are the archive and are never modified.
  */
 import sharp from "sharp";
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const from = (p) => join(root, "resources/photos", p);
 const to = (p) => join(root, "src/assets/photos", p);
+
+// resources/photos is the local-only source archive (gitignored, not in CI). On
+// a build where it's absent (Netlify, fresh clone), skip and let the build use
+// the committed derivatives already in src/assets/photos.
+if (!existsSync(join(root, "resources/photos"))) {
+  console.log(
+    "[prep-images] resources/photos not present — skipping; using committed src/assets/photos.",
+  );
+  process.exit(0);
+}
 
 // [source, output, maxWidth, crop?] — maxWidth = the largest the layout ever
 // renders. Optional `crop` ({left,top,width,height}, in post-rotate source px)

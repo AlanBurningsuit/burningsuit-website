@@ -77,7 +77,10 @@ Node 22 (`.nvmrc`).
   every media query on the ladder **48 / 56 / 62rem**.
 - **`resources/`** (raw photos/illustrations) and **`design/`** (process docs)
   are gitignored, kept local only. `scripts/prep-images.mjs` regenerates the
-  optimised `src/assets/` photos from `resources/photos/` — a manual step, not
-  part of `npm run build`.
+  optimised `src/assets/` photos from `resources/photos/`; it runs as the first
+  step of `npm run build` when the source archive is present (locally) and
+  **skips gracefully when it isn't** (Netlify/CI use the committed
+  `src/assets/photos` derivatives). Re-run a build, or `npm run prep:images`,
+  after changing a source photo, and commit the regenerated derivatives.
 - The **`about-dog` visual snapshot** can flake (its clip-path photo reveal
   settles non-deterministically); a re-run usually goes green.
