@@ -71,7 +71,7 @@ export default defineConfig({
   // PLATFORM LIMITATION: plain GitHub Pages cannot send response headers, and a
   // meta-delivered CSP cannot enforce `frame-ancestors` (clickjacking) or carry
   // HSTS. Those are intentionally omitted here rather than shipped as no-ops.
-  // Revisit if a CDN/proxy (e.g. Cloudflare) is ever put in front. See A6.
+  // Revisit if a CDN/proxy is ever put in front. See A6.
   security: {
     csp: {
       algorithm: "SHA-256",
