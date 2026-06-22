@@ -7,10 +7,10 @@
  * live in app.css. `mailtoHref` carries the page's prefilled subject (built in
  * BaseLayout); defaults to a bare mailto.
  */
+import { bookingHref } from "../config/site";
 interface Props {
   mailtoHref?: string;
 }
-const { mailtoHref = "mailto:alan@burningsuit.co.uk" } = Astro.props;
 const nav = [
   { href: "/power-bi/", label: "power bi & fabric" },
   { href: "/ai-fit-for-teams/", label: "ai fit for teams" },
@@ -31,6 +31,6 @@ const nav = [
     <nav aria-label="Main">
       {nav.map((n) => <a class="u" href={n.href}>{n.label}</a>)}
     </nav>
-    <a class="cta" href={mailtoHref}>email me</a>
+    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">book a call</a>
   </div>
 </header>

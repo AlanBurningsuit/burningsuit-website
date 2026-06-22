@@ -8,6 +8,8 @@ import type { Line } from "../components/RiseHeading.astro";
 import { getEntry } from "astro:content";
 import { Picture } from "astro:assets";
 import pbiHero from "../assets/photos/DSC08846-Edit.jpg";
+import BookCta from "../components/BookCta.astro";
+import { mailtoFor } from "../config/site";
 
 // The proof panel is the law-firm case study at teaser length. Its naming gate is
 // the SAME `namePublished` the full /work/law-firm page uses, so the teaser and the
@@ -16,7 +18,7 @@ const lawFirm = await getEntry("work", "law-firm");
 const lawFirmNamed = lawFirm?.data.namePublished ? lawFirm.data.named : undefined;
 
 const contactSubject = "Power BI & Fabric — where it's stuck";
-const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
+const contactMailto = mailtoFor(contactSubject);
 
 // Same headline as the home hero; display grotesque, masked-rise, amber "with".
 const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
@@ -183,10 +185,18 @@ const aiDoor: RowData[] = [
           front, and we go month-to-month. The point is for your team to need me less over time.
         </p>
         <p data-reveal>
-          It starts with a conversation: <a class="u" href={contactMailto}>tell me where it's
-          stuck</a>, and I'll tell you whether I can help.
+          Embedded advisory usually runs £3,000 to £6,000 a month, depending on the work.
         </p>
       </div>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-label="book a call">
+    <div class="wrap">
+      <BookCta src="power-bi-proof" mailtoHref={contactMailto} reveal>
+        Tell me where it's stuck, and I'll tell you whether I can help. 30 minutes, nothing to
+        prepare.
+      </BookCta>
     </div>
   </section>
 

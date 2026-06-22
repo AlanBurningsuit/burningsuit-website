@@ -11,6 +11,7 @@
 import { Font } from "astro:assets";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import { CONTACT_EMAIL, ANALYTICS } from "../config/site";
 import "../styles/app.css";
 
 interface Props {
@@ -38,7 +39,7 @@ const {
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
-const contactEmail = "alan@burningsuit.co.uk";
+const contactEmail = CONTACT_EMAIL;
 const mailtoHref = contactSubject
   ? `mailto:${contactEmail}?subject=${encodeURIComponent(contactSubject)}`
   : `mailto:${contactEmail}`;
@@ -94,6 +95,14 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     <Font cssVariable="--font-mona" preload />
     <Font cssVariable="--font-albert" preload />
     <Font cssVariable="--font-commit" preload />
+
+    {/* Cookieless analytics — OFF by default. Flipping ANALYTICS.enabled also
+        requires the matching ANALYTICS_ENABLED flag in astro.config.mjs (it
+        adds the provider host to script-src + connect-src). is:inline keeps the
+        external src untouched; it's governed by the script-src host, not a hash. */}
+    {ANALYTICS.enabled && (
+      <script is:inline defer data-domain={ANALYTICS.dataDomain} src={ANALYTICS.scriptSrc} />
+    )}
   </head>
   <body>
     <Header mailtoHref={mailtoHref} />

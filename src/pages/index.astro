@@ -7,12 +7,22 @@ import PrinciplesChapter from "../components/PrinciplesChapter.astro";
 import PhotoChapter from "../components/PhotoChapter.astro";
 import StatementChapter from "../components/StatementChapter.astro";
 import AboutTeaser from "../components/AboutTeaser.astro";
+import BookCta from "../components/BookCta.astro";
 import type { Line } from "../components/RiseHeading.astro";
 import { Picture } from "astro:assets";
 import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
+import { mailtoFor } from "../config/site";
+import { getEntry } from "astro:content";
 
 const contactSubject = "Power BI & Fabric";
-const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
+const contactMailto = mailtoFor(contactSubject);
+
+// Homepage proof beat: one concrete outcome from the law-firm study. The subject
+// reads as the named client only when that study's namePublished gate is true
+// (same build-time gate the /power-bi teaser uses) — otherwise the anonymised form.
+const lawFirm = await getEntry("work", "law-firm");
+const lawFirmNamed = lawFirm?.data.namePublished ? lawFirm.data.named : undefined;
+const proofWho = lawFirmNamed?.client ?? "A data team inside an international law firm";
 
 const heroLabel = "power bi and fabric, done with you.";
 const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
@@ -45,7 +55,7 @@ const principles = [
   },
   {
     title: "mental models first",
-    body: "AI literacy is a feel for how these tools think, and where they help your work or quietly mislead it. I go deep on that, then make it something your team can hold too.",
+    body: "When a tool writes the DAX or builds the model, someone on your team still has to read it back and know whether it holds up. I help them build that judgment, so they catch a number that only looks right before it goes out.",
   },
 ];
 
@@ -80,10 +90,11 @@ const statementLines: Line[] = [
           I help your team get more capable with Power BI and Fabric, and
           <strong>keep the work yours, even as AI takes on the typing</strong>.
         </p>
-        <div class="cta-row enter appear-450">
-          <a class="cta" href={contactMailto}>email me</a>
-          <a class="cta ghost" href="#what">what i do</a>
-        </div>
+        <p class="hero-sig enter appear-450">
+          I'm Alan. I've spent five years with teams adopting Power BI and Fabric, and a
+          decade building software before that.
+        </p>
+        <BookCta src="hero" mailtoHref={contactMailto} variant="hero" rowClass="enter appear-600" />
       </div>
       <figure class="hero-photo enter appear-300">
         <Picture
@@ -109,12 +120,24 @@ const statementLines: Line[] = [
       </div>
       <div>
         <ServiceRows rows={serviceRows} />
-        <p class="section-intro" data-reveal>
-          A few of these in practice - a law firm's data team, a contact-centre lead, a
-          university carbon model, a museum that ran on a whiteboard.
-          <a class="u" href="/work/">see the work ▸</a>
-        </p>
       </div>
+    </div>
+    <div class="wrap what proof-line">
+      <div class="label">
+        <p class="kicker meta" data-reveal>in practice</p>
+      </div>
+      <div class="proof-body" data-reveal>
+        {proofWho}, wary of a Fabric build they hadn't made, found the error the
+        migration missed. <a class="u" href="/work/">see the work ▸</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-label="book a call">
+    <div class="wrap">
+      <BookCta src="home-proof" mailtoHref={contactMailto} reveal>
+        If that's where you are too, I'm happy to talk it through — nothing to prepare.
+      </BookCta>
     </div>
   </section>
 

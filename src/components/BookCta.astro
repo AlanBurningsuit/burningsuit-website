@@ -1,0 +1,70 @@
+---
+/**
+ * The conversion CTA primitive, used at the page's intent peaks.
+ *
+ * variant="hero"    — two buttons in a row (primary book + ghost email), left,
+ *                     inside the hero grid; positioned by `.hero .cta-row`.
+ * variant="section" — the page's ACTION as a calm, full-width CENTRED invitation:
+ *                     a de-risk line, ONE primary "book a call" button, and a quiet
+ *                     "or email me" text link. Render it as a DIRECT child of
+ *                     `.what` so it can span both grid columns (page-centred, not
+ *                     centred in the off-centre content column) and sit under a
+ *                     hairline — a deliberate "act here" beat, not buttons dropped
+ *                     into the reading prose.
+ *
+ * The booking link is external (new tab); a top-level navigation needs no CSP
+ * change. The default slot is the de-risk / context microcopy for this placement.
+ */
+import { bookingHref } from "../config/site";
+
+interface Props {
+  /** Placement id → ?utm_content= for attribution in Cal. */
+  src: string;
+  /** The page's mailto (with optional prefilled subject). */
+  mailtoHref: string;
+  label?: string;
+  emailLabel?: string;
+  variant?: "hero" | "section";
+  /** section only: add data-reveal so the block animates in on scroll. */
+  reveal?: boolean;
+  /** hero only: load-choreography classes for the row, e.g. "enter appear-450". */
+  rowClass?: string;
+}
+const {
+  src,
+  mailtoHref,
+  label = "book a 30-minute call",
+  emailLabel = "or email me",
+  variant = "section",
+  reveal = false,
+  rowClass = "",
+} = Astro.props;
+const hasNote = Astro.slots.has("default");
+const bookHref = bookingHref(src);
+---
+{
+  variant === "hero" ? (
+    <div class:list={["cta-row", rowClass]}>
+      <a class="cta" href={bookHref} target="_blank" rel="noopener noreferrer">
+        {label}
+      </a>
+      <a class="cta ghost" href={mailtoHref}>
+        {emailLabel}
+      </a>
+    </div>
+  ) : (
+    <div class="cta-invite" {...(reveal ? { "data-reveal": true } : {})}>
+      {hasNote && (
+        <p class="cta-note">
+          <slot />
+        </p>
+      )}
+      <a class="cta" href={bookHref} target="_blank" rel="noopener noreferrer">
+        {label}
+      </a>
+      <a class="u cta-email meta" href={mailtoHref}>
+        {emailLabel}
+      </a>
+    </div>
+  )
+}

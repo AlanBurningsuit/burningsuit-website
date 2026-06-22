@@ -144,8 +144,7 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--bg) 86%, transparent);
-    backdrop-filter: blur(8px);
+    background: var(--bg);
     border-bottom: var(--bw-hair) solid var(--line);
     transition: transform var(--t-ui) var(--ease-out);
     /* hold the chrome steady across cross-document navigations */
@@ -289,6 +288,48 @@
   .bar .cta {
     padding: 0.55em 0.95em;
     font-size: var(--fs-ui-sm);
+  }
+
+  /* ---- the BookCta primitive ----
+     Hero: two buttons in a row (left), positioned by `.hero .cta-row`. */
+  .cta-row {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  /* Section invitation (power-bi / ai-fit): the page's ACTION, lifted out of the
+     reading flow onto its own full-bleed band (`.cta-band`) — a recessed ground,
+     darker than the page, no edges (the colour alone sets it apart). The invite
+     itself is just the centred stack: de-risk line, primary button, "or email me". */
+  .cta-band {
+    background: var(--bg-band);
+    padding-block: var(--space-super);
+  }
+  .cta-invite {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.1rem;
+  }
+  .cta-invite .cta-note {
+    margin: 0;
+    max-width: 46ch;
+  }
+  .cta-invite .cta-email {
+    color: var(--fg-dim);
+    font-size: var(--fs-ui-sm);
+  }
+  /* footer booking button — sits above the big mailto in the basement */
+  .cta-footer {
+    margin-top: 1.1rem;
+  }
+  /* the de-risk / capacity microcopy under a CTA — quiet, readable, never a slogan */
+  .cta-note {
+    margin: 0.85rem 0 0;
+    max-width: 48ch;
+    color: var(--fg-dim);
   }
 
   /* ---- the mono labels + the one living magenta cursor ---- */
@@ -487,6 +528,13 @@
     color: var(--fg);
     font-weight: 600;
   }
+  /* the light signature anchor under the lede: names Alan + one credential, quiet */
+  .hero-sig {
+    margin-top: 1rem;
+    max-width: 40rem;
+    font-size: var(--fs-sm);
+    color: var(--fg-dim);
+  }
   .hero .cta-row {
     margin-top: 2rem;
     display: flex;
@@ -591,6 +639,11 @@
   }
   .offers.single {
     grid-template-columns: 1fr; /* the lone "door" card stays full width */
+  }
+  /* multi-card grids cap at the reading measure so the cards never run wider than
+     the prose sharing the same `.what` column (the lone door card stays full-width). */
+  .offers:not(.single) {
+    max-width: var(--measure-wide);
   }
   .panel {
     position: relative;
@@ -698,6 +751,8 @@
   .casefile .attr {
     margin-top: 1rem;
     color: var(--ink-soft);
+    /* a named client renders in its own proper case, never lowercased by .meta */
+    text-transform: none;
   }
   .casefile blockquote {
     margin-top: var(--space-block);
@@ -711,6 +766,8 @@
     margin-top: 0.6rem;
     font-style: normal;
     color: var(--ink-soft);
+    /* attribution (name, role, org) keeps its natural case, not .meta lowercase */
+    text-transform: none;
   }
   /* the "read the full story" link out of the /power-bi teaser to /work/law-firm */
   .casefile .more {
@@ -913,49 +970,6 @@
     object-fit: cover;
     object-position: 50% 18%;
   }
-  a.mail {
-    display: inline-block;
-    position: relative;
-    margin-top: clamp(1.2rem, 3vh, 2rem);
-    font-family: var(--ff-display);
-    font-weight: 800;
-    font-size: var(--fs-4);
-    letter-spacing: var(--ls-display);
-    line-height: var(--lh-tight);
-    color: var(--amber);
-    text-decoration: none;
-    overflow-wrap: anywhere;
-  }
-  /* two-pass underline: rule exits right while a clone redraws from the left */
-  a.mail::before,
-  a.mail::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0.02em;
-    height: 2.5px;
-    width: 100%;
-    background: currentColor;
-  }
-  a.mail::before {
-    transform: scaleX(1);
-    transform-origin: 100% 50%;
-    transition: transform var(--t-slide) var(--ease-out) var(--d-tap);
-  }
-  a.mail::after {
-    transform: scaleX(0);
-    transform-origin: 0 50%;
-    transition: transform var(--t-slide) var(--ease-out);
-  }
-  @media (hover: hover) {
-    a.mail:hover::before {
-      transform: scaleX(0);
-    }
-    a.mail:hover::after {
-      transform: scaleX(1);
-      transition-delay: var(--d-tap);
-    }
-  }
   .foot-meta {
     display: flex;
     flex-wrap: wrap;
@@ -1112,6 +1126,17 @@
   .section-intro {
     margin-top: var(--space-xs);
     max-width: var(--measure-prose);
+  }
+  /* homepage proof line: one real outcome set apart as its own `.what` row under
+     the service cards — an amber "in practice" label in the left margin (like
+     "what i do") and a body-size line. Not a caption. */
+  .proof-line {
+    margin-top: var(--space-lg);
+  }
+  .proof-line .proof-body {
+    max-width: var(--measure-wide);
+    font-size: var(--fs-base);
+    color: var(--fg);
   }
 
   /* the /404 way-back links */

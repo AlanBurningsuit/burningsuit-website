@@ -23,8 +23,8 @@ test.describe("no-JS: everything is visible, nothing reveal-hidden", () => {
         );
         expect(opacity, `reveal #${i} on ${path} must be visible without JS`).toBe(1);
       }
-      // the footer mailto (the contact path) is present and visible
-      await expect(page.locator("a.mail")).toBeVisible();
+      // the footer contact path (the email link) is present and visible without JS
+      await expect(page.locator('footer a[href^="mailto:"]')).toBeVisible();
     });
   }
 

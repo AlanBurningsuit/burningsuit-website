@@ -64,6 +64,7 @@
   --bg: var(--color-bg);
   --bg-2: var(--color-bg-2);
   --bg-3: #343f44; /* one step up from bg-2 — raised / hover ground (ghost button) */
+  --bg-band: #1f262b; /* full-bleed CTA band — recessed, darker than the base ground (no edges) */
   --bg-dim: var(--color-bg-dim);
   --deep: var(--color-deep);
   --line: rgb(211 198 170 / 0.12); /* fg @ 12% — the hairline divider */

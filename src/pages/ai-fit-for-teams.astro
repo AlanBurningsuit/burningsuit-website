@@ -5,9 +5,11 @@ import ServiceRows from "../components/ServiceRows.astro";
 import Aside from "../components/Aside.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import type { Line } from "../components/RiseHeading.astro";
+import BookCta from "../components/BookCta.astro";
+import { mailtoFor } from "../config/site";
 
 const contactSubject = "AI in Power BI & Fabric";
-const contactMailto = `mailto:alan@burningsuit.co.uk?subject=${encodeURIComponent(contactSubject)}`;
+const contactMailto = mailtoFor(contactSubject);
 
 const heroLines: Line[] = [{ before: "make ai ", em: "fit", after: " the team." }];
 // Hero-left visual: the buyer's own sharpest worry, set as a carved-cream
@@ -214,6 +216,14 @@ const door: RowData[] = [
           actual work. It starts with a conversation.
         </p>
       </div>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-label="book a call">
+    <div class="wrap">
+      <BookCta src="ai-fit" mailtoHref={contactMailto} reveal>
+        30 minutes, nothing to prepare.
+      </BookCta>
     </div>
   </section>
 
