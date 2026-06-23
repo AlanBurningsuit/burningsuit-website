@@ -1,157 +1,41 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import RiseHeading from "../components/RiseHeading.astro";
-import ServiceRows from "../components/ServiceRows.astro";
-import type { RowData } from "../components/ServiceRow.astro";
-import PrinciplesChapter from "../components/PrinciplesChapter.astro";
-import PhotoChapter from "../components/PhotoChapter.astro";
-import StatementChapter from "../components/StatementChapter.astro";
-import AboutTeaser from "../components/AboutTeaser.astro";
-import BookCta from "../components/BookCta.astro";
-import type { Line } from "../components/RiseHeading.astro";
-import { Picture } from "astro:assets";
-import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
-import { mailtoFor } from "../config/site";
-import { getEntry } from "astro:content";
-
-const contactSubject = "Power BI & Fabric";
-const contactMailto = mailtoFor(contactSubject);
-
-// Homepage proof beat: one concrete outcome from the law-firm study. The subject
-// reads as the named client only when that study's namePublished gate is true
-// (same build-time gate the /power-bi teaser uses) — otherwise the anonymised form.
-const lawFirm = await getEntry("work", "law-firm");
-const lawFirmNamed = lawFirm?.data.namePublished ? lawFirm.data.named : undefined;
-const proofWho = lawFirmNamed?.client ?? "A data team inside an international law firm";
-
-const heroLabel = "power bi and fabric, done with you.";
-const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
-
-const serviceRows: RowData[] = [
-  {
-    n: "01",
-    href: "/power-bi/",
-    title: { before: "power bi & fabric, done ", em: "with", after: " you" },
-    body: "Embedded advisory, strategy and architecture review, and ongoing work inside Power BI and Fabric teams. You stay close to the work; I help your team feel like they've got it — so the know-how stays with you when I leave.",
-    cta: "see how it works",
-  },
-  {
-    n: "02",
-    href: "/ai-fit-for-teams/",
-    title: { before: "ai ", em: "fit", after: " for teams" },
-    body: "Copilot and agents can already write the DAX, build the model, even draft the whole report — but 'can' doesn't mean 'should'. I help your team work out what to hand over, what to keep, and who checks what, so the work stays yours to own and verify.",
-    cta: "see how it works",
-  },
-];
-
-const principles = [
-  {
-    title: "the answers are yours",
-    body: "I help your team reach the right answers for how you actually work, instead of arriving with mine. Understand your own models and data, and you can own them — and own what you hand to a tool.",
-  },
-  {
-    title: "what not to automate",
-    body: "Knowing what not to automate matters as much as knowing what to. As the tools take on more of the build, the discipline is choosing which decisions you let it make — and staying conscious of where you've made the call.",
-  },
-  {
-    title: "mental models first",
-    body: "When a tool writes the DAX or builds the model, someone on your team still has to read it back and know whether it holds up. I help them build that judgment, so they catch a number that only looks right before it goes out.",
-  },
-];
-
-const statementLines: Line[] = [
-  "ai can make the things.",
-  "the responsibility for them",
-  { before: "stays with ", em: "you", after: "." },
-];
+/*
+ * TEMPORARY placeholder — published to `main` only to prove the GitHub Actions
+ * deploy pipeline (deploy.yml -> withastro/action -> deploy-pages -> apex) end
+ * to end on the real domain. Self-contained (does NOT use BaseLayout) so it has
+ * no nav links to the removed pages, while still carrying the <title>, meta
+ * description, canonical, and a valid JSON-LD node that `npm run check:seo`
+ * (the publish-readiness gate) requires. Reverted via the `legacy-site-backup`
+ * tag once the deploy is confirmed.
+ */
+const canonical = "https://burningsuit.co.uk/";
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "burningsuit",
+  url: canonical,
+});
 ---
-
-<BaseLayout
-  title="Power BI & Fabric advisory, done with you — burningsuit"
-  description="Embedded Power BI and Fabric advisory, done with you — strategy, architecture review, and team capability — with a clear-eyed take on what AI means for how the work gets built."
-  contactSubject={contactSubject}
->
-  <Fragment slot="footer-invitation"
-    >Tell me where Power BI or Fabric is getting stuck — the bottleneck, the model nobody
-    quite trusts, the bit AI's about to change. If I can help, I'll tell you how; if I
-    can't, I'll tell you that too. Replies come from me</Fragment
-  >
-
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <p class="kicker hero-prompt">
-          <span class="pre" aria-hidden="true">›</span><span class="kt"
-            >power bi &amp; fabric advisory</span
-          ><span class="cursor" aria-hidden="true"></span>
-        </p>
-        <RiseHeading as="h1" kind="hero" label={heroLabel} lines={heroLines} />
-        <p class="lede enter appear-300">
-          I help your team get more capable with Power BI and Fabric, and
-          <strong>keep the work yours, even as AI takes on the typing</strong>.
-        </p>
-        <p class="hero-sig enter appear-450">
-          I'm Alan. I've spent five years with teams adopting Power BI and Fabric, and a
-          decade building software before that.
-        </p>
-        <BookCta src="hero" mailtoHref={contactMailto} variant="hero" rowClass="enter appear-600" />
-      </div>
-      <figure class="hero-photo enter appear-300">
-        <Picture
-          src={heroPhoto}
-          alt="Alan, who runs burningsuit, sitting outdoors and smiling"
-          formats={["avif"]}
-          fallbackFormat="webp"
-          widths={[400, 600, 800]}
-          sizes="(min-width: 62rem) 40vw, 100vw"
-          quality={66}
-          loading="eager"
-        />
-      </figure>
-    </div>
-  </section>
-
-  <div class="thread" data-reveal-raw aria-hidden="true"></div>
-
-  <section class="chapter" aria-labelledby="what">
-    <div class="wrap what">
-      <div class="label">
-        <h2 class="kicker meta" id="what" data-reveal>what i do</h2>
-      </div>
-      <div>
-        <ServiceRows rows={serviceRows} />
-      </div>
-    </div>
-    <div class="wrap what proof-line">
-      <div class="label">
-        <p class="kicker meta" data-reveal>in practice</p>
-      </div>
-      <div class="proof-body" data-reveal>
-        {proofWho}, wary of a Fabric build they hadn't made, found the error the
-        migration missed. <a class="u" href="/work/">see the work ▸</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="cta-band" aria-label="book a call">
-    <div class="wrap">
-      <BookCta src="home-proof" mailtoHref={contactMailto} reveal>
-        If that's where you are too, I'm happy to talk it through — nothing to prepare.
-      </BookCta>
-    </div>
-  </section>
-
-  <PrinciplesChapter kicker="how i work" headingId="how" principles={principles} />
-
-  <PhotoChapter />
-
-  <StatementChapter
-    label="ai can make the things. the responsibility for them stays with you."
-    lines={statementLines}
-  />
-
-  <AboutTeaser />
-
-  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
-  <div id="talk" class="talk-spacer"></div>
-</BaseLayout>
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>burningsuit — updating</title>
+    <meta
+      name="description"
+      content="burningsuit — embedded Power BI & Fabric advisory, done with you. The site is being updated; back shortly."
+    />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/placeholder.css" />
+    <script type="application/ld+json" is:inline set:html={jsonLd} />
+  </head>
+  <body>
+    <main>
+      <p class="mark">burningsuit</p>
+      <p>we're updating the site — back shortly.</p>
+      <p><a href="mailto:alan@burningsuit.co.uk">alan@burningsuit.co.uk</a></p>
+    </main>
+  </body>
+</html>
