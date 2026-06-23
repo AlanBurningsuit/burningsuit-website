@@ -638,11 +638,13 @@
     }
   }
   .offers.single {
-    grid-template-columns: 1fr; /* the lone "door" card stays full width */
+    grid-template-columns: 1fr; /* a lone "door" card spans its single column */
   }
-  /* multi-card grids cap at the reading measure so the cards never run wider than
-     the prose sharing the same `.what` column (the lone door card stays full-width). */
-  .offers:not(.single) {
+  /* cap every offers grid at the wide reading measure so cards never run wider
+     than the prose / case-file panel sharing the same `.what` column — the lone
+     door card is capped too, so it lines up with the other panels rather than
+     stretching the full column width. */
+  .offers {
     max-width: var(--measure-wide);
   }
   .panel {
@@ -687,8 +689,7 @@
     margin-left: 1.1rem;
     margin-top: calc(-1 * var(--px));
   }
-  .tab .sp,
-  .tab .dot {
+  .tab .sp {
     width: var(--px);
     height: var(--px);
     background: var(--amber);
@@ -841,6 +842,41 @@
     height: 100%;
     object-fit: cover;
     object-position: 42% 42%;
+  }
+
+  /* a photo set into a prose chapter (Zelda on /about) — same carved cream frame
+     and clip-path curtain as .photo-ch, sized to fill the prose content width so
+     it lines up with the paragraphs above it. Cropped 3:2 in prep-images so it
+     reads as a landscape band, not a tall portrait. The explicit top margin (not
+     relying on `.prose > * + *`) also resets the UA figure margin so it aligns
+     flush with the prose. */
+  .figure-inset {
+    margin: var(--space-block) 0 0;
+    max-width: var(--measure-prose);
+  }
+  .figure-inset .ph {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    overflow: clip;
+    background: var(--bg-2);
+    border: var(--px) solid var(--deep);
+    border-radius: var(--r);
+    box-shadow:
+      0 0 0 var(--px) var(--paper-edge),
+      7px 7px 0 0 rgb(var(--shadow-ink) / 0.5);
+  }
+  .js .figure-inset .ph {
+    clip-path: inset(0 0 100% 0 round var(--r));
+    transition: clip-path var(--t-reveal) var(--ease-out);
+  }
+  .js .figure-inset.show .ph {
+    clip-path: inset(0 round var(--r));
+  }
+  .figure-inset img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
   }
 
   /* ============ statement chapter (a single centred conviction) ============ */
@@ -1237,9 +1273,6 @@
     margin-top: var(--space-md);
     max-width: var(--measure-prose);
   }
-  .offer > .tag {
-    color: var(--amber);
-  }
   /* the lead offer (embedded advisory) gets a quiet amber spine instead of a
      floating "the lead offer" label — it marks primacy without reading as a
      heading for the whole list. */
@@ -1364,7 +1397,8 @@
     scale: 1;
     transition: none;
   }
-  .js .photo-ch .ph {
+  .js .photo-ch .ph,
+  .js .figure-inset .ph {
     clip-path: none;
     transition: none;
   }

@@ -5,16 +5,19 @@
  * Copy is the SIGNED deck at design/copy/about.md (v5, signed 2026-06-17, with
  * Alan's inline edits). Voice: warm outward, light about himself, "for everyone
  * else" as the spine, spoken cadence. Structure mirrors /colophon (prose
- * chapters on the aubergine ground): page-hero → thread → chapters → thread-end.
+ * chapters on the dark ground): page-hero → thread → chapters → thread-end.
  *
- * PHOTOS PENDING: the "where burningsuit comes from" and "and the dog" sections
- * have comment hooks where real photos drop in later (Stuart & Alison; Zelda).
- * They're text-only for now so the build stays green and snapshots deterministic
- * — add <Picture> + regenerate the visual baselines when the images land.
+ * PHOTOS: the "and the dog" section now carries Zelda (a narrow ~22rem portrait
+ * inset, carved frame + clip-path reveal, same skin as PhotoChapter). The "where
+ * burningsuit comes from" section still has a comment hook for the Stuart &
+ * Alison photo, pending supply — add <Picture> + regenerate the visual baselines
+ * when that one lands.
  *
  * OPEN COPY ITEM: DataKind line not yet placed (Alan deciding the angle).
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { Picture } from "astro:assets";
+import zelda from "../assets/photos/zelda.jpg";
 
 const contactSubject = "Hello";
 ---
@@ -29,7 +32,7 @@ const contactSubject = "Hello";
     genuinely like to hear about it</Fragment
   >
 
-  <section class="page-hero" data-ground="aubergine">
+  <section class="page-hero">
     <div class="wrap">
       <p class="kicker meta enter">about</p>
       <h1 class="enter appear-300">power bi and ai — for everyone <em>else</em>.</h1>
@@ -46,7 +49,7 @@ const contactSubject = "Hello";
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  <section class="chapter" data-ground="aubergine" aria-labelledby="capable">
+  <section class="chapter" aria-labelledby="capable">
     <div class="wrap what">
       <h2 class="label kicker meta" id="capable" data-reveal>i start from what people can do</h2>
       <div class="prose">
@@ -68,7 +71,7 @@ const contactSubject = "Hello";
     </div>
   </section>
 
-  <section class="chapter" data-ground="aubergine" aria-labelledby="human">
+  <section class="chapter" aria-labelledby="human">
     <div class="wrap what">
       <h2 class="label kicker meta" id="human" data-reveal>the part that isn't really technical</h2>
       <div class="prose">
@@ -96,7 +99,7 @@ const contactSubject = "Hello";
     </div>
   </section>
 
-  <section class="chapter" data-ground="aubergine" aria-labelledby="origin">
+  <section class="chapter" aria-labelledby="origin">
     <div class="wrap what">
       <h2 class="label kicker meta" id="origin" data-reveal>where burningsuit comes from</h2>
       <div class="prose">
@@ -118,7 +121,7 @@ const contactSubject = "Hello";
     </div>
   </section>
 
-  <section class="chapter" data-ground="aubergine" aria-labelledby="dog">
+  <section class="chapter" aria-labelledby="dog">
     <div class="wrap what">
       <h2 class="label kicker meta" id="dog" data-reveal>and the dog</h2>
       <div class="prose">
@@ -128,11 +131,24 @@ const contactSubject = "Hello";
           go outside now and then, which honestly does more for the work than
           you'd think.
         </p>
-        {/* photo: Zelda — drop in when supplied */}
+        <figure class="figure-inset" data-reveal-fig>
+          <div class="ph">
+            <Picture
+              src={zelda}
+              alt="Zelda, a small black-and-tan dog, snuggled into a cream fleece blanket"
+              formats={["avif"]}
+              fallbackFormat="webp"
+              widths={[700, 1050, 1400]}
+              sizes="(min-width: 56rem) 42rem, 100vw"
+              quality={60}
+              loading="lazy"
+            />
+          </div>
+        </figure>
       </div>
     </div>
   </section>
 
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
-  <div class="talk-spacer" data-ground="aubergine"></div>
+  <div class="talk-spacer"></div>
 </BaseLayout>

@@ -19,7 +19,7 @@ interface Props {
 const { outcome, id = "snapshot", kicker = "the short version" } = Astro.props;
 ---
 
-<section class="chapter" data-ground="aubergine" aria-labelledby={id}>
+<section class="chapter" aria-labelledby={id}>
   <div class="wrap what">
     <div class="label">
       <h2 class="kicker meta" id={id} data-reveal>{kicker}</h2>

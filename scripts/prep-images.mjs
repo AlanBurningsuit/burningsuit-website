@@ -39,8 +39,12 @@ const jobs = [
   ["DSC09290-Edit.jpg", "DSC09290-Edit.jpg", 900], // about portrait (~45vw)
   ["DSC09247-Edit.jpg", "DSC09247-Edit.jpg", 384], // face chip (2× of 192px)
   // /power-bi hero: landscape original (6000×4000) cropped to a 4:5 portrait
-  // framed with Alan's eyes near centre, then downscaled.
-  ["DSC08846-Edit.jpg", "DSC08846-Edit.jpg", 800, { left: 2340, top: 0, width: 2880, height: 3600 }],
+  // framed with Alan's face near centre, then downscaled.
+  ["DSC09087-Edit.jpg", "DSC09087-Edit.jpg", 800, { left: 2000, top: 0, width: 3200, height: 4000 }],
+  // /about — Zelda, the dog: phone portrait (3072×4080) cropped to a 3:2
+  // landscape framed on her face + the blanket roll, so it fills the prose
+  // content width in the "and the dog" chapter. 1400px covers 42rem at 2×.
+  ["PXL_20230723_093559913.PORTRAIT.jpg", "zelda.jpg", 1400, { left: 0, top: 800, width: 3072, height: 2048 }],
 ];
 
 for (const [src, out, width, crop] of jobs) {

@@ -16,7 +16,7 @@ interface Props {
 }
 const { kicker, label, lines } = Astro.props;
 ---
-<section class="chapter statement-ch" aria-label={kicker || undefined} data-ground="aubergine">
+<section class="chapter statement-ch" aria-label={kicker || undefined}>
   <div class="wrap">
     {kicker && <p class="kicker meta" data-reveal>{kicker}</p>}
     <RiseHeading as="p" kind="statement" label={label} lines={lines} />

@@ -23,7 +23,7 @@ const { kicker, heading, lead, title, description, contactSubject, footerInvitat
 <BaseLayout title={title} description={description} contactSubject={contactSubject}>
   <Fragment slot="footer-invitation">{footerInvitation}</Fragment>
 
-  <section class="page-hero" data-ground="aubergine">
+  <section class="page-hero">
     <div class="wrap">
       <p class="kicker meta enter">{kicker}</p>
       <h1 class="enter appear-300">
@@ -40,5 +40,5 @@ const { kicker, heading, lead, title, description, contactSubject, footerInvitat
   <Casefile study={study} />
 
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
-  <div class="talk-spacer" data-ground="aubergine"></div>
+  <div class="talk-spacer"></div>
 </BaseLayout>
