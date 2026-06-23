@@ -15,11 +15,13 @@
     "prep:images": "node scripts/prep-images.mjs",
     "preview": "astro preview",
     "check": "astro check",
+    "check:seo": "node scripts/check-seo.mjs",
     "serve": "http-server dist -p 4321 -s -c-1",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
     "test:links": "linkinator dist --recurse --silent --skip \"^mailto:|^https?://(?!localhost)\"",
-    "test:lh": "lhci autorun"
+    "test:lh": "lhci autorun",
+    "gate": "npm run check && npm run build && npm run test:links && npm run check:seo"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.3",

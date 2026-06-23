@@ -1,0 +1,32 @@
+---
+/**
+ * Server-rendered JSON-LD. Emits one `<script type="application/ld+json">`
+ * carrying an `@graph` of the supplied nodes, so every entity (@id) resolves
+ * within a single connected block.
+ *
+ * This is the ONLY place structured data is emitted. It follows the proven
+ * pattern from the old BaseLayout inline block: `is:inline` keeps Astro from
+ * bundling it, `set:html` keeps Astro from HTML-escaping the JSON. ld+json is
+ * inert data, not executable script, so Astro's security.csp does NOT need to
+ * hash it — adding schema requires zero CSP change. Never emit schema from a
+ * client script; this component renders into the static HTML at build time.
+ *
+ * Gated by `noindex`: pages kept out of the index (e.g. /404) emit no schema,
+ * mirroring the meta-robots rule so the two never disagree.
+ */
+import type { SchemaNode } from "../../lib/schema";
+
+interface Props {
+  /** One node or many — emitted together under a single @graph. */
+  schema: SchemaNode | SchemaNode[];
+  /** When true, emit nothing (matches BaseLayout's noindex gate). */
+  noindex?: boolean;
+}
+const { schema, noindex = false } = Astro.props;
+
+const nodes = Array.isArray(schema) ? schema : [schema];
+const json = JSON.stringify({ "@context": "https://schema.org", "@graph": nodes });
+---
+{!noindex && nodes.length > 0 && (
+  <script type="application/ld+json" is:inline set:html={json} />
+)}

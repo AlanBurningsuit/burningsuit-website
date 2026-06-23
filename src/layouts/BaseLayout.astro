@@ -11,7 +11,9 @@
 import { Font } from "astro:assets";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import Schema from "../components/seo/Schema.astro";
 import { CONTACT_EMAIL, ANALYTICS } from "../config/site";
+import { siteGraph, type SchemaNode } from "../lib/schema";
 import "../styles/app.css";
 
 interface Props {
@@ -28,6 +30,17 @@ interface Props {
    *  one-action/no-funnel model while giving the reader a contextual starting
    *  line. Omit for a bare mailto. */
   contactSubject?: string;
+  /** og:type — "website" (default) for landing pages, "article" for editorial
+   *  pages (case studies / blog). Drives the article:* time tags below. */
+  ogType?: "website" | "article";
+  /** ISO timestamps for og:article — emitted only when ogType is "article". */
+  publishedTime?: string;
+  modifiedTime?: string;
+  /** Page-specific JSON-LD node(s) — Article, BreadcrumbList, FAQPage, etc.
+   *  Appended to the site-wide identity graph and emitted as one @graph block.
+   *  The site graph (Organization/Person/WebSite) is always present; pages add
+   *  only what's specific to them. */
+  jsonLd?: SchemaNode | SchemaNode[];
 }
 const {
   title,
@@ -36,6 +49,10 @@ const {
   ogImageAlt = "burningsuit — Power BI & Fabric advisory, done with you, with an eye on what AI changes",
   noindex = false,
   contactSubject,
+  ogType = "website",
+  publishedTime,
+  modifiedTime,
+  jsonLd,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
@@ -44,23 +61,12 @@ const mailtoHref = contactSubject
   ? `mailto:${contactEmail}?subject=${encodeURIComponent(contactSubject)}`
   : `mailto:${contactEmail}`;
 
-// ProfessionalService structured data. Company-number-bearing fields (legalName,
-// registration) are deliberately omitted until the real Companies House number
-// lands (Stage 0). Astro's security.csp hashes this is:inline block into
-// script-src; ld+json isn't executed, so it's data, not behaviour.
-const jsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "burningsuit",
-  description:
-    "Embedded Power BI and Fabric advisory, done with you — strategy, architecture review, and team capability — with a clear-eyed take on what AI means for how the work gets built.",
-  url: Astro.site?.href ?? "https://burningsuit.co.uk/",
-  email: contactEmail,
-  founder: { "@type": "Person", name: "Alan Harman-Box" },
-  areaServed: "GB",
-  address: { "@type": "PostalAddress", addressRegion: "West Sussex", addressCountry: "GB" },
-  serviceType: ["Power BI advisory", "Microsoft Fabric advisory", "AI advisory for data teams"],
-});
+// Structured data: the site-wide identity graph (Organization/Person/WebSite,
+// from src/config/site.ts) plus any page-specific node(s). Assembled here and
+// emitted once via <Schema> as a connected @graph. See src/lib/schema.ts.
+const siteUrl = Astro.site?.href ?? "https://burningsuit.co.uk/";
+const pageNodes = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const graph: SchemaNode[] = [...siteGraph(siteUrl), ...pageNodes];
 const hasFooterInvitation = Astro.slots.has("footer-invitation");
 ---
 <!doctype html>
@@ -79,7 +85,7 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -87,9 +93,15 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogImageAlt} />
+    {ogType === "article" && publishedTime && (
+      <meta property="article:published_time" content={publishedTime} />
+    )}
+    {ogType === "article" && (modifiedTime ?? publishedTime) && (
+      <meta property="article:modified_time" content={modifiedTime ?? publishedTime} />
+    )}
     <meta name="twitter:card" content="summary_large_image" />
 
-    {!noindex && <script type="application/ld+json" is:inline set:html={jsonLd} />}
+    <Schema schema={graph} noindex={noindex} />
 
     <!-- self-hosted fonts (subset + preloaded at build) -->
     <Font cssVariable="--font-mona" preload />

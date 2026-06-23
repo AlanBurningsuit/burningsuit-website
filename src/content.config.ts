@@ -37,6 +37,15 @@ const work = defineCollection({
     lead: z.string(),
     /** The /work index tile's outcome line (the draft's 60-second hook). */
     tileOutcome: z.string(),
+    /**
+     * Freshness signals for Article schema (answer engines weight recency
+     * heavily). Optional so existing entries keep building; add `datePublished`
+     * (and `dateModified` when revised) to emit dates. `z.coerce.date()` accepts
+     * a plain "YYYY-MM-DD" string in frontmatter. If omitted, no date is emitted
+     * — never a fabricated one.
+     */
+    datePublished: z.coerce.date().optional(),
+    dateModified: z.coerce.date().optional(),
     /** Prefilled mailto subject for this page's CTAs. */
     contactSubject: z.string(),
     /** The page's footer "let's talk" invitation (carries the draft's "the ask"). */
