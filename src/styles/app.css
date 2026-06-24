@@ -189,29 +189,32 @@
   nav a:focus-visible {
     color: var(--amber);
   }
-  /* mobile: the nav drops to its own full-width row (logo + CTA stay on row 1)
-     so every page stays reachable without a JS menu. */
+  /* On phones (below the 48rem rung) the logo + four nav items + CTA can't share
+     one row, so the nav drops to its own full-width row below — logo + CTA hold
+     row 1 — keeping every page reachable without a JS menu. Above 48rem they sit
+     inline; the .cta white-space:nowrap (above) is what holds the button on one
+     line through the 48–56rem band instead of wrapping, so no earlier collapse
+     is needed. */
   @media (max-width: 47.99rem) {
     .bar {
       flex-wrap: wrap;
       justify-content: space-between;
       row-gap: 0.7rem;
     }
+    /* gap spacing instead of the ::before middot, so the four items wrap to a
+       tidy second row without stranding a divider at the break */
     nav {
       order: 3;
       flex-basis: 100%;
       margin-left: 0;
       justify-content: center;
-      row-gap: 0.3rem;
+      gap: 0.3rem 1rem;
     }
-    /* the one intentional exception to the mono scale: nav shrinks below
-       --mono-fine so all three items + their dividers hold one centred row down
-       to ~340px (no dangling divider at a wrap) */
     nav a {
-      font-size: 0.75rem;
+      font-size: var(--mono-fine);
     }
     nav a + a::before {
-      margin-inline: 0.45rem;
+      content: none;
     }
   }
   /* drawn underline: in from the left, out to the right — never rewinds */
@@ -247,6 +250,7 @@
     font-weight: 600;
     font-size: var(--fs-ui);
     line-height: 1;
+    white-space: nowrap; /* a button label never wraps — line-height:1 makes a 2-line wrap read broken */
     display: inline-flex;
     align-items: center;
     gap: 0.5ch;
