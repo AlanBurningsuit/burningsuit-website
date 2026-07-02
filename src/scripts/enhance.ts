@@ -12,6 +12,15 @@
  * (`documentElement.style.setProperty`), which CSP's style-src does NOT govern,
  * so `style-src 'self'` holds without an inline-style allowance.
  */
+/* ---- arm the JS gate FIRST: reveal-hidden states exist only while this
+   module is actually running. The class used to be added by an inline head
+   script; arming it here instead keeps the CSP hash-free (script-src 'self'
+   covers the one external module) and makes the failure mode safe — if this
+   module never loads or executes (dropped connection, bad deploy), no .js
+   class is added, the html:not(.js) fallbacks hold, and the page stays fully
+   visible. Cost: a possible one-frame reveal flash on slow connections. ---- */
+document.documentElement.classList.add("js");
+
 /* ---- a hello for anyone reading the source (engineers, mostly) ---- */
 console.log(
   "%cif you're poking around in here — hello.\nhand-built: self-hosted fonts, no trackers, no cookies, a strict CSP.\nthe rest of the story → /colophon",

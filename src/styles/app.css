@@ -430,7 +430,9 @@
      .show. With JS off those masked lines keep their 110% translate and stay
      clipped out of view — most visibly the statement chapter, which would
      silently break the colophon's "readable if everything clever fails" boast.
-     Reveal them flat so the page is complete without JS. */
+     Reveal them flat so the page is complete without JS. The .js class itself
+     is armed by the enhance module (not an inline script), so a module that
+     never loads/executes degrades through this same fallback. */
   html:not(.js) .lines .l > .i {
     transform: none;
   }
@@ -1423,5 +1425,41 @@
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none !important;
+  }
+}
+
+/* ============ print: every end-state forced, nothing waits for scroll ============ */
+/* The scroll choreography reveals content as it enters the viewport, so printing
+   an unscrolled page would otherwise emit the unrevealed sections at opacity 0 /
+   translated out of their clip masks. Force the revealed end-state of every
+   mechanism (mirrors the reduced-motion end-states). Unlayered + last → wins. */
+@media print {
+  .js [data-reveal],
+  .enter {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+  .l > .i {
+    transform: none;
+    animation: none;
+  }
+  .js .thread {
+    transform: none;
+  }
+  .js .thread::after {
+    scale: 1;
+  }
+  .js .photo-ch .ph,
+  .js .figure-inset .ph {
+    clip-path: none;
+  }
+  .kt {
+    width: auto; /* full prompt static — shrink-to-fit, no typed-width constant */
+    animation: none;
+  }
+  .cursor {
+    animation: none;
   }
 }

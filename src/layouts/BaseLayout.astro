@@ -1,12 +1,14 @@
 ---
 /**
  * The document shell. Renders <head> (meta/OG, self-hosted <Font> tags, the
- * first-paint html.js script, the bundled enhancement module), the sticky
- * Header, the page's <main>, and the fixed basement Footer.
+ * bundled enhancement module), the sticky Header, the page's <main>, and the
+ * fixed basement Footer.
  *
  * The CSP <meta http-equiv> is injected automatically by Astro's `security.csp`
- * feature (it hashes the is:inline script + framework styles) — do NOT add one
- * here by hand.
+ * feature — do NOT add one here by hand. The page deliberately ships NO inline
+ * scripts: the `.js` reveal gate is armed inside the bundled module (see
+ * enhance.ts), so `script-src 'self'` covers every script on the page with no
+ * inline hashes to keep byte-true.
  */
 import { Font } from "astro:assets";
 import Header from "../components/Header.astro";
@@ -75,10 +77,6 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- first paint: mark JS so reveal-hidden states only exist with JS on -->
-    <script is:inline>
-      document.documentElement.classList.add("js");
-    </script>
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -133,9 +131,10 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     </Footer>
 
     <!-- progressive enhancement, bundled to an external module (script-src
-         'self'). Also carries the console greeting for anyone reading the
-         source — kept in the bundled module (not a second inline script) so the
-         meta-CSP covers it without an extra hash to keep in sync. -->
+         'self') — the ONLY script on the page. It arms the html.js reveal gate
+         first thing, so if it ever fails to load or execute, no hidden state is
+         armed and the page stays fully visible. Also carries the console
+         greeting for anyone reading the source. -->
     <script>
       import "../scripts/enhance.ts";
     </script>
