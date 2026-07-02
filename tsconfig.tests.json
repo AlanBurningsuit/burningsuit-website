@@ -1,0 +1,18 @@
+{
+  // Type-checks the Playwright layer (tests/ + playwright.config.ts), which the
+  // app tsconfig deliberately excludes so `astro check` stays scoped to src/.
+  // Playwright itself transpiles WITHOUT type-checking, so this is the only
+  // thing that types the specs at all. Run: `npm run check:tests` (chained
+  // into `npm run test:visual`).
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["tests/**/*.ts", "playwright.config.ts"]
+}

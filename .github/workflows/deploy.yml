@@ -26,8 +26,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      # withastro/action runs npm ci + astro build and uploads dist/ as the
-      # Pages artifact. Node 22 to match .nvmrc / package.json engines.
+      # withastro/action installs deps and runs `npm run build` by default —
+      # i.e. the FULL pipeline (prep:images → astro build → check:budget), so
+      # the byte budget gates production deploys too. Node 22 to match
+      # .nvmrc / package.json engines.
       - name: Build Astro site
         uses: withastro/action@v4
         with:
@@ -35,6 +37,11 @@ jobs:
 
   deploy:
     needs: build
+    # In-repo guard against a manual dispatch from dev/feature branches
+    # publishing an unreleased site to the apex. (The github-pages
+    # environment's branch policy also blocks this by default, but that's an
+    # out-of-repo setting nobody can see in review.)
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

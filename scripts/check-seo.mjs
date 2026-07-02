@@ -20,9 +20,17 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const DIST = "dist";
+// The canonical origin. astro.config.mjs `site` is authoritative — keep in sync.
+const SITE = "https://burningsuit.co.uk";
 
 const all = readdirSync(DIST, { recursive: true }).map((f) => String(f).replaceAll("\\", "/"));
 const pages = all.filter((f) => f.endsWith(".html")).sort();
+
+// A dist with zero pages must never read as a pass ("checked 0 pages ✓").
+if (pages.length === 0) {
+  console.error("SEO gate FAILED — dist/ contains no .html pages (build first?)");
+  process.exit(1);
+}
 
 const metaTags = (html) => [...html.matchAll(/<meta\b[^>]*>/gi)].map((m) => m[0]);
 const linkTags = (html) => [...html.matchAll(/<link\b[^>]*>/gi)].map((m) => m[0]);
@@ -41,10 +49,14 @@ const fail = (route, msg) => {
 for (const rel of pages) {
   const route = "/" + rel.replace(/index\.html$/, "").replace(/\.html$/, "");
   const html = readFileSync(join(DIST, rel), "utf8");
+  // Head-only slice for the <title> count: an accessible inline-SVG <title>
+  // in the body must not read as a duplicate document title.
+  const headEnd = html.indexOf("</head>");
+  const head = headEnd === -1 ? html : html.slice(0, headEnd);
 
   // <title>
-  const titles = [...html.matchAll(/<title[^>]*>([\s\S]*?)<\/title>/gi)].map((m) => m[1].trim());
-  if (titles.length !== 1) fail(route, `expected 1 <title>, found ${titles.length}`);
+  const titles = [...head.matchAll(/<title[^>]*>([\s\S]*?)<\/title>/gi)].map((m) => m[1].trim());
+  if (titles.length !== 1) fail(route, `expected 1 <title> in <head>, found ${titles.length}`);
   else if (!titles[0]) fail(route, "<title> is empty");
 
   // <meta name="description">
@@ -60,6 +72,17 @@ for (const rel of pages) {
     .map((t) => attr(t, "href"));
   if (canons.length !== 1) fail(route, `expected 1 canonical, found ${canons.length}`);
   else if (!/^https?:\/\//.test(canons[0] ?? "")) fail(route, `canonical not absolute: ${canons[0]}`);
+  else {
+    // The canonical must point at THIS route on the production origin —
+    // otherwise a single BaseLayout/site regression canonicalises every page
+    // to the homepage (mass deindexing) while a presence-only check stays
+    // green. Trailing-slash form is normalised, not asserted.
+    const norm = (u) => u.replace(/\/+$/, "");
+    const expected = SITE + route;
+    if (norm(canons[0]) !== norm(expected)) {
+      fail(route, `canonical ${canons[0]} does not match its route (expected ${expected})`);
+    }
+  }
 
   // robots noindex?
   const noindex = metaTags(html).some(

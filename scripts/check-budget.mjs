@@ -9,9 +9,8 @@
  *   - all fonts (woff2, already compressed)      <= 140 KB total
  *   - every image                                <  300 KB each
  *
- * Run after `npm run build`. The enhancement JS is inlined into each HTML by
- * Astro, so it's already inside the HTML's gzipped size; external JS, if any,
- * is added explicitly.
+ * Run after `npm run build`. The enhancement JS is an external module
+ * (script-src 'self'), so it's counted through its <script src> like the CSS.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { gzipSync } from "node:zlib";
@@ -26,6 +25,12 @@ const all = readdirSync(DIST, { recursive: true }).map((f) => String(f).replaceA
 const gz = (buf) => gzipSync(buf, { level: 9 }).length;
 const kb = (n) => (n / 1024).toFixed(1) + " KB";
 
+// A dist with zero routes must never read as a pass.
+if (!all.some((f) => f.endsWith(".html"))) {
+  console.error("byte-budget gate FAILED — dist/ contains no .html routes (build first?)");
+  process.exit(1);
+}
+
 let failed = false;
 
 // ---- critical render path, per route ----
@@ -34,16 +39,25 @@ console.log("  " + "route".padEnd(34) + "html".padStart(9) + "assets".padStart(1
 for (const rel of all.filter((f) => f.endsWith(".html")).sort()) {
   const html = readFileSync(join(DIST, rel));
   const text = html.toString();
+  // Attribute-order-independent: find each <link>, then check rel/href
+  // separately, so a generated-markup reorder can't silently zero the CSS.
   const refs = [
-    ...[...text.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"/g)].map((m) => m[1]),
+    ...[...text.matchAll(/<link\b[^>]*>/g)]
+      .filter((m) => /\brel="stylesheet"/.test(m[0]))
+      .map((m) => m[0].match(/\bhref="([^"]+)"/)?.[1])
+      .filter(Boolean),
     ...[...text.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => m[1]),
   ];
   let assetGz = 0;
   for (const href of refs) {
+    if (/^(https?:)?\/\//.test(href)) continue; // off-site — not ours to count
     try {
       assetGz += gz(readFileSync(join(DIST, href.replace(/^\//, ""))));
     } catch {
-      /* off-site or missing — not part of our critical path */
+      // A SITE-relative asset that can't be read is a broken critical path,
+      // not something to silently exclude from the measurement.
+      failed = true;
+      console.log(`asset MISSING: ${href} (referenced by ${rel}) ✗`);
     }
   }
   const htmlGz = gz(html);
