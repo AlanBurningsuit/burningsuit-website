@@ -33,48 +33,47 @@ const serviceRows: RowData[] = [
     href: "/power-bi/",
     title: { before: "power bi & fabric, done ", em: "with", after: " you" },
     body: "Embedded advisory, strategy and architecture review, and ongoing work inside Power BI and Fabric teams. You stay close to the work; I help your team feel like they've got it — so the know-how stays with you when I leave.",
-    cta: "see how it works",
+    cta: "see power bi & fabric",
   },
   {
     n: "02",
     href: "/ai-fit-for-teams/",
     title: { before: "ai ", em: "fit", after: " for teams" },
     body: "Copilot and agents can already write the DAX, build the model, even draft the whole report — but 'can' doesn't mean 'should'. I help your team work out what to hand over, what to keep, and who checks what, so the work stays yours to own and verify.",
-    cta: "see how it works",
+    cta: "see ai fit for teams",
   },
 ];
 
 const principles = [
   {
     title: "the answers are yours",
-    body: "I help your team reach the right answers for how you actually work, instead of arriving with mine. Understand your own models and data, and you can own them — and own what you hand to a tool.",
+    body: "I help your team reach the right answers for how you actually work, instead of arriving with mine. Understand your own models and data well enough to judge what's safe to hand to a tool.",
   },
   {
     title: "what not to automate",
-    body: "Knowing what not to automate matters as much as knowing what to. As the tools take on more of the build, the discipline is choosing which decisions you let it make — and staying conscious of where you've made the call.",
+    body: "Knowing what not to automate matters as much as knowing what to. As the tools take on more of the build, the discipline is choosing which decisions you let them make — and staying conscious of where you've made the call.",
   },
   {
     title: "mental models first",
-    body: "When a tool writes the DAX or builds the model, someone on your team still has to read it back and know whether it holds up. I help them build that judgment, so they catch a number that only looks right before it goes out.",
+    body: "When a tool writes the DAX or builds the model, someone on your team still has to read it back and know whether it holds up. I help them build that judgement, so they catch a number that only looks right before it goes out.",
   },
 ];
 
 const statementLines: Line[] = [
-  "ai can make the things.",
-  "the responsibility for them",
-  { before: "stays with ", em: "you", after: "." },
+  "ai will build whatever you ask.",
+  "someone still has to know",
+  { before: "what to ask ", em: "for", after: "." },
 ];
 ---
 
 <BaseLayout
   title="Power BI & Fabric advisory, done with you — burningsuit"
-  description="Embedded Power BI and Fabric advisory, done with you — strategy, architecture review, and team capability — with a clear-eyed take on what AI means for how the work gets built."
+  description="Embedded Power BI and Fabric advisory, done with you — ongoing work inside your team, so the know-how stays with you when I leave, even as AI takes on the typing."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
-    >Tell me where Power BI or Fabric is getting stuck — the bottleneck, the model nobody
-    quite trusts, the bit AI's about to change. If I can help, I'll tell you how; if I
-    can't, I'll tell you that too. Replies come from me</Fragment
+    >Tell me what your Power BI or Fabric team is wrestling with, and where you'd
+    like it to get to. Replies come from me</Fragment
   >
 
   <section class="hero">
@@ -91,7 +90,7 @@ const statementLines: Line[] = [
           <strong>keep the work yours, even as AI takes on the typing</strong>.
         </p>
         <p class="hero-sig enter appear-450">
-          I'm Alan. I've spent five years with teams adopting Power BI and Fabric, and a
+          I'm Alan. I've spent five years with teams adopting Power BI, and a
           decade building software before that.
         </p>
         <BookCta src="hero" mailtoHref={contactMailto} variant="hero" rowClass="enter appear-600" />
@@ -146,7 +145,7 @@ const statementLines: Line[] = [
   <PhotoChapter />
 
   <StatementChapter
-    label="ai can make the things. the responsibility for them stays with you."
+    label="ai will build whatever you ask. someone still has to know what to ask for."
     lines={statementLines}
   />
 

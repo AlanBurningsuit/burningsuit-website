@@ -58,21 +58,34 @@ export const ANALYTICS = {
  * Keep this in sync with the visible on-page copy: Google penalises
  * structured data that describes content the user can't see. Schema
  * strings duplicated as literals in a layout drift; sourced from here
- * they can't. Company-number-bearing fields (legalName, registration)
- * stay omitted until the real Companies House number lands (Stage 0) —
- * mirror that discipline for any field you can't yet stand behind.
+ * they can't. The Companies House registration is wired below (ORG_LEGAL,
+ * confirmed against the register), and the founder sameAs now carries Alan's
+ * confirmed LinkedIn. Logo stays omitted until a real asset exists — keep that
+ * discipline for any field you can't yet stand behind, and never fabricate one.
  * ------------------------------------------------------------------ */
 export const SITE_NAME = "burningsuit";
 
 /** The org's own description (ProfessionalService). Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =
-  "Embedded Power BI and Fabric advisory, done with you — strategy, architecture review, and team capability — with a clear-eyed take on what AI means for how the work gets built.";
+  "Embedded Power BI and Fabric advisory, done with you — ongoing work inside your team, so the know-how stays with you when I leave, even as AI takes on the typing.";
 
 /** Postal identity (no street — area-served advisory, not a storefront). */
 export const ORG_ADDRESS = {
   addressRegion: "West Sussex",
   addressCountry: "GB",
+} as const;
+
+/**
+ * Companies House registration, wired into the Organization schema. Confirmed
+ * against the register: legal name "BURNINGSUIT LIMITED" (standard-cased here;
+ * the brand stays lowercase everywhere else), number 05738130 (8 digits, the
+ * leading zero kept). Emitted as legalName + an identifier PropertyValue on the
+ * Organization node (schema.ts).
+ */
+export const ORG_LEGAL = {
+  legalName: "Burningsuit Limited",
+  companyNumber: "05738130",
 } as const;
 
 /** The advisory's areas of work — used as Organization `knowsAbout`. (We model
@@ -88,9 +101,9 @@ export const SERVICE_AREAS = [
  * The founder, for E-E-A-T Person schema. `sameAs` carries public profile
  * URLs (LinkedIn, etc.) that let answer engines tie the named author to a
  * real identity — the single biggest authority signal for an advisory.
- * Left EMPTY until Alan confirms the canonical URLs: never fabricate a
- * profile link (it fails the voice skill's truth test and Google's). Add
- * them here and they flow into Person + Organization automatically.
+ * Owner-confirmed only: never fabricate a profile link (it fails the voice
+ * skill's truth test and Google's). These flow into Person + Organization
+ * automatically, and compact() in schema.ts omits the field while it's empty.
  */
 export const FOUNDER = {
   name: "Alan Harman-Box",
@@ -104,6 +117,6 @@ export const FOUNDER = {
     "Power BI governance",
     "AI for data teams",
   ],
-  /** Owner-supplied. e.g. "https://www.linkedin.com/in/…". Empty = omit. */
-  sameAs: [] as string[],
+  /** Owner-supplied, confirmed. Empty = omit. */
+  sameAs: ["https://www.linkedin.com/in/alan-harman-box"] as string[],
 } as const;

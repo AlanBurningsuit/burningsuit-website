@@ -26,9 +26,10 @@ interface Props {
   /** Emit <meta name="robots" content="noindex"> — used by /404 so error pages
    *  stay out of the index. */
   noindex?: boolean;
-  /** Prefilled mailto subject for this page's CTAs (header + footer). Keeps the
-   *  one-action/no-funnel model while giving the reader a contextual starting
-   *  line. Omit for a bare mailto. */
+  /** Prefilled mailto subject for the page's email path (the footer "email me"
+   *  and any page-level mailto). Part of the two-path funnel — book a call +
+   *  email — giving the reader a contextual starting line. Omit for a bare
+   *  mailto. */
   contactSubject?: string;
   /** og:type — "website" (default) for landing pages, "article" for editorial
    *  pages (case studies / blog). Drives the article:* time tags below. */

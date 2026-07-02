@@ -1,28 +1,27 @@
 ---
 order: 3
-title: "From a dashboard ask to a foundation they own — burningsuit"
+title: "A university's carbon footprint, moved off one person's spreadsheet — a Power BI case study — burningsuit"
 description: >-
-  A UK university's sustainability team asked for a dashboard. It was the wrong
-  place to start - so I wrote the business case and roadmap first, then built a
-  model their own team can run, validated to within rounding.
+  Power BI case study: a UK university's carbon footprint ran on one person's
+  spreadsheet - the wrong place for a dashboard. I built a model their team can
+  run.
 kicker: "case file"
 heading:
-  before: "from a dashboard ask to a "
-  em: "foundation"
-  after: " they own."
+  before: "a university's carbon footprint, moved off one person's "
+  em: "spreadsheet"
+  after: "."
 descriptor: "a UK university's sustainability team"
 lead: >-
-  Their whole carbon footprint rested largely on one self-taught person, days of
-  Excel per faculty report, a reporting cycle that ran to about eight days by
-  hand. The ask that came in was "help us get to a dashboard". The dashboard
-  wasn't the thing that was going to help him yet.
+  A UK university's whole carbon footprint rested largely on one self-taught
+  person, and a reporting cycle that ran to about eight days by hand. The ask
+  that came in was "help us get to a dashboard". The dashboard wasn't the thing
+  that was going to help him yet.
 tileOutcome: >-
-  They asked for a quick dashboard. I told them the dashboard was the wrong
-  place to start - and a few months later they had a proper model their own team
-  could run.
+  They asked for a dashboard. I told them it was the wrong place to start - and a
+  few months later they had a proper model their own team could run.
 datePublished: 2026-06-23
 dateModified: 2026-06-23
-contactSubject: "Power BI & Fabric"
+contactSubject: "Power BI — off one spreadsheet"
 footerInvitation: >-
   If something your organisation reports on is really running on one person and
   one spreadsheet - or you've been asked to just build a dashboard on top of it
@@ -39,8 +38,8 @@ design/copy/case-studies/03; pending Alan's final voice sign-off. */}
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
 <li><strong>who:</strong> the sustainability team at a UK university, whose whole carbon footprint rested largely on one self-taught person</li>
 <li><strong>the ask:</strong> "help us get to a dashboard" - and a budget that needed spending</li>
-<li><strong>what I did:</strong> reframed it from a dashboard into a business-risk problem, wrote the business case and roadmap, then built the foundation properly when a summer prototype proved the point</li>
-<li><strong>where it got to:</strong> a documented production model, validated to within rounding, that the lead can run and extend himself</li>
+<li><strong>what I did:</strong> reframed it from a dashboard into a business-risk problem, wrote the business case and roadmap, then built it out for real once a summer prototype proved the point</li>
+<li><strong>where it got to:</strong> a documented production model the lead can run and extend himself, its numbers checked against his own</li>
 </Snapshot>
 
 <Chapter id="started" kicker="where he was">
@@ -63,13 +62,13 @@ When the sponsor pushed back - fair questions about value for money, and a prefe
 
 Over the summer, a student on the team built a working prototype, and it did its job. It proved Power BI could handle the university's carbon data, and it turned vague requirements into concrete, working examples. I said that plainly, because it mattered: none of it was wrong. It's exactly what happens when a capable person builds something real without years of data architecture behind them.
 
-But it had the classic signs of a model grown bottom-up - everything in one wide table, the logic sitting in calculated columns, no real date or organisation dimensions - and left as it was, every new request would mean rework, and the reliance on one person would only deepen. So I wrote it up as two roads. Keep building on the prototype: cheaper now, but progressively more fragile and more dependent on him. Or pause and build the foundation properly: more upfront, but an asset that gets easier to extend as it grows. I recommended building it properly, in writing, and said plainly that the decision was theirs.
+But it had the classic signs of a model grown bottom-up - everything in one wide table, the logic sitting in calculated columns, no real date or organisation dimensions - and left as it was, every new request would mean rework, and the reliance on one person would only deepen. So I wrote it up as two roads. Keep building on the prototype: cheaper now, but progressively more fragile and more dependent on him. Or pause and build the foundation properly: more upfront, but an asset that gets easier to extend as it grows. I recommended the foundation, in writing, and said plainly that the decision was theirs.
 
 </Chapter>
 
 <Chapter id="build" kicker="the build: a model that shows its own working">
 
-They chose to build it properly, and I did. I rebuilt the prototype as a production model with the heavy lifting moved into the data load, before the reports ever see it. The two very different kinds of activity - what the university buys, and how it travels - got their own fact tables, because they're measured differently and use different emissions methods. The carbon is worked out as the data loads, so the reports just add up a column and stay fast.
+They chose the foundation, and I built it. I rebuilt the prototype as a production model with the heavy lifting moved into the data load, before the reports ever see it. The two very different kinds of activity - what the university buys, and how it travels - got their own fact tables, because they're measured differently and use different emissions methods. The carbon is worked out as the data loads, so the reports just add up a column and stay fast.
 
 If you're sceptical, this is the part I'd point you at - the bits that protect trust in the number:
 
@@ -97,7 +96,7 @@ It validated against his own spreadsheet to within rounding.
 
 <Chapter id="wrong" kicker="when I got something wrong, I said so">
 
-Two things I'd flag. When he spotted, mid-hand-over, that I'd wired up calendar-year factors where it should have been the academic year, I confirmed it and fixed it before the next session rather than waving it away. If I get something wrong, I'd rather you heard it from me. And when a validation gap appeared against one of his travel totals, he asked me to hold off recalculating until he'd checked his own source's factors. So I held off, and we left his totals alone until he'd had the chance to check them himself.
+Two things I'd flag. When he spotted, mid-hand-over, that I'd wired up calendar-year factors where it should have been the academic year, I confirmed it and fixed it before the next session rather than waving it away. If I get something wrong, I'd rather you heard it from me. And when a validation gap appeared against one of his travel totals, he asked me to hold off recalculating until he'd checked his own source's factors. So I held off, and we left his totals alone until he'd had the chance to check them himself. Once he had, the gap resolved and we moved on.
 
 </Chapter>
 

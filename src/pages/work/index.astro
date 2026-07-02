@@ -2,18 +2,19 @@
 /**
  * /work — the case-study index.
  *
- * A text-led page-hero that earns the anonymity (NDA work, told without logos,
- * detail turned up not down), then the four studies as carved "case file" tiles
- * built from the `work` collection (sorted by `order`) through ServiceRows — the
- * same cream-panel-as-link the homepage uses. Adding a study to the collection
- * adds a tile here automatically.
+ * A text-led page-hero pitched on recognition (real Power BI & Fabric work, told
+ * without the client names — a cold reader should see their own situation in the
+ * pain triad), then the four studies as carved "case file" tiles built from the
+ * `work` collection (sorted by `order`) through ServiceRows — the same
+ * cream-panel-as-link the homepage uses. Adding a study to the collection adds a
+ * tile here automatically.
  */
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ServiceRows from "../../components/ServiceRows.astro";
 import type { RowData } from "../../components/ServiceRow.astro";
 
-const contactSubject = "Power BI & Fabric";
+const contactSubject = "Power BI & Fabric — one of these sounds like us";
 
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
 const rows: RowData[] = studies.map((s) => ({
@@ -26,13 +27,13 @@ const rows: RowData[] = studies.map((s) => ({
 ---
 
 <BaseLayout
-  title="Work — Power BI & Fabric case studies — burningsuit"
-  description="Real Power BI and Fabric jobs: a law firm's data team, a contact-centre lead, a university carbon model, and a museum that ran on a whiteboard. Read the one that sounds like yours."
+  title="Power BI & Fabric case studies — burningsuit"
+  description="Power BI and Fabric case studies, told without the logos: a law firm's data team, a contact-centre lead, a university carbon model, and a museum that ran on a whiteboard."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
-    >If one of these sounds like where you are, tell me about it. If I can help, I'll
-    tell you how; if I can't, I'll tell you that too</Fragment
+    >If one of these sounds like where you are, tell me about it - even if you're
+    not sure it's a project yet</Fragment
   >
 
   <section class="page-hero">
@@ -40,8 +41,9 @@ const rows: RowData[] = studies.map((s) => ({
       <p class="kicker meta enter">the work</p>
       <h1 class="enter appear-300">you might recognise one of these.</h1>
       <p class="lead enter appear-450">
-        A bottleneck, a model nobody quite trusts, every report still done by hand.
-        Read the one that sounds like yours.
+        Four real Power BI and Fabric engagements I've worked on, told without the
+        client names. A bottleneck, a model nobody quite trusts, every report still
+        done by hand. Read the one that sounds like yours.
       </p>
     </div>
   </section>

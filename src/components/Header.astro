@@ -3,9 +3,10 @@
  * Sticky header. Hides on scroll-down, returns on scroll-up (enhance.ts adds
  * `.hh`). Nav links the pages that ship — power-bi (the front door) first, the
  * ai-fit bridge, then /work (the proof) and /about. /contact is not emitted; the
- * mailto is the contact path. The drawn underline (.u) and instant-flip CTA
- * live in app.css. `mailtoHref` carries the page's prefilled subject (built in
- * BaseLayout); defaults to a bare mailto.
+ * two contact paths (book a call + email) live in the footer close. The drawn
+ * underline (.u) and instant-flip CTA live in app.css. The header's one action is
+ * the book-a-call CTA; `mailtoHref` is accepted so BaseLayout can pass header and
+ * footer the same props, but the header itself renders no mailto.
  */
 import { bookingHref } from "../config/site";
 interface Props {

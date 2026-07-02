@@ -18,7 +18,7 @@ const heroLines: Line[] = [{ before: "make ai ", em: "fit", after: " the team." 
 // below, so it's deliberately NOT repeated in the worry list.
 
 const worries = [
-  "Is the team actually getting much out of AI, or just licensed for it?",
+  "Is the team getting much out of AI, or just licensed for it?",
   "Is there more you could be doing with it — or less?",
   "Is your data going somewhere it shouldn't?",
   "Are you being handed work nobody can quite vouch for?",
@@ -31,7 +31,7 @@ const movements = [
   },
   {
     title: "conversations with the team",
-    body: "Then I sit with the team and get the real picture of how the work actually happens — what's frustrating, what's easy, what tools they're drawn to, what they want to be able to do. If AI's already in use, we open up what it's actually producing — the DAX it wrote, the model it built — and I show you where it holds up and where it doesn't. That's the part that's hard to see from where you sit.",
+    body: "Then I sit with the team and get the real picture of how the work happens — what's frustrating, what's easy, what tools they're drawn to, what they want to be able to do. If AI's already in use, we open up what it's producing — the DAX it wrote, the model it built — and go through it together, where it holds up and where it doesn't.",
   },
   {
     title: "the fit map",
@@ -52,7 +52,7 @@ const door: RowData[] = [
     n: "→",
     href: "/power-bi/",
     title: { before: "power bi & fabric, done ", em: "with", after: " you" },
-    body: "When the work is specifically Power BI or Fabric — the bottleneck, the model nobody quite trusts, the architecture question — that's where to start. Embedded advisory, strategy and review, done with you.",
+    body: "When the work is specifically Power BI or Fabric — an architecture call, a model that needs owning, a team you'd like more self-sufficient — that's where to start. Embedded advisory, strategy and review, done with you.",
     cta: "see power bi, done with you",
   },
 ];
@@ -74,10 +74,10 @@ const door: RowData[] = [
         <p class="kicker meta enter">ai fit for teams</p>
         <RiseHeading as="h1" kind="hero" label="make ai fit the team." lines={heroLines} />
         <p class="lead enter appear-300">
-          Most teams I meet have built something solid in Power BI and Fabric — and now AI can
-          write the DAX, build the model, even draft the report. I help your team work out where
-          that genuinely helps, where it's costing them more than it saves, and which decisions
-          should stay yours — without promising you 10x speed-ups.
+          I'm Alan. Most teams I meet have built something solid in Power BI and Fabric — and now
+          Copilot and agents can write the DAX, build the model, even draft the report. I help
+          your team work out what to hand over, what to keep, and who checks what — where that
+          genuinely helps, and where it costs more than it saves.
         </p>
       </div>
       {/* The buyer's own question as a carved terminal readout: claim (h1, right)
@@ -116,10 +116,10 @@ const door: RowData[] = [
       <h2 class="label kicker meta" id="not-behind" data-reveal>you're not behind</h2>
       <div class="prose">
         <p data-reveal>
-          I won't walk in assuming your team's fallen behind, or that the people are the problem.
-          Most teams I sit with are sharper than they've been given credit for — heads-down on the
-          day job, a bit wary of what the latest thing's really for, and just short of someone to
-          think it through with.
+          I won't walk in assuming your team's fallen behind on AI, or that the people are the
+          problem. The teams I sit with usually know their own data and models inside out. What
+          they're short of is an unhurried hour to work out which of these tools earns its place,
+          and which is a demo that won't survive contact with their real reports.
         </p>
       </div>
     </div>
@@ -185,11 +185,12 @@ const door: RowData[] = [
       <h2 class="label kicker meta" id="copilot" data-reveal>already rolled out copilot?</h2>
       <div class="prose">
         <p data-reveal>
-          Good — that's a start, but it's only licences. How is it being used? Is anyone
-          faster? Have the outputs improved? Who's checking the DAX it writes? If you can
-          answer all of those crisply, you're further along than most — and probably worth a
-          conversation anyway, because the watch list is where the value is. If any of them
-          give you pause, that's exactly what the fit map sorts out.
+          Good — that's a start, but it's only licences so far. What changed once it landed: is
+          anyone faster, are the outputs any better, and is someone reading the DAX back before
+          it ships? The catch with Copilot is that it sounds just as sure about a model it's
+          misread as one it's nailed. If those answers come back crisp — outputs demonstrably
+          better, someone clearly checking the DAX — you're in good shape and you probably don't
+          need me. If a couple went quiet, that's the gap the fit map closes.
         </p>
       </div>
     </div>
@@ -200,8 +201,9 @@ const door: RowData[] = [
       <h2 class="label kicker meta" id="belief" data-reveal>what it comes down to</h2>
       <div>
         <p class="belief" data-reveal>
-          Every piece of work is a stack of decisions. Hand it to AI without naming them and it
-          makes them for you — and a tool can't take <em>responsibility</em> for a decision.
+          Every piece of work is a stack of decisions. Hand a problem to AI without naming those
+          decisions, and it makes them for you — and a tool can't take <em>responsibility</em>
+          for a decision.
         </p>
       </div>
     </div>
@@ -213,7 +215,7 @@ const door: RowData[] = [
       <div class="prose">
         <p data-reveal>
           A few days of my time, spread over two or three weeks, fitted around the team's
-          actual work. It starts with a conversation.
+          work. It starts with a conversation.
         </p>
       </div>
     </div>
