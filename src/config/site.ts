@@ -11,7 +11,10 @@ export const CONTACT_EMAIL = "alan@burningsuit.co.uk";
 
 /**
  * The hosted Cal.com scheduling page — Alan's 30-minute event, direct (skips the
- * profile menu) so the click matches the "book a 30-minute call" label.
+ * profile menu) so the click matches the booking labels. The full label is
+ * "book a 30-minute call" (footer, BookCta); the header deliberately abbreviates
+ * to "book a call" because the long form wraps at mid widths (owner call,
+ * 2026-07-02) — the Cal page itself states the duration either way.
  */
 export const BOOKING_URL = "https://cal.com/alan-burningsuit/30min";
 
@@ -107,7 +110,10 @@ export const SERVICE_AREAS = [
  */
 export const FOUNDER = {
   name: "Alan Harman-Box",
-  jobTitle: "Power BI, Fabric & AI advisor",
+  // Mirrors the visible ranking (owner call, 2026-07-02): Power BI & Fabric are
+  // the front door; AI stays in knowsAbout/SERVICE_AREAS (ordered last), matching
+  // the copy's "the main work" / "the other thing I do" framing.
+  jobTitle: "Power BI & Fabric advisor",
   knowsAbout: [
     "Power BI",
     "Microsoft Fabric",
