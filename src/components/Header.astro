@@ -18,6 +18,10 @@ const nav = [
   { href: "/work/", label: "work" },
   { href: "/about/", label: "about" },
 ];
+// aria-current wayfinding — server-rendered per page, zero runtime cost.
+// Trailing-slash-normalised so dev-server paths match the built /page/ form.
+const here = Astro.url.pathname.replace(/\/+$/, "");
+const isCurrent = (href: string) => here === href.replace(/\/+$/, "");
 ---
 <header id="hd">
   <div class="wrap bar">
@@ -30,7 +34,9 @@ const nav = [
       /></a
     >
     <nav aria-label="Main">
-      {nav.map((n) => <a class="u" href={n.href}>{n.label}</a>)}
+      {nav.map((n) => (
+        <a class="u" href={n.href} aria-current={isCurrent(n.href) ? "page" : undefined}>{n.label}</a>
+      ))}
     </nav>
     <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">book a call</a>
   </div>

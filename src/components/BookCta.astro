@@ -6,11 +6,11 @@
  *                     inside the hero grid; positioned by `.hero .cta-row`.
  * variant="section" — the page's ACTION as a calm, full-width CENTRED invitation:
  *                     a de-risk line, ONE primary "book a call" button, and a quiet
- *                     "or email me" text link. Render it as a DIRECT child of
- *                     `.what` so it can span both grid columns (page-centred, not
- *                     centred in the off-centre content column) and sit under a
- *                     hairline — a deliberate "act here" beat, not buttons dropped
- *                     into the reading prose.
+ *                     "or email me" text link. Rendered inside the page's single
+ *                     full-bleed band: <section class="cta-band"><div class="wrap">
+ *                     <BookCta …> — the recessed "act here" beat between chapters
+ *                     (see .cta-band in app.css), not buttons dropped into the
+ *                     reading prose.
  *
  * The booking link is external (new tab); a top-level navigation needs no CSP
  * change. The default slot is the de-risk / context microcopy for this placement.

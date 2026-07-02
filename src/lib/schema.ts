@@ -77,7 +77,9 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
     jobTitle: FOUNDER.jobTitle,
     knowsAbout: [...FOUNDER.knowsAbout],
     worksFor: { "@id": orgId(siteUrl) },
-    url: `${siteUrl}about`,
+    // Trailing slash matters: /about/ is the canonical form every page links
+    // and the sitemap emits — the entity URL must resolve the same way.
+    url: `${siteUrl}about/`,
     sameAs: [...FOUNDER.sameAs],
   });
 

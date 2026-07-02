@@ -44,10 +44,7 @@ if ("IntersectionObserver" in window) {
       }),
     { rootMargin: "0px 0px -15% 0px" },
   );
-  targets.forEach((el) => {
-    if (el.hasAttribute("data-reveal-lines")) el.classList.add("lines");
-    io.observe(el);
-  });
+  targets.forEach((el) => io.observe(el));
 } else {
   targets.forEach((el) => el.classList.add("show"));
 }
@@ -62,14 +59,14 @@ if (ft) {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(setFh);
 }
 
-/* ---- live local time (degrades to the static label without JS) ---- */
+/* ---- live local time in the footer (degrades to the static "gmt" label) ---- */
 const fmt = new Intl.DateTimeFormat("en-GB", {
   hour: "2-digit",
   minute: "2-digit",
   timeZone: "Europe/London",
 });
 const tick = () =>
-  ["clock", "clock2"].forEach((id) => {
+  ["clock2"].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.textContent = fmt.format(new Date());
   });

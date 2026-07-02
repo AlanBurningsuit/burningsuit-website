@@ -1,7 +1,7 @@
 /**
- * QA / fidelity capture (not a gate). Screenshots the three built Astro pages
- * and the pinned B5 source for side-by-side human sign-off. Requires two
- * http-servers already running:
+ * QA / fidelity capture (not a gate). Screenshots the built Astro pages (and
+ * the archived B5 concept when the local-only design/ tree is present) for
+ * side-by-side human sign-off. Requires two http-servers already running:
  *   - :4321  serving dist/                  (the Astro build)
  *   - :4322  serving the repo root          (so B5's ../resources resolves)
  *
@@ -19,6 +19,11 @@ const targets = [
   { url: "http://localhost:4321/", name: "home" },
   { url: "http://localhost:4321/ai-fit-for-teams/", name: "ai-fit" },
   { url: "http://localhost:4321/power-bi/", name: "power-bi" },
+  { url: "http://localhost:4321/about/", name: "about" },
+  { url: "http://localhost:4321/work/", name: "work" },
+  { url: "http://localhost:4321/work/law-firm/", name: "work-law-firm" },
+  { url: "http://localhost:4321/colophon/", name: "colophon" },
+  // archived design reference — SKIPs when the local-only design/ tree is absent
   { url: "http://localhost:4322/design/concept-b5-alive.html", name: "b5-home" },
 ];
 const viewports = [
@@ -38,7 +43,13 @@ for (const t of targets) {
       });
       const page = await ctx.newPage();
       await page.clock.install({ time: new Date("2026-06-15T10:30:00") });
-      await page.goto(t.url, { waitUntil: "load", timeout: 20000 });
+      const res = await page.goto(t.url, { waitUntil: "load", timeout: 20000 });
+      // goto doesn't throw on an HTTP 404 — don't cheerfully "shot:" the 404 page.
+      if (!res || !res.ok()) {
+        console.log(`SKIP ${file}: HTTP ${res ? res.status() : "no response"}`);
+        await ctx.close();
+        continue;
+      }
       await page.waitForLoadState("networkidle", { timeout: 8000 }).catch(() => {});
       await page.evaluate(() => document.fonts.ready);
       // fire every reveal, then return to the top

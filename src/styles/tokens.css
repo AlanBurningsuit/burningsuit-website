@@ -31,6 +31,8 @@
 @theme inline {
   --font-sans: var(--font-albert);
   --font-display: var(--font-mona);
+  /* fallback stack duplicated at --ff-mono below (a @theme inline var can't be
+     safely referenced from :root) — edit BOTH together */
   --font-mono: var(--font-commit), ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
 }
 
@@ -39,7 +41,6 @@
    like the concept (concepts/concept-green-instrument.html). */
 :root {
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* entrances: rises, settles, draws-in */
-  --ease-draw: cubic-bezier(0.645, 0.045, 0.355, 1); /* hairline rules only */
   --ease-step2: steps(2); /* the .cta press-in stutter */
   --ease-step3: steps(3); /* the panel press-in stutter */
   /* duration scale — every transition / animation timing maps to one of these,
@@ -49,16 +50,13 @@
   --t-nudge: 0.2s; /* arrow nudge on hover */
   --t-ui: 0.3s; /* default UI move + the reduced-motion fade */
   --t-fade: 0.4s; /* opacity reveals */
-  --t-slide: 0.6s; /* mail underline sweep */
   --t-draw: 0.65s; /* the thread grow */
   --t-move: 0.9s; /* content rise / settle */
-  --t-rule: 1s; /* hairline self-draw */
   --t-reveal: 1.1s; /* photo curtain */
   --t-blink: 1.15s; /* cursor blink */
   --t-type: 1.2s; /* typewriter */
-  --d-tap: 0.15s; /* second-pass underline offset */
   --stagger-fast: 80ms; /* per-item reveal cadence — rises */
-  --stagger-slow: 120ms; /* per-item reveal cadence — rules / settles */
+  --stagger-slow: 120ms; /* per-item reveal cadence — settles */
   --rise: 24px;
 
   --bg: var(--color-bg);
@@ -87,6 +85,7 @@
 
   --ff-display: var(--font-mona);
   --ff-body: var(--font-albert);
+  /* stack duplicated in @theme inline's --font-mono above — edit BOTH together */
   --ff-mono: var(--font-commit), ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
 
   /* mono instrument-label scale — three deliberate steps; every mono label maps
@@ -105,8 +104,7 @@
   /* display / hero — impact sizes */
   --fs-display: clamp(2.8rem, 1.4rem + 7vw, 7rem); /* outro h2 (preserved) */
   --fs-7: clamp(2.6rem, 1.5rem + 5.5vw, 5.9rem); /* page-hero h1 */
-  --fs-6: clamp(2.4rem, 1.633rem + 3.83vw, 4.7rem); /* home hero (preserved) */
-  --fs-5: clamp(2.1rem, 1.55rem + 2.75vw, 3.75rem); /* pbi-hero (narrower column) */
+  --fs-6: clamp(2.4rem, 1.633rem + 3.83vw, 4.7rem); /* home hero + pbi-hero (preserved) */
   /* content headings — the clean ÷1.25 ramp */
   --fs-4: clamp(1.8rem, 1.4rem + 2vw, 3rem); /* about h2 + statement + mail */
   --fs-3: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem); /* belief */
@@ -114,7 +112,6 @@
   --fs-1: clamp(1.2rem, 1.087rem + 0.57vw, 1.54rem); /* principle h3 — smallest heading */
   /* leads */
   --fs-lead: clamp(1.1rem, 1.017rem + 0.42vw, 1.35rem); /* .lead + hero lede */
-  --fs-lead-sm: clamp(1.05rem, 1rem + 0.25vw, 1.2rem); /* bottleneck beats */
   /* body + fixed UI / prose */
   --fs-base: clamp(1.02rem, 0.98rem + 0.3vw, 1.15rem); /* body — the anchor */
   --fs-sm: 0.98rem; /* secondary body — card + principle paragraphs */
@@ -169,4 +166,9 @@
   --space-block: 1.1rem; /* the common fixed margin above a sub-block */
   --gutter: clamp(1.15rem, 4vw, 3rem); /* the page inline gutter */
   --footer-h: clamp(540px, 80svh, 840px); /* CSS fallback; JS measures the real height */
+  /* ≈ the sticky header bar's height (emergent: logo clamp(140px,15vw,180px) at
+     285:52 + .bar padding-block 0.85rem). One value, two consumers — the hero's
+     min-height and the sticky .what label offset — so a bar/logo change can't
+     silently mis-centre one of them. */
+  --header-h: 3.6rem;
 }

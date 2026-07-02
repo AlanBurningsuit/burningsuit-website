@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ServiceRows from "../components/ServiceRows.astro";
 import Aside from "../components/Aside.astro";
+import Offer from "../components/Offer.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import type { Line } from "../components/RiseHeading.astro";
@@ -27,7 +28,6 @@ const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", 
 // hero's AI beat, so the card now carries the AI-pressure substance on its own.
 const aiDoor: RowData[] = [
   {
-    n: "→",
     href: "/ai-fit-for-teams/",
     title: { before: "ai ", em: "fit", after: " for teams" },
     body: "Copilot and agents can already write the DAX, build the model, even draft the whole report — but 'can' doesn't mean 'should'. Working out what to hand over, what to keep, and who checks what is the other thing I do, so the work stays yours to own and verify.",
@@ -93,8 +93,7 @@ const aiDoor: RowData[] = [
           <em>capable</em> of owning it — with or without me.
         </p>
 
-        <div class="offer offer-lead" data-reveal>
-          <h3>embedded advisory</h3>
+        <Offer title="embedded advisory" lead>
           <p>
             The work I rate most highly: I join your team for a stretch — office hours,
             workshops, one-on-ones — working on your real problems, in your real workspace,
@@ -102,35 +101,32 @@ const aiDoor: RowData[] = [
             scheduled course, and by the third month the team is making its own changes and
             catching a wrong number before it goes out, without needing to check with me first.
           </p>
-        </div>
+        </Offer>
 
-        <div class="offer" data-reveal>
-          <h3>strategy &amp; architecture review</h3>
+        <Offer title="strategy & architecture review">
           <p>
             Before anything gets built: what are we measuring, really? Is the model carrying
             the business logic it should? Does the move onto Fabric earn its keep, and where?
             I'll tell you what it's going to cost and what you're going to get — including when
             the honest answer is that a new model won't fix this.
           </p>
-        </div>
+        </Offer>
 
-        <div class="offer" data-reveal>
-          <h3>ongoing work</h3>
+        <Offer title="ongoing work">
           <p>
             The point of all of it is capability: a team that can build, change and verify the
             work without waiting on one person. The learning lands on your own data, inside
             your actual problems, because that's where it sticks — so when I leave, the know-how
             stays with your team.
           </p>
-        </div>
+        </Offer>
 
-        <div class="offer" data-reveal>
-          <h3>build work, case by case</h3>
+        <Offer title="build work, case by case">
           <p>
             And if you have a specific, well-thought-through Power BI build in mind, ask — I take
             those on case by case.
           </p>
-        </div>
+        </Offer>
       </div>
     </div>
   </section>

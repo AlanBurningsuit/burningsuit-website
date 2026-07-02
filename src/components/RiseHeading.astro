@@ -7,7 +7,8 @@
  *     IntersectionObserver triggers the rise on scroll.
  *
  * Lines are STRUCTURED fragments — a plain string, or { before, em, after } to
- * embed one real <em> (the serif-italic accent). No set:html anywhere.
+ * embed one real <em> (the amber colour accent — the type system has no
+ * italic). No set:html anywhere.
  *
  * The statement is a <p> (`as="p"`), never a <blockquote>: the source copy is a
  * plain statement, not a quotation.
@@ -61,7 +62,7 @@ const classes = [
           {typeof line === "string" ? (
             line
           ) : (
-            <Fragment>{line.before}<em>{line.em}</em>{line.after}</Fragment>
+            <Fragment>{line.before}{line.em && <em>{line.em}</em>}{line.after}</Fragment>
           )}
         </span>
       </span>

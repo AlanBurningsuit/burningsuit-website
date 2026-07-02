@@ -10,13 +10,13 @@
  */
 import FaceChip from "./FaceChip.astro";
 import { commitHash } from "../lib/commit";
-import { bookingHref } from "../config/site";
+import { bookingHref, mailtoFor } from "../config/site";
 interface Props {
   /** The mailto (with optional prefilled ?subject=) built per-page in
    *  BaseLayout; defaults to a bare mailto. */
   mailtoHref?: string;
 }
-const { mailtoHref = "mailto:alan@burningsuit.co.uk" } = Astro.props;
+const { mailtoHref = mailtoFor() } = Astro.props;
 ---
 <footer aria-labelledby="talk-h">
   <div class="wrap outro">

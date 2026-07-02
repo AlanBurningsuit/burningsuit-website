@@ -27,7 +27,7 @@
 
 /* ---- per-element stagger + entrance delay as literal utilities ----
    stagger-N → --i:N (a unitless index; each context multiplies it: hero/lines
-   ×80ms, reveals/rules ×120ms). appear-N → --d:Nms (entrance animation-delay).
+   ×80ms, reveals ×120ms). appear-N → --d:Nms (entrance animation-delay).
    Written as literals in markup (stagger-2, appear-450) so Tailwind detects
    them; never string-built. */
 @utility stagger-* {
@@ -37,8 +37,11 @@
   --d: calc(--value(integer) * 1ms);
 }
 /* Guarantee the finite set is emitted even though stagger-N is composed by
-   index in RiseHeading (Tailwind only scans complete literal strings). */
-@source inline("stagger-{0,1,2,3,4,5,6,7}");
+   index in RiseHeading and ServiceRows (Tailwind only scans complete literal
+   strings). The /work index builds one tile per collection entry, so the range
+   runs ahead of the content: a 13th study needs this widened or the last tiles
+   silently lose their stagger (--i falls back to 0). */
+@source inline("stagger-{0,1,2,3,4,5,6,7,8,9,10,11}");
 @source inline("appear-{300,450,600}");
 
 /* ============================ base ============================ */
@@ -152,6 +155,12 @@
   }
   header.hh {
     transform: translateY(-100%);
+  }
+  /* Keyboard escape hatch: tabbing fires no scroll event, so without this a
+     Shift+Tab into the hidden header lands focus on links translated
+     off-screen (invisible focus, WCAG 2.4.7). Focus inside → header returns. */
+  header.hh:focus-within {
+    transform: none;
   }
   .bar {
     display: flex;
@@ -356,18 +365,23 @@
     color: var(--moss);
     margin-right: 0.5ch;
   }
+  /* The typed width = 26 RENDERED glyphs ("power bi & fabric advisory" — count
+     glyphs, not source bytes: &amp; is one glyph) + one 0.04em kicker tracking
+     unit per glyph. THREE places share the 26: this width, the steps() count
+     below, and the keyframe — update all of them together when the tagline
+     changes, or the spark cursor floats off the end of the text again. */
   .kt {
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
-    width: 30ch;
+    width: calc(26ch + 26 * var(--ls-mono-wide));
     max-width: 100%;
     vertical-align: bottom;
   }
   @media (prefers-reduced-motion: no-preference) {
     .kt {
       width: 0;
-      animation: type var(--t-type) steps(30, end) var(--t-ui) forwards;
+      animation: type var(--t-type) steps(26, end) var(--t-ui) forwards;
     }
   }
   .cursor {
@@ -436,22 +450,6 @@
   html:not(.js) .lines .l > .i {
     transform: none;
   }
-  /* self-drawing hairlines */
-  .rule {
-    height: 1px;
-    background: currentColor;
-    opacity: 0.16;
-    border: 0;
-  }
-  .js .rule {
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--t-rule) var(--ease-draw);
-    transition-delay: calc(var(--i, 0) * var(--stagger-slow));
-  }
-  .js .rule.show {
-    transform: scaleX(1);
-  }
   /* the stitched thread — appears exactly twice, 8px square terminal */
   .thread {
     width: 2px;
@@ -485,7 +483,7 @@
   .js .thread.show::after {
     scale: 1;
   }
-  /* furniture: the second thread's spacing + the #talk scroll spacer */
+  /* furniture: the second thread's spacing + the spacer above the footer */
   .thread-end {
     margin-block: var(--space-super) 0;
   }
@@ -496,11 +494,11 @@
   /* ============ hero (confident type, does a job, no mascot) ============ */
   /* The hero holds a full screen and centres its content, so the page opens as
      one composed view and the "what i do" scroll-link delivers a fresh screen
-     rather than nudging a few pixels. 3.6rem ≈ the sticky header, so the centre
-     reads true below it. min-height (not height) lets a tall stacked phone hero
-     grow past the fold. */
+     rather than nudging a few pixels. --header-h ≈ the sticky header, so the
+     centre reads true below it. min-height (not height) lets a tall stacked
+     phone hero grow past the fold. */
   .hero {
-    min-height: calc(100svh - 3.6rem);
+    min-height: calc(100svh - var(--header-h));
     display: grid;
     align-content: center;
     padding-block: clamp(1.5rem, 4vh, 3rem);
@@ -542,10 +540,7 @@
     color: var(--fg-dim);
   }
   .hero .cta-row {
-    margin-top: 2rem;
-    display: flex;
-    gap: 0.8rem;
-    flex-wrap: wrap;
+    margin-top: 2rem; /* flex/gap/wrap come from the base .cta-row */
   }
   .hero-photo {
     margin: 0;
@@ -588,7 +583,8 @@
   @media (min-width: 56rem) {
     .what .label {
       position: sticky;
-      top: 96px;
+      /* header height + a breath of air, so the label never tucks under the bar */
+      top: calc(var(--header-h) + 2.4rem);
     }
   }
   /* the content column's first block carries no top margin */
@@ -615,9 +611,6 @@
     border-left: var(--bw-spine) solid color-mix(in srgb, var(--voice) 45%, transparent);
     text-wrap: pretty;
   }
-  .aside-muted {
-    color: var(--fg-dim);
-  }
   @media (min-width: 56rem) {
     .what .label .aside {
       margin-top: 1.35rem; /* a little air below the label, in the margin */
@@ -625,10 +618,14 @@
   }
 
   /* ============ carved cream entry panels ============ */
+  /* Capped at the wide reading measure so cards never run wider than the prose
+     / case-file panel sharing the same `.what` column — the lone door card is
+     capped too, so it lines up with the other panels. */
   .offers {
     display: grid;
     gap: var(--space-xs);
     grid-template-columns: 1fr;
+    max-width: var(--measure-wide);
   }
   @media (min-width: 48rem) {
     .offers {
@@ -645,13 +642,6 @@
   }
   .offers.single {
     grid-template-columns: 1fr; /* a lone "door" card spans its single column */
-  }
-  /* cap every offers grid at the wide reading measure so cards never run wider
-     than the prose / case-file panel sharing the same `.what` column — the lone
-     door card is capped too, so it lines up with the other panels rather than
-     stretching the full column width. */
-  .offers {
-    max-width: var(--measure-wide);
   }
   .panel {
     position: relative;
@@ -973,10 +963,6 @@
     font-size: var(--fs-display);
     letter-spacing: var(--ls-display-loose);
   }
-  .outro h2 em {
-    color: var(--amber);
-    font-style: normal;
-  }
   .outro .sub {
     margin-top: 1.2rem;
     max-width: 38rem;
@@ -1161,10 +1147,6 @@
     color: var(--amber);
     font-style: normal;
   }
-  .section-intro {
-    margin-top: var(--space-xs);
-    max-width: var(--measure-prose);
-  }
   /* homepage proof line: one real outcome set apart as its own `.what` row under
      the service cards — an amber "in practice" label in the left margin (like
      "what i do") and a body-size line. Not a caption. */
@@ -1339,7 +1321,8 @@
 }
 @keyframes type {
   to {
-    width: 30ch;
+    /* must equal .kt's static width (26 glyphs + tracking) */
+    width: calc(26ch + 26 * var(--ls-mono-wide));
   }
 }
 
@@ -1387,10 +1370,6 @@
     transition-duration: var(--t-ui);
     transition-delay: 0s; /* no staggered cascade under reduced motion — a plain fade */
   }
-  .js .rule {
-    transform: none;
-    transition: none;
-  }
   .js .thread {
     transform: none;
     transition: none;
@@ -1404,9 +1383,10 @@
     clip-path: none;
     transition: none;
   }
-  /* the typewriter + cursor: full prompt static, no type-on, no blink */
+  /* the typewriter + cursor: full prompt static, no type-on, no blink.
+     width:auto shrink-wraps the text exactly — no typed-width constant here. */
   .kt {
-    width: 30ch;
+    width: auto;
     animation: none;
   }
   .cursor {

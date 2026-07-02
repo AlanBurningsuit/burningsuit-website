@@ -19,7 +19,9 @@ const contactSubject = "Power BI & Fabric — one of these sounds like us";
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
 const rows: RowData[] = studies.map((s) => ({
   href: `/work/${s.id}/`,
-  tab: "case file",
+  // The schema's documented contract: kicker drives the hero eyebrow AND the
+  // index tile plate, so a study that overrides it can't drift apart.
+  tab: s.data.kicker,
   title: s.data.heading,
   body: s.data.tileOutcome,
   cta: "read the full story",
