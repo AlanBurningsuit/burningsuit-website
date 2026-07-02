@@ -66,11 +66,20 @@ for (const rel of pages) {
   if (descs.length !== 1) fail(route, `expected 1 meta description, found ${descs.length}`);
   else if (!descs[0]) fail(route, "meta description is empty");
 
-  // <link rel="canonical">
+  // robots noindex? (needed by the canonical rule below, and the JSON-LD rule)
+  const noindex = metaTags(html).some(
+    (t) => attr(t, "name") === "robots" && /noindex/i.test(attr(t, "content") ?? ""),
+  );
+
+  // <link rel="canonical"> — mirrors the JSON-LD rule: noindex pages emit NO
+  // canonical (a canonical on a noindexed page is a mixed signal); indexable
+  // pages emit exactly one, absolute, pointing at THIS route.
   const canons = linkTags(html)
     .filter((t) => attr(t, "rel") === "canonical")
     .map((t) => attr(t, "href"));
-  if (canons.length !== 1) fail(route, `expected 1 canonical, found ${canons.length}`);
+  if (noindex) {
+    if (canons.length) fail(route, `noindex page emits ${canons.length} canonical(s) — should emit none`);
+  } else if (canons.length !== 1) fail(route, `expected 1 canonical, found ${canons.length}`);
   else if (!/^https?:\/\//.test(canons[0] ?? "")) fail(route, `canonical not absolute: ${canons[0]}`);
   else {
     // The canonical must point at THIS route on the production origin —
@@ -83,11 +92,6 @@ for (const rel of pages) {
       fail(route, `canonical ${canons[0]} does not match its route (expected ${expected})`);
     }
   }
-
-  // robots noindex?
-  const noindex = metaTags(html).some(
-    (t) => attr(t, "name") === "robots" && /noindex/i.test(attr(t, "content") ?? ""),
-  );
 
   // JSON-LD blocks
   const blocks = [
