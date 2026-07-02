@@ -1,12 +1,18 @@
 # burningsuit.co.uk
 
-Phase 2 of the burningsuit company site. Static, hand-built, no CMS.
+The burningsuit company site. Static, hand-built, no CMS. Current design is v3
+**"the honest instrument"** (flat Everforest green; tokens + semantic classes in
+`src/styles/`).
 
-**Stack:** Astro 6 · Tailwind v4 (via PostCSS) · self-hosted fonts (Astro Fonts
-API) · `astro:assets` images (AVIF/WebP) · deployed to **GitHub Pages** by
-GitHub Actions. The approved homepage design is `design/concept-b5-alive.html`
-("B5"); the Astro build is a faithful port of it, plus two service pages built
-from the signed copy in `design/copy/`.
+**Stack:** Astro 6 · Tailwind v4 (via PostCSS) · MDX content collections (the
+`/work` case studies) · self-hosted fonts (Astro Fonts API) · `astro:assets`
+images (AVIF/WebP) · published to **GitHub Pages** by GitHub Actions
+(`.github/workflows/deploy.yml`, on push to `main`).
+
+**Branch reality:** `main` is production — right now it serves a one-page
+placeholder while the full site is finished; the complete Astro site lives on
+**`dev`** with a Netlify preview. **Merging `dev` → `main` is the go-live act**
+— see `AGENTS.md` for the checklist. Never push experiments to `main`.
 
 ## Local development
 
@@ -20,7 +26,7 @@ Requires **Node 22.12+** (see `.nvmrc`).
 ```bash
 npm install
 npm run dev        # local dev server
-npm run build      # static build → dist/
+npm run build      # prep:images + static build → dist/ + byte-budget gate
 npm run preview    # preview the built site
 npm run check      # astro check (types/templates)
 ```
@@ -29,7 +35,7 @@ npm run check      # astro check (types/templates)
 
 `src/assets/photos/*` are **pre-resized derivatives** (capped so the responsive
 fallback stays within budget). Regenerate them from the originals in
-`resources/photos/` with:
+`resources/photos/` (local-only) with:
 
 ```bash
 npm run prep:images
@@ -38,72 +44,64 @@ npm run prep:images
 ## Verification gates
 
 ```bash
-npm run build
-npm run serve        # serves dist/ on :4321 (gates run against this)
-npm run test:visual  # Playwright region snapshots (chromium + firefox)
-npm run test:links   # linkinator on dist/ (internal links)
-npm run test:lh      # Lighthouse CI (perf/a11y)
+npm run gate         # the de-facto CI: astro check → build (+byte budget)
+                     #   → linkinator on dist/ → SEO/JSON-LD assertions
+npm run serve        # serves dist/ on :4321 (Playwright runs against this)
+npm run test:visual  # type-checks tests/, then Playwright region snapshots
+                     #   (chromium + firefox + a 390px mobile project)
+npm run test:lh      # Lighthouse CI (perf/a11y; slow lane, run pre-merge)
 ```
 
 `npm run test:visual` needs browsers once: `npx playwright install chromium firefox`.
-First run establishes the snapshot baselines (`--update-snapshots`). The visual
-gate is a **regression tripwire**, not a pixel oracle — the rebuild legitimately
-differs from B5 (self-hosted fonts, AVIF). Fidelity vs B5 is a human-signed
-side-by-side (`node scripts/shoot.mjs`, with dist on :4321 and the repo root on
-:4322).
+Baselines are committed for **this Windows machine** (`…-win32.png`); on other
+platforms regenerate a set first (`npm run test:visual:update`). The visual
+gate is a **regression tripwire**, not a pixel oracle.
 
-## Content / build flags
+## Content
 
-`src/config/flags.ts` resolves the still-open copy decisions at build time
-(signed/safe variant is always the default — content is never rendered then
-hidden):
+Two tracks:
 
-| Flag | Default | Effect |
-|---|---|---|
-| `heroItalic` | `"still"` | Which hero word takes the serif-italic (`still` vs `job`). |
-| `proofNamed` | `false` | Name the anchor client + show the quote on /power-bi. Gate on written permission. |
-| `sheepDip` | `false` | Include the "sheep-dip training" line on /power-bi. Alan's call. |
+- **Case studies / proof** → an `.mdx` entry in the `work` collection
+  (`src/content/work/`; schema in `src/content.config.ts`). The filename is the
+  slug; the route and the `/work` tile are automatic.
+- **Standing pages** → bespoke `.astro` under `src/pages/`.
 
-## Pages
-
-Shipping this pass: `/`, `/ai-fit-for-teams/`, `/power-bi/`. **`/about` and
-`/contact` are intentionally not built** — their copy isn't signed, and shipping
-placeholder text would leak via "view source". Nav links only the live pages;
-the footer mailto is the contact path. The home about-teaser's "the longer
-story" link points to LinkedIn until `/about` ships (see `AboutTeaser.astro`).
+**Naming is gated per study** by `namePublished` frontmatter: the named client +
+quote render only when it is `true` AND written permission has landed. While
+`false`, nothing named reaches the HTML — and the schema now **fails the build**
+if a `named` block is committed with the gate closed (client names must never
+enter this public repo's history). `src/config/flags.ts` is an empty shell kept
+for future build-time copy flags.
 
 ## Deployment (GitHub Pages)
 
-The site builds and deploys from `.github/workflows/deploy.yml` on push to
-`main`. It only goes **live** once the repo's **Pages source** is set to
-"GitHub Actions".
+The Pages source is **GitHub Actions**: `deploy.yml` builds whatever Astro
+project is on `main` (the full `npm run build`, byte budget included) and
+publishes `dist/` to the apex. The deploy job is guarded to `main`.
 
-**Rollback-safe cutover:**
-
-1. Verify locally: `npm run build` → `npm run serve` → run the gates.
-2. Push the workflow to `main`; let the Action build.
-3. In repo Settings → Pages, switch **Source** to **GitHub Actions**.
-4. Confirm the live apex (`burningsuit.co.uk`) renders the Astro build.
-5. **Then** retire the root Phase-1 `index.html` and its root asset duplicates.
-
-If the deploy regresses, switch Pages **Source** back to the previous
-branch/root — the Phase-1 page and its root assets (`/favicon.svg`,
-`/og-image.png`) are still present until step 5.
+**Go-live** (promoting the full site) is one move — merge `dev` → `main` —
+plus verifying the apex afterwards. Roll back by reverting the merge on `main`;
+the Action redeploys the placeholder.
 
 `public/CNAME` preserves the apex domain; `public/.nojekyll` stops Jekyll
 touching `_astro/`. DNS (Mythic Beasts, apex → GitHub Pages) is configured
-separately.
+separately. The Netlify preview (`netlify.toml`, production branch = `dev`) is
+hard-noindexed and never competes with the apex.
 
 ### Security headers — platform limitation
 
-CSP ships as a `<meta http-equiv>` tag generated by Astro (`security.csp`),
-which auto-hashes the one inline script. **Plain GitHub Pages cannot send
-response headers**, so `frame-ancestors` (clickjacking), HSTS, and
-`X-Frame-Options` are **not enforceable** here — a meta CSP ignores
+CSP ships as a `<meta http-equiv>` tag generated by Astro (`security.csp`).
+The page deliberately ships **no inline scripts** — the one external module is
+covered by `script-src 'self'`, so there are no inline hashes to keep in sync.
+**Plain GitHub Pages cannot send response headers**, so `frame-ancestors`
+(clickjacking) and HSTS are **not enforceable** here — a meta CSP ignores
 `frame-ancestors` by design. Revisit only if a CDN/proxy is ever placed in
 front. Everything else in the policy (`default-src 'none'`,
-`script-src 'self'` + hashes, `style-src 'self'`, etc.) is enforced.
+`script-src 'self'`, `style-src 'self'`, etc.) is enforced, and
+`tests/csp.spec.ts` asserts both the policy and its runtime cleanliness.
 
-Analytics: none — dropped to keep the strict CSP and the "no analytics unless
-asked" rule. Re-add only with
-an explicit `script-src`/`connect-src` allowance.
+Analytics: **built but OFF.** A cookieless Plausible integration exists behind
+two deliberately coupled flags (`ANALYTICS.enabled` in `src/config/site.ts` +
+`ANALYTICS_ENABLED` in `astro.config.mjs` — flip both or neither; enabling it
+also falsifies the colophon's "no analytics" copy, so edit that in the same
+change). Until then: no trackers, no cookies, no third-party requests.
