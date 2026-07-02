@@ -912,10 +912,11 @@
     grid-template-columns: 1fr;
   }
   /* converged from 52rem onto the 56rem rung so the about panel flips two-column
-     in step with the logbook spine */
+     in step with the logbook spine. A landscape photo is the minority column — a
+     contained chip beside the prose, not the dominant element (this is a teaser). */
   @media (min-width: 56rem) {
     .about-grid {
-      grid-template-columns: 5fr 6fr;
+      grid-template-columns: 3fr 5fr;
     }
   }
   .about-grid figure {
@@ -923,9 +924,10 @@
   }
   .about-grid img {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    /* landscape, not the old 4:5 portrait that boxed the photo too tall */
+    aspect-ratio: 3 / 2;
     object-fit: cover;
-    object-position: 50% 25%;
+    object-position: 50% 35%;
     border-radius: var(--r-sm);
   }
   .about-grid h2 {
@@ -945,18 +947,6 @@
   .about-grid p strong {
     color: var(--ink);
     font-weight: 600;
-  }
-  .about a.u {
-    color: var(--ink-soft);
-    text-decoration: none;
-    font-family: var(--ff-display);
-    font-weight: 600;
-    display: inline-block;
-    margin-top: 1.4rem;
-  }
-  .about a.u:hover,
-  .about a.u:focus-visible {
-    color: var(--spark);
   }
   .about .meta {
     color: var(--ink-soft);
@@ -1162,6 +1152,12 @@
   }
   .prose > * + * {
     margin-top: var(--space-block);
+  }
+  /* body-prose emphasis is the same amber colour-shift as headings — never
+     italic (the colophon's "nothing leans into italic" claim depends on this). */
+  .prose em {
+    color: var(--amber);
+    font-style: normal;
   }
   .section-intro {
     margin-top: var(--space-xs);
