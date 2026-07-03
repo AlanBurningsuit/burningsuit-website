@@ -1,25 +1,31 @@
 ---
 /**
- * The gated testimonial — the carved "case file" panel reused from /power-bi.
+ * The gated testimonial — the "in their words" section on a case-study page.
  *
- * Rendered by CaseStudyLayout (NOT from the MDX body) so the gate lives in one
- * audited place. The named client + verbatim quote render ONLY when the study's
- * `namePublished` is true. While it's false (the anonymised default), nothing is
- * emitted — the quote never reaches the build, so view-source can't leak it.
- * The whole case-study page is the anonymised proof; this panel is the upgrade
- * that appears once written permission lands.
+ * Rendered by CaseStudyLayout (NOT from the MDX body). The section renders
+ * ONLY when the study's named tier exists — while `namePublished` is false
+ * (the anonymised default), nothing is emitted, so view-source can't leak a
+ * PERMISSION-PENDING quote. The whole case-study page is the anonymised
+ * proof; this section is the upgrade that appears once written permission
+ * lands.
+ *
+ * The panel skeleton + the gated quote block live in CasefilePanel.astro;
+ * the gate expression itself is src/lib/named.ts `namedTier()` — the one
+ * audited place, shared with the /power-bi teaser and the homepage proof line.
  */
 import type { CollectionEntry } from "astro:content";
+import CasefilePanel from "./CasefilePanel.astro";
+import { namedTier } from "../lib/named";
 
 interface Props {
   study: CollectionEntry<"work">["data"];
 }
 const { study } = Astro.props;
-const show = study.namePublished && study.named;
+const named = namedTier(study);
 ---
 
 {
-  show && study.named && (
+  named && (
     <section class="chapter" aria-labelledby="words">
       <div class="wrap what">
         <div class="label">
@@ -28,20 +34,7 @@ const show = study.namePublished && study.named;
           </h2>
         </div>
         <div>
-          <div class="proof panel casefile" data-reveal>
-            <span class="tab">
-              <span class="sp" aria-hidden="true" />
-              case file
-            </span>
-            <div class="body">
-              <p class="src">{study.descriptor}</p>
-              <p class="attr meta">{study.named.client}</p>
-              <blockquote>
-                {study.named.quote}
-                <cite class="meta">{study.named.cite}</cite>
-              </blockquote>
-            </div>
-          </div>
+          <CasefilePanel study={study} />
         </div>
       </div>
     </section>

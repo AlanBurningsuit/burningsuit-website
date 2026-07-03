@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ServiceRows from "../components/ServiceRows.astro";
 import Aside from "../components/Aside.astro";
+import CasefilePanel from "../components/CasefilePanel.astro";
 import Offer from "../components/Offer.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import type { RowData } from "../components/ServiceRow.astro";
@@ -12,11 +13,11 @@ import pbiHero from "../assets/photos/DSC09087-Edit.jpg";
 import BookCta from "../components/BookCta.astro";
 import { mailtoFor } from "../config/site";
 
-// The proof panel is the law-firm case study at teaser length. Its naming gate is
-// the SAME `namePublished` the full /work/law-firm page uses, so the teaser and the
-// page can never disagree about naming the client.
+// The proof panel is the law-firm case study at teaser length. CasefilePanel
+// derives its naming gate from the SAME `namePublished` the full /work/law-firm
+// page uses (namedTier() in src/lib/named.ts), so the teaser and the page can
+// never disagree about naming the client.
 const lawFirm = await getEntry("work", "law-firm");
-const lawFirmNamed = lawFirm?.data.namePublished ? lawFirm.data.named : undefined;
 
 const contactSubject = "Power BI & Fabric — where it's stuck";
 const contactMailto = mailtoFor(contactSubject);
@@ -138,35 +139,20 @@ const aiDoor: RowData[] = [
         <Aside data-reveal>data problems are people problems.</Aside>
       </div>
       <div>
-        <div class="proof panel casefile" data-reveal>
-          <span class="tab"><span class="sp" aria-hidden="true"></span>case file</span>
-          <div class="body">
-            <p class="src">a data team · international law firm</p>
-            <p>
-              One data team I work with — inside an international law firm — started from “fear of
-              breaking”: production models nobody dared touch, external help needed for the
-              smallest change, the whole thing resting on one or two people. A few months of
-              working together, and they were running their own diagnostic sessions, tracing data
-              lineage end to end, and challenging what their vendor delivered with technical
-              evidence they'd gathered themselves. The reliance moved from a single expert to the
-              team — which is also what makes them ready for what AI is starting to add to the job.
-            </p>
-            {
-              lawFirmNamed && (
-                <>
-                  <p class="attr meta">{lawFirmNamed.client}</p>
-                  <blockquote>
-                    {lawFirmNamed.quote}
-                    <cite class="meta">{lawFirmNamed.cite}</cite>
-                  </blockquote>
-                </>
-              )
-            }
-            <p class="more">
-              <a class="u" href="/work/law-firm/">read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
-            </p>
-          </div>
-        </div>
+        <CasefilePanel study={lawFirm?.data} src="a data team · international law firm">
+          <p>
+            One data team I work with — inside an international law firm — started from “fear of
+            breaking”: production models nobody dared touch, external help needed for the
+            smallest change, the whole thing resting on one or two people. A few months of
+            working together, and they were running their own diagnostic sessions, tracing data
+            lineage end to end, and challenging what their vendor delivered with technical
+            evidence they'd gathered themselves. The reliance moved from a single expert to the
+            team — which is also what makes them ready for what AI is starting to add to the job.
+          </p>
+          <Fragment slot="links">
+            <a class="u" href="/work/law-firm/">read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
+          </Fragment>
+        </CasefilePanel>
       </div>
     </div>
   </section>

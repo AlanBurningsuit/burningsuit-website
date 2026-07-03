@@ -13,16 +13,17 @@ import { Picture } from "astro:assets";
 import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
 import { mailtoFor } from "../config/site";
 import { getEntry } from "astro:content";
+import { namedTier } from "../lib/named";
 
 const contactSubject = "Power BI & Fabric";
 const contactMailto = mailtoFor(contactSubject);
 
 // Homepage proof beat: one concrete outcome from the law-firm study. The subject
-// reads as the named client only when that study's namePublished gate is true
-// (same build-time gate the /power-bi teaser uses) — otherwise the anonymised form.
+// reads as the named client only when that study's namePublished gate opens
+// (namedTier() — the same audited gate the /power-bi teaser and the study page
+// use) — otherwise the anonymised form.
 const lawFirm = await getEntry("work", "law-firm");
-const lawFirmNamed = lawFirm?.data.namePublished ? lawFirm.data.named : undefined;
-const proofWho = lawFirmNamed?.client ?? "A data team inside an international law firm";
+const proofWho = namedTier(lawFirm?.data)?.client ?? "A data team inside an international law firm";
 
 const heroLabel = "power bi and fabric, done with you.";
 const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
