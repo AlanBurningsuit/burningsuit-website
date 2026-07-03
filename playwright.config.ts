@@ -16,7 +16,16 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
-  workers: process.env.CI ? 1 : undefined,
+  // The visual tests scroll the whole page then capture 2-5 stabilised region
+  // shots — 15-25s each even on Chromium. The 30s default left Firefox timing
+  // out mid-capture under any machine load (the historical "about-dog flake"
+  // mechanism). Generous is correct for a manual slow-lane tripwire.
+  timeout: 90_000,
+  // Capped: at the default (~cores/2) this machine launches 7-10 parallel
+  // browser instances and FIREFOX times out at page setup (verified 2026-07:
+  // whole-project failures at 7 workers, clean at 2). Reliability beats speed
+  // for a tripwire suite.
+  workers: process.env.CI ? 1 : 4,
   reporter: [["list"]],
   expect: {
     timeout: 15_000,
