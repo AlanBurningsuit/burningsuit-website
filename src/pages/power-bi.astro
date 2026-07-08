@@ -18,7 +18,7 @@ import { mailtoFor } from "../config/site";
 // never disagree about naming the client.
 const lawFirm = await getEntry("work", "law-firm");
 
-const contactSubject = "Power BI & Fabric — where it's stuck";
+const contactSubject = "Power BI & Fabric - where it's stuck";
 const contactMailto = mailtoFor(contactSubject);
 
 // Same headline as the home hero; display grotesque, masked-rise, amber "with".
@@ -38,12 +38,12 @@ const aiDoor: RowData[] = [
 ---
 
 <BaseLayout
-  title="Power BI & Fabric advisory: embedded, review, capability — burningsuit"
+  title="Power BI & Fabric advisory: embedded, review, capability - burningsuit"
   description="Embedded advisory, reporting strategy and architecture review for Power BI and Fabric teams - so your team owns it, and the know-how stays when I leave."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
-    >Tell me where Power BI or Fabric is grinding — the bottleneck, the model nobody quite
+    >Tell me where Power BI or Fabric is grinding - the bottleneck, the model nobody quite
     trusts, the bit AI's about to change. If I can help, I'll tell you how; if I can't,
     I'll tell you that too</Fragment
   >
@@ -91,7 +91,7 @@ const aiDoor: RowData[] = [
       <div>
         <p class="lead" data-reveal>
           Whatever the shape of the work, the aim is the same: your team ends up more
-          <em>capable</em> of owning it — with or without me.
+          <em>capable</em> of owning it - with or without me.
         </p>
 
         <Offer title="embedded advisory" lead>
@@ -143,7 +143,7 @@ const aiDoor: RowData[] = [
       <div>
         <CasefilePanel study={lawFirm?.data} src="a data team · international law firm">
           <p>
-            One data team I work with — inside an international law firm — started from “fear of
+            One data team I work with - inside an international law firm - started from “fear of
             breaking”: production models nobody dared touch, external help needed for the
             smallest change, the whole thing resting on one or two people. A few months of
             working together, and they were running their own diagnostic sessions, tracing data
@@ -162,7 +162,7 @@ const aiDoor: RowData[] = [
   <section class="cta-band" aria-label="book a call">
     <div class="wrap">
       <BookCta src="power-bi-engagement" mailtoHref={contactMailto} reveal>
-        Even a first call should leave you with something useful — a clearer read on where it's
+        Even a first call should leave you with something useful - a clearer read on where it's
         stuck. 30 minutes, nothing to prepare.
       </BookCta>
     </div>

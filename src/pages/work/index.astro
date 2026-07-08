@@ -14,7 +14,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import ServiceRows from "../../components/ServiceRows.astro";
 import type { RowData } from "../../components/ServiceRow.astro";
 
-const contactSubject = "Power BI & Fabric — one of these sounds like us";
+const contactSubject = "Power BI & Fabric - one of these sounds like us";
 
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
 const rows: RowData[] = studies.map((s) => ({
@@ -29,7 +29,7 @@ const rows: RowData[] = studies.map((s) => ({
 ---
 
 <BaseLayout
-  title="Power BI & Fabric case studies — burningsuit"
+  title="Power BI & Fabric case studies - burningsuit"
   description="Power BI and Fabric case studies, told without the logos: a law firm's data team, a contact-centre lead, a university carbon model, and a museum that ran on a whiteboard."
   contactSubject={contactSubject}
 >

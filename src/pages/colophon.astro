@@ -4,7 +4,7 @@ import { commitHash } from "../lib/commit";
 ---
 
 <BaseLayout
-  title="Colophon — how this site is made · burningsuit"
+  title="Colophon - how this site is made · burningsuit"
   description="How this site is made: the type, the stack, the strict CSP, and why there are no trackers. The site is the work sample."
   contactSubject="How the site's built"
 >
@@ -20,7 +20,7 @@ import { commitHash } from "../lib/commit";
       <p class="lead enter appear-450">
         I build the things I advise on, so it seems only fair to show my working.
         This site is small on purpose: it should load instantly on a phone, on
-        a train — and it should still be readable if everything clever fails to
+        a train - and it should still be readable if everything clever fails to
         load.
       </p>
     </div>
@@ -34,17 +34,17 @@ import { commitHash } from "../lib/commit";
       <div class="prose">
         <p data-reveal>
           Three roles. <strong>Mona Sans</strong> for headings, nav and the big
-          moments — GitHub's grotesque, plenty of engineering in it and drawn with
+          moments - GitHub's grotesque, plenty of engineering in it and drawn with
           enough character to stay friendly. <strong>Albert Sans</strong> for body,
           a warm humanist sans standing in for the brand's Bilo. And
-          <strong>Commit Mono</strong> carries the small voice — the asides, the
-          labels, the clock. Emphasis is a shift in colour — a word warms to amber
+          <strong>Commit Mono</strong> carries the small voice - the asides, the
+          labels, the clock. Emphasis is a shift in colour - a word warms to amber
           while the typeface holds steady. No serif anywhere, and nothing leans
           into italic.
         </p>
         <p data-reveal>
           Every face is subset to the Latin range, served as woff2 from this
-          domain, and preloaded — no third-party font
+          domain, and preloaded - no third-party font
           CDN, no flash of invisible text, no request leaving for Google on your
           behalf.
         </p>
@@ -59,7 +59,7 @@ import { commitHash } from "../lib/commit";
         <p data-reveal>
           <strong>Astro</strong> builds it to static HTML; <strong>Tailwind</strong>
           configures the design system in CSS. There is no server, no database,
-          no client framework hydrating in the background — just files, served
+          no client framework hydrating in the background - just files, served
           from <strong>GitHub Pages</strong> over a custom domain. Images are
           generated at build time as AVIF with a WebP fallback.
         </p>
@@ -86,7 +86,7 @@ import { commitHash } from "../lib/commit";
         <p data-reveal>
           A strict Content Security Policy backs that up: by default the page is
           allowed to load <em>nothing</em>, and then permitted, one line at a
-          time, only the things it genuinely needs — its own styles, its own
+          time, only the things it genuinely needs - its own styles, its own
           scripts, its own fonts, and images from itself. It ships as a
           <code class="meta">&lt;meta&gt;</code> tag because GitHub Pages can't
           send response headers; the one trade-off that costs is noted in the
@@ -104,7 +104,7 @@ import { commitHash } from "../lib/commit";
           A lot of what I do is help teams tell capable from trustworthy. This
           site is a small argument that I hold myself to the same line: it's
           accessible, fast, and honest about its own internals. If it isn't, tell
-          me — that's a fair thing to hold me to.
+          me - that's a fair thing to hold me to.
         </p>
         <p class="meta" data-reveal>
           this build: <span>{commitHash}</span> · west sussex, england{
