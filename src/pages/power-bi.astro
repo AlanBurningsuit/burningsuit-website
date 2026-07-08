@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ServiceRows from "../components/ServiceRows.astro";
-import Aside from "../components/Aside.astro";
 import CasefilePanel from "../components/CasefilePanel.astro";
 import Offer from "../components/Offer.astro";
 import RiseHeading from "../components/RiseHeading.astro";
@@ -25,13 +24,14 @@ const contactMailto = mailtoFor(contactSubject);
 // Same headline as the home hero; display grotesque, masked-rise, amber "with".
 const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
 
-// The bridge to the AI page. The prose that used to sit above this card duplicated the
-// hero's AI beat, so the card now carries the AI-pressure substance on its own.
+// The bridge to the AI page — the closing door. A one-line transition in the section
+// introduces it; the card leads with Copilot as the present pressure and names agents as
+// where it's heading, then hands to /ai-fit-for-teams.
 const aiDoor: RowData[] = [
   {
     href: "/ai-fit-for-teams/",
     title: { before: "ai ", em: "fit", after: " for teams" },
-    body: "Copilot and agents can already write the DAX, build the model, even draft the whole report — but 'can' doesn't mean 'should'. Working out what to hand over, what to keep, and who checks what is the other thing I do, so the work stays yours to own and verify.",
+    body: "Copilot can already write DAX and draft a whole report - and agents that build the model outright aren't far behind. It's the same ownership question, one move on: can your team still change what it ships, and vouch for it? Working out what to hand over, what to keep, and who checks it is the other thing I do.",
     cta: "see ai fit for teams",
   },
 ];
@@ -39,7 +39,7 @@ const aiDoor: RowData[] = [
 
 <BaseLayout
   title="Power BI & Fabric advisory: embedded, review, capability — burningsuit"
-  description="Embedded advisory, strategy and architecture review, and ongoing work inside Power BI and Fabric teams. You stay close to the work; I help your team feel like they've got it — so the know-how stays with you when I leave."
+  description="Embedded advisory, reporting strategy and architecture review for Power BI and Fabric teams - so your team owns it, and the know-how stays when I leave."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
@@ -53,9 +53,9 @@ const aiDoor: RowData[] = [
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="power bi and fabric, done with you." lines={heroLines} />
         <p class="lead enter appear-300">
-          I'm Alan, and <strong>I've spent five years alongside teams adopting Power BI</strong>.
-          A team gets the licences, builds the first reports, and <em>then</em> the difficult
-          part starts:
+          <strong>I've spent five years alongside teams adopting Power BI</strong>, and the story
+          rarely changes. A team gets the licences, builds the first reports, and <em>then</em> the
+          difficult part starts:
         </p>
         <ul class="beats enter appear-450">
           <li>the one person who really knows the model becomes the bottleneck;</li>
@@ -64,8 +64,8 @@ const aiDoor: RowData[] = [
         </ul>
         <p class="lead enter appear-600">
           And there's always more: Fabric to move onto, Copilot writing DAX, agents building
-          whole reports. The more the tools take on, the sharper one question gets: who owns
-          the outcome?
+          whole reports. The more the tools take on, the sharper one question gets: who's making
+          the calls - you, or the tools?
         </p>
       </div>
       <figure class="hero-photo enter appear-300">
@@ -96,35 +96,38 @@ const aiDoor: RowData[] = [
 
         <Offer title="embedded advisory" lead>
           <p>
-            The work I rate most highly: I join your team for a stretch — office hours,
-            workshops, one-on-ones — working on your real problems, in your real workspace,
-            across Power BI and Fabric. It runs as a working relationship rather than a
-            scheduled course, and by the third month the team is making its own changes and
-            catching a wrong number before it goes out, without needing to check with me first.
+            I join your team for a stretch - office hours, workshops, one-on-ones - working on
+            your real models and real problems, in your own workspace, across Power BI and Fabric.
+            It runs as a working relationship rather than a scheduled course, so the team gets more
+            capable on the problems you actually have: able to change the model without fear of
+            breaking it, and to catch a wrong number before it goes out, without checking with me
+            first.
+          </p>
+          <p class="aside">Ongoing and month-to-month, sized to your team. Usually £3,000 to £6,000 a month.</p>
+        </Offer>
+
+        <Offer title="reporting strategy">
+          <p>
+            Before anything gets built: what are you actually measuring, and why? We work out the
+            questions the team needs to be able to answer, and what a good answer looks like for
+            each - so everyone means the same thing by the same number. You walk away with a clear
+            picture of what's worth reporting and what to leave out.
           </p>
         </Offer>
 
-        <Offer title="strategy & architecture review">
+        <Offer title="architecture review">
           <p>
-            Before anything gets built: what are we measuring, really? Is the model carrying
-            the business logic it should? Does the move onto Fabric earn its keep, and where?
-            I'll tell you what it's going to cost and what you're going to get — including when
-            the honest answer is that a new model won't fix this.
+            Then the plumbing: does your model actually serve that strategy, or quietly get in the
+            way? I'll tell you what's carrying its weight and what isn't - including when the honest
+            answer is that a new model won't fix the real problem. And if you're weighing up Fabric,
+            I'll tell you straight whether it earns its keep for you.
           </p>
-        </Offer>
-
-        <Offer title="ongoing work">
-          <p>
-            The point of all of it is capability: a team that can build, change and verify the
-            work without waiting on one person. The learning lands on your own data, inside
-            your actual problems, because that's where it sticks — so when I leave, the know-how
-            stays with your team.
-          </p>
+          <p class="aside">A fixed, shorter piece. Scoped and priced up front.</p>
         </Offer>
 
         <Offer title="build work, case by case">
           <p>
-            And if you have a specific, well-thought-through Power BI build in mind, ask — I take
+            And if you have a specific, well-thought-through Power BI build in mind, ask - I take
             those on case by case.
           </p>
         </Offer>
@@ -135,8 +138,7 @@ const aiDoor: RowData[] = [
   <section class="chapter" aria-labelledby="proof">
     <div class="wrap what">
       <div class="label">
-        <h2 class="kicker meta" id="proof" data-reveal>how it tends to go</h2>
-        <Aside data-reveal>data problems are people problems.</Aside>
+        <h2 class="kicker meta" id="proof" data-reveal>a team that owned it</h2>
       </div>
       <div>
         <CasefilePanel study={lawFirm?.data} src="a data team · international law firm">
@@ -147,28 +149,12 @@ const aiDoor: RowData[] = [
             working together, and they were running their own diagnostic sessions, tracing data
             lineage end to end, and challenging what their vendor delivered with technical
             evidence they'd gathered themselves. The reliance moved from a single expert to the
-            team — which is also what makes them ready for what AI is starting to add to the job.
+            team.
           </p>
           <Fragment slot="links">
             <a class="u" href="/work/law-firm/">read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
           </Fragment>
         </CasefilePanel>
-      </div>
-    </div>
-  </section>
-
-  <section class="chapter" aria-labelledby="engagement">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="engagement" data-reveal>the engagement, practically</h2>
-      <div class="prose">
-        <p data-reveal>
-          Embedded advisory is ongoing, sized to your team and fits around the work you're
-          already doing. Reviews are a fixed, shorter piece. I'll scope and price it with you up
-          front, and we go month-to-month. The point is for your team to need me less over time.
-        </p>
-        <p data-reveal>
-          Embedded advisory usually runs £3,000 to £6,000 a month, depending on the work.
-        </p>
       </div>
     </div>
   </section>
@@ -186,6 +172,10 @@ const aiDoor: RowData[] = [
     <div class="wrap what">
       <h2 class="label kicker meta" id="aipressure" data-reveal>what ai's already touching</h2>
       <div>
+        <p class="lead" data-reveal>
+          A team that can own and verify its own reporting is also the team that's ready for what
+          AI adds to the job.
+        </p>
         <ServiceRows rows={aiDoor} />
       </div>
     </div>
