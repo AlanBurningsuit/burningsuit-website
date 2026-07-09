@@ -2,9 +2,9 @@
 order: 3
 title: "A university's carbon footprint, moved off one person's spreadsheet - a Power BI case study - burningsuit"
 description: >-
-  Power BI case study: a UK university's carbon footprint ran on one person's
-  spreadsheet - the wrong place for a dashboard. I built a model their team can
-  run.
+  Power BI case study: a university's carbon footprint lived in one person's
+  spreadsheets - rebuilt as one model for all their carbon reporting, and
+  handed over.
 kicker: "case file"
 heading:
   before: "a university's carbon footprint, moved off one person's "
@@ -12,65 +12,62 @@ heading:
   after: "."
 descriptor: "a UK university's sustainability team"
 lead: >-
-  A UK university's whole carbon footprint rested largely on one self-taught
-  person, and a reporting cycle that ran to about eight days by hand. The ask
-  that came in was "help us get to a dashboard". The dashboard wasn't the thing
-  that was going to help him yet.
+  A UK university's whole Scope 3 carbon footprint reporting sat with one
+  person - expert in the method, self-taught in Power BI and Excel - the
+  workings spread across spreadsheets only he could follow. I rebuilt those
+  workings as one data model, and handed it over so he could run it himself.
 tileOutcome: >-
-  They asked for a dashboard. I told them it was the wrong place to start - and a
-  few months later they had a proper model their own team could run.
+  One model now sits under all their carbon reporting - built from the
+  spreadsheets it used to live in, and run by the person who owns the number.
 datePublished: 2026-06-23
-dateModified: 2026-06-23
+dateModified: 2026-07-08
 contactSubject: "Power BI - off one spreadsheet"
 footerInvitation: >-
-  If something your organisation reports on is really running on one person and
-  one spreadsheet - or you've been asked to just build a dashboard on top of it
-  - that's worth a proper look first. I'll tell you what it needs.
+  If something your organisation reports on really lives in one person's
+  spreadsheets, that's worth a proper look before anyone builds a dashboard on
+  top of it. I'll tell you what it needs.
 namePublished: false
 ---
 
 {/* Anonymised tier ships today. The named tier (client + verbatim quote) is held
 OUTSIDE this public repo — design/copy/case-studies/07-named-tier-frontmatter.md,
 local-only — and returns only when namePublished is true AND the lead/sponsor have
-signed off. NEVER name the summer student. Copy adapted from
-design/copy/case-studies/03; pending Alan's final voice sign-off. */}
+signed off. NEVER name the summer student. Full-arc rewrite 2026-07-08 per the ops
+rethink brief + delivery source pack (design/copy/case-studies/03-*); pending
+Alan's read-aloud sign-off. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
-<li><strong>who:</strong> the sustainability team at a UK university, whose whole carbon footprint rested largely on one self-taught person</li>
-<li><strong>the ask:</strong> "help us get to a dashboard" - and a budget that needed spending</li>
-<li><strong>what I did:</strong> reframed it from a dashboard into a business-risk problem, wrote the business case and roadmap, then built it out for real once a summer prototype proved the point</li>
-<li><strong>where it got to:</strong> a documented production model the lead can run and extend himself, its numbers checked against his own</li>
+<li><strong>who:</strong> the sustainability team at a UK university, whose whole Scope 3 carbon footprint reporting sat with one person - expert in the method, self-taught in Power BI and Excel</li>
+<li><strong>where he was:</strong> all of it ran out of several sprawling Excel spreadsheets and hand-applied corrections; a single faculty report could mean days of Excel, and there was one for every faculty</li>
+<li><strong>what I did:</strong> designed and built one data model that all their carbon reporting draws on - a done-for-them build, deliberately - then handed it over across two sessions with him driving</li>
+<li><strong>where it got to:</strong> finished, validated against his own figures, and owned - the annual refresh takes him under half a day, and he's come back with the next piece of carbon reporting</li>
 </Snapshot>
 
 <Chapter id="started" kicker="where he was">
 
-The work came in as a referral: their sustainability team had budget to spend and wanted "some support working through how to get to a dashboard". Underneath that ask was one person carrying the university's whole carbon footprint more or less on his own - a heroic amount of manual work, days of Excel per faculty report, a reporting cycle that ran to about eight days by hand. He sent me four big projects, every one marked high priority, with the ultimate aim of a single dashboard showing the university's whole carbon footprint.
+When he first got in touch, the university's whole Scope 3 carbon footprint reporting was, in practice, one person. He owned the number: the supply-chain spend, the business travel, the waste and water, all of it worked out to a method he'd built up over years. He knew that job cold - the self-taught part was Power BI and Excel. The reporting itself ran entirely in Excel: several sprawling working spreadsheets, plus a set of corrections he applied by hand every year because the finance system kept miscoding IT equipment under a catch-all line. A single faculty report could mean days of Excel, and there was one to do for every faculty - and that was before the annual whole-university figure or anything ad hoc. The full cycle ran to about eight days by hand.
 
-He wasn't wrong to want it. But the dashboard wasn't the thing that was going to help him yet.
-
-</Chapter>
-
-<Chapter id="reframe" kicker="the reframe: too technical, too soon">
-
-My first real piece of work was to slow it down. Diving into Power Query and data sources was too technical, too soon. The thing actually hurting him was business risk and the sheer time going into manual processes - so I reframed the work that way, and proposed a minimum viable victory: automate the manual faculty reporting first, the part eating eight days, and use it to prove the approach. I wrote a business case the team could take to their director, and a roadmap from the manual present to an automated, governed future.
-
-When the sponsor pushed back - fair questions about value for money, and a preference for a menu of smaller decisions rather than one big proposal - I didn't dig in. I rebuilt the whole thing from a sales pitch into an analytical report with costed options they could choose from. The reframed version landed, and that phase closed with the team happy it had answered their concerns.
+Power BI was the thing they suspected might help. The ask that reached me was help getting to a dashboard. Fair enough - a dashboard was the visible thing missing. But underneath it sat a bigger question: where would the dashboard's numbers come from?
 
 </Chapter>
 
-<Chapter id="honest" kicker="the honest call: build it properly">
+<Chapter id="useful" kicker="working out what would actually be useful">
 
-Over the summer, a student on the team built a working prototype, and it did its job. It proved Power BI could handle the university's carbon data, and it turned vague requirements into concrete, working examples. I said that plainly, because it mattered: none of it was wrong. It's exactly what happens when a capable person builds something real without years of data architecture behind them.
+The university's carbon reporting isn't one report. There's the annual figure, the faculty briefings, the year-on-year commentary, business travel broken down by mode and cabin class. A dashboard built for any one of those would answer that one and nothing else, and every new question would land back on him.
 
-But it had the classic signs of a model grown bottom-up - everything in one wide table, the logic sitting in calculated columns, no real date or organisation dimensions - and left as it was, every new request would mean rework, and the reliance on one person would only deepen. So I wrote it up as two roads. Keep building on the prototype: cheaper now, but progressively more fragile and more dependent on him. Or pause and build the foundation properly: more upfront, but an asset that gets easier to extend as it grows. I recommended the foundation, in writing, and said plainly that the decision was theirs.
+So the strategy I laid out was one data model underneath all of it: built once, from the data he already had and the logic already spread across his spreadsheets, so that every report - the ones he runs now and the ones nobody's asked for yet - draws on the same numbers, worked out the same way, from one auditable place. I put the recommendation in writing, and the decision was theirs.
+
+They'd already had a go, sensibly. Summer students had built them some Power BI reports - each one, in effect, a single spreadsheet read in with charts drawn on top. After I'd laid out the strategy, another student took a run at the data model itself, with very little Power BI behind them, and that run settled it: putting charts on data you already have is the straightforward end of Power BI, and a model that stays consistent and auditable across every reporting lens is close to the last thing you learn. Most of my work is done with the team. This piece I did for them - a foundation is worth getting right first time - with the handover built in so it wouldn't stay mine.
 
 </Chapter>
 
 <Chapter id="build" kicker="the build: a model that shows its own working">
 
-They chose the foundation, and I built it. I rebuilt the prototype as a production model with the heavy lifting moved into the data load, before the reports ever see it. The two very different kinds of activity - what the university buys, and how it travels - got their own fact tables, because they're measured differently and use different emissions methods. The carbon is worked out as the data loads, so the reports just add up a column and stay fast.
+They chose the model, and a good part of the build turned out to be getting the method out of his head and his spreadsheets and writing it down as the model. Water worked out from metered cubic metres rather than estimated from spend; waste from actual tonnage; the taxi calculation that works backwards from cost to distance. Each of those was a correction he'd been applying by hand every year; now it's just how the model works.
 
-If you're sceptical, this is the part I'd point you at - the bits that protect trust in the number:
+The model itself does the heavy lifting as the data loads, before the reports ever see it. What the university buys, and how it travels, got their own tables, because they're measured differently and use different emissions methods. The carbon is worked out on the way in, so the reports just add up a column and stay fast.
+
+A few decisions in the build do most of the work of keeping the number trustworthy:
 
 <Offer title="every working is kept" lead>
 
@@ -94,20 +91,14 @@ It validated against his own spreadsheet to within rounding.
 
 </Chapter>
 
-<Chapter id="wrong" kicker="when I got something wrong, I said so">
+<Chapter id="handover" kicker="the handover: until he could run it himself">
 
-Two things I'd flag. When he spotted, mid-hand-over, that I'd wired up calendar-year factors where it should have been the academic year, I confirmed it and fixed it before the next session rather than waving it away. If I get something wrong, I'd rather you heard it from me. And when a validation gap appeared against one of his travel totals, he asked me to hold off recalculating until he'd checked his own source's factors. So I held off, and we left his totals alone until he'd had the chance to check them himself. Once he had, the gap resolved and we moved on.
-
-</Chapter>
-
-<Chapter id="handover" kicker="the hand-over: until he could run it himself">
-
-The point of all this was that he could run it. So the hand-over was two unhurried sessions with him driving on his own laptop - even on a machine that took a couple of minutes to open the model and kept freezing - because muscle memory only forms if your hands are on the keys. We went through Power Query versus DAX, publishing, splitting the model from the report, and the once-a-year refresh. He'd had a gap since his last training, so we started gently. By the end he could state the split back to me himself: Power Query transforms the data on the way in, DAX does the work inside the model.
+The point of all this was that he could run it. So the handover was two unhurried sessions with him driving on his own laptop - even on a machine that took a couple of minutes to open the model and kept freezing - because muscle memory only forms if your hands are on the keys. We went through Power Query versus DAX, publishing, splitting the model from the report, and the once-a-year refresh. He'd had a gap since his last training, so we started gently. By the end he could state the split back to me himself: Power Query transforms the data on the way in, DAX does the work inside the model.
 
 </Chapter>
 
 <Chapter id="got-to" kicker="where it got to">
 
-From a footprint resting on one person's heroic manual work and a fragile prototype, to a documented production model - built on a strategy and a business case that won the work, validated against his own figures to within rounding, and split so the faculty and whole-university reports draw on one trusted source. Most of all, understood and owned by the person who has to live with it. He's since come back for a follow-on piece of work.
+The work is finished and handed over, and what's left behind is his. The once-a-year refresh now takes him under half a day: collect the raw exports, make a few hand corrections, and the model does the rest. The whole method - every calculation the footprint depends on - is in a reference document, and the code that ingests and transforms the data is written to be read: well commented, named so it explains itself, because the point was always that the next person could follow it. And because the model and the reports are separate, the faculty view, the whole-university view and whatever comes next all read from one model; he can point a new report at it himself. He's since come back for a follow-on piece of work: the next kind of carbon reporting on the university's list.
 
 </Chapter>
