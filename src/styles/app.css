@@ -1,15 +1,16 @@
 /* ===========================================================================
    burningsuit — design system (Tailwind v4, CSS-first config)
 
-   v3 "the honest instrument": a warm engineering logbook in flat Everforest
-   green. Deep-forest grounds, cream entry panels, a left margin that talks
-   (the asides), Commit Mono chrome, the magenta flame as the single living
-   spark. No gradient, no scanline, no ground-morph, no mascot.
+   "The field notebook" (2026-07-11 warmth delta): a well-kept notebook from
+   someone who sits with your team, in flat Everforest green. Deep-forest
+   grounds, cream panels reserved for proof, a margin that talks (the asides),
+   display headlines that do the work, one magenta spark (CTA, mark, thread —
+   no cursor of any kind). No gradient, no scanline, no ground-morph, no
+   mascot; nothing idles or loops.
 
-   This is a RE-SKIN of the proven v2 chassis: the @layer cascade, the JS-gated
-   reveal system, the masked line-rise, the fixed-footer "basement", the
-   cross-document view-transitions, and the reduced-motion system are all
-   PRESERVED. Only the tokens, type, colour, layout, and motion change.
+   The chassis is preserved from earlier skins: the @layer cascade, the
+   JS-gated reveal system, the masked line-rise, the fixed-footer "basement",
+   the cross-document view-transitions, and the reduced-motion system.
 
    Cascade order (Tailwind v4): theme vars → base (incl. Preflight, then the
    reset which is imported AFTER so it wins) → components → utilities. The

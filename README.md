@@ -1,8 +1,8 @@
 # burningsuit.co.uk
 
-The burningsuit company site. Static, hand-built, no CMS. Current design is v3
-**"the honest instrument"** (flat Everforest green; tokens + semantic classes in
-`src/styles/`).
+The burningsuit company site. Static, hand-built, no CMS. Current design is
+**"the field notebook"** (flat Everforest green, 2026-07-11 warmth delta;
+tokens + semantic classes in `src/styles/`).
 
 **Stack:** Astro 6 · Tailwind v4 (via PostCSS) · MDX content collections (the
 `/work` case studies) · self-hosted fonts (Astro Fonts API) · `astro:assets`

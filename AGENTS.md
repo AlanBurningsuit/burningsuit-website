@@ -7,9 +7,9 @@ Orientation for anyone — human or AI — working in this repo.
 `burningsuit.co.uk` — the marketing site for Alan Harman-Box's solo **Power BI
 & Fabric + AI advisory** (what it's FOR lives in the north-star skill; this doc
 is the how). A static site: **Astro 6 + Tailwind v4**, no JS framework,
-`output: "static"`, deployed to GitHub Pages via Actions. Current design is v3
-"the honest instrument" (flat Everforest green). All styles live in
-`src/styles/` (`tokens.css` + `app.css`).
+`output: "static"`, deployed to GitHub Pages via Actions. Current design is
+"the field notebook" (flat Everforest green, 2026-07-11 warmth delta). All
+styles live in `src/styles/` (`tokens.css` + `app.css`).
 
 ## Branches (only two)
 

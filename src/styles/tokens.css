@@ -21,7 +21,7 @@
   --color-ink-soft: #5c6a72; /* Everforest light fg — body on cream */
   --color-amber: #e69875; /* Everforest orange — links + warmth */
   --color-moss: #a7c080; /* Everforest green — quiet positive, sparing */
-  --color-spark: #d90148; /* the logo magenta — THE pop (cursor, CTA, mark) */
+  --color-spark: #d90148; /* the logo magenta — THE pop (CTA, mark, thread) */
 }
 
 /* ---- fonts: map semantic utilities to the Astro Fonts API css variables ----
@@ -133,7 +133,7 @@
   /* responsive breakpoint ladder — CSS @media can't read custom properties, so
      these stay literal; keep every media query on these three rungs:
        48rem → cards / offer grids go two-column
-       56rem → the logbook spine + about panel go two-column
+       56rem → the notebook spine + about grid go two-column
        62rem → hero copy + portrait split
      (47.99 / 61.99 are the non-overlapping max-width boundary pairs.) */
   /* line-height scale — keyed to type role */
@@ -141,7 +141,7 @@
   --lh-tight: 1.1; /* statement, mail, belief */
   --lh-snug: 1.2; /* qlist, principle h3 */
   --lh-label: 1.3; /* mono eyebrow */
-  --lh-relaxed: 1.55; /* multi-line mono — aside, ask-line, beats */
+  --lh-relaxed: 1.55; /* multi-line mono — aside, beats */
   --lh-body: 1.6; /* body copy */
   --lh-loose: 1.7; /* footer fine print */
   /* letter-spacing scale — negative tracks display, positive tracks mono */
@@ -179,6 +179,6 @@
    max-width boundary. (The 47.99rem 2×2-nav step died with the long labels.) */
 @media (max-width: 55.99rem) {
   :root {
-    --header-h: 5.375rem; /* measured with the short sentence-case labels (see B6 note) */
+    --header-h: 5.625rem; /* measured 88.6px (two-row bar, short labels), rounded up to 90px */
   }
 }
