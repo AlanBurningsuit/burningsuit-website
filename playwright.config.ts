@@ -50,6 +50,17 @@ export default defineConfig({
     // phone): the mobile nav row, CTA wrap behaviour, single-column layouts.
     // dsf pinned to 1 so baselines stay byte-sane.
     { name: "mobile", use: { ...devices["Pixel 7"], deviceScaleFactor: 1 } },
+    // The 390px class of regression (A5). Pixel 7 metrics keep this CHROMIUM —
+    // devices["iPhone 12"] would silently select WebKit, whose binary isn't
+    // installed here. dsf pinned for byte-sane baselines.
+    {
+      name: "mobile390",
+      use: {
+        ...devices["Pixel 7"],
+        viewport: { width: 390, height: 664 },
+        deviceScaleFactor: 1,
+      },
+    },
   ],
   webServer: {
     command: "npm run serve",
