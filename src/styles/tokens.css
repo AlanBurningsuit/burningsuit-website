@@ -166,9 +166,27 @@
   --space-block: 1.1rem; /* the common fixed margin above a sub-block */
   --gutter: clamp(1.15rem, 4vw, 3rem); /* the page inline gutter */
   --footer-h: clamp(540px, 80svh, 840px); /* CSS fallback; JS measures the real height */
-  /* ≈ the sticky header bar's height (emergent: logo clamp(140px,15vw,180px) at
-     285:52 + .bar padding-block 0.85rem). One value, two consumers — the hero's
-     min-height and the sticky .what label offset — so a bar/logo change can't
-     silently mis-centre one of them. */
-  --header-h: 3.6rem;
+  /* The sticky header bar's MEASURED height (built site, header boundingBox
+     65.1px at ≥896px, 2026-07-11 — the old 3.6rem was a stale estimate). One
+     value, two consumers — the hero's min-height and the sticky .what label
+     offset — so a bar/logo change can't silently mis-centre one of them. */
+  --header-h: 4.125rem;
+}
+
+/* --header-h media steps — the token must state the header's MEASURED height
+   at each collapse rung (app.css: two-row bar ≤55.99rem; 2×2 nav ≤47.99rem),
+   or everything computed from it (hero centring, sticky offsets) inherits a
+   lie. Values are measured on the built site (header boundingBox, rounded up)
+   — re-measure after any bar/nav/logo change. Steps sit outside :root on the
+   ladder's max-width boundaries (48/56rem — see the ladder comment above).
+   DELETE the 47.99rem step when the short nav labels land (Phase 2). */
+@media (max-width: 55.99rem) {
+  :root {
+    --header-h: 5.375rem; /* measured 85.1px (two-row bar), rounded up to 86px */
+  }
+}
+@media (max-width: 47.99rem) {
+  :root {
+    --header-h: 6.875rem; /* measured 109.8px (2×2 nav), rounded up to 110px */
+  }
 }

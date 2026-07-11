@@ -142,6 +142,25 @@
     margin-bottom: var(--footer-h);
   }
 
+  /* skip link — the first tab stop on every page. Visually hidden until it
+     takes keyboard focus, then a plain pill pinned above the sticky header. */
+  .skip {
+    position: fixed;
+    top: var(--px);
+    left: var(--gutter);
+    z-index: 60; /* above the sticky header (50) */
+    background: var(--bg-2);
+    color: var(--fg);
+    text-decoration: none;
+    padding: 0.55em 0.95em;
+    border: var(--px) solid var(--deep);
+    border-radius: var(--r-sm);
+    transform: translateY(calc(-100% - 3 * var(--px)));
+  }
+  .skip:focus-visible {
+    transform: none;
+  }
+
   /* ============ header (hides down, returns up) ============ */
   header {
     position: sticky;
@@ -198,25 +217,40 @@
   nav a:focus-visible {
     color: var(--amber);
   }
-  /* On phones (below the 48rem rung) the logo + four nav items + CTA can't share
-     one row, so the nav drops to its own full-width row below — logo + CTA hold
-     row 1 — keeping every page reachable without a JS menu. Above 48rem they sit
-     inline; the .cta white-space:nowrap (above) is what holds the button on one
-     line through the 48–56rem band instead of wrapping, so no earlier collapse
-     is needed. */
-  @media (max-width: 47.99rem) {
+  /* current-page wayfinding: amber + the drawn underline held on. Covers both
+     the exact page (aria-current="page") and an ancestor section
+     (aria-current="true", e.g. /work over /work/law-firm/). Amber on the bg is
+     5.98:1 — clears the 3:1 non-text floor for the held underline too. */
+  nav a[aria-current] {
+    color: var(--amber);
+  }
+  nav a[aria-current]::after {
+    transform: scaleX(1);
+    transform-origin: 0 50%;
+  }
+  /* Below 56rem the logo + four nav items + CTA can't share one row (the
+     inline bar runs ~800px, so even a 768px tablet wrapped it) — the nav drops
+     to its own full-width row below; logo + CTA hold row 1. Every page stays
+     reachable without a JS menu. Compressed paddings keep the two-row header
+     honest against the media-stepped --header-h in tokens.css — measure the
+     built header before touching either. */
+  @media (max-width: 55.99rem) {
     .bar {
       flex-wrap: wrap;
       justify-content: space-between;
-      row-gap: 0.7rem;
+      padding-block: 0.6rem;
+      row-gap: 0.5rem;
     }
-    /* gap spacing instead of the ::before middot, so the four items wrap to a
-       tidy second row without stranding a divider at the break */
+    .bar .cta {
+      padding: 0.45em 0.85em;
+    }
+    /* gap spacing instead of the ::before middot, so the row never strands a
+       divider at a break */
     nav {
       order: 3;
       flex-basis: 100%;
       margin-left: 0;
-      justify-content: center;
+      justify-content: space-between;
       gap: 0.3rem 1rem;
     }
     nav a {
@@ -224,6 +258,19 @@
     }
     nav a + a::before {
       content: none;
+    }
+  }
+  /* Below 48rem the four long labels exceed the row (~350px of mono against
+     ~323px at 360), which used to strand "about" alone. A deliberate 2×2 grid
+     instead — nothing stranded. DELETE this block when the short sentence-case
+     labels land (Phase 2) and drop the 47.99rem --header-h step with it. */
+  @media (max-width: 47.99rem) {
+    nav {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      justify-content: start;
+      column-gap: 1.25rem;
+      row-gap: 0.3rem;
     }
   }
   /* drawn underline: in from the left, out to the right — never rewinds */
@@ -562,6 +609,25 @@
       max-width: 20rem;
     }
   }
+  /* Phone hero: content-sized, not viewport-locked. A 664px viewport can't
+     hold the stacked hero anyway — the criterion is the conversion moment (H1
+     + primary CTA) inside the first screen, with the next section peeking. */
+  @media (max-width: 47.99rem) {
+    .hero {
+      min-height: 0;
+      padding-block: var(--space-md) var(--space-lg);
+    }
+    .hero-photo img {
+      aspect-ratio: 3 / 2;
+    }
+    .hero .cta-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .hero .cta-row .cta {
+      justify-content: center;
+    }
+  }
 
   /* ============ the logbook spine: sticky mono label + content ============ */
   .chapter {
@@ -725,9 +791,11 @@
     content: "▸";
     transition: transform var(--t-nudge);
   }
+  /* spark at .go size on paper is 4.38:1 (fail); the press shade clears 4.63:1
+     and keeps the hover inside the press-mechanic family */
   a.panel:hover .go,
   a.panel:focus-visible .go {
-    color: var(--spark);
+    color: var(--spark-press);
   }
   a.panel:hover .go::after,
   a.panel:focus-visible .go::after {
@@ -735,6 +803,16 @@
   }
 
   /* ============ the case file panel (power-bi proof) ============ */
+  /* Links on paper: amber text on cream is 1.95:1 and spark body text 4.38:1 —
+     both fail AA. Ink (8.42:1, AAA) carries the text; the amber lives in the
+     underline, which only has to clear the 3:1 non-text floor. */
+  .panel .body a,
+  .casefile a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-decoration-thickness: var(--bw-spine);
+  }
   .casefile {
     max-width: var(--measure-wide);
   }

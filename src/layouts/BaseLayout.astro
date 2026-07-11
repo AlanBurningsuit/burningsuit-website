@@ -125,8 +125,9 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     )}
   </head>
   <body>
+    <a class="skip" href="#main">skip to content</a>
     <Header mailtoHref={mailtoHref} />
-    <main>
+    <main id="main">
       <slot />
     </main>
     <Footer mailtoHref={mailtoHref}>
