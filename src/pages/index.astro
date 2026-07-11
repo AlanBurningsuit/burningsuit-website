@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import RiseHeading from "../components/RiseHeading.astro";
-import ServiceRows from "../components/ServiceRows.astro";
+import DoorRow from "../components/DoorRow.astro";
+import CasefilePanel from "../components/CasefilePanel.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import PrinciplesChapter from "../components/PrinciplesChapter.astro";
 import PhotoChapter from "../components/PhotoChapter.astro";
@@ -13,17 +14,17 @@ import { Picture } from "astro:assets";
 import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
 import { mailtoFor } from "../config/site";
 import { getEntry } from "astro:content";
-import { namedTier } from "../lib/named";
 
 const contactSubject = "Power BI & Fabric";
 const contactMailto = mailtoFor(contactSubject);
 
-// Homepage proof beat: one concrete outcome from the law-firm study. The subject
-// reads as the named client only when that study's namePublished gate opens
-// (namedTier() — the same audited gate the /power-bi teaser and the study page
-// use) — otherwise the anonymised form.
-const lawFirm = await getEntry("work", "law-firm");
-const proofWho = namedTier(lawFirm?.data)?.client ?? "A data team inside an international law firm";
+// The trust moment's featured study. ROTATION IS EDITORIAL: a human swaps this
+// constant at edit time — never a runtime loop (doctrine: north-star, D7). The
+// law firm must not carry the homepage alone; CasefilePanel's namePublished
+// gate handles naming, so the signed tileOutcome ships anonymised until a
+// permission lands.
+const FEATURED_STUDY = "museum";
+const featured = await getEntry("work", FEATURED_STUDY);
 
 const heroLabel = "power bi and fabric, done with you.";
 const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
@@ -107,22 +108,28 @@ const statementLines: Line[] = [
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  <section class="chapter" aria-labelledby="what">
-    <div class="wrap what">
-      <div class="label">
-        <h2 class="kicker meta" id="what" data-reveal>what i do</h2>
-      </div>
-      <div>
-        <ServiceRows rows={serviceRows} />
-      </div>
+  <section class="chapter" aria-labelledby="in-practice">
+    <div class="wrap">
+      <h2 class="section-head" id="in-practice" data-reveal>in practice</h2>
+      <CasefilePanel study={featured?.data} tab={featured?.data.kicker}>
+        <p>{featured?.data.tileOutcome}</p>
+        <Fragment slot="links">
+          <a class="u" href={`/work/${FEATURED_STUDY}/`}>read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
+        </Fragment>
+      </CasefilePanel>
+      <p class="trust-line" data-reveal>
+        I also give a talk at user groups - "we're all middle management now" -
+        about staying responsible for work you've handed off.
+      </p>
     </div>
-    <div class="wrap what proof-line">
-      <div class="label">
-        <p class="kicker meta" data-reveal>in practice</p>
-      </div>
-      <div class="proof-body" data-reveal>
-        {proofWho}, wary of a Fabric build they hadn't made, came out owning it
-        - tracing wrong numbers back to source themselves. <a class="u" href="/work/">see the work ▸</a>
+  </section>
+
+  <section class="chapter" aria-labelledby="what">
+    <div class="wrap">
+      <h2 class="section-head" id="what" data-reveal>what i do</h2>
+      <div class="doors">
+        <DoorRow {...serviceRows[0]} variant="lead" index={1} />
+        <DoorRow {...serviceRows[1]} variant="second" index={2} />
       </div>
     </div>
   </section>

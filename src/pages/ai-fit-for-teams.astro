@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import RiseHeading from "../components/RiseHeading.astro";
-import ServiceRows from "../components/ServiceRows.astro";
+import DoorRow from "../components/DoorRow.astro";
 import Aside from "../components/Aside.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import type { Line } from "../components/RiseHeading.astro";
@@ -47,14 +47,12 @@ const fitmap = [
   "and the watch list is specific to your stack - if Microsoft brings a Fabric or Copilot feature out of beta, you'll already know what it makes feasible",
 ];
 
-const door: RowData[] = [
-  {
-    href: "/power-bi/",
-    title: { before: "power bi & fabric, done ", em: "with", after: " you" },
-    body: "When the work is specifically Power BI or Fabric - an architecture call, a model that needs owning, a team you'd like more self-sufficient - that's where to start. Embedded advisory, strategy and review, done with you.",
-    cta: "see power bi, done with you",
-  },
-];
+const door: RowData = {
+  href: "/power-bi/",
+  title: { before: "power bi & fabric, done ", em: "with", after: " you" },
+  body: "When the work is specifically Power BI or Fabric - an architecture call, a model that needs owning, a team you'd like more self-sufficient - that's where to start. Embedded advisory, strategy and review, done with you.",
+  cta: "see power bi, done with you",
+};
 ---
 
 <BaseLayout
@@ -214,9 +212,9 @@ const door: RowData[] = [
   </section>
 
   <section class="chapter" aria-labelledby="door">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="door" data-reveal>the main work</h2>
-      <ServiceRows rows={door} />
+    <div class="wrap">
+      <h2 class="section-head" id="door" data-reveal>the main work</h2>
+      <DoorRow {...door} variant="second" index={1} />
     </div>
   </section>
 

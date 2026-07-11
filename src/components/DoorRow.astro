@@ -1,0 +1,34 @@
+---
+/**
+ * A door — the route into a service page, as a dark editorial row (D6).
+ * Not a cream panel: cream is proof-only. The whole row is the anchor; a
+ * hairline tops it; the one hover tell (the `.go` label) warms to AMBER —
+ * spark on the dark ground is 2.65:1 and never carries a state.
+ *
+ * variant="lead" is the Power BI door: visibly fuller (display h3 a tier up,
+ * two-column at ≥62rem). variant="second" is the subordinate door (the AI
+ * bridge on the homepage; the cross-door on each single-door page). The
+ * asymmetry is deliberate front-door hierarchy, not a card stagger.
+ *
+ * Reuses RowData so page frontmatter moves verbatim from ServiceRow.
+ */
+import type { RowData } from "./ServiceRow.astro";
+
+interface Props extends RowData {
+  variant?: "lead" | "second";
+  /** Reveal-stagger index within the section. */
+  index?: number;
+}
+const { href, title, body, cta = "see how it works", variant = "second", index = 0 } = Astro.props;
+---
+<a
+  class:list={["door", variant === "lead" && "door-lead", `stagger-${index}`]}
+  href={href}
+  data-reveal
+>
+  <h3>{title.before}{title.em && <em>{title.em}</em>}{title.after}</h3>
+  <div class="door-body">
+    <p>{body}</p>
+    <span class="go">{cta}</span>
+  </div>
+</a>

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ServiceRows from "../components/ServiceRows.astro";
+import DoorRow from "../components/DoorRow.astro";
 import CasefilePanel from "../components/CasefilePanel.astro";
 import Offer from "../components/Offer.astro";
 import RiseHeading from "../components/RiseHeading.astro";
@@ -24,17 +24,16 @@ const contactMailto = mailtoFor(contactSubject);
 // Same headline as the home hero; display grotesque, masked-rise, amber "with".
 const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
 
-// The bridge to the AI page — the closing door. A one-line transition in the section
-// introduces it; the card leads with Copilot as the present pressure and names agents as
-// where it's heading, then hands to /ai-fit-for-teams.
-const aiDoor: RowData[] = [
-  {
-    href: "/ai-fit-for-teams/",
-    title: { before: "ai ", em: "fit", after: " for teams" },
-    body: "Copilot can already write DAX and draft a whole report - and agents that build the model outright aren't far behind. It's the same ownership question, one move on: can your team still change what it ships, and vouch for it? Working out what to hand over, what to keep, and who checks it is the other thing I do.",
-    cta: "see ai fit for teams",
-  },
-];
+// The bridge to the AI page — the closing door (dark editorial row; cream is
+// proof-only). A one-line transition in the section introduces it; the door
+// leads with Copilot as the present pressure and names agents as where it's
+// heading, then hands to /ai-fit-for-teams.
+const aiDoor: RowData = {
+  href: "/ai-fit-for-teams/",
+  title: { before: "ai ", em: "fit", after: " for teams" },
+  body: "Copilot can already write DAX and draft a whole report - and agents that build the model outright aren't far behind. It's the same ownership question, one move on: can your team still change what it ships, and vouch for it? Working out what to hand over, what to keep, and who checks it is the other thing I do.",
+  cta: "see ai fit for teams",
+};
 ---
 
 <BaseLayout
@@ -174,7 +173,7 @@ const aiDoor: RowData[] = [
           A team that can own and verify its own reporting is also the team that's ready for what
           AI adds to the job.
         </p>
-        <ServiceRows rows={aiDoor} />
+        <DoorRow {...aiDoor} variant="second" index={1} />
       </div>
     </div>
   </section>

@@ -55,13 +55,29 @@ test.describe("no-JS: everything is visible, nothing reveal-hidden", () => {
     });
   }
 
-  test("no-JS: the about teaser sits on a cream entry panel", async ({ page }) => {
+  test("no-JS: cream is proof-only — trust beat cream + non-law-firm, teaser dark, tiles cream", async ({ page }) => {
     await page.goto("/");
-    const bg = await page
-      .locator(".about .panel")
-      .evaluate((el) => getComputedStyle(el).backgroundColor);
-    // #f1ecd9 — the Everforest-light cream paper surface (set in CSS, no JS)
+    // the about teaser left the cream era (it's a route, not evidence)
+    await expect(page.locator(".about .panel")).toHaveCount(0);
+    await expect(page.locator(".about .about-door")).toHaveCount(1);
+    // the homepage trust beat exists and sits on cream (#f1ecd9, set in CSS, no JS)
+    const beat = page.locator(".chapter:has(#in-practice) .panel.casefile");
+    await expect(beat).toHaveCount(1);
+    const bg = await beat.evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(bg).toBe("rgb(241, 236, 217)");
+    // …and the featured study is NOT the law firm (doctrine: the law firm must
+    // not carry the homepage alone — this guards the rotation, not the pixels)
+    const readMore = page.locator(".chapter:has(#in-practice) .more a").first();
+    const href = await readMore.getAttribute("href");
+    expect(href).toMatch(/^\/work\/.+\/$/);
+    expect(href).not.toContain("law-firm");
+    // /work tiles stay cream — proof lives on paper
+    await page.goto("/work/");
+    const tileBg = await page
+      .locator(".offers a.panel")
+      .first()
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(tileBg).toBe("rgb(241, 236, 217)");
   });
 });
 

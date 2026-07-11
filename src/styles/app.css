@@ -636,7 +636,67 @@
     }
   }
 
-  /* ============ carved cream entry panels ============ */
+  /* ============ the doors: dark editorial rows into the service pages ============ */
+  /* Cream is proof-only, so the routes into the two offers sit on the dark
+     ground as editorial rows — hairline-topped, whole-row links. The lead
+     door (Power BI) is deliberately fuller than the second (front-door
+     hierarchy, not a stagger). The hover tell is AMBER: spark on this ground
+     is 2.65:1 and never carries a state. */
+  .doors {
+    display: grid;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+  }
+  .door {
+    display: block;
+    text-decoration: none;
+    border-top: var(--bw-hair) solid var(--line);
+    padding-top: var(--space-md);
+  }
+  .door h3 {
+    color: var(--fg);
+    font-size: var(--fs-2);
+    max-width: var(--measure-head);
+  }
+  .door-lead h3 {
+    font-size: var(--fs-3);
+  }
+  .door p {
+    margin-top: var(--space-block);
+    color: var(--fg-dim);
+    max-width: var(--measure-prose);
+  }
+  .door-lead p {
+    max-width: var(--measure-wide);
+  }
+  .door .go {
+    color: var(--fg-dim);
+    margin-top: var(--space-block);
+    padding-top: 0;
+  }
+  .door:hover .go,
+  .door:focus-visible .go {
+    color: var(--amber);
+  }
+  .door:hover .go::after,
+  .door:focus-visible .go::after {
+    transform: translateX(3px);
+  }
+  @media (min-width: 62rem) {
+    .door-lead {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: var(--space-lg);
+    }
+    .door-lead .door-body p {
+      margin-top: 0; /* the body column starts level with the headline */
+    }
+    .door:not(.door-lead) {
+      max-width: 75%; /* the second door reads subordinate, not equal */
+    }
+  }
+
+  /* ============ carved cream proof panels ============ */
   /* Capped at the wide reading measure so cards never run wider than the prose
      / case-file panel sharing the same `.what` column — the lone door card is
      capped too, so it lines up with the other panels. */
@@ -651,16 +711,12 @@
       grid-template-columns: 1fr 1fr;
       align-items: stretch; /* equal height — no clever stagger (it read broken) */
     }
-    /* reserve two title lines so a one-line card title ("ai fit for teams")
-       doesn't sit higher than a wrapping one ("power bi & fabric, done with
-       you"); keeps the two card bodies on the same baseline so the pair stops
-       feeling lopsided. Not on .single — a lone card has no sibling to match. */
-    .offers:not(.single) .panel h3 {
+    /* reserve two title lines so a one-line tile title doesn't sit higher
+       than a wrapping one; keeps paired tile bodies on the same baseline so
+       the pair stops feeling lopsided. */
+    .offers .panel h3 {
       min-height: calc(2 * var(--lh-display) * 1em);
     }
-  }
-  .offers.single {
-    grid-template-columns: 1fr; /* a lone "door" card spans its single column */
   }
   .panel {
     position: relative;
@@ -918,9 +974,18 @@
     font-style: normal;
   }
 
-  /* ============ about: a cream "the thread" panel (not a full-bleed band) ============ */
+  /* ============ about teaser: a dark door to /about (cream is proof-only) ============ */
   .about {
     padding-block: var(--space-super);
+  }
+  /* the whole teaser is the door — a block anchor on the dark ground with a
+     hairline top, same grammar as the service doors; the one tell (.go)
+     warms to amber. */
+  .about-door {
+    display: block;
+    text-decoration: none;
+    border-top: var(--bw-hair) solid var(--line);
+    padding-top: var(--space-md);
   }
   .about-grid {
     display: grid;
@@ -928,9 +993,9 @@
     align-items: center;
     grid-template-columns: 1fr;
   }
-  /* converged from 52rem onto the 56rem rung so the about panel flips two-column
-     in step with the logbook spine. A landscape photo is the minority column — a
-     contained chip beside the prose, not the dominant element (this is a teaser). */
+  /* converged from 52rem onto the 56rem rung so the teaser flips two-column
+     in step with the notebook spine. A landscape photo is the minority column —
+     a contained chip beside the prose, not the dominant element (a teaser). */
   @media (min-width: 56rem) {
     .about-grid {
       grid-template-columns: 3fr 5fr;
@@ -945,28 +1010,38 @@
     aspect-ratio: 3 / 2;
     object-fit: cover;
     object-position: 50% 35%;
-    border-radius: var(--r-sm);
+    /* the carved-material frame, kept from the cream era — photos stay framed */
+    background: var(--bg-2);
+    border: var(--px) solid var(--deep);
+    border-radius: var(--r);
+    box-shadow:
+      0 0 0 var(--px) var(--paper-edge),
+      7px 7px 0 0 rgb(var(--shadow-ink) / 0.5);
   }
   .about-grid h2 {
-    color: var(--ink);
+    color: var(--fg);
     font-size: var(--fs-4);
     max-width: var(--measure-head);
   }
-  .about-grid h2 em {
-    color: var(--spark);
-    font-style: normal;
-  }
   .about-grid p {
-    color: var(--ink-soft);
+    color: var(--fg-dim);
     margin-top: var(--space-block);
     max-width: 34rem;
   }
   .about-grid p strong {
-    color: var(--ink);
+    color: var(--fg);
     font-weight: 600;
   }
-  .about .meta {
-    color: var(--ink-soft);
+  .about-door .go {
+    color: var(--fg-dim);
+  }
+  .about-door:hover .go,
+  .about-door:focus-visible .go {
+    color: var(--amber);
+  }
+  .about-door:hover .go::after,
+  .about-door:focus-visible .go::after {
+    transform: translateX(3px);
   }
 
   /* ============ footer basement: the destination ============ */
@@ -1143,16 +1218,13 @@
     color: var(--amber);
     font-style: normal;
   }
-  /* homepage proof line: one real outcome set apart as its own `.what` row under
-     the service cards — an amber "in practice" label in the left margin (like
-     "what i do") and a body-size line. Not a caption. */
-  .proof-line {
-    margin-top: var(--space-lg);
-  }
-  .proof-line .proof-body {
+  /* the homepage credibility line — sits under the trust moment's proof beat,
+     carrying the talk. One signed line, body-warm, never a caption. */
+  .trust-line {
     max-width: var(--measure-wide);
-    font-size: var(--fs-base);
+    font-size: var(--fs-lead);
     color: var(--fg);
+    margin-top: var(--space-md);
   }
 
   /* the /404 way-back links */

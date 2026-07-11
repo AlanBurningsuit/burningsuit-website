@@ -1,20 +1,18 @@
 ---
 /**
- * About teaser, as a carved cream panel on the dark green ground (cream is
- * always a contained "entry" panel in this skin, never a full-bleed ground).
- * Stance-led: p1 is what Alan is thinking about; p2 is a compact bridge to the
- * longer story (where burningsuit comes from + the responsibility talk). The
- * software-delivery credential lands once, in the home hero sig; /about carries
- * the full version, so the panel doesn't pre-quote it — the panel itself is
- * "the longer story". No journal tab — Alan found the "the thread" label too
- * on-the-nose; the panel stands alone.
+ * About teaser, as a dark door to /about (cream is proof-only since the
+ * 2026-07-11 delta — the teaser is a route, not evidence, so it sits on the
+ * dark ground with the same door grammar as the service rows). Stance-led:
+ * p1 is what Alan is thinking about; p2 is a compact bridge to the longer
+ * story (where burningsuit comes from + the responsibility talk). The
+ * software-delivery credential lands once, in the home hero sig; /about
+ * carries the full version, so the teaser doesn't pre-quote it.
  *
- * The whole panel IS the door to /about — it reuses the carved `a.panel` doorway
- * (same pattern as the offer cards): the card lifts on hover/focus and the one
- * tell, the `.go` label `the longer story ▸`, warms to spark and nudges right.
- * The portrait is a contained chip beside the prose, not the dominant element —
- * this is a teaser, not the about page. Signed + shipped 2026-06-17; the MA
- * mention was dropped from the longer-story line per Alan's about-page sign-off.
+ * The whole teaser IS the door — the one tell, the `.go` label
+ * `the longer story ▸`, warms to amber and nudges right. The portrait keeps
+ * its carved frame and stays the minority column — this is a teaser, not the
+ * about page. Copy signed 2026-06-17; the MA mention was dropped from the
+ * longer-story line per Alan's about-page sign-off.
  */
 import { Picture } from "astro:assets";
 import about from "../assets/photos/DSC08683-Edit.jpg";
@@ -23,8 +21,8 @@ const longerStoryHref = "/about/";
 ---
 <section class="about" id="about" aria-labelledby="who">
   <div class="wrap">
-    <a class="panel" href={longerStoryHref}>
-      <div class="body about-grid">
+    <a class="about-door" href={longerStoryHref}>
+      <div class="about-grid">
         <figure data-reveal>
           <Picture
             src={about}
