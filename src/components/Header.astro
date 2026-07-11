@@ -12,11 +12,13 @@ import { bookingHref } from "../config/site";
 interface Props {
   mailtoHref?: string;
 }
+// Short sentence-case labels (the 2026-07-11 chrome relaxation, Phase-2 copy
+// batch). The long lowercase forms live on in each page's own H1.
 const nav = [
-  { href: "/power-bi/", label: "power bi & fabric" },
-  { href: "/ai-fit-for-teams/", label: "ai fit for teams" },
-  { href: "/work/", label: "work" },
-  { href: "/about/", label: "about" },
+  { href: "/power-bi/", label: "Power BI" },
+  { href: "/ai-fit-for-teams/", label: "AI fit" },
+  { href: "/work/", label: "Work" },
+  { href: "/about/", label: "About" },
 ];
 // aria-current wayfinding — server-rendered per page, zero runtime cost.
 // Trailing-slash-normalised so dev-server paths match the built /page/ form.
@@ -45,6 +47,6 @@ const currentFor = (href: string): "page" | "true" | undefined => {
         <a class="u" href={n.href} aria-current={currentFor(n.href)}>{n.label}</a>
       ))}
     </nav>
-    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">book a call</a>
+    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">Book a call</a>
   </div>
 </header>

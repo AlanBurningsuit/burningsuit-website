@@ -27,15 +27,11 @@ const named = namedTier(study);
 {
   named && (
     <section class="chapter" aria-labelledby="words">
-      <div class="wrap what">
-        <div class="label">
-          <h2 class="kicker meta" id="words" data-reveal>
-            in their words
-          </h2>
-        </div>
-        <div>
-          <CasefilePanel study={study} />
-        </div>
+      <div class="wrap">
+        <h2 class="section-head" id="words" data-reveal>
+          in their words
+        </h2>
+        <CasefilePanel study={study} />
       </div>
     </section>
   )

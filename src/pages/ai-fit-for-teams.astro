@@ -97,8 +97,8 @@ const door: RowData[] = [
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
   <section class="chapter" aria-labelledby="not-behind">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="not-behind" data-reveal>you're not behind</h2>
+    <div class="wrap">
+      <h2 class="section-head" id="not-behind" data-reveal>you're not behind</h2>
       <div class="prose">
         <p data-reveal>
           I won't walk in assuming your team's fallen behind on AI, or that the people are the
@@ -111,19 +111,17 @@ const door: RowData[] = [
   </section>
 
   <section class="chapter" aria-labelledby="worries">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="worries" data-reveal>the questions teams bring me</h2>
-      <div>
-        <ul class="qlist">
-          {worries.map((q) => <li data-reveal>{q}</li>)}
-        </ul>
-      </div>
+    <div class="wrap">
+      <h2 class="section-head" id="worries" data-reveal>the questions teams bring me</h2>
+      <ul class="qlist">
+        {worries.map((q) => <li data-reveal>{q}</li>)}
+      </ul>
     </div>
   </section>
 
   <section class="chapter" aria-labelledby="how-it-works">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="how-it-works" data-reveal>how it works</h2>
+    <div class="wrap">
+      <h2 class="section-head" id="how-it-works" data-reveal>how it works</h2>
       <div>
         <p class="lead" data-reveal>
           It's a few days of my time, spread over two or three weeks and fitted around how the
@@ -149,10 +147,10 @@ const door: RowData[] = [
   <section class="chapter" aria-labelledby="fitmap">
     <div class="wrap what">
       <div class="label">
-        <h2 class="kicker meta" id="fitmap" data-reveal>what's in the fit map</h2>
         <Aside data-reveal>the tools are just a means to an end.</Aside>
       </div>
       <div>
+        <h2 class="section-head" id="fitmap" data-reveal>what's in the fit map</h2>
         <ul class="fitmap">
           {fitmap.map((item) => <li data-reveal>{item}</li>)}
         </ul>
@@ -161,10 +159,8 @@ const door: RowData[] = [
   </section>
 
   <section class="chapter" aria-labelledby="afterwards">
-    <div class="wrap what">
-      <div class="label">
-        <h2 class="kicker meta" id="afterwards" data-reveal>afterwards</h2>
-      </div>
+    <div class="wrap">
+      <h2 class="section-head" id="afterwards" data-reveal>afterwards</h2>
       <div class="prose">
         <p data-reveal>
           The difference is in the decisions: you make them knowing where AI helps your team,
@@ -181,8 +177,8 @@ const door: RowData[] = [
   </section>
 
   <section class="chapter" aria-labelledby="copilot">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="copilot" data-reveal>already rolled out copilot?</h2>
+    <div class="wrap">
+      <h2 class="section-head" id="copilot" data-reveal>already rolled out copilot?</h2>
       <div class="prose">
         <p data-reveal>
           Good - that's a start, but it's only licences so far. What changed once it landed: is
@@ -197,8 +193,8 @@ const door: RowData[] = [
   </section>
 
   <section class="chapter" aria-labelledby="belief">
-    <div class="wrap what">
-      <h2 class="label kicker meta" id="belief" data-reveal>what it comes down to</h2>
+    <div class="wrap">
+      <h2 class="section-head" id="belief" data-reveal>what it comes down to</h2>
       <div>
         <p class="belief" data-reveal>
           Every piece of work is a stack of decisions. Hand a problem to AI without naming those

@@ -70,7 +70,7 @@ test("work index — regions", async ({ page }, testInfo) => {
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`work-hero-${tag}.png`);
   // the four case-file tiles (scoped to the "case files" chapter heading)
-  await expect(page.locator(".what:has(#cases)")).toHaveScreenshot(`work-cases-${tag}.png`);
+  await expect(page.locator(".chapter:has(#cases)")).toHaveScreenshot(`work-cases-${tag}.png`);
 });
 
 test("work case study — regions", async ({ page }, testInfo) => {
