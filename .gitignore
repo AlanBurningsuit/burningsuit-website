@@ -35,3 +35,6 @@ claude.md
 Burningsuit Brand Guidelines V1.pdf
 .agents/
 .claude/
+
+# Local Netlify folder
+.netlify
