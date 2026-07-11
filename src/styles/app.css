@@ -196,12 +196,18 @@
     align-items: center;
     flex-wrap: wrap;
     margin-left: auto; /* push the nav + the CTA after it to the right */
+    gap: calc(2 * clamp(0.7rem, 2vw, 1.1rem));
   }
-  /* a quiet middot divides each menu item; the spacing lives in the divider's
-     margins (no flex gap) so the dot sits centred between links */
+  /* a quiet middot centred in each gap. Positioned OUTSIDE the link box (the
+     links are position:relative via .u) so the drawn underline and the
+     current-page underline span exactly the label — a middot inside the
+     anchor made every underline start under the divider. */
   nav a + a::before {
     content: "·";
-    margin-inline: clamp(0.7rem, 2vw, 1.1rem);
+    position: absolute;
+    left: calc(-1 * clamp(0.7rem, 2vw, 1.1rem));
+    top: 50%;
+    transform: translate(-50%, -50%);
     color: var(--fg-dim);
   }
   /* nav is chrome, not code: body face, sentence case (the 2026-07-11 case
@@ -618,6 +624,13 @@
   @media (min-width: 56rem) {
     .what {
       grid-template-columns: 1fr 4fr;
+      column-gap: var(--space-lg);
+      row-gap: 0; /* the head's own margin-bottom is the gap below it */
+    }
+    /* spine chapters hang their head at the margin like plain chapters do;
+       the rail below holds only the aside, beside the content */
+    .what > .section-head {
+      grid-column: 1 / -1;
     }
   }
   .what .label {
@@ -675,6 +688,7 @@
     text-decoration: none;
     border-top: var(--bw-hair) solid var(--line);
     padding-top: var(--space-md);
+    transition: border-top-color var(--t-flip);
   }
   .door h3 {
     color: var(--fg);
@@ -697,6 +711,10 @@
     margin-top: var(--space-block);
     padding-top: 0;
   }
+  .door:hover,
+  .door:focus-visible {
+    border-top-color: var(--amber); /* the hairline warms with the tell */
+  }
   .door:hover .go,
   .door:focus-visible .go {
     color: var(--amber);
@@ -706,13 +724,27 @@
     transform: translateX(3px);
   }
   @media (min-width: 62rem) {
+    /* lead door: headline left, body right, the tell under the headline at
+       the door's left edge — so both doors' tells align at the margin */
     .door-lead {
       display: grid;
       grid-template-columns: 1fr 1.4fr;
-      gap: var(--space-lg);
+      column-gap: var(--space-lg);
     }
-    .door-lead .door-body p {
+    .door-lead h3 {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .door-lead p {
+      grid-column: 2;
+      grid-row: 1 / span 2;
       margin-top: 0; /* the body column starts level with the headline */
+    }
+    .door-lead .go {
+      grid-column: 1;
+      grid-row: 2;
+      justify-self: start;
+      align-self: start;
     }
     .door:not(.door-lead) {
       max-width: 75%; /* the second door reads subordinate, not equal */
@@ -991,6 +1023,7 @@
     font-size: var(--fs-4);
     margin: 0.9rem auto 0;
     max-width: var(--measure-statement);
+    color: var(--fg); /* a conviction in full voice — matches .belief, not body-dim */
   }
   .statement-ch .statement em {
     color: var(--amber);
@@ -1009,6 +1042,11 @@
     text-decoration: none;
     border-top: var(--bw-hair) solid var(--line);
     padding-top: var(--space-md);
+    transition: border-top-color var(--t-flip);
+  }
+  .about-door:hover,
+  .about-door:focus-visible {
+    border-top-color: var(--amber); /* same door grammar as the service rows */
   }
   .about-grid {
     display: grid;
@@ -1340,7 +1378,8 @@
     top: 0.6em;
     width: 0.5rem;
     height: 0.5rem;
-    background: var(--spark);
+    /* amber, not spark — the spark stays rationed to CTA / mark / thread */
+    background: var(--amber);
   }
 
   /* embedded sub-offers (power-bi "what i do") */

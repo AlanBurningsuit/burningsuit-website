@@ -59,10 +59,13 @@ const principles = [
   },
 ];
 
+// Hand-split so every line fits the 22ch statement measure — the old
+// three-line split overflowed and stranded "ask." alone mid-statement.
 const statementLines: Line[] = [
-  "ai will build whatever you ask.",
-  "someone still has to know",
-  { before: "what to ask ", em: "for", after: "." },
+  "ai will build",
+  "whatever you ask.",
+  "someone still has to",
+  { before: "know what to ask ", em: "for", after: "." },
 ];
 ---
 

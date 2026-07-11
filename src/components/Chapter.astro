@@ -30,11 +30,11 @@ const { id, kicker, aside } = Astro.props;
   {
     aside ? (
       <div class="wrap what">
+        <h2 class="section-head" id={id} data-reveal>{kicker}</h2>
         <div class="label">
           <Aside data-reveal>{aside}</Aside>
         </div>
         <div>
-          <h2 class="section-head" id={id} data-reveal>{kicker}</h2>
           <div class="prose" data-reveal>
             <slot />
           </div>

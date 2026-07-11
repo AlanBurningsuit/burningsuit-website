@@ -27,8 +27,6 @@ const { href, title, body, cta = "see how it works", variant = "second", index =
   data-reveal
 >
   <h3>{title.before}{title.em && <em>{title.em}</em>}{title.after}</h3>
-  <div class="door-body">
-    <p>{body}</p>
-    <span class="go">{cta}</span>
-  </div>
+  <p>{body}</p>
+  <span class="go">{cta}</span>
 </a>
