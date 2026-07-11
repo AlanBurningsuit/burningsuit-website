@@ -724,28 +724,9 @@
     transform: translateX(3px);
   }
   @media (min-width: 62rem) {
-    /* lead door: headline left, body right, the tell under the headline at
-       the door's left edge — so both doors' tells align at the margin */
-    .door-lead {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      column-gap: var(--space-lg);
-    }
-    .door-lead h3 {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    .door-lead p {
-      grid-column: 2;
-      grid-row: 1 / span 2;
-      margin-top: 0; /* the body column starts level with the headline */
-    }
-    .door-lead .go {
-      grid-column: 1;
-      grid-row: 2;
-      justify-self: start;
-      align-self: start;
-    }
+    /* ONE door grammar: headline top, body below, tell at the foot — same
+       stack at every size. The asymmetry is scale and width only: the lead
+       door runs the full column with the bigger h3; the second caps at 75%. */
     .door:not(.door-lead) {
       max-width: 75%; /* the second door reads subordinate, not equal */
     }
