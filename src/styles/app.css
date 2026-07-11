@@ -588,6 +588,28 @@
     max-width: var(--measure-head);
     margin-bottom: var(--space-sm);
   }
+  /* Plain chapters keep the notebook's binding margin at ≥56rem: the display
+     head hangs at the left margin (full span) and the content sits on the
+     same 4fr column the spine uses — without it every section piles against
+     the gutter and wide screens go left-heavy with a dead right half.
+     Spine chapters (.what) and the centred statement keep their own grids. */
+  @media (min-width: 56rem) {
+    .chapter:not(.statement-ch) > .wrap:not(.what) {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      column-gap: var(--space-lg);
+    }
+    .chapter:not(.statement-ch) > .wrap:not(.what) > .section-head {
+      grid-column: 1 / -1;
+    }
+    .chapter:not(.statement-ch) > .wrap:not(.what) > :not(.section-head) {
+      grid-column: 2;
+    }
+    /* grid rows don't margin-collapse — the head's own margin-bottom is the gap */
+    .chapter:not(.statement-ch) > .wrap:not(.what) > .section-head + * {
+      margin-top: 0;
+    }
+  }
   .what {
     display: grid;
     gap: var(--space-lg);
