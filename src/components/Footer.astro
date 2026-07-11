@@ -2,14 +2,13 @@
 /**
  * The basement: main scrolls up off this fixed footer to reveal the "let's talk"
  * close — the invitation line + face chip, then the two contact actions side by
- * side (primary "book a 30-minute call", ghost "email me", as in the hero), the
+ * side (primary "Book a 30-minute call", ghost "Email me", as in the hero), the
  * plain © line, and the full-width lockup signing the page.
  *
  * The invitation line is a named slot so each page can supply its own CTA copy
  * while keeping the chip + period consistent. Default = the homepage line.
  */
 import FaceChip from "./FaceChip.astro";
-import { commitHash } from "../lib/commit";
 import { bookingHref, mailtoFor } from "../config/site";
 interface Props {
   /** The mailto (with optional prefilled ?subject=) built per-page in
@@ -28,16 +27,12 @@ const { mailtoHref = mailtoFor() } = Astro.props;
     </p>
     <div class="cta-row cta-footer">
       <a class="cta" href={bookingHref("footer")} target="_blank" rel="noopener noreferrer"
-        >book a 30-minute call</a
+        >Book a 30-minute call</a
       >
-      <a class="cta ghost" href={mailtoHref}>email me</a>
-    </div>
-    <div class="foot-meta meta">
-      <span>local time - <span id="clock2">gmt</span></span>
-      <a class="u" href="/colophon/">build <span id="commit">{commitHash}</span> ↗</a>
+      <a class="cta ghost" href={mailtoHref}>Email me</a>
     </div>
     <p class="legal">
-      burningsuit ltd is a limited company registered in england &amp; wales&NewLine;registered number: 05738130 &middot; registered office: the courtyard, shoreham road, upper beeding, west sussex, BN44 3TN &middot; &copy; 2026{
+      Burningsuit Ltd is a limited company registered in England &amp; Wales&NewLine;Registered number: 05738130 &middot; Registered office: The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN &middot; &copy; 2026{
       }
     </p>
   </div>

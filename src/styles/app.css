@@ -392,53 +392,14 @@
     color: var(--fg-dim);
   }
 
-  /* ---- the mono labels + the one living magenta cursor ---- */
+  /* ---- the mono labels (page-hero eyebrows + true metadata) ---- */
   .kicker {
     font-family: var(--ff-mono);
     font-weight: 400;
     letter-spacing: var(--ls-mono-wide);
     font-size: var(--mono-lead);
     line-height: var(--lh-label); /* eyebrows are real headings; don't inherit display lh */
-    text-transform: lowercase;
     color: var(--amber);
-  }
-  /* the hero "prompt": › then the typed tagline then the blinking block cursor */
-  .hero-prompt {
-    display: inline-flex;
-    align-items: baseline;
-    max-width: 100%;
-  }
-  .hero-prompt .pre {
-    color: var(--moss);
-    margin-right: 0.5ch;
-  }
-  /* The typed width = 26 RENDERED glyphs ("power bi & fabric advisory" — count
-     glyphs, not source bytes: &amp; is one glyph) + one 0.04em kicker tracking
-     unit per glyph. THREE places share the 26: this width, the steps() count
-     below, and the keyframe — update all of them together when the tagline
-     changes, or the spark cursor floats off the end of the text again. */
-  .kt {
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    width: calc(26ch + 26 * var(--ls-mono-wide));
-    max-width: 100%;
-    vertical-align: bottom;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .kt {
-      width: 0;
-      animation: type var(--t-type) steps(26, end) var(--t-ui) forwards;
-    }
-  }
-  .cursor {
-    display: inline-block;
-    width: 0.62em;
-    height: 1.02em;
-    vertical-align: -0.14em;
-    background: var(--spark);
-    margin-left: 0.18em;
-    animation: blink var(--t-blink) steps(1) infinite;
   }
 
   /* ============ load choreography (pure CSS, never gates input) ============ */
@@ -489,11 +450,11 @@
   }
   /* No-JS fallback: the .lines rise relies on the IntersectionObserver adding
      .show. With JS off those masked lines keep their 110% translate and stay
-     clipped out of view — most visibly the statement chapter, which would
-     silently break the colophon's "readable if everything clever fails" boast.
-     Reveal them flat so the page is complete without JS. The .js class itself
-     is armed by the enhance module (not an inline script), so a module that
-     never loads/executes degrades through this same fallback. */
+     clipped out of view — most visibly the statement chapter. The floor is
+     "readable if everything clever fails": reveal them flat so the page is
+     complete without JS. The .js class itself is armed by the enhance module
+     (not an inline script), so a module that never loads/executes degrades
+     through this same fallback. */
   html:not(.js) .lines .l > .i {
     transform: none;
   }
@@ -1066,18 +1027,6 @@
     object-fit: cover;
     object-position: 50% 18%;
   }
-  .foot-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem 1.5rem;
-    border-top: var(--bw-hair) solid var(--line);
-    padding-block: 1.1rem;
-    margin-top: clamp(2rem, 5vh, 3.5rem);
-  }
-  .foot-meta a {
-    color: inherit; /* quiet furniture, not a default-blue link */
-    text-decoration: none;
-  }
   .legal {
     font-family: var(--ff-mono);
     font-size: var(--mono-fine);
@@ -1167,37 +1116,21 @@
       order: -1; /* the question sits in the left column; copy leads in source for mobile */
     }
   }
+  /* the static ask: the buyer's sharpest question as bare display type —
+     no panel, no rotation, nothing idles */
   .hero-ask {
     margin: 0;
+    font-family: var(--ff-display);
+    font-weight: 800;
+    font-size: var(--fs-3);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    color: var(--fg);
+    max-width: var(--measure-head);
   }
-  .ask-panel {
-    height: auto;
-    width: 100%;
-    max-width: 24rem;
-  }
-  .ask-panel .body {
-    padding: clamp(1.5rem, 3.2vw, 2.1rem); /* roomier than the default card padding */
-  }
-  .ask-line {
-    font-family: var(--ff-mono);
-    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
-    line-height: var(--lh-relaxed);
-    color: var(--ink);
-    /* hold a stable height so the panel doesn't jump as the rolling questions
-       (different lengths) type and delete */
-    min-height: 3.4em;
-  }
-  .ask-pre {
-    color: var(--spark); /* magenta prompt — the constant cream-panel accent across all questions */
-    margin-right: 0.5ch;
-  }
-  .ask-note {
-    margin-top: var(--space-block);
-    padding-top: 1rem;
-    border-top: var(--bw-hair) solid color-mix(in srgb, var(--ink) 14%, transparent);
-    font-family: var(--ff-mono);
-    font-size: var(--mono-label);
-    color: var(--ink-soft);
+  .hero-ask em {
+    color: var(--amber);
+    font-style: normal;
   }
   .lead {
     margin-top: var(--space-md);
@@ -1220,7 +1153,7 @@
     margin-top: var(--space-block);
   }
   /* body-prose emphasis is the same amber colour-shift as headings — never
-     italic (the colophon's "nothing leans into italic" claim depends on this). */
+     italic (the type system has no italic; the notebook's emphasis is colour). */
   .prose em {
     color: var(--amber);
     font-style: normal;
@@ -1387,22 +1320,6 @@
     transform: none;
   }
 }
-@keyframes blink {
-  0%,
-  55% {
-    opacity: 1;
-  }
-  56%,
-  100% {
-    opacity: 0;
-  }
-}
-@keyframes type {
-  to {
-    /* must equal .kt's static width (26 glyphs + tracking) */
-    width: calc(26ch + 26 * var(--ls-mono-wide));
-  }
-}
 
 /* ============ cross-document view transitions (unlayered: progressive) ============ */
 /* Native MPA view transitions: the named chrome (header + lockup) holds while
@@ -1461,15 +1378,6 @@
     clip-path: none;
     transition: none;
   }
-  /* the typewriter + cursor: full prompt static, no type-on, no blink.
-     width:auto shrink-wraps the text exactly — no typed-width constant here. */
-  .kt {
-    width: auto;
-    animation: none;
-  }
-  .cursor {
-    animation: none;
-  }
   a.panel {
     transition: none;
   }
@@ -1512,12 +1420,5 @@
   .js .photo-ch .ph,
   .js .figure-inset .ph {
     clip-path: none;
-  }
-  .kt {
-    width: auto; /* full prompt static — shrink-to-fit, no typed-width constant */
-    animation: none;
-  }
-  .cursor {
-    animation: none;
   }
 }

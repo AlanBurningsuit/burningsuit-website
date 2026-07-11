@@ -102,6 +102,8 @@ front. Everything else in the policy (`default-src 'none'`,
 
 Analytics: **built but OFF.** A cookieless Plausible integration exists behind
 two deliberately coupled flags (`ANALYTICS.enabled` in `src/config/site.ts` +
-`ANALYTICS_ENABLED` in `astro.config.mjs` — flip both or neither; enabling it
-also falsifies the colophon's "no analytics" copy, so edit that in the same
-change). Until then: no trackers, no cookies, no third-party requests.
+`ANALYTICS_ENABLED` in `astro.config.mjs` — flip both or neither). The site
+makes no on-page claim about analytics (the craft is silent by doctrine), so
+this is purely a config decision — but "no trackers" is still part of the
+trust story, and enabling it is the owner's call. Until then: no trackers, no
+cookies, no third-party requests.

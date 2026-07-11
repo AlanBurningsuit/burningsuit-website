@@ -8,9 +8,7 @@ import { test, expect, type Page } from "@playwright/test";
  * human-signed comparison (scripts/shoot.mjs), not asserted here.
  */
 async function prepare(page: Page, path: string) {
-  // Freeze time BEFORE load: Intl renders a constant 10:30 Europe/London and
-  // enhance.ts's 30-second tick can never repaint the clock mid-run (the
-  // textContent pin below is belt-and-braces, not the guarantee).
+  // Freeze time BEFORE load so nothing date-derived can drift between runs.
   await page.clock.setFixedTime(new Date("2026-07-02T10:30:00+01:00"));
   await page.goto(path);
   await page.evaluate(() => document.fonts.ready);
@@ -23,10 +21,6 @@ async function prepare(page: Page, path: string) {
     }
     window.scrollTo(0, 0);
     await new Promise((r) => setTimeout(r, 200));
-    // pin the footer clock + the build commit hash so the footer snapshot is
-    // deterministic across commits (both are dynamic).
-    document.querySelectorAll("#clock2").forEach((el) => (el.textContent = "10:30"));
-    document.querySelectorAll("#commit").forEach((el) => (el.textContent = "abc1234"));
   });
 }
 

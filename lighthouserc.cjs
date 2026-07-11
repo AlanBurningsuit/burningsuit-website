@@ -10,7 +10,6 @@ module.exports = {
         "http://localhost/ai-fit-for-teams/index.html",
         "http://localhost/power-bi/index.html",
         "http://localhost/about/index.html",
-        "http://localhost/colophon/index.html",
         "http://localhost/work/index.html",
         "http://localhost/work/law-firm/index.html",
       ],

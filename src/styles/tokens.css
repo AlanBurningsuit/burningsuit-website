@@ -53,8 +53,6 @@
   --t-draw: 0.65s; /* the thread grow */
   --t-move: 0.9s; /* content rise / settle */
   --t-reveal: 1.1s; /* photo curtain */
-  --t-blink: 1.15s; /* cursor blink */
-  --t-type: 1.2s; /* typewriter */
   --stagger-fast: 80ms; /* per-item reveal cadence — rises */
   --stagger-slow: 120ms; /* per-item reveal cadence — settles */
   --rise: 24px;

@@ -9,7 +9,7 @@ import { test, expect } from "@playwright/test";
  *      events (fonts, styles, images, the one external module) and no console
  *      errors / uncaught page errors.
  */
-const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/colophon/"];
+const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/", "/work/", "/work/law-firm/"];
 
 for (const path of pages) {
   test(`CSP present and violation-free: ${path}`, async ({ page }) => {

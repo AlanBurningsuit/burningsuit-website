@@ -12,10 +12,9 @@ const contactSubject = "AI in Power BI & Fabric";
 const contactMailto = mailtoFor(contactSubject);
 
 const heroLines: Line[] = [{ before: "make ai ", em: "fit", after: " the team." }];
-// Hero-left visual: the buyer's own sharpest worry, set as a carved-cream
-// terminal readout — an object (not bare type) so it separates cleanly from the
-// headline and mirrors /power-bi's photo. It pays off in the Copilot section
-// below, so it's deliberately NOT repeated in the worry list.
+// Hero-left visual: the buyer's own sharpest worry as bare display type —
+// static, signed, identical with and without JS. It pays off in the Copilot
+// section below, so it's deliberately NOT repeated in the worry list.
 
 const worries = [
   "We're paying for Copilot - what are we actually getting for it?",
@@ -82,21 +81,16 @@ const door: RowData[] = [
           costs you more than it saves.
         </p>
       </div>
-      {/* The buyer's own question as a carved terminal readout: claim (h1, right)
+      {/* The buyer's own question as bare display type: claim (h1, right)
           faces question (left). Real line, no fabricated log/metrics. */}
-      <figure class="hero-ask">
-        <div class="panel ask-panel">
-          <div class="body">
-            <p class="ask-line" data-ask-rotate>
-              <span class="sr-only">who's checking the dax?</span>
-              <span class="ask-pre" aria-hidden="true">›</span><span class="ask-text"
-                aria-hidden="true">who's checking the dax?</span><span class="cursor" aria-hidden="true"
-              ></span>
-            </p>
-            <p class="ask-note">the questions i keep coming back to.</p>
-          </div>
-        </div>
-      </figure>
+      <RiseHeading
+        as="p"
+        kind="hero"
+        class="hero-ask"
+        label="who's checking the dax?"
+        lines={[{ before: "who's ", em: "checking", after: " the dax?" }]}
+        startIndex={2}
+      />
     </div>
   </section>
 
