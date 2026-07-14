@@ -110,3 +110,23 @@ test("work contact-centre — exhibit region", async ({ page }, testInfo) => {
   const tag = testInfo.project.name;
   await expect(page.locator(".chapter:has(#safe)")).toHaveScreenshot(`work-contactcentre-safe-${tag}.png`);
 });
+
+test("study + /work tails — the final-thread→footer gap is the tight variant", async ({ page }, testInfo) => {
+  // Studies and /work end on a short close, so they carry .thread-tight
+  // (margin --space-md + a halved stitch) instead of the shared 268px tail.
+  // Geometry, not a screenshot: the region snapshots never captured this gap.
+  // Asserted on chromium only — the clamp() maths is viewport-dependent.
+  test.skip(testInfo.project.name !== "chromium", "gap asserted once, at the 1280×720 chromium viewport");
+  for (const path of ["/work/law-firm/", "/work/"]) {
+    await page.goto(path);
+    const gap = await page.evaluate(() => {
+      const chapters = document.querySelectorAll("main .chapter");
+      const last = chapters[chapters.length - 1].getBoundingClientRect();
+      const main = document.querySelector("main")!.getBoundingClientRect();
+      return Math.round(main.bottom - last.bottom);
+    });
+    // --space-md (38) + clamp(2rem,5vw,4rem) thread (64) + talk-spacer (58) ≈ 160
+    expect(gap, `${path} tail gap`).toBeGreaterThan(120);
+    expect(gap, `${path} tail gap`).toBeLessThan(200);
+  }
+});

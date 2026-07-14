@@ -486,6 +486,13 @@
   .thread-end {
     margin-block: var(--space-super) 0;
   }
+  /* the tight tail — studies + /work end on a short close, and the shared
+     tail read as a hole there (268px of dark at 1440, measured 2026-07-14).
+     Half-height stitch, block-step margin; the talk-spacer stays shared. */
+  .thread-tight {
+    margin-block: var(--space-md) 0;
+    height: clamp(2rem, 5vw, 4rem);
+  }
   .talk-spacer {
     height: clamp(3rem, 8vh, 5rem);
   }
