@@ -1141,6 +1141,20 @@
   .legal a {
     color: inherit;
   }
+  /* the recorded hand's one survivor (D9): Alan's real signature, static ink.
+     Two homes only - here in the footer and the close of /about. Never
+     animated, never a font; regenerate from the ops raw via the capture
+     pipeline if it ever needs re-exporting. */
+  .signoff {
+    display: block;
+    height: 2.75rem;
+    width: auto;
+    margin-top: 2rem;
+    color: var(--fg-dim);
+  }
+  .prose .signoff {
+    margin-top: 2.5rem;
+  }
   .lockup {
     width: 100%;
     padding: 0 var(--gutter) clamp(1rem, 2.5vh, 2rem);

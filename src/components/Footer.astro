@@ -9,6 +9,7 @@
  * while keeping the chip + period consistent. Default = the homepage line.
  */
 import FaceChip from "./FaceChip.astro";
+import Signoff from "./Signoff.astro";
 import { bookingHref, mailtoFor } from "../config/site";
 interface Props {
   /** The mailto (with optional prefilled ?subject=) built per-page in
@@ -31,6 +32,7 @@ const { mailtoHref = mailtoFor() } = Astro.props;
       >
       <a class="cta ghost" href={mailtoHref}>Email me</a>
     </div>
+    <Signoff />
     <p class="legal">
       Burningsuit Limited is a limited company registered in England &amp; Wales&NewLine;Registered number: 05738130 &middot; Registered office: The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN &middot; &copy; 2026{
       }
