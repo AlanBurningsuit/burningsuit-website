@@ -81,3 +81,11 @@ test("work case study — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#snapshot)")).toHaveScreenshot(`work-study-snapshot-${tag}.png`);
   await expect(page.locator(".chapter:has(#did)")).toHaveScreenshot(`work-study-did-${tag}.png`);
 });
+
+test("work museum — exhibit region", async ({ page }, testInfo) => {
+  // the instrument exhibit (D10) — the first-call question chapter carries the
+  // Exhibit figure; snapshot the whole chapter so the prose hand-off is covered.
+  await prepare(page, "/work/museum/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".chapter:has(#question)")).toHaveScreenshot(`work-museum-question-${tag}.png`);
+});

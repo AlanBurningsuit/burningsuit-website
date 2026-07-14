@@ -22,11 +22,13 @@ const targets = [
   { url: "http://localhost:4321/about/", name: "about" },
   { url: "http://localhost:4321/work/", name: "work" },
   { url: "http://localhost:4321/work/law-firm/", name: "work-law-firm" },
+  { url: "http://localhost:4321/work/museum/", name: "work-museum" },
+  { url: "http://localhost:4321/work/carbon-footprint/", name: "work-carbon" },
   // archived design reference — SKIPs when the local-only design/ tree is absent
   { url: "http://localhost:4322/design/concept-b5-alive.html", name: "b5-home" },
 ];
 const viewports = [
-  { width: 1200, height: 950, tag: "desktop" },
+  { width: 1440, height: 950, tag: "desktop" },
   { width: 390, height: 844, tag: "mobile" },
 ];
 

@@ -13,15 +13,15 @@ heading:
 descriptor: "a city-centre museum & gallery"
 lead: >-
   A city-centre museum and gallery with data everywhere - tickets, catering,
-  footfall - and every report made by hand. On our first call I asked what
-  they'd want to see every day if they could only see three numbers. No one
-  had an answer yet, which is exactly where the work needed to start.
+  footfall - and every report made by hand. On our first call I asked one
+  question - no one had an answer yet, which is exactly where the work
+  needed to start.
 tileOutcome: >-
   From a visitor number written on a whiteboard each day to reports the team
   reads in Teams and runs themselves - three systems, one shared model
   underneath.
 datePublished: 2026-06-23
-dateModified: 2026-07-09
+dateModified: 2026-07-14
 contactSubject: "Power BI - seeing it in one place"
 footerInvitation: >-
   If your organisation collects plenty and still can't see how it's doing at a
@@ -37,11 +37,13 @@ local-only — and returns only when namePublished is true AND written permissio
 landed. Never publish financials, API/auth detail, vendor names, exhibition names,
 or funding-body cues. Full-arc rewrite 2026-07-09 per the ops rethink brief +
 delivery source pack (design/copy/case-studies/05-*); voice-signed by Alan
-2026-07-09. */}
+2026-07-09. Instrument-exhibit conversion 2026-07-14 (D10): the first-call
+question moved from lead + snapshot + chapter body into the one Exhibit;
+ledger row in ops brand/claims-ledger.md. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
 <li><strong>where they started:</strong> tickets, catering and footfall in separate systems, none of it joined up, and no way to see how they were doing at a glance</li>
-<li><strong>what I asked:</strong> which three metrics, seen every day, would actually change what you do? - they didn't know yet, so we worked it out together</li>
+<li><strong>what I asked:</strong> the three-metrics question - they didn't have an answer yet, so we worked it out together</li>
 <li><strong>what I built:</strong> three live systems joined into one model, feeding reports the team reads in Teams, from front of house up to senior leadership</li>
 <li><strong>where it got to:</strong> they own it now - loading their own data, debating how the pages should work, taking the numbers into board conversations</li>
 </Snapshot>
@@ -54,7 +56,13 @@ They had no shortage of data. What they didn't have was any way to see it in one
 
 <Chapter id="question" kicker="the question they couldn't answer">
 
-On the first call I asked: what three metrics, if you could see no others, would actually make a significant difference to what you're doing every day? They knew their numbers well, but no one had ever had to pick. So before anything got built, we worked it out - a questionnaire to each member of the core team, then a workshop with a deliberately unfair rule: ignore the data you have. What do you need to know, day to day?
+<Exhibit tab="the three-metrics question" caption="asked on the first call · a city-centre museum & gallery">
+
+what three metrics, if you could see no others, would actually make a significant difference to what you're doing <em>every day</em>?
+
+</Exhibit>
+
+They knew their numbers well, but no one had ever had to pick. So before anything got built, we worked it out - a questionnaire to each member of the core team, then a workshop with a deliberately unfair rule: ignore the data you have. What do you need to know, day to day?
 
 Out of that came exact definitions the whole team stood behind: what counts as spend per head, how catering conversion is honestly measured, which of several footfall figures is the one to report. They could have started a dashboard on day one without asking any of this. But it would have been built bottom-up - the easiest data to get at deciding what the insights were. We went top-down instead: decide what would be genuinely useful to know, then work out how to get it out of the data.
 

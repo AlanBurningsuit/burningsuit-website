@@ -1,0 +1,35 @@
+---
+/**
+ * The instrument exhibit (D10) — a real engagement artifact pinned to a study
+ * page: a question Alan actually asked, a rule he left behind, a decision, a
+ * structure. Typeset evidence on the carved cream ground, so it sits with the
+ * other proof surfaces (cream = proof only).
+ *
+ * Contract (ops canon, D10 2026-07-14):
+ *   - always a CONVERSION — the pinned line lives here, not in the prose,
+ *     which is rewritten to hand off to it;
+ *   - a claims-ledger row lands in ops before the exhibit ships;
+ *   - the body is a statement, never a <blockquote> (Alan's words are never
+ *     self-quoted); one `em` max.
+ *
+ * Authored from MDX inside a Chapter, e.g.
+ *   <Exhibit tab="the first-call question" caption="asked on the first call">
+ *   what three metrics, if you could see no others, …?
+ *   </Exhibit>
+ */
+interface Props {
+  /** Mono plate label — per-exhibit, authored lowercase, never a repeated generic. */
+  tab: string;
+  /** Optional provenance line, rendered as the figcaption. */
+  caption?: string;
+}
+const { tab, caption } = Astro.props;
+---
+
+<figure class="proof panel exhibit" data-reveal>
+  <span class="tab"><span class="sp" aria-hidden="true"></span>{tab}</span>
+  <div class="body">
+    <slot />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

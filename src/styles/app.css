@@ -889,6 +889,42 @@
     font-size: var(--fs-sm);
   }
 
+  /* ============ the instrument exhibit (D10 — evidence, pinned) ============ */
+  /* A real engagement artifact typeset on the carved cream ground. The body is
+     a statement in display type at --fs-2/600 — above the large-text floor, so
+     a spark em clears contrast on paper (body-size spark is 4.38:1, a fail).
+     The explicit margin resets the UA figure margins (same move as
+     .figure-inset); the top step matches the prose flow it sits in. */
+  .exhibit {
+    margin: var(--space-block) 0 0;
+    /* .panel's height:100% serves the equal-height offer grid; in prose flow
+       it would stretch the figure to the grid-definite prose height. */
+    height: auto;
+  }
+  .exhibit .body p {
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: var(--fs-2);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display-tight);
+    color: var(--ink);
+    margin-top: 0;
+  }
+  .exhibit .body p + p {
+    margin-top: var(--space-block);
+  }
+  .exhibit .body p em {
+    font-style: normal;
+    color: var(--spark);
+  }
+  .exhibit figcaption {
+    padding: 0 var(--space-sm) var(--space-sm);
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    letter-spacing: var(--ls-mono-wide);
+    color: var(--ink-soft);
+  }
+
   /* ============ how i work: the 3 parallel principles, UNNUMBERED ============ */
   /* They are parallel, not sequential, so no 01/02/03 (that implies an order
      that isn't there). A clean hairline-separated list, Mona 600 titles,

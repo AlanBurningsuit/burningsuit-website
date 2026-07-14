@@ -13,6 +13,7 @@ import Chapter from "../../components/Chapter.astro";
 import Snapshot from "../../components/Snapshot.astro";
 import Offer from "../../components/Offer.astro";
 import Aside from "../../components/Aside.astro";
+import Exhibit from "../../components/Exhibit.astro";
 
 export async function getStaticPaths() {
   const studies = await getCollection("work");
@@ -27,5 +28,5 @@ const { Content } = await render(entry);
 ---
 
 <CaseStudyLayout study={entry.data}>
-  <Content components={{ Chapter, Snapshot, Offer, Aside }} />
+  <Content components={{ Chapter, Snapshot, Offer, Aside, Exhibit }} />
 </CaseStudyLayout>
