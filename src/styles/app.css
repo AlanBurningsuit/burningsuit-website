@@ -1152,8 +1152,13 @@
     margin-top: 2rem;
     color: var(--fg-dim);
   }
+  /* on /about it signs the Zelda frame, painter-style: bigger, tucked under
+     the carved frame's bottom-right corner instead of floating a full block
+     space below at the left edge */
   .prose .signoff {
-    margin-top: 2.5rem;
+    height: 4.25rem;
+    margin-top: 1.1rem;
+    margin-left: auto;
   }
   .lockup {
     width: 100%;
