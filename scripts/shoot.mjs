@@ -24,6 +24,7 @@ const targets = [
   { url: "http://localhost:4321/work/law-firm/", name: "work-law-firm" },
   { url: "http://localhost:4321/work/museum/", name: "work-museum" },
   { url: "http://localhost:4321/work/carbon-footprint/", name: "work-carbon" },
+  { url: "http://localhost:4321/work/contact-centre/", name: "work-contact-centre" },
   // archived design reference — SKIPs when the local-only design/ tree is absent
   { url: "http://localhost:4322/design/concept-b5-alive.html", name: "b5-home" },
 ];
