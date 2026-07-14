@@ -19,7 +19,7 @@ tileOutcome: >-
   From giving up on Power BI more than once - to opening it most days, on her
   own data, to keep her hand in.
 datePublished: 2026-06-23
-dateModified: 2026-06-23
+dateModified: 2026-07-14
 contactSubject: "Power BI - someone who keeps bouncing off it"
 footerInvitation: >-
   If there's someone on your team who could be brilliant with this but keeps
@@ -32,7 +32,11 @@ namePublished: false
 descriptor. The named tier (client + verbatim quote) is held OUTSIDE this public repo
 — design/copy/case-studies/07-named-tier-frontmatter.md, local-only — and returns only
 when namePublished is true AND she has signed off, attributed by role first. Copy
-adapted from design/copy/case-studies/02; voice-signed by Alan 2026-07-08. */}
+adapted from design/copy/case-studies/02; voice-signed by Alan 2026-07-08.
+Instrument-exhibit conversion 2026-07-14 (D10): the bad-data rule moved from
+the safe chapter's prose into the Exhibit (rule stated impersonally - the
+done-with-her framing stays in the prose); ledger row in ops
+brand/claims-ledger.md. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
 <li><strong>who:</strong> a contact-centre team lead - not a data person, and happy to say so</li>
@@ -67,7 +71,15 @@ And she did the doing. She fixed a broken query herself mid-session, and reached
 
 <Chapter id="safe" kicker="kind to her future self">
 
-Two moments I'd point to. When a system outage dropped a 66-hour junk value into the data, I coached her through removing the bad rows at source and writing down why: you're always collaborating with someone, even when it's only yourself in six months' time, and that person deserves to be able to see the reasoning. And when she asked about modelling agents who move between teams over time, I was straight with her - a real problem, a genuinely hard one, and too big for where we were, so we'd save it. Knowing what to leave for later is part of how she ends up with a model she can keep running herself.
+Two moments I'd point to. When a system outage dropped a 66-hour junk value into the data, I didn't show her a quiet filter to make it disappear. The rule she got instead:
+
+<Exhibit tab="the bad-data rule" caption="coached during the build · a national contact centre">
+
+remove the bad rows at source and write down why - so if it ever happens again it shows up instead of hiding.
+
+</Exhibit>
+
+You're always collaborating with someone, even when it's only yourself in six months' time, and that person deserves to be able to see the reasoning. And when she asked about modelling agents who move between teams over time, I was straight with her - a real problem, a genuinely hard one, and too big for where we were, so we'd save it. Knowing what to leave for later is part of how she ends up with a model she can keep running herself.
 
 </Chapter>
 

@@ -1420,31 +1420,30 @@
   }
 
   /* the fit map list */
+  /* the fit-map document skeleton: the deliverable shown as its own
+     structure — mono section labels (the document's headings, amber like the
+     movement numerals) over the signed lines. A template is not evidence, so
+     it stays on the dark ground (D10) — never cream. */
   .fitmap {
     list-style: none;
     margin-top: var(--space-md);
-    display: grid;
-    gap: 0.9rem;
     max-width: var(--measure-prose);
   }
-  .fitmap li {
-    position: relative;
-    padding-left: 1.6rem;
+  .fitmap li + li {
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: var(--bw-hair) solid var(--line);
+  }
+  .fitmap .fm-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    letter-spacing: var(--ls-mono-wide);
+    color: var(--amber);
+  }
+  .fitmap li p {
+    margin-top: 0.4rem;
     color: var(--fg-dim);
-  }
-  .fitmap li strong {
-    color: var(--fg);
-    font-weight: 600;
-  }
-  .fitmap li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.6em;
-    width: 0.5rem;
-    height: 0.5rem;
-    /* amber, not spark — the spark stays rationed to CTA / mark / thread */
-    background: var(--amber);
   }
 
   /* embedded sub-offers (power-bi "what i do") */

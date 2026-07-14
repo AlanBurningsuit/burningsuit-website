@@ -39,12 +39,29 @@ const movements = [
   },
 ];
 
+// The deliverable shown as its own structure (D10: a template is not
+// evidence — dark ground, never cream). Same signed content, document shape.
 const fitmap = [
-  "what the team could be building faster, and what it could be building better",
-  "what AI can't improve for you yet, and what it shouldn't touch at all",
-  "a skills brief: what to hire for, what to develop, what to stop worrying about",
-  "a 90-day decision list: do now · don't do yet · watch",
-  "and the watch list is specific to your stack - if Microsoft brings a Fabric or Copilot feature out of beta, you'll already know what it makes feasible",
+  {
+    label: "faster / better",
+    body: "what the team could be building faster, and what it could be building better",
+  },
+  {
+    label: "can't yet / shouldn't touch",
+    body: "what AI can't improve for you yet, and what it shouldn't touch at all",
+  },
+  {
+    label: "the skills brief",
+    body: "what to hire for, what to develop, what to stop worrying about",
+  },
+  {
+    label: "the 90-day decision list",
+    body: "do now · don't do yet · watch",
+  },
+  {
+    label: "the watch list - specific to your stack",
+    body: "if Microsoft brings a Fabric or Copilot feature out of beta, you'll already know what it makes feasible",
+  },
 ];
 
 const door: RowData = {
@@ -150,7 +167,14 @@ const door: RowData = {
       </div>
       <div>
         <ul class="fitmap">
-          {fitmap.map((item) => <li data-reveal>{item}</li>)}
+          {
+            fitmap.map((s) => (
+              <li data-reveal>
+                <span class="fm-label">{s.label}</span>
+                <p>{s.body}</p>
+              </li>
+            ))
+          }
         </ul>
       </div>
     </div>

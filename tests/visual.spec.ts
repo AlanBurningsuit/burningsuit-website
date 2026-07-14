@@ -96,3 +96,17 @@ test("work carbon — exhibit region", async ({ page }, testInfo) => {
   const tag = testInfo.project.name;
   await expect(page.locator(".chapter:has(#build)")).toHaveScreenshot(`work-carbon-build-${tag}.png`);
 });
+
+test("work law-firm — exhibit region", async ({ page }, testInfo) => {
+  // the ownership-rule exhibit in the turn chapter.
+  await prepare(page, "/work/law-firm/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".chapter:has(#turn)")).toHaveScreenshot(`work-lawfirm-turn-${tag}.png`);
+});
+
+test("work contact-centre — exhibit region", async ({ page }, testInfo) => {
+  // the bad-data-rule exhibit in the kind-to-her-future-self chapter.
+  await prepare(page, "/work/contact-centre/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".chapter:has(#safe)")).toHaveScreenshot(`work-contactcentre-safe-${tag}.png`);
+});
