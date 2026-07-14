@@ -20,7 +20,7 @@ tileOutcome: >-
   One model now sits under all their carbon reporting - built from the
   spreadsheets it used to live in, and run by the person who owns the number.
 datePublished: 2026-06-23
-dateModified: 2026-07-08
+dateModified: 2026-07-14
 contactSubject: "Power BI - off one spreadsheet"
 footerInvitation: >-
   If something your organisation reports on really lives in one person's
@@ -34,7 +34,10 @@ OUTSIDE this public repo — design/copy/case-studies/07-named-tier-frontmatter.
 local-only — and returns only when namePublished is true AND the lead/sponsor have
 signed off. NEVER name the summer student. Full-arc rewrite 2026-07-08 per the ops
 rethink brief + delivery source pack (design/copy/case-studies/03-*);
-voice-signed by Alan 2026-07-09. */}
+voice-signed by Alan 2026-07-09. Instrument-exhibit conversion 2026-07-14
+(D10): the three build-rule Offers became the one list-shaped Exhibit, plus
+the pack's laptop worked example with the price and vendor stripped; ledger
+row in ops brand/claims-ledger.md. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
 <li><strong>who:</strong> the sustainability team at a UK university, whose whole Scope 3 carbon footprint reporting sat with one person - expert in the method, self-taught in Power BI and Excel</li>
@@ -69,23 +72,13 @@ The model itself does the heavy lifting as the data loads, before the reports ev
 
 A few decisions in the build do most of the work of keeping the number trustworthy:
 
-<Offer title="every working is kept" lead>
+<Exhibit tab="the rules left in the model" caption="written into the model · a UK university's sustainability team">
 
-Where a more precise figure is available - an actual product, a known supplier - it's used, but the cruder spend-based estimate is stored alongside it. So when someone asks why a line moved, the answer is visible.
+- **every working is kept.** Where a more precise figure is available - an actual product, a known supplier - it's used, but the cruder spend-based estimate is stored alongside it. So when someone asks why a line moved, the answer is visible. One laptop order: 7,740 kg of carbon by the product data, 19,422 kg by the spend estimate - the model keeps both.
+- **the factors are pinned to the year they applied.** When an emissions factor changes, the model holds the historic one in place, so a change in method never quietly shows up as a change in the footprint.
+- **he can still fix data by hand.** I added a plain override column so he can keep making the manual corrections he already makes, without going anywhere near the model's guts.
 
-</Offer>
-
-<Offer title="the factors are pinned to the year they applied">
-
-When an emissions factor changes, the model holds the historic one in place, so a change in method never quietly shows up as a change in the footprint - which is exactly what wrecks confidence in sustainability reporting.
-
-</Offer>
-
-<Offer title="he can still fix data by hand">
-
-I added a plain override column so he can keep making the manual corrections he already makes, without going anywhere near the model's guts.
-
-</Offer>
+</Exhibit>
 
 It validated against his own spreadsheet to within rounding.
 

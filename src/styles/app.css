@@ -924,6 +924,35 @@
     letter-spacing: var(--ls-mono-wide);
     color: var(--ink-soft);
   }
+  /* list-shaped exhibits (a set of rules left behind): the rule line is the
+     artifact — display ink over an ink-soft explanation. The dark-ground list
+     classes (.qlist/.beats) and --line hairline fail contrast on paper, so
+     the separator uses the paper-edge tone. */
+  .exhibit .body ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .exhibit .body li {
+    color: var(--ink-soft);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-body);
+  }
+  .exhibit .body li + li {
+    margin-top: var(--space-2xs);
+    padding-top: var(--space-2xs);
+    border-top: var(--bw-hair) solid var(--paper-edge);
+  }
+  .exhibit .body li strong {
+    display: block;
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: var(--fs-1);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display-tight);
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
 
   /* ============ how i work: the 3 parallel principles, UNNUMBERED ============ */
   /* They are parallel, not sequential, so no 01/02/03 (that implies an order
