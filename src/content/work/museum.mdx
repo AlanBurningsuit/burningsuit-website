@@ -37,9 +37,11 @@ local-only — and returns only when namePublished is true AND written permissio
 landed. Never publish financials, API/auth detail, vendor names, exhibition names,
 or funding-body cues. Full-arc rewrite 2026-07-09 per the ops rethink brief +
 delivery source pack (design/copy/case-studies/05-*); voice-signed by Alan
-2026-07-09. Instrument-exhibit conversion 2026-07-14 (D10): the first-call
-question moved from lead + snapshot + chapter body into the one Exhibit;
-ledger row in ops brand/claims-ledger.md. */}
+2026-07-09. Instrument-exhibit conversions 2026-07-14 (D10): the first-call
+question moved from lead + snapshot + chapter body into the one Exhibit, and
+the build chapter's triplet became the flow-diagram Exhibit (relationship
+carried by the figcaption; strokes decorative); ledger rows in ops
+brand/claims-ledger.md. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
 <li><strong>where they started:</strong> tickets, catering and footfall in separate systems, none of it joined up, and no way to see how they were doing at a glance</li>
@@ -72,7 +74,16 @@ Working through their systems also turned up things the manual reports had never
 
 <Chapter id="build" kicker="three systems, one model">
 
-What the counters count, what the tills take, what the shop and ticketing sell: three live systems, connected automatically, feeding one model - so the data is joined once and every report draws on it, rather than each report rebuilding its own version of the truth. The reports sit in Teams, where the team already works, and export cleanly for board papers.
+<Exhibit tab="the shape of the build" caption="three live systems, connected automatically, feeding one shared model">
+<div class="exhibit-flow">
+  <p>what the counters count</p>
+  <p>what the tills take</p>
+  <p>what the shop & ticketing sell</p>
+  <p class="model">one shared model</p>
+</div>
+</Exhibit>
+
+The data is joined once and every report draws on it, rather than each report rebuilding its own version of the truth. The reports sit in Teams, where the team already works, and export cleanly for board papers.
 
 A couple of streams stay manual - cash from the donation boxes arrives as a simple monthly file drop - but the rule throughout was: automatic wherever a system can be connected, and where a person has to be involved, the smallest possible ask.
 

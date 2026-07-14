@@ -960,6 +960,52 @@
     color: var(--ink);
     margin-bottom: 0.4rem;
   }
+  /* the diagram exhibit (museum: three systems → one model): DOM text boxes
+     in reading order, the relationship carried by the figcaption sentence —
+     the strokes are empty pseudo-elements, decoration only, never announced.
+     Stroke height must equal the desktop row-gap (both 1.4rem). */
+  .exhibit .body .exhibit-flow {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  .exhibit .body .exhibit-flow p {
+    margin: 0;
+    padding: var(--space-2xs);
+    border: var(--bw-hair) solid var(--paper-edge);
+    border-radius: var(--r-sm);
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    text-align: center;
+  }
+  .exhibit .body .exhibit-flow .model {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  @media (min-width: 48rem) {
+    .exhibit .body .exhibit-flow {
+      grid-template-columns: 1fr 1fr 1fr;
+      row-gap: 1.4rem;
+    }
+    .exhibit .body .exhibit-flow .model {
+      grid-column: 1 / -1;
+    }
+    .exhibit .body .exhibit-flow p:not(.model) {
+      position: relative;
+    }
+    .exhibit .body .exhibit-flow p:not(.model)::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      width: var(--bw-spine);
+      height: 1.4rem;
+      background: var(--ink-soft);
+    }
+  }
 
   /* ============ how i work: the 3 parallel principles, UNNUMBERED ============ */
   /* They are parallel, not sequential, so no 01/02/03 (that implies an order

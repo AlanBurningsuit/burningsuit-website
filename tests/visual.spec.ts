@@ -90,6 +90,13 @@ test("work museum — exhibit region", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#question)")).toHaveScreenshot(`work-museum-question-${tag}.png`);
 });
 
+test("work museum — diagram region", async ({ page }, testInfo) => {
+  // the flow-diagram exhibit (three systems → one model) in the build chapter.
+  await prepare(page, "/work/museum/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".chapter:has(#build)")).toHaveScreenshot(`work-museum-build-${tag}.png`);
+});
+
 test("work carbon — exhibit region", async ({ page }, testInfo) => {
   // the list-shaped exhibit (the build rules) — covers the .exhibit ul styles.
   await prepare(page, "/work/carbon-footprint/");
