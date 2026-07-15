@@ -38,18 +38,14 @@ export function mailtoFor(subject?: string): string {
 }
 
 /**
- * Cookieless analytics (Workstream D). DEFAULT OFF. Turning this on weakens the
- * deliberately-tight CSP: the matching `ANALYTICS_ENABLED` flag in
- * astro.config.mjs must be flipped to the same value so the provider host is
- * added to script-src + connect-src. Until traffic justifies it, the ?src= split
- * in the booking dashboard + asking on the call is the real signal — at
- * single-digit booking volume nothing here reaches significance.
- *
- * Plausible is the default (cookieless, EU-friendly, no cookie banner). Swap for
- * Fathom or a self-hosted/reverse-proxied first-party endpoint if preferred.
+ * Cookieless Plausible analytics (Workstream D). The matching
+ * `ANALYTICS_ENABLED` flag in astro.config.mjs must stay enabled so the provider
+ * host remains in script-src + connect-src. The generic tracker remains
+ * supported by Plausible; replace scriptSrc with the site's personalised
+ * tracker when the account is reachable again.
  */
 export const ANALYTICS = {
-  enabled: false,
+  enabled: true,
   scriptSrc: "https://plausible.io/js/script.js",
   dataDomain: "burningsuit.co.uk",
 } as const;

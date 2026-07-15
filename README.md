@@ -100,10 +100,8 @@ front. Everything else in the policy (`default-src 'none'`,
 `script-src 'self'`, `style-src 'self'`, etc.) is enforced, and
 `tests/csp.spec.ts` asserts both the policy and its runtime cleanliness.
 
-Analytics: **built but OFF.** A cookieless Plausible integration exists behind
-two deliberately coupled flags (`ANALYTICS.enabled` in `src/config/site.ts` +
-`ANALYTICS_ENABLED` in `astro.config.mjs` — flip both or neither). The site
-makes no on-page claim about analytics (the craft is silent by doctrine), so
-this is purely a config decision — but "no trackers" is still part of the
-trust story, and enabling it is the owner's call. Until then: no trackers, no
-cookies, no third-party requests.
+Analytics: **ON.** The site uses cookieless Plausible behind two deliberately
+coupled flags (`ANALYTICS.enabled` in `src/config/site.ts` and
+`ANALYTICS_ENABLED` in `astro.config.mjs`). The CSP permits only Plausible's
+tracker script and event beacon. `tests/csp.spec.ts` asserts the script, domain
+and both CSP permissions together so the two configuration points cannot drift.

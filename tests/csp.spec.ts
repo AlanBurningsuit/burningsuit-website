@@ -14,6 +14,17 @@ const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/", "/work/", "/w
 for (const path of pages) {
   test(`CSP present and violation-free: ${path}`, async ({ page }) => {
     const problems: string[] = [];
+    let analyticsBeacons = 0;
+    await page.route("https://plausible.io/js/script.js", (route) =>
+      route.fulfill({
+        contentType: "application/javascript",
+        body: 'void fetch("https://plausible.io/api/event", { method: "POST", mode: "no-cors", body: "{}" });',
+      }),
+    );
+    await page.route("https://plausible.io/api/event", (route) => {
+      analyticsBeacons++;
+      return route.fulfill({ status: 202, body: "{}" });
+    });
     page.on("console", (m) => {
       if (m.type() === "error") problems.push(`console.error: ${m.text()}`);
     });
@@ -34,7 +45,13 @@ for (const path of pages) {
     expect(csp, "the CSP <meta> must exist").toBeTruthy();
     expect(csp).toContain("default-src 'none'");
     expect(csp).toMatch(/script-src[^;]*'self'/);
+    expect(csp).toMatch(/script-src[^;]*https:\/\/plausible\.io/);
+    expect(csp).toMatch(/connect-src[^;]*https:\/\/plausible\.io/);
     expect(csp).toMatch(/style-src[^;]*'self'/);
+
+    const tracker = page.locator('script[src="https://plausible.io/js/script.js"]');
+    await expect(tracker).toHaveCount(1);
+    await expect(tracker).toHaveAttribute("data-domain", "burningsuit.co.uk");
 
     // Half 2: exercise the page — walk it so below-the-fold lazy resources
     // are actually requested and can surface violations inside the window.
@@ -47,6 +64,7 @@ for (const path of pages) {
       }
     });
     await page.waitForTimeout(700);
+    expect(analyticsBeacons, "the analytics tracker did not send its event beacon").toBe(1);
     expect(problems, problems.join("\n")).toEqual([]);
   });
 }
