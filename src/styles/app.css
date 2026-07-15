@@ -452,25 +452,40 @@
   html:not(.js) .lines .l > .i {
     transform: none;
   }
-  /* the stitched thread — appears exactly twice, 8px square terminal.
-     Height tightened one notch 2026-07-15: the hero→first-chapter gap read
-     oversized in Alan's review (the gap = this clamp + --space-super). */
+  /* the stitched thread — appears exactly twice per page. The OPENER (hero →
+     first chapter) ends in a small down arrowhead: an affordance that there's
+     more below (Alan, 2026-07-15). The closing variants keep the 8px square
+     terminal. .thread-snug tightens the opener on the homepage only — the
+     other pages keep the full-height stitch (same review). */
   .thread {
     width: 2px;
-    height: clamp(3rem, 7.5vw, 6rem);
+    height: clamp(4rem, 10vw, 8rem);
     margin-inline: auto;
     background: var(--spark);
     position: relative;
+  }
+  .thread-snug {
+    height: clamp(3rem, 7.5vw, 6rem);
   }
   .thread::after {
     content: "";
     position: absolute;
     left: 50%;
+    bottom: -8px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--spark);
+    translate: -50% 0;
+  }
+  .thread-end::after,
+  .thread-tight::after {
     bottom: -4px;
     width: 8px;
     height: 8px;
+    border: 0;
     background: var(--spark);
-    translate: -50% 0;
   }
   .js .thread {
     transform: scaleY(0);
@@ -771,6 +786,12 @@
     display: flex;
     flex-direction: column;
     background: var(--paper);
+    /* D11 notebook paper (signed at prototype 2026-07-15): a faint dot grid
+       so cream reads as a notebook PAGE, not a generic card. Hard-stop radial
+       — a flat repeating pattern, not the banned atmospheric gradient. The
+       dot is hairline-weight (--bw-hair), NOT the 3px carved-edge --px. */
+    background-image: radial-gradient(circle, var(--paper-dot) var(--bw-hair), transparent var(--bw-hair));
+    background-size: var(--paper-grid) var(--paper-grid);
     color: var(--ink);
     height: 100%;
     border: var(--px) solid var(--deep);
@@ -925,12 +946,24 @@
   .exhibit .body p + p {
     margin-top: var(--space-block);
   }
+  /* D11 figure grammar (prototype-gated): exhibits number themselves per page
+     — field-notebook record-keeping, mono's true-metadata job. The counter
+     lives on <main> so every page restarts at fig. 1. */
+  main {
+    counter-reset: exhibit;
+  }
+  .exhibit {
+    counter-increment: exhibit;
+  }
   .exhibit figcaption {
     padding: 0 var(--space-sm) var(--space-sm);
     font-family: var(--ff-mono);
     font-size: var(--mono-label);
     letter-spacing: var(--ls-mono-wide);
     color: var(--ink-soft);
+  }
+  .exhibit figcaption::before {
+    content: "fig. " counter(exhibit) " · ";
   }
   /* list-shaped exhibits (a set of rules left behind): the rule line is the
      artifact — display ink over an ink-soft explanation. The dark-ground list

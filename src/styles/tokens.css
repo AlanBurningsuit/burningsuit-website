@@ -18,7 +18,7 @@
   --color-fg-dim: #9da9a0; /* grey2 — muted (also the AA-safe aside tone) */
   --color-paper: #f1ecd9; /* cream entry-panel surface (Everforest light bg) */
   --color-ink: #3a444a; /* dark grey-green heading on cream */
-  --color-ink-soft: #5c6a72; /* Everforest light fg — body on cream */
+  --color-ink-soft: #4d5a61; /* body on cream — darkened from Everforest #5c6a72 2026-07-15 (Alan: contrast on cream felt low) */
   --color-amber: #e69875; /* Everforest orange — links + warmth */
   --color-moss: #a7c080; /* Everforest green — quiet positive, sparing */
   --color-spark: #d90148; /* the logo magenta — THE pop (CTA, mark, thread) */
@@ -71,6 +71,8 @@
 
   --paper: var(--color-paper);
   --paper-edge: #cfc6a8; /* the carved ring around a cream panel */
+  --paper-dot: color-mix(in srgb, var(--paper-edge) 35%, var(--paper)); /* D11 notebook dot-grid ink — tuned for a 1px dot; at 3px anything over ~20% read as polka dots */
+  --paper-grid: 1.125rem; /* D11 dot pitch — 18px between pencil dots */
   --ink: var(--color-ink);
   --ink-soft: var(--color-ink-soft);
 
@@ -89,9 +91,10 @@
   /* mono instrument-label scale — three deliberate steps; every mono label maps
      to one of these, so there are no in-between magic sizes. (Mobile nav is the
      one intentional exception: it shrinks below the scale to hold its row.) */
-  --mono-fine: 0.78rem; /* the quietest voice — footer fine print */
-  --mono-label: 0.82rem; /* default small label — meta, tabs, asides, citations */
-  --mono-lead: 0.86rem; /* labels that head a block — eyebrows, figures, nav */
+  /* bumped one notch 2026-07-15 — Alan: "mono is probably a bit small all over" */
+  --mono-fine: 0.82rem; /* the quietest voice — footer fine print */
+  --mono-label: 0.875rem; /* default small label — meta, tabs, asides, citations */
+  --mono-lead: 0.92rem; /* labels that head a block — eyebrows, figures, nav */
 
   /* text & display scale — a 1.25 major-third ramp on one fluid anchor
      (20rem→80rem viewport), so every step grows in lockstep instead of each
