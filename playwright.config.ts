@@ -45,7 +45,13 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+    // Firefox renders the heavy cream-panel pages (repeated dot-grid paint +
+    // 2-capture verify) at ~90s total — exactly the shared timeout, so verify
+    // runs died where update runs squeaked by (verified 2026-07-15 on
+    // /power-bi: update passed at 1.5m, verify timed out on .proof, four runs
+    // in a row). Same mechanism as the 30s→90s bump above; Firefox alone gets
+    // double headroom.
+    { name: "firefox", use: { ...devices["Desktop Firefox"] }, timeout: 180_000 },
     // Below-the-ladder coverage (the 48/56/62rem breakpoints all sit above a
     // phone): the mobile nav row, CTA wrap behaviour, single-column layouts.
     // dsf pinned to 1 so baselines stay byte-sane.
