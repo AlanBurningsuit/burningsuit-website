@@ -22,6 +22,16 @@ async function prepare(page: Page, path: string) {
     window.scrollTo(0, 0);
     await new Promise((r) => setTimeout(r, 200));
   });
+  // Neutralise sticky chrome: region captures stitch it in at arbitrary
+  // scroll offsets (flaky), and anything baked over a region can hide a real
+  // regression behind it. CSSOM writes are CSP-safe (style-src gates parsed
+  // styles, not the object model). The header has its own coverage in
+  // responsive.spec; the footer stays — home-footer snapshots it directly.
+  await page.evaluate(() => {
+    for (const el of document.querySelectorAll<HTMLElement>("header#hd, a.skip")) {
+      el.style.visibility = "hidden";
+    }
+  });
 }
 
 test("home — regions", async ({ page }, testInfo) => {

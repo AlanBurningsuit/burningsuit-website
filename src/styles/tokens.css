@@ -154,6 +154,7 @@
   /* spacing scale — fluid rhythm steps that collapse the bespoke per-block
      clamps. --space-md is the default "space before a block"; --space-super is
      the section step. Genuinely vh-based or one-off insets stay literal. */
+  --space-3xs: 0.4rem; /* the smallest fixed step — a label to its own line */
   --space-2xs: clamp(0.8rem, 2vw, 1.2rem); /* tight inset — list item padding */
   --space-xs: clamp(1rem, 2.5vw, 1.5rem); /* small block gap / pad-top */
   --space-sm: clamp(1.1rem, 2.4vw, 1.7rem); /* card body padding, column gap */

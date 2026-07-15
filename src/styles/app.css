@@ -897,11 +897,11 @@
   }
 
   /* ============ the instrument exhibit (D10 — evidence, pinned) ============ */
-  /* A real engagement artifact typeset on the carved cream ground. The body is
-     a statement in display type at --fs-2/600 — above the large-text floor, so
-     a spark em clears contrast on paper (body-size spark is 4.38:1, a fail).
-     The explicit margin resets the UA figure margins (same move as
-     .figure-inset); the top step matches the prose flow it sits in. */
+  /* A real engagement artifact typeset on the carved cream ground. The body
+     is a plain ink statement in display type — no em: the spark stays with
+     the CTA, wordmark and thread (One spark), and on cream the plate itself
+     is the emphasis. The explicit margin resets the UA figure margins (same
+     move as .figure-inset); the top step matches the prose flow it sits in. */
   .exhibit {
     margin: var(--space-block) 0 0;
     /* .panel's height:100% serves the equal-height offer grid; in prose flow
@@ -919,10 +919,6 @@
   }
   .exhibit .body p + p {
     margin-top: var(--space-block);
-  }
-  .exhibit .body p em {
-    font-style: normal;
-    color: var(--spark);
   }
   .exhibit figcaption {
     padding: 0 var(--space-sm) var(--space-sm);
@@ -958,12 +954,12 @@
     line-height: var(--lh-snug);
     letter-spacing: var(--ls-display-tight);
     color: var(--ink);
-    margin-bottom: 0.4rem;
+    margin-bottom: var(--space-3xs);
   }
   /* the diagram exhibit (museum: three systems → one model): DOM text boxes
      in reading order, the relationship carried by the figcaption sentence —
      the strokes are empty pseudo-elements, decoration only, never announced.
-     Stroke height must equal the desktop row-gap (both 1.4rem). */
+     Stroke height must equal the desktop row-gap (both --space-sm). */
   .exhibit .body .exhibit-flow {
     display: grid;
     gap: var(--space-2xs);
@@ -988,7 +984,7 @@
   @media (min-width: 48rem) {
     .exhibit .body .exhibit-flow {
       grid-template-columns: 1fr 1fr 1fr;
-      row-gap: 1.4rem;
+      row-gap: var(--space-sm);
     }
     .exhibit .body .exhibit-flow .model {
       grid-column: 1 / -1;
@@ -1002,7 +998,7 @@
       left: 50%;
       top: 100%;
       width: var(--bw-spine);
-      height: 1.4rem;
+      height: var(--space-sm);
       background: var(--ink-soft);
     }
   }
@@ -1495,7 +1491,7 @@
     color: var(--amber);
   }
   .fitmap li p {
-    margin-top: 0.4rem;
+    margin-top: var(--space-3xs);
     color: var(--fg-dim);
   }
 
