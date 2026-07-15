@@ -1040,6 +1040,32 @@
       background: var(--ink-soft);
     }
   }
+  /* the descending variant (law-firm trace): the same DOM boxes as one chain,
+     top to bottom, at every width — a wrong number followed down to source.
+     Strokes stay decorative pseudos; height equals the row gap. */
+  .exhibit .body .exhibit-flow.flow-down {
+    row-gap: var(--space-sm);
+  }
+  .exhibit .body .exhibit-flow.flow-down p:not(.model) {
+    position: relative;
+  }
+  .exhibit .body .exhibit-flow.flow-down p:not(.model)::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: var(--bw-spine);
+    height: var(--space-sm);
+    background: var(--ink-soft);
+  }
+  @media (min-width: 48rem) {
+    .exhibit .body .exhibit-flow.flow-down {
+      grid-template-columns: none;
+    }
+    .exhibit .body .exhibit-flow.flow-down .model {
+      grid-column: auto;
+    }
+  }
 
   /* ============ how i work: the 3 parallel principles, UNNUMBERED ============ */
   /* They are parallel, not sequential, so no 01/02/03 (that implies an order

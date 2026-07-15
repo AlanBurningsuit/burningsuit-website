@@ -80,9 +80,22 @@ The shape was a done-with-you retainer running in parallel to the migration, on 
 
 <Offer title="they ran their own diagnostics" lead>
 
-During handover - the stage where you expect to be shaking things out - a year-to-date number looked wrong. The easy move was to hand it straight back to the consultancy: that number's wrong, please fix it. Instead the team used it as a way into the stack, with me alongside: proving the hunch with test visuals, then tracing the number back through the Power BI layer, into the gold and silver tables, down to the source - where a stored procedure turned out to be quietly dropping the right rows and keeping empty ones.
+During handover - the stage where you expect to be shaking things out - a year-to-date number looked wrong. The easy move was to hand it straight back to the consultancy: that number's wrong, please fix it. Instead the team used it as a way into the stack, with me alongside, and followed the number all the way down:
 
 </Offer>
+
+<Exhibit tab="the diagnostic trace" caption="one wrong number, followed down through the layers by the team · a large international law firm's data team">
+<div class="exhibit-flow flow-down">
+  <p>a year-to-date number looks wrong</p>
+  <p>test visuals prove the hunch</p>
+  <p>down through the reporting layer</p>
+  <p>into the gold tables</p>
+  <p>through the silver tables</p>
+  <p>into the bronze tables</p>
+  <p>to a stored procedure, quietly dropping the right rows and keeping the empty ones</p>
+  <p class="model">the source: year-opening values a separate app had been writing into specific rows - a quirk the team knew all about</p>
+</div>
+</Exhibit>
 
 <Offer title="they knew where to look">
 
