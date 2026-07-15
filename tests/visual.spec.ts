@@ -43,6 +43,13 @@ test("home — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#what)")).toHaveScreenshot(`home-services-${tag}.png`);
   await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
   await expect(page.locator(".about")).toHaveScreenshot(`home-about-${tag}.png`);
+  // The footer is the FIXED basement (main slides over it), so scrollIntoView
+  // is a no-op and the capture shows whatever main content overlays its box.
+  // Pin absolute-bottom scroll so the basement is actually exposed — without
+  // this the shot depends on the incidental scroll the .about capture leaves,
+  // which shifts whenever page height changes (bit us 2026-07-15).
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(250);
   await expect(page.locator("footer")).toHaveScreenshot(`home-footer-${tag}.png`);
 });
 

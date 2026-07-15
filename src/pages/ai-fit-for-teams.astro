@@ -85,7 +85,8 @@ const door: RowData = {
   <section class="page-hero aifit-hero">
     <div class="wrap aifit-hero-grid">
       <div class="hero-copy">
-        <p class="kicker meta enter">ai fit for teams</p>
+        {/* No eyebrow: service pages carry none (the H1 names the offer; the
+            eyebrow only repeated it) — ruled in the 2026-07-15 review. */}
         <RiseHeading as="h1" kind="hero" label="make ai fit the team." lines={heroLines} />
         <p class="lead enter appear-300">
           Your team's licensed for Copilot, and so far it hasn't quite paid off - some of it
@@ -125,21 +126,12 @@ const door: RowData = {
     </div>
   </section>
 
-  <section class="chapter" aria-labelledby="worries">
-    <div class="wrap">
-      <h2 class="section-head" id="worries" data-reveal>the questions teams bring me</h2>
-      <ul class="qlist">
-        {worries.map((q) => <li data-reveal>{q}</li>)}
-      </ul>
-    </div>
-  </section>
-
   <section class="chapter" aria-labelledby="how-it-works">
     <div class="wrap">
       <h2 class="section-head" id="how-it-works" data-reveal>how it works</h2>
       <div>
         <p class="lead" data-reveal>
-          It's a few days of my time, spread over two or three weeks and fitted around how the
+          It's a short piece of work, spread over two or three weeks and fitted around how the
           team already works. It starts with a conversation, and ends with a map you can act on.
         </p>
         <ol class="movements">
@@ -177,6 +169,15 @@ const door: RowData = {
           }
         </ul>
       </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="worries">
+    <div class="wrap">
+      <h2 class="section-head" id="worries" data-reveal>the questions teams bring me</h2>
+      <ul class="qlist">
+        {worries.map((q) => <li data-reveal>{q}</li>)}
+      </ul>
     </div>
   </section>
 

@@ -23,7 +23,7 @@ const { outcome, id = "snapshot", kicker = "the short version" } = Astro.props;
   <div class="wrap">
     <h2 class="section-head" id={id} data-reveal>{kicker}</h2>
     <p class="lead" data-reveal>{outcome}</p>
-    <ul class="beats" data-reveal>
+    <ul class="beats beats-body" data-reveal>
       <slot />
     </ul>
   </div>

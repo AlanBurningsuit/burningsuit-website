@@ -368,9 +368,12 @@
     margin: 0;
     max-width: 46ch;
   }
+  /* the email path — a deliberate clause in the body voice, not a mono
+     whisper under the button (Alan's 2026-07-15 review: it read as an
+     afterthought). Body face at UI size, full ink, drawn underline. */
   .cta-invite .cta-email {
-    color: var(--fg-dim);
-    font-size: var(--fs-ui-sm);
+    color: var(--fg);
+    font-size: var(--fs-ui);
   }
   /* footer booking button — sits above the big mailto in the basement */
   .cta-footer {
@@ -449,10 +452,12 @@
   html:not(.js) .lines .l > .i {
     transform: none;
   }
-  /* the stitched thread — appears exactly twice, 8px square terminal */
+  /* the stitched thread — appears exactly twice, 8px square terminal.
+     Height tightened one notch 2026-07-15: the hero→first-chapter gap read
+     oversized in Alan's review (the gap = this clamp + --space-super). */
   .thread {
     width: 2px;
-    height: clamp(4rem, 10vw, 8rem);
+    height: clamp(3rem, 7.5vw, 6rem);
     margin-inline: auto;
     background: var(--spark);
     position: relative;
@@ -1332,6 +1337,11 @@
     left: 0;
     color: var(--amber);
   }
+  /* Snapshot ("the short version") reuses .beats, but there the list IS the
+     content, not supporting cast under a lead — body size, same dim voice. */
+  .beats-body li {
+    font-size: var(--fs-base);
+  }
 
   /* /ai-fit hero: the buyer's own question as the LEFT visual (variety vs
      /power-bi's right-hand portrait). Bare display type — the question answers
@@ -1393,15 +1403,6 @@
     color: var(--amber);
     font-style: normal;
   }
-  /* the homepage credibility line — sits under the trust moment's proof beat,
-     carrying the talk. One signed line, body-warm, never a caption. */
-  .trust-line {
-    max-width: var(--measure-wide);
-    font-size: var(--fs-lead);
-    color: var(--fg);
-    margin-top: var(--space-md);
-  }
-
   /* the /404 way-back links */
   .notfound-links {
     display: flex;

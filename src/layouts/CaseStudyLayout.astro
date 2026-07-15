@@ -3,8 +3,8 @@
  * /work/<slug> — a single case study.
  *
  * Wraps BaseLayout with the shared case-study shell: a text-led page-hero (kicker
- * + lowercase H1 with one amber em + standfirst + an "Alan Harman-Box · burningsuit"
- * byline that mirrors the Article JSON-LD author), the chaptered MDX body via the
+ * + lowercase H1 with one amber em + standfirst; no visible byline — the Article
+ * JSON-LD author is the Person @id, grounded by the first-person copy), the chaptered MDX body via the
  * default slot, then the gated <Casefile> testimonial and a quiet door to /power-bi
  * (the considering reader's next question: shape, rhythm, price). Structure mirrors
  * /about (no hero photo — "no real screenshots" is a hard rule and these are text
@@ -62,7 +62,6 @@ const crumbs = breadcrumbList([
         {heading.before}{heading.em && <em>{heading.em}</em>}{heading.after}
       </h1>
       <p class="lead enter appear-450">{lead}</p>
-      <p class="meta enter appear-600">Alan Harman-Box · burningsuit</p>
     </div>
   </section>
 

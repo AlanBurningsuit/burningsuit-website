@@ -47,7 +47,7 @@ const serviceRows: RowData[] = [
 const principles = [
   {
     title: "the answers are yours",
-    body: "I help your team reach the right answers for how you actually work, instead of arriving with mine. Understand your own models and data well enough to judge what's safe to hand to a tool.",
+    body: "I help your team reach the answers that fit how you actually work, instead of arriving with mine. Understand your own models and data well enough to judge what's safe to hand to a tool.",
   },
   {
     title: "what not to automate",
@@ -114,16 +114,15 @@ const statementLines: Line[] = [
   <section class="chapter" aria-labelledby="in-practice">
     <div class="wrap">
       <h2 class="section-head" id="in-practice" data-reveal>in practice</h2>
-      <CasefilePanel study={featured?.data} tab={featured?.data.kicker}>
+      <CasefilePanel study={featured?.data}>
         <p>{featured?.data.tileOutcome}</p>
         <Fragment slot="links">
           <a class="u" href={`/work/${FEATURED_STUDY}/`}>read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
         </Fragment>
       </CasefilePanel>
-      <p class="trust-line" data-reveal>
-        I also give a talk at a few user groups, called "we're all middle
-        management now".
-      </p>
+      {/* The talk line was cut at the 2026-07-15 shakedown — credibility is
+          tenure in the hero sig; the talk lives on /about. A credibility line
+          returns here only if the talk write-up ships as a real essay page. */}
     </div>
   </section>
 
@@ -140,7 +139,7 @@ const statementLines: Line[] = [
   <section class="cta-band" aria-label="book a call">
     <div class="wrap">
       <BookCta src="home-proof" mailtoHref={contactMailto} reveal>
-        If that's where you are too, I'm happy to talk it through - nothing to prepare.
+        If either of those sounds like your team, I'm happy to talk it through - nothing to prepare.
       </BookCta>
     </div>
   </section>
