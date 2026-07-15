@@ -7,12 +7,11 @@ import mdx from "@astrojs/mdx";
 // rolldown-vite (withastro/astro#16542). PostCSS is the same engine, same
 // @theme/@utility/@source directives — just a different integration point.
 
-// Cookieless analytics toggle (Workstream D). MUST match `ANALYTICS.enabled` in
-// src/config/site.ts. OFF keeps the CSP at its deliberately-tight default; ON adds
-// ONLY the provider host to script-src + connect-src (the script src + the event
-// beacon) — nothing else loosens. Swap ANALYTICS_HOST for a self-hosted/proxied
+// Cookieless analytics (Workstream D). MUST match `ANALYTICS.enabled` in
+// src/config/site.ts. The CSP permits only the provider host for the tracker
+// script and event beacon. Swap ANALYTICS_HOST for a self-hosted/proxied
 // first-party endpoint to avoid the third party entirely.
-const ANALYTICS_ENABLED = false;
+const ANALYTICS_ENABLED = true;
 const ANALYTICS_HOST = "https://plausible.io";
 
 // https://astro.build/config
