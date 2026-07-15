@@ -1,0 +1,10 @@
+# Keeps the pinned action SHAs in .github/workflows/ current. PRs target dev
+# so updates ride the normal dev integration + Netlify preview flow instead of
+# landing straight on main (= live).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    target-branch: dev
