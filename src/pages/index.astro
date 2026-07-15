@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import RiseHeading from "../components/RiseHeading.astro";
+import Aside from "../components/Aside.astro";
 import DoorRow from "../components/DoorRow.astro";
 import CasefilePanel from "../components/CasefilePanel.astro";
 import type { RowData } from "../components/ServiceRow.astro";
@@ -126,15 +127,19 @@ const statementLines: Line[] = [
     </div>
   </section>
 
-  {/* D11 aside placements were prototyped here 2026-07-15 and killed on
-      review — the deck's lines didn't belong in these spots. The margin
-      voice returns when fresh lines are written and signed. */}
   <section class="chapter" aria-labelledby="what">
-    <div class="wrap">
+    <div class="wrap what">
       <h2 class="section-head" id="what" data-reveal>what i do</h2>
-      <div class="doors">
-        <DoorRow {...serviceRows[0]} variant="lead" index={1} />
-        <DoorRow {...serviceRows[1]} variant="second" index={2} />
+      <div class="label">
+        {/* Signed 2026-07-15 (asides-d11-deck placement 1) — the insider key
+            to why there are two doors. */}
+        <Aside data-reveal>same ownership question, whichever door you come in by.</Aside>
+      </div>
+      <div>
+        <div class="doors">
+          <DoorRow {...serviceRows[0]} variant="lead" index={1} />
+          <DoorRow {...serviceRows[1]} variant="second" index={2} />
+        </div>
       </div>
     </div>
   </section>
