@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { ANALYTICS } from "../src/config/site";
 
 /**
  * The meta CSP must hold at runtime — two halves, both load-bearing:
@@ -9,13 +10,23 @@ import { test, expect } from "@playwright/test";
  *      events (fonts, styles, images, the one external module) and no console
  *      errors / uncaught page errors.
  */
-const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/", "/work/", "/work/law-firm/"];
+const pages = [
+  "/",
+  "/ai-fit-for-teams/",
+  "/power-bi/",
+  "/about/",
+  "/work/",
+  "/work/law-firm/",
+  "/privacy/",
+];
 
 for (const path of pages) {
   test(`CSP present and violation-free: ${path}`, async ({ page }) => {
     const problems: string[] = [];
     let analyticsBeacons = 0;
-    await page.route("https://plausible.io/js/script.js", (route) =>
+    // The tracker src comes from site.ts so this intercept can't silently go
+    // stale against the deployed tag (it did once, generic script.js → pa-*).
+    await page.route(ANALYTICS.scriptSrc, (route) =>
       route.fulfill({
         contentType: "application/javascript",
         body: 'void fetch("https://plausible.io/api/event", { method: "POST", mode: "no-cors", body: "{}" });',
@@ -49,9 +60,10 @@ for (const path of pages) {
     expect(csp).toMatch(/connect-src[^;]*https:\/\/plausible\.io/);
     expect(csp).toMatch(/style-src[^;]*'self'/);
 
-    const tracker = page.locator('script[src="https://plausible.io/js/script.js"]');
+    // The personalised tracker embeds the site id in its URL; init lives in
+    // enhance.ts, so there is no data-domain attribute to assert.
+    const tracker = page.locator(`script[src="${ANALYTICS.scriptSrc}"]`);
     await expect(tracker).toHaveCount(1);
-    await expect(tracker).toHaveAttribute("data-domain", "burningsuit.co.uk");
 
     // Half 2: exercise the page — walk it so below-the-fold lazy resources
     // are actually requested and can surface violations inside the window.

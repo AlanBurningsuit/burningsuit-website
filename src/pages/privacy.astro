@@ -1,0 +1,231 @@
+---
+/**
+ * /privacy — the site's privacy notice.
+ *
+ * A factual legal notice (UK GDPR right to be informed + the PECR
+ * statistical-purposes exception), written in Alan's voice but NOT marketing.
+ * Every factual claim traces to the confirmed processing position in the ops
+ * repo (site/privacy-position-2026-07-16.md); keep this page in step with that
+ * note and with the analytics setup in src/config/site.ts.
+ *
+ * The opt-out button is wired to the handler in enhance.ts via
+ * [data-analytics-optout]; its two labels live in the data attributes so the
+ * copy stays here. No page-specific JSON-LD: the automatic site graph is
+ * enough for a legal notice.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const contactSubject = "Privacy question";
+---
+
+<BaseLayout
+  title="Privacy - burningsuit"
+  description="How burningsuit handles your data: cookieless analytics that never store your IP, no profiling, and a one-click way to opt this device out."
+  contactSubject={contactSubject}
+>
+  <Fragment slot="footer-invitation"
+    >If you've a question about your data or anything on this page, ask me and
+    I'll answer it myself</Fragment
+  >
+
+  <section class="page-hero">
+    <div class="wrap">
+      <h1 class="enter appear-300">what this site does with your <em>data</em>.</h1>
+      <p class="lead enter appear-450">
+        burningsuit is a one-person business. This site sets no cookies and
+        builds no profile of you. It measures which pages get read using
+        privacy-friendly analytics that never store
+        your IP address or anything that identifies you, and you can switch even
+        that off on this page. Here's the whole picture.
+      </p>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-labelledby="who">
+    <div class="wrap">
+      <h2 class="section-head" id="who" data-reveal>who runs this site</h2>
+      <div class="prose">
+        <p data-reveal>
+          burningsuit is the trading name of Burningsuit Limited, a company
+          registered in England and Wales under number 05738130. The registered
+          office is The Courtyard, Shoreham Road, Upper Beeding, West Sussex,
+          BN44 3TN.
+        </p>
+        <p data-reveal>
+          I'm Alan Harman-Box, and burningsuit is me, so any question about your
+          data comes straight to me at <a class="u" href="mailto:alan@burningsuit.co.uk"
+          >alan@burningsuit.co.uk</a>. Burningsuit Limited is the data controller
+          for the parts this site runs itself: the analytics below, and any
+          enquiry or booking details once they reach me.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="analytics">
+    <div class="wrap">
+      <h2 class="section-head" id="analytics" data-reveal>the analytics</h2>
+      <div class="prose">
+        <p data-reveal>
+          I use Plausible Analytics to see which pages people read and roughly
+          where they arrive from. It's cookieless.
+        </p>
+        <p data-reveal>
+          For each page view it stores the page address, the referring page, and
+          your browser, operating system and device type (worked out from the
+          user-agent your browser sends, which isn't itself kept), plus a coarse
+          location - country, region and city - worked out from your IP address,
+          which also isn't kept. There are no cookies, no browser storage, and no
+          persistent identifier. To count unique visitors without one, Plausible
+          works out a daily hash from a rotating secret plus the site and your IP
+          and browser; the raw IP and user-agent are processed transiently to
+          compute that hash, never written to storage, and the secret is deleted
+          every 24 hours. So the data is isolated to a single day, site and
+          device, and there's nothing there to build a profile from.
+        </p>
+        <p data-reveal>
+          Why I do this: I want an aggregate, anonymous picture of which pages
+          get read and where visitors come from, so I can make a small advisory's
+          site better. That's my legitimate interest, and it's the lawful basis I
+          rely on for this measurement. There's no profiling, and I don't sell or
+          otherwise trade any of it.
+        </p>
+        <p data-reveal>
+          Plausible is the processor here and I'm the controller, bound by
+          Plausible's data processing agreement. Plausible is an Estonian
+          company, and all visitor data stays in the EU on EU-owned
+          infrastructure (in Germany, Finland and Slovenia); none of it is
+          transferred to the US. The aggregated statistics are kept for three
+          years.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="optout">
+    <div class="wrap">
+      <h2 class="section-head" id="optout" data-reveal>opting this device out</h2>
+      <div class="prose">
+        <p data-reveal>
+          If you'd rather not be counted, you can exclude this device right here.
+          It takes effect straight away and costs you nothing.
+        </p>
+        <p data-reveal>
+          <button
+            type="button"
+            class="cta ghost"
+            data-analytics-optout
+            aria-pressed="false"
+            data-label-on="exclude this device"
+            data-label-off="this device is excluded - undo"
+          >exclude this device</button>
+        </p>
+        <p data-reveal>
+          One note on how this works: the analytics only run if your
+          browser runs JavaScript. If you have JavaScript switched off, the
+          script never loads in the first place, so there's nothing to opt out
+          of. The button above sets a small flag in this browser that tells
+          Plausible to ignore this device; pressing it again clears the flag.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="hosting">
+    <div class="wrap">
+      <h2 class="section-head" id="hosting" data-reveal>where the site is hosted</h2>
+      <div class="prose">
+        <p data-reveal>
+          The site is hosted on <a class="u" href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages"
+          target="_blank" rel="noopener noreferrer">GitHub Pages</a>, run by
+          GitHub, Inc. GitHub logs visitors' IP addresses for security purposes;
+          that's covered by GitHub's own privacy statement. GitHub is a US
+          company, so serving the site this way involves
+          a transfer of that log data to the US under GitHub's terms.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="booking">
+    <div class="wrap">
+      <h2 class="section-head" id="booking" data-reveal>booking a call</h2>
+      <div class="prose">
+        <p data-reveal>
+          The "book a call" links take you to Cal.com to pick a time. That
+          booking happens on <a class="u" href="https://cal.com/privacy"
+          target="_blank" rel="noopener noreferrer">Cal.com's own site</a>, run by
+          Cal.com, Inc. (a US company), under their privacy policy. When you book,
+          I receive the details you give - your name, email and the time you chose
+          - and from that point I'm the controller of them.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="email">
+    <div class="wrap">
+      <h2 class="section-head" id="email" data-reveal>emailing me</h2>
+      <div class="prose">
+        <p data-reveal>
+          The "email me" links just open your own email program with my address
+          filled in; the site itself doesn't process or send anything. Once your
+          email reaches me, I handle it on Microsoft 365, and I'm the controller
+          of it.
+        </p>
+        <p data-reveal>
+          I keep enquiry and booking details for as long as the enquiry, or any
+          work that follows from it, needs, and then I delete them. There's no
+          fixed clock, and I don't hang on to things I've no reason to keep.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="rights">
+    <div class="wrap">
+      <h2 class="section-head" id="rights" data-reveal>your rights</h2>
+      <div class="prose">
+        <p data-reveal>
+          Under UK data protection law you have rights over your personal data.
+          In plain terms, you can ask for:
+        </p>
+        <ul class="beats beats-body" data-reveal>
+          <li>access - what I hold about you, and a copy of it;</li>
+          <li>rectification - anything wrong put right;</li>
+          <li>erasure - your data deleted;</li>
+          <li>restriction - a pause on how I use it;</li>
+          <li>objection - to my using it at all, including the analytics above;</li>
+          <li>portability - where it applies, your data in a portable form.</li>
+        </ul>
+        <p data-reveal>
+          To exercise any of these, email me at <a class="u" href="mailto:alan@burningsuit.co.uk"
+          >alan@burningsuit.co.uk</a>. If you think I've handled your data badly
+          you can complain to the <a class="u" href="https://ico.org.uk/"
+          target="_blank" rel="noopener noreferrer">Information Commissioner's
+          Office</a>, the UK's data protection regulator; you're welcome to raise
+          it with me first.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="changes">
+    <div class="wrap">
+      <h2 class="section-head" id="changes" data-reveal>changes to this notice</h2>
+      <div class="prose">
+        <p data-reveal>
+          This notice reflects how the site works today. If I change the setup, a
+          different analytics tool say, or a new way of taking bookings, I'll
+          update this page to match it.
+        </p>
+        <p data-reveal>Last updated: 16 July 2026.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

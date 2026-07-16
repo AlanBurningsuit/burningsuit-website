@@ -5,7 +5,15 @@ import { test, expect } from "@playwright/test";
  * nothing may stay hidden under reduced motion. These are functional assertions
  * (computed opacity, visibility, fallback grounds), not pixel comparisons.
  */
-const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/", "/work/", "/work/law-firm/"];
+const pages = [
+  "/",
+  "/ai-fit-for-teams/",
+  "/power-bi/",
+  "/about/",
+  "/work/",
+  "/work/law-firm/",
+  "/privacy/",
+];
 
 /**
  * Geometric visibility per hide MECHANISM. Opacity only covers [data-reveal];
