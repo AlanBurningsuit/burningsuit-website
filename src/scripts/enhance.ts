@@ -20,6 +20,57 @@
    visible. Cost: a possible one-frame reveal flash on slow connections. ---- */
 document.documentElement.classList.add("js");
 
+/* ---- Plausible init: the CSP-safe home for the account snippet's inline
+   half. The queue stub works in either load order — if the async tracker
+   won the race it defined the real plausible/init and these `||` keep it;
+   if this module ran first, the stub queues and `plausible.o = {}` tells
+   the tracker to start on arrival. ---- */
+type PlausibleStub = {
+  (...args: unknown[]): void;
+  q?: unknown[];
+  o?: object;
+  init?: (opts?: object) => void;
+};
+const w = window as { plausible?: PlausibleStub };
+w.plausible =
+  w.plausible ||
+  function (...args: unknown[]) {
+    (w.plausible!.q = w.plausible!.q || []).push(args);
+  };
+w.plausible.init =
+  w.plausible.init ||
+  function (opts?: object) {
+    w.plausible!.o = opts || {};
+  };
+w.plausible.init();
+
+/* ---- /privacy analytics opt-out: Plausible's supported exclusion is the
+   `plausible_ignore` localStorage flag (verified against the deployed
+   tracker). The button's two labels live in its data attributes so the copy
+   stays in the page; without JS the tracker never runs, so the hidden
+   toggle costs nothing. localStorage can throw in locked-down browsers —
+   the button then stays inert rather than erroring. ---- */
+const optOut = document.querySelector<HTMLButtonElement>("[data-analytics-optout]");
+if (optOut) {
+  const KEY = "plausible_ignore";
+  try {
+    const render = () => {
+      const off = localStorage.getItem(KEY) === "true";
+      optOut.setAttribute("aria-pressed", String(off));
+      const label = off ? optOut.dataset.labelOff : optOut.dataset.labelOn;
+      if (label) optOut.textContent = label;
+    };
+    optOut.addEventListener("click", () => {
+      if (localStorage.getItem(KEY) === "true") localStorage.removeItem(KEY);
+      else localStorage.setItem(KEY, "true");
+      render();
+    });
+    render();
+  } catch {
+    /* storage unavailable — leave the server-rendered label in place */
+  }
+}
+
 const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
 /* ---- scroll reveals: fire once at ~85% viewport, never un-reveal ---- */

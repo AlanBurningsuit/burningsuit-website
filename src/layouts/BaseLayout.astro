@@ -119,10 +119,9 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     {/* Cookieless analytics. The matching ANALYTICS_ENABLED flag in
         astro.config.mjs adds the provider host to script-src + connect-src.
         is:inline keeps the external src untouched; it is governed by the
-        script-src host, not a hash. */}
-    {ANALYTICS.enabled && (
-      <script is:inline defer data-domain={ANALYTICS.dataDomain} src={ANALYTICS.scriptSrc} />
-    )}
+        script-src host, not a hash. Init lives in enhance.ts (the queue stub
+        is safe in either load order), so no inline snippet is needed. */}
+    {ANALYTICS.enabled && <script is:inline async src={ANALYTICS.scriptSrc} />}
   </head>
   <body>
     <a class="skip" href="#main">skip to content</a>

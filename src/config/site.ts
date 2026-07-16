@@ -40,14 +40,16 @@ export function mailtoFor(subject?: string): string {
 /**
  * Cookieless Plausible analytics (Workstream D). The matching
  * `ANALYTICS_ENABLED` flag in astro.config.mjs must stay enabled so the provider
- * host remains in script-src + connect-src. The generic tracker remains
- * supported by Plausible; replace scriptSrc with the site's personalised
- * tracker when the account is reachable again.
+ * host remains in script-src + connect-src. The personalised tracker embeds the
+ * site id in the URL (no data-domain attribute); it only starts once
+ * `plausible.init()` runs, which lives in the bundled enhance.ts module — the
+ * account's inline init snippet is deliberately NOT pasted into the layout
+ * (the site ships no inline scripts). Visitors can exclude themselves via the
+ * `plausible_ignore` localStorage flag (the /privacy opt-out toggle).
  */
 export const ANALYTICS = {
   enabled: true,
-  scriptSrc: "https://plausible.io/js/script.js",
-  dataDomain: "burningsuit.co.uk",
+  scriptSrc: "https://plausible.io/js/pa-36aM528GLdATzATwx2J-6.js",
 } as const;
 
 /* ------------------------------------------------------------------ *
