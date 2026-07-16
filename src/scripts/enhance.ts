@@ -6,18 +6,19 @@
  * and the auto-hiding header. Nothing idles or loops — the 2026-07 warmth
  * delta retired the clock, the console greeting and the /ai-fit rotation.
  *
- * NOTE on CSP: this script is bundled to an external module (script-src 'self').
+ * NOTE on CSP: the build inlines this bundle as a module script and Astro
+ * auto-hashes it into script-src (the hashes are byte-sensitive — LF only).
  * The only DOM-style writes it makes go through the CSSOM
  * (`documentElement.style.setProperty`), which CSP's style-src does NOT govern,
  * so `style-src 'self'` holds without an inline-style allowance.
  */
 /* ---- arm the JS gate FIRST: reveal-hidden states exist only while this
-   module is actually running. The class used to be added by an inline head
-   script; arming it here instead keeps the CSP hash-free (script-src 'self'
-   covers the one external module) and makes the failure mode safe — if this
-   module never loads or executes (dropped connection, bad deploy), no .js
-   class is added, the html:not(.js) fallbacks hold, and the page stays fully
-   visible. Cost: a possible one-frame reveal flash on slow connections. ---- */
+   module is actually running. The class used to be added by a separate inline
+   head script; arming it here instead keeps it inside the one auto-hashed
+   bundle and makes the failure mode safe — if this module never loads or
+   executes (dropped connection, bad deploy), no .js class is added, the
+   html:not(.js) fallbacks hold, and the page stays fully visible. Cost: a
+   possible one-frame reveal flash on slow connections. ---- */
 document.documentElement.classList.add("js");
 
 /* ---- Plausible init: the CSP-safe home for the account snippet's inline
