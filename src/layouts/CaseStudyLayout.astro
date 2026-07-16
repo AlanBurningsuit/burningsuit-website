@@ -3,11 +3,13 @@
  * /work/<slug> — a single case study.
  *
  * Wraps BaseLayout with the shared case-study shell: a text-led page-hero (kicker
- * + lowercase H1 with one amber em + standfirst), the chaptered MDX body via the
- * default slot, then the gated <Casefile> testimonial. Structure mirrors /about
- * (no hero photo — "no real screenshots" is a hard rule and these are text pages).
- * "The ask" is the footer invitation + the mailto CTA, the same one-action model
- * every page uses.
+ * + lowercase H1 with one amber em + standfirst; no visible byline — the Article
+ * JSON-LD author is the Person @id, grounded by the first-person copy), the chaptered MDX body via the
+ * default slot, then the gated <Casefile> testimonial and a quiet door to /power-bi
+ * (the considering reader's next question: shape, rhythm, price). Structure mirrors
+ * /about (no hero photo — "no real screenshots" is a hard rule and these are text
+ * pages). "The ask" is the footer close + the page's two contact paths (book a call
+ * + email), each carrying this study's contactSubject.
  */
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
@@ -37,8 +39,8 @@ const article = articleNode({
 });
 const crumbs = breadcrumbList([
   { name: "Home", url: siteUrl },
-  { name: "Work", url: `${siteUrl}work` },
-  { name: title.replace(/ — burningsuit$/, ""), url: pageUrl },
+  { name: "Work", url: `${siteUrl}work/` },
+  { name: title.replace(/ - burningsuit$/, ""), url: pageUrl },
 ]);
 ---
 
@@ -69,6 +71,17 @@ const crumbs = breadcrumbList([
 
   <Casefile study={study} />
 
-  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <section class="chapter" aria-label="working together">
+    <div class="wrap">
+      <div class="prose" data-reveal>
+        <p>
+          This is the sort of work I do embedded with a team, month to month.
+          <a class="u" href="/power-bi/">what working together looks like - shape, rhythm, price ▸</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
   <div class="talk-spacer"></div>
 </BaseLayout>

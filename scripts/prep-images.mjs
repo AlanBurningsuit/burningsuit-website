@@ -35,12 +35,13 @@ if (!existsSync(join(root, "resources/photos"))) {
 // original into a portrait centred on the subject's eyes.
 const jobs = [
   ["DSC08670-Edit.jpg", "DSC08670-Edit.jpg", 1000], // hero portrait (4:5, ~40vw right column)
+  ["DSC08683-Edit.jpg", "DSC08683-Edit.jpg", 1600], // about-teaser landscape (panel doorway)
   ["DSC09119-2-Edit-Edit.jpg", "DSC09119-2-Edit-Edit.jpg", 1600], // material photo band
-  ["DSC09290-Edit.jpg", "DSC09290-Edit.jpg", 900], // about portrait (~45vw)
   ["DSC09247-Edit.jpg", "DSC09247-Edit.jpg", 384], // face chip (2× of 192px)
-  // /power-bi hero: landscape original (6000×4000) cropped to a 4:5 portrait
-  // framed with Alan's face near centre, then downscaled.
-  ["DSC09087-Edit.jpg", "DSC09087-Edit.jpg", 800, { left: 2000, top: 0, width: 3200, height: 4000 }],
+  // /power-bi hero (swapped to DSC08810 2026-07-15, Alan's contact-sheet pick):
+  // landscape original (6000×4000) cropped to a 4:5 portrait centred on his
+  // face (x≈3000), then downscaled.
+  ["DSC08810-Edit.jpg", "DSC08810-Edit.jpg", 800, { left: 1400, top: 0, width: 3200, height: 4000 }],
   // /about — Zelda, the dog: phone portrait (3072×4080) cropped to a 3:2
   // landscape framed on her face + the blanket roll, so it fills the prose
   // content width in the "and the dog" chapter. 1400px covers 42rem at 2×.

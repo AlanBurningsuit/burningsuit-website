@@ -1,0 +1,198 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Aside from "../components/Aside.astro";
+import DoorRow from "../components/DoorRow.astro";
+import CasefilePanel from "../components/CasefilePanel.astro";
+import Offer from "../components/Offer.astro";
+import RiseHeading from "../components/RiseHeading.astro";
+import type { RowData } from "../components/ServiceRow.astro";
+import type { Line } from "../components/RiseHeading.astro";
+import { getEntry } from "astro:content";
+import { Picture } from "astro:assets";
+import pbiHero from "../assets/photos/DSC08810-Edit.jpg";
+import BookCta from "../components/BookCta.astro";
+import { mailtoFor } from "../config/site";
+
+// The proof panel is the law-firm case study at teaser length. CasefilePanel
+// derives its naming gate from the SAME `namePublished` the full /work/law-firm
+// page uses (namedTier() in src/lib/named.ts), so the teaser and the page can
+// never disagree about naming the client.
+const lawFirm = await getEntry("work", "law-firm");
+
+const contactSubject = "Power BI & Fabric - where it's stuck";
+const contactMailto = mailtoFor(contactSubject);
+
+// Same headline as the home hero; display grotesque, masked-rise, amber "with".
+const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
+
+// The bridge to the AI page — the closing door (dark editorial row; cream is
+// proof-only). A one-line transition in the section introduces it; the door
+// leads with Copilot as the present pressure and names agents as where it's
+// heading, then hands to /ai-fit-for-teams.
+const aiDoor: RowData = {
+  href: "/ai-fit-for-teams/",
+  title: { before: "ai ", em: "fit", after: " for teams" },
+  body: "Copilot can already write DAX and draft a whole report - and agents that build the model outright aren't far behind. It's the same ownership question, one move on: can your team still change what it ships, and vouch for it? Working out what to hand over, what to keep, and who checks it is the other thing I do.",
+  cta: "see ai fit for teams",
+};
+---
+
+<BaseLayout
+  title="Power BI & Fabric advisory: embedded, review, capability - burningsuit"
+  description="Embedded advisory, reporting strategy and architecture review for Power BI and Fabric teams - so your team owns it, and the know-how stays when I leave."
+  ogImage="/social/linkedin-power-bi.png"
+  ogImageAlt="power bi & fabric, done with you, beside a field-notebook model diagram"
+  ogImageWidth={1200}
+  ogImageHeight={627}
+  contactSubject={contactSubject}
+>
+  <Fragment slot="footer-invitation"
+    >Tell me where Power BI or Fabric is grinding - the bottleneck, the model nobody quite
+    trusts, the bit AI's about to change. If I can help, I'll tell you how; if I can't,
+    I'll tell you that too</Fragment
+  >
+
+  <section class="page-hero pbi-hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <RiseHeading as="h1" kind="hero" label="power bi and fabric, done with you." lines={heroLines} />
+        <p class="lead enter appear-300">
+          <strong>I've spent five years alongside teams adopting Power BI</strong>, and the story
+          rarely changes. A team gets the licences, builds the first reports, and <em>then</em> the
+          difficult part starts:
+        </p>
+        <ul class="beats enter appear-450">
+          <li>the one person who really knows the model becomes the bottleneck;</li>
+          <li>things break when anyone else touches them;</li>
+          <li>the training course made sense until you tried it on your own data.</li>
+        </ul>
+        <p class="lead enter appear-600">
+          And there's always more: Fabric to move onto, Copilot writing DAX, agents building
+          whole reports. The more the tools take on, the sharper one question gets: who's making
+          the calls - you, or the tools?
+        </p>
+      </div>
+      <figure class="hero-photo enter appear-300">
+        <Picture
+          src={pbiHero}
+          alt="Alan in a red checked overshirt, smiling, against a dark wall"
+          formats={["avif"]}
+          fallbackFormat="webp"
+          widths={[400, 600, 800]}
+          sizes="(min-width: 62rem) 36vw, 100vw"
+          quality={70}
+          loading="eager"
+        />
+      </figure>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-labelledby="whatido">
+    <div class="wrap what">
+      <h2 class="section-head" id="whatido" data-reveal>what i do</h2>
+      <div class="label">
+        {/* Signed 2026-07-15 (asides-d11-deck placement 2, Alan verbatim,
+            JASON) — margin only, never on an offer card. */}
+        <Aside data-reveal>no one person has to understand the full stack to every level of detail.</Aside>
+      </div>
+      <div>
+        <p class="lead" data-reveal>
+          Whatever the shape of the work, the aim is the same: your team ends up more
+          <em>capable</em> of owning it - with or without me.
+        </p>
+
+        <Offer title="embedded advisory" lead>
+          <p>
+            I join your team for a stretch - office hours, workshops, one-on-ones - working on
+            your real models and real problems, in your own workspace, across Power BI and Fabric.
+            It runs as a working relationship rather than a scheduled course, so the team gets more
+            capable on the problems you actually have: able to change the model without fear of
+            breaking it, and to catch a wrong number before it goes out, without checking with me
+            first.
+          </p>
+          <p class="aside">Ongoing and month-to-month, sized to your team. Usually £3,000 to £6,000 a month.</p>
+        </Offer>
+
+        <Offer title="reporting strategy">
+          <p>
+            Before anything gets built: what are you actually measuring, and why? We work out the
+            questions the team needs to be able to answer, and what a good answer looks like for
+            each - so everyone means the same thing by the same number. You walk away with a clear
+            picture of what's worth reporting and what to leave out.
+          </p>
+        </Offer>
+
+        <Offer title="architecture review">
+          <p>
+            Then the plumbing: does your model actually serve that strategy, or quietly get in the
+            way? I'll tell you what's carrying its weight and what isn't - including when the honest
+            answer is that a new model won't fix the real problem. And if you're weighing up Fabric,
+            I'll tell you straight whether it earns its keep for you.
+          </p>
+          <p class="aside">A fixed, shorter piece. Scoped and priced up front.</p>
+        </Offer>
+
+        <Offer title="build work, case by case">
+          <p>
+            And if you have a specific, well-thought-through Power BI build in mind, ask - I take
+            those on case by case.
+          </p>
+        </Offer>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="proof">
+    <div class="wrap what">
+      <h2 class="section-head" id="proof" data-reveal>a team that owned it</h2>
+      <div class="label">
+        {/* Signed 2026-07-15 (asides-d11-deck placement 3, near-verbatim from
+            the Manchester talk) — names the mechanism the proof shows. */}
+        <Aside data-reveal>to be responsible for it, they had to understand why it's built the way it is.</Aside>
+      </div>
+      <div>
+        <CasefilePanel study={lawFirm?.data} src="a data team · international law firm">
+          <p>
+            One data team I work with - inside an international law firm - started from “fear of
+            breaking”: production models nobody dared touch, external help needed for the
+            smallest change, the whole thing resting on one or two people. A few months of
+            working together, and they were running their own diagnostic sessions, tracing data
+            lineage end to end, and walking into handover conversations with the likely cause
+            already in hand. The reliance moved from a single expert to the
+            team.
+          </p>
+          <Fragment slot="links">
+            <a class="u" href="/work/law-firm/">read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
+          </Fragment>
+        </CasefilePanel>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-label="book a call">
+    <div class="wrap">
+      <BookCta src="power-bi-engagement" mailtoHref={contactMailto} reveal>
+        Even a first call should leave you with something useful - a clearer read on where it's
+        stuck. 30 minutes, nothing to prepare.
+      </BookCta>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="aipressure">
+    <div class="wrap">
+      <h2 class="section-head" id="aipressure" data-reveal>what ai's already touching</h2>
+      <div>
+        <p class="lead" data-reveal>
+          A team that can own and verify its own reporting is also the team that's ready for what
+          AI adds to the job.
+        </p>
+        <DoorRow {...aiDoor} variant="second" index={1} />
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

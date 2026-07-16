@@ -1,5 +1,6 @@
 // Lighthouse CI for the static build. `npm run test:lh` builds nothing — run
-// `npm run build` first; lhci serves dist/ itself and audits the three pages.
+// `npm run build` first; lhci serves dist/ itself and audits one page per
+// template (both layouts: BaseLayout pages + a CaseStudyLayout study).
 module.exports = {
   ci: {
     collect: {
@@ -9,7 +10,8 @@ module.exports = {
         "http://localhost/ai-fit-for-teams/index.html",
         "http://localhost/power-bi/index.html",
         "http://localhost/about/index.html",
-        "http://localhost/colophon/index.html",
+        "http://localhost/work/index.html",
+        "http://localhost/work/law-firm/index.html",
       ],
       numberOfRuns: 1,
       settings: { preset: "desktop" },

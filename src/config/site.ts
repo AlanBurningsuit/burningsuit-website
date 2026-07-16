@@ -11,7 +11,10 @@ export const CONTACT_EMAIL = "alan@burningsuit.co.uk";
 
 /**
  * The hosted Cal.com scheduling page — Alan's 30-minute event, direct (skips the
- * profile menu) so the click matches the "book a 30-minute call" label.
+ * profile menu) so the click matches the booking labels. The full label is
+ * "book a 30-minute call" (footer, BookCta); the header deliberately abbreviates
+ * to "book a call" because the long form wraps at mid widths (owner call,
+ * 2026-07-02) — the Cal page itself states the duration either way.
  */
 export const BOOKING_URL = "https://cal.com/alan-burningsuit/30min";
 
@@ -35,20 +38,18 @@ export function mailtoFor(subject?: string): string {
 }
 
 /**
- * Cookieless analytics (Workstream D). DEFAULT OFF. Turning this on weakens the
- * deliberately-tight CSP: the matching `ANALYTICS_ENABLED` flag in
- * astro.config.mjs must be flipped to the same value so the provider host is
- * added to script-src + connect-src. Until traffic justifies it, the ?src= split
- * in the booking dashboard + asking on the call is the real signal — at
- * single-digit booking volume nothing here reaches significance.
- *
- * Plausible is the default (cookieless, EU-friendly, no cookie banner). Swap for
- * Fathom or a self-hosted/reverse-proxied first-party endpoint if preferred.
+ * Cookieless Plausible analytics (Workstream D). The matching
+ * `ANALYTICS_ENABLED` flag in astro.config.mjs must stay enabled so the provider
+ * host remains in script-src + connect-src. The personalised tracker embeds the
+ * site id in the URL (no data-domain attribute); it only starts once
+ * `plausible.init()` runs, which lives in the bundled enhance.ts module — the
+ * account's inline init snippet is deliberately NOT pasted into the layout
+ * (the site ships no inline scripts). Visitors can exclude themselves via the
+ * `plausible_ignore` localStorage flag (the /privacy opt-out toggle).
  */
 export const ANALYTICS = {
-  enabled: false,
-  scriptSrc: "https://plausible.io/js/script.js",
-  dataDomain: "burningsuit.co.uk",
+  enabled: true,
+  scriptSrc: "https://plausible.io/js/pa-36aM528GLdATzATwx2J-6.js",
 } as const;
 
 /* ------------------------------------------------------------------ *
@@ -58,21 +59,34 @@ export const ANALYTICS = {
  * Keep this in sync with the visible on-page copy: Google penalises
  * structured data that describes content the user can't see. Schema
  * strings duplicated as literals in a layout drift; sourced from here
- * they can't. Company-number-bearing fields (legalName, registration)
- * stay omitted until the real Companies House number lands (Stage 0) —
- * mirror that discipline for any field you can't yet stand behind.
+ * they can't. The Companies House registration is wired below (ORG_LEGAL,
+ * confirmed against the register), and the founder sameAs now carries Alan's
+ * confirmed LinkedIn. Logo stays omitted until a real asset exists — keep that
+ * discipline for any field you can't yet stand behind, and never fabricate one.
  * ------------------------------------------------------------------ */
 export const SITE_NAME = "burningsuit";
 
 /** The org's own description (ProfessionalService). Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =
-  "Embedded Power BI and Fabric advisory, done with you — strategy, architecture review, and team capability — with a clear-eyed take on what AI means for how the work gets built.";
+  "Embedded Power BI and Fabric advisory, done with you - ongoing work inside your team, so the know-how stays with you when I leave, even as AI takes on the typing.";
 
 /** Postal identity (no street — area-served advisory, not a storefront). */
 export const ORG_ADDRESS = {
   addressRegion: "West Sussex",
   addressCountry: "GB",
+} as const;
+
+/**
+ * Companies House registration, wired into the Organization schema. Confirmed
+ * against the register: legal name "BURNINGSUIT LIMITED" (standard-cased here;
+ * the brand stays lowercase everywhere else), number 05738130 (8 digits, the
+ * leading zero kept). Emitted as legalName + an identifier PropertyValue on the
+ * Organization node (schema.ts).
+ */
+export const ORG_LEGAL = {
+  legalName: "Burningsuit Limited",
+  companyNumber: "05738130",
 } as const;
 
 /** The advisory's areas of work — used as Organization `knowsAbout`. (We model
@@ -88,13 +102,16 @@ export const SERVICE_AREAS = [
  * The founder, for E-E-A-T Person schema. `sameAs` carries public profile
  * URLs (LinkedIn, etc.) that let answer engines tie the named author to a
  * real identity — the single biggest authority signal for an advisory.
- * Left EMPTY until Alan confirms the canonical URLs: never fabricate a
- * profile link (it fails the voice skill's truth test and Google's). Add
- * them here and they flow into Person + Organization automatically.
+ * Owner-confirmed only: never fabricate a profile link (it fails the voice
+ * skill's truth test and Google's). These flow into Person + Organization
+ * automatically, and compact() in schema.ts omits the field while it's empty.
  */
 export const FOUNDER = {
   name: "Alan Harman-Box",
-  jobTitle: "Power BI, Fabric & AI advisor",
+  // Mirrors the visible ranking (owner call, 2026-07-02): Power BI & Fabric are
+  // the front door; AI stays in knowsAbout/SERVICE_AREAS (ordered last), matching
+  // the copy's "the main work" / "the other thing I do" framing.
+  jobTitle: "Power BI & Fabric advisor",
   knowsAbout: [
     "Power BI",
     "Microsoft Fabric",
@@ -104,6 +121,6 @@ export const FOUNDER = {
     "Power BI governance",
     "AI for data teams",
   ],
-  /** Owner-supplied. e.g. "https://www.linkedin.com/in/…". Empty = omit. */
-  sameAs: [] as string[],
+  /** Owner-supplied, confirmed. Empty = omit. */
+  sameAs: ["https://www.linkedin.com/in/alan-harman-box"] as string[],
 } as const;

@@ -1,0 +1,155 @@
+---
+/**
+ * /about — the person behind burningsuit.
+ *
+ * Copy is the SIGNED deck at design/copy/about.md (v5, signed 2026-06-17, with
+ * Alan's inline edits). Voice: warm outward, light about himself, "for everyone
+ * else" as the spine, spoken cadence. Structure: prose chapters on the dark
+ * ground — page-hero → thread → chapters → thread-end.
+ *
+ * PHOTOS: the "and the dog" section now carries Zelda (a narrow ~22rem portrait
+ * inset, carved frame + clip-path reveal, same skin as PhotoChapter). The "where
+ * burningsuit comes from" section still has a comment hook for the Stuart &
+ * Alison photo, pending supply — add <Picture> + regenerate the visual baselines
+ * when that one lands.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Signoff from "../components/Signoff.astro";
+import { Picture } from "astro:assets";
+import zelda from "../assets/photos/zelda.jpg";
+
+const contactSubject = "Hello";
+---
+
+<BaseLayout
+  title="About - burningsuit: Power BI, Fabric & AI for everyone else"
+  description="I'm Alan Harman-Box. burningsuit is embedded Power BI and Fabric advisory, done with you - for the people who just want the job done as AI changes how it's built."
+  contactSubject={contactSubject}
+>
+  <Fragment slot="footer-invitation"
+    >If any of this sounds like the kind of thing you're dealing with, I'd
+    genuinely like to hear about it</Fragment
+  >
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="kicker meta enter">about</p>
+      <h1 class="enter appear-300">power bi and ai - for everyone <em>else</em>.</h1>
+      <p class="lead enter appear-450">
+        I'm Alan, and burningsuit is me. There's a lot of noise about
+        AI and Power BI at the moment, and most of it feels aimed at the people
+        who are already knee-deep in 'agents'. I'm interested in everyone else -
+        the people who just want to get their job done well and would rather not
+        have to turn into a nerd to do it. Which is fine by me - I'm more than
+        happy to be the nerd in the room, so you don't have to.
+      </p>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-labelledby="capable">
+    <div class="wrap">
+      <h2 class="section-head" id="capable" data-reveal>i start from what people can do</h2>
+      <div class="prose">
+        <p data-reveal>
+          I've got a fairly stubborn belief that, with the right instruction and
+          a bit of encouragement, almost anyone can learn almost anything - so I
+          won't turn up assuming a team's behind, or that the people are the
+          problem. Most of the teams I meet are more capable than they've been
+          given credit for; they're just busy with the day job, a bit wary of
+          the latest thing, and short on someone to think it through with.
+        </p>
+        <p data-reveal>
+          What I do these days is <a class="u" href="/power-bi/">embedded Power BI
+          and Fabric advisory, done with you</a> - I work alongside your team on
+          your real problems, so they come out owning what we build rather than
+          being handed it. If you'd sooner see that than read about me, there are
+          <a class="u" href="/work/">a few case files</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="human">
+    <div class="wrap">
+      <h2 class="section-head" id="human" data-reveal>the part that isn't really technical</h2>
+      <div class="prose">
+        <p data-reveal>
+          The nuts and bolts of Power BI I can do, and I've done it a long time.
+          But that's honestly not usually the thing that makes the difference.
+          It's much more about whether people who are busy, and a bit sceptical,
+          actually feel like having a go - and whether, by the end, your team
+          reckons I get how they work, rather than someone turning up to tell
+          them they've been doing it wrong. That's really the part I care about
+          getting right.
+        </p>
+        <p data-reveal>
+          I've spent about five years working with organisations getting to
+          grips with Power BI and Fabric, and before that a decade or so in
+          software delivery - large systems, some of it for government. I also
+          give a talk at a few user groups, called "we're all middle management
+          now", about being responsible for work you've handed off to something
+          that can't be held responsible for it. The thing that's stuck
+          with me through all of it is that these projects mostly succeed or
+          fail on the people side, well before the technology really comes into
+          it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="origin">
+    <div class="wrap">
+      <h2 class="section-head" id="origin" data-reveal>where burningsuit comes from</h2>
+      <div class="prose">
+        <p data-reveal>
+          burningsuit was my parents' Power BI training business. They handed it
+          over last year and they're properly retired now, so it's me. I've
+          taken it somewhere a bit different from where it started - these days
+          it's more about advising and designing alongside teams than running
+          courses - but the reason it exists hasn't really changed.
+        </p>
+        <p data-reveal>
+          As my mum said, burningsuit was for "everyone else" - normal people,
+          basically. Not the nerds, not the people who are always online
+          performing their work - just someone trying to get a job done. And
+          that's still the focus.
+        </p>
+        {/* photo: Stuart & Alison — drop in when supplied */}
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="dog">
+    <div class="wrap">
+      <h2 class="section-head" id="dog" data-reveal>and the dog</h2>
+      <div class="prose">
+        <p data-reveal>
+          Last thing: this is Zelda, who I'm told is Chief Morale Officer. She's
+          no use at all with the DAX, but she's very good at making me get up and
+          go outside now and then, which honestly does more for the work than
+          you'd think.
+        </p>
+        <figure class="figure-inset" data-reveal-fig>
+          <div class="ph">
+            <Picture
+              src={zelda}
+              alt="Zelda, a small black-and-tan dog, snuggled into a cream fleece blanket"
+              formats={["avif"]}
+              fallbackFormat="webp"
+              widths={[700, 1050, 1400]}
+              sizes="(min-width: 56rem) 42rem, 100vw"
+              quality={60}
+              loading="lazy"
+            />
+          </div>
+        </figure>
+        <Signoff reveal />
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

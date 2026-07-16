@@ -3,34 +3,50 @@
  * Sticky header. Hides on scroll-down, returns on scroll-up (enhance.ts adds
  * `.hh`). Nav links the pages that ship — power-bi (the front door) first, the
  * ai-fit bridge, then /work (the proof) and /about. /contact is not emitted; the
- * mailto is the contact path. The drawn underline (.u) and instant-flip CTA
- * live in app.css. `mailtoHref` carries the page's prefilled subject (built in
- * BaseLayout); defaults to a bare mailto.
+ * two contact paths (book a call + email) live in the footer close. The drawn
+ * underline (.u) and instant-flip CTA live in app.css. The header's one action is
+ * the book-a-call CTA; `mailtoHref` is accepted so BaseLayout can pass header and
+ * footer the same props, but the header itself renders no mailto.
  */
 import { bookingHref } from "../config/site";
 interface Props {
   mailtoHref?: string;
 }
+// Short sentence-case labels (the 2026-07-11 chrome relaxation, Phase-2 copy
+// batch). The long lowercase forms live on in each page's own H1.
 const nav = [
-  { href: "/power-bi/", label: "power bi & fabric" },
-  { href: "/ai-fit-for-teams/", label: "ai fit for teams" },
-  { href: "/work/", label: "work" },
-  { href: "/about/", label: "about" },
+  { href: "/power-bi/", label: "Power BI" },
+  { href: "/ai-fit-for-teams/", label: "AI fit" },
+  { href: "/work/", label: "Work" },
+  { href: "/about/", label: "About" },
 ];
+// aria-current wayfinding — server-rendered per page, zero runtime cost.
+// Trailing-slash-normalised so dev-server paths match the built /page/ form.
+// Exact match → "page"; ancestor match (e.g. /work over /work/law-firm/) →
+// "true", so section membership stays visible on child routes.
+const here = Astro.url.pathname.replace(/\/+$/, "");
+const currentFor = (href: string): "page" | "true" | undefined => {
+  const target = href.replace(/\/+$/, "");
+  if (here === target) return "page";
+  if (target && here.startsWith(`${target}/`)) return "true";
+  return undefined;
+};
 ---
 <header id="hd">
   <div class="wrap bar">
     <a href="/"
       ><img
         src="/logos/burningsuit-on-green.svg"
-        alt="burningsuit — home"
+        alt="burningsuit - home"
         width="285"
         height="52"
       /></a
     >
     <nav aria-label="Main">
-      {nav.map((n) => <a class="u" href={n.href}>{n.label}</a>)}
+      {nav.map((n) => (
+        <a class="u" href={n.href} aria-current={currentFor(n.href)}>{n.label}</a>
+      ))}
     </nav>
-    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">book a call</a>
+    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">Book a call</a>
   </div>
 </header>

@@ -1,28 +1,29 @@
 ---
 order: 1
-title: "A law firm's data team that took back its own Fabric build — burningsuit"
+title: "A law firm's data team that owns a Fabric build they didn't build - a Power BI & Fabric case study - burningsuit"
 description: >-
-  A small data team inside a large international law firm moved onto Microsoft
-  Fabric with a consultancy doing the build - and came out owning it, having
-  found the error the migration missed.
-kicker: "case file"
+  Power BI and Fabric case study: a consultancy moved a law firm's Power BI
+  model onto Fabric; a done-with-you retainer alongside the migration meant
+  the team came out owning it.
+kicker: "embedded advisory"
 heading:
-  before: "a law firm's data team that took back its own "
+  before: "a law firm's data team that owns a "
   em: "fabric"
-  after: " build."
+  after: " build they didn't build."
 descriptor: "a large international law firm's data team"
 lead: >-
-  A handful of people inside a global law firm, strong in SQL, were moving a
-  decade of reporting onto Microsoft Fabric with a consultancy doing the build.
-  Their lead's worry was sharper than any training course: coming out the far
-  side relying on that consultancy to touch his own estate.
+  A small data team inside a global law firm - strong in SQL and SSRS, with no
+  Fabric between them - and a specialist consultancy moving the Power BI model
+  that had outgrown its refresh onto Microsoft Fabric. Their lead's worry was
+  simple: if his team didn't get to grips with Fabric, they'd come out of the
+  migration dependent on the contractors who built it.
 tileOutcome: >-
-  A team moving onto Fabric, with a consultancy doing the build, could have
-  ended up unable to touch their own estate. Instead, they found the error the
-  migration had missed.
+  A consultancy built their Fabric model; the team came out owning it. By
+  handover they were tracing wrong numbers back through the new stack
+  themselves.
 datePublished: 2026-06-23
-dateModified: 2026-06-23
-contactSubject: "Power BI & Fabric — where it's stuck"
+dateModified: 2026-07-14
+contactSubject: "Power BI & Fabric - where it's stuck"
 footerInvitation: >-
   If your Power BI is carrying something that matters and only one or two people
   dare touch it, that's the situation I work in most. Tell me where it's stuck
@@ -33,21 +34,27 @@ namePublished: false
 {/* Anonymised tier ships today. The named tier (client + verbatim quote) is held
 OUTSIDE this public repo — design/copy/case-studies/07-named-tier-frontmatter.md,
 local-only — and returns only when namePublished is true AND written permission has
-landed; engagement status: confirm before republishing. Copy adapted from
-design/copy/case-studies/01; pending Alan's final voice sign-off. */}
+landed. Engagement status: paused March 2026, resuming September 2026; the Fabric
+model is fully handed over to the team. Copy adapted from
+design/copy/case-studies/01; voice-signed by Alan 2026-07-08.
+Instrument-exhibit conversion 2026-07-14 (D10): the ownership rule moved
+from the turn chapter's prose into the Exhibit; ledger row in ops
+brand/claims-ledger.md. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
-<li><strong>who:</strong> a small data team inside a large international law firm - strong in SQL, an SSRS house</li>
-<li><strong>where they were:</strong> moving their reporting onto Microsoft Fabric, with a specialist consultancy doing the build</li>
-<li><strong>the worry:</strong> their lead didn't want to come out of a big migration relying on that consultancy to touch his own estate - and off-the-shelf Fabric training hadn't stuck</li>
-<li><strong>what I did:</strong> joined as a done-with-you retainer so the team understood and owned the build themselves - and they ended up finding an error the migration had missed</li>
+<li><strong>who:</strong> a small data team inside a large international law firm - strong in SQL and SSRS, some Power BI, no Fabric yet</li>
+<li><strong>where they were:</strong> their Power BI model had grown past refreshing reliably, so a specialist consultancy was moving it - and the pipeline behind it - into Microsoft Fabric; the reporting stayed in Power BI</li>
+<li><strong>the worry:</strong> if the team didn't understand Fabric, they couldn't take ownership of the model when it was handed over - and off-the-shelf Fabric training hadn't stuck</li>
+<li><strong>what I did:</strong> joined on a done-with-you retainer running alongside the migration, so the team could understand and own the Fabric model themselves</li>
 </Snapshot>
 
 <Chapter id="started" kicker="where they started">
 
 When their head of data first got in touch, he was partway through a decision. His team - a handful of people inside a global law firm's IT - ran the firm's reporting on an SSRS estate built up over a decade, with a lot of the business logic buried in the report code. On top of that sat a Power BI model carrying some of the firm's most sensitive numbers. It had grown too big: it wasn't refreshing reliably, and he'd find out days later that the figures were stale. Adding anything to it was slow and painful.
 
-His plan was to move the estate onto Microsoft Fabric, with a specialist consultancy doing the build, so his team's strong SQL skills could do more of the work. But he'd been here before. Off-the-shelf "Fabric in a day" training hadn't stuck, because there was no live model to practise on. And his real worry was sharper than training: he didn't want to come out the far side of a big migration relying on the consultancy to touch his own estate. His most experienced people knew the data inside out from the SSRS days, but faced with the same data in the model, they were wary of breaking it.
+A specialist consultancy pitched the fix: move that model, and the pipeline feeding it, into Microsoft Fabric. They knew the source data, so they would do the build - his team had no Fabric experience to do it with. The reporting itself would stay in Power BI; everything underneath it would change.
+
+That's when he came to me. If the model was moving into Fabric, his team needed to understand Fabric too - otherwise the migration would end with the firm's numbers on a platform only the contractors could safely change. His people knew the data inside out from the SSRS days; the gap was the platform it was all landing on. And he'd been here before: off-the-shelf "Fabric in a day" training hadn't stuck, because there was no live model to practise on.
 
 So what he wanted was simple to say and harder to do: whatever the consultancy built, his team had to come out able to own it.
 
@@ -55,31 +62,44 @@ So what he wanted was simple to say and harder to do: whatever the consultancy b
 
 <Chapter id="turn" kicker="the turn">
 
-I ran a skills assessment and a confidential one-to-one with everyone before touching anything technical. The worry the lead had named was real, and the one-to-ones turned up more underneath it: the team had quietly split into two halves, the SQL people and the Power BI people, each guarding their own patch, with too much knowledge sitting in too few hands.
+The starting point was getting to know the team: a skills assessment and a confidential one-to-one with everyone, to understand the dynamics and work out how to position the learning so the team could actually absorb it. The worry the lead had named was real, and the one-to-ones turned up more underneath it: the team had quietly split into two halves, the SQL people and the Power BI people, with too much knowledge sitting in too few hands.
 
-What I wrote down and said out loud was plain enough: a team can't own what it didn't build and was never shown. Having the consultancy build it was getting the platform stood up, but it left the people who'd have to live with it on the outside. So the fix was hands-on - getting the team into their own Fabric ecosystem, on their own data, until it stopped being a black box and started being theirs.
+<Exhibit tab="the ownership rule" caption="the rule the engagement ran on · a large international law firm's data team">
+
+a team can't own what it didn't build and was never shown.
+
+</Exhibit>
+
+Having the consultancy build it was getting the platform stood up, but it left the people who'd have to live with it on the outside. So the fix was hands-on - getting the team into their own Fabric ecosystem, on their own data, until it stopped being a black box and started being theirs.
 
 </Chapter>
 
 <Chapter id="did" kicker="what the team did">
 
-The shape was a done-with-you retainer running in parallel to the migration, on the team's real data, with clear lines: their consultancy built and migrated the platform, and my job was narrower - to make the team able to understand and evolve the Fabric build that landed. I deliberately didn't write their production code or take over the migration, because the whole point was that they'd need me less as it went on. The work that mattered was theirs.
+The shape was a done-with-you retainer running in parallel to the migration, on the team's real data, with clear lines: the consultancy built and migrated the platform, and I stayed out of the build. My job was to hear the team's problems and guide them to solving those problems themselves, with a safety net under them while they did. Fabric brought genuinely new ways of working - a dev workspace and a production one, knowing where a change can safely be made and how to back one out - and the only way that stops feeling foreign is doing it yourself. I didn't do things for the team, because that isn't how know-how moves across.
 
 <Offer title="they ran their own diagnostics" lead>
 
-When a year-to-date number looked wrong, I didn't go and fix it. I walked them through proving their own hunch with test visuals, then tracing the number back through the Power BI layer, into the gold and silver tables, down to the source - where a stored procedure turned out to be quietly dropping the right rows and keeping empty ones. The number was wrong by a wide margin, and it was the team who found it.
+During handover - the stage where you expect to be shaking things out - a year-to-date number looked wrong. The easy move was to hand it straight back to the consultancy: that number's wrong, please fix it. Instead the team used it as a way into the stack, with me alongside, and followed the number all the way down:
 
 </Offer>
 
-<Offer title="they built their own early warning">
+<Exhibit tab="the diagnostic trace" caption="one wrong number, followed down through the layers by the team · a large international law firm's data team">
+<div class="exhibit-flow flow-down">
+  <p>a year-to-date number looks wrong</p>
+  <p>test visuals prove the hunch</p>
+  <p>down through the reporting layer</p>
+  <p>into the gold tables</p>
+  <p>through the silver tables</p>
+  <p>into the bronze tables</p>
+  <p>to a stored procedure, quietly dropping the right rows and keeping the empty ones</p>
+  <p class="model">the source: year-opening values a separate app had been writing into specific rows - a quirk the team knew all about</p>
+</div>
+</Exhibit>
 
-One of the developers built a small monitoring dashboard that caught an overnight gateway failure before the source-system team even knew it had happened.
+<Offer title="they knew where to look">
 
-</Offer>
-
-<Offer title="they started challenging the work done for them">
-
-Armed with evidence they'd gathered themselves, they could go back to their migration consultancy with specifics, rather than taking a hand-over on trust.
+By user acceptance testing they were comfortable enough in Fabric to follow an issue in the outputs back through the pipeline and arrive saying: here's the error, and here's where we think it's coming from - because they could tie the new build back to years of knowing how and why the original reports worked.
 
 </Offer>
 
@@ -95,6 +115,6 @@ The part I'm most quietly pleased with on this one is the handful of times I arg
 
 <Chapter id="got-to" kicker="where they got to">
 
-From a team wary of touching a Fabric build they hadn't made and calling for help on minor changes, to a team running its own diagnostic sessions, spotting systemic issues before they bit, and holding its consultancy to account with evidence it had gathered itself. By the new year they intended to manage the migrated Fabric model independently after hand-over. The engagement was extended past its original run, and the firm offered to introduce me to heads of data at peer firms.
+From a team wary of touching a Fabric build they hadn't made and calling for help on minor changes, to a team running its own diagnostic sessions and going back to the consultancy with the likely cause, rather than taking the build on trust. The migration is fully handed over now, and they manage the Fabric model themselves. The engagement was extended past its original run, and the firm offered to introduce me to heads of data at peer firms.
 
 </Chapter>

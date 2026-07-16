@@ -1,0 +1,66 @@
+---
+/**
+ * /work — the case-study index.
+ *
+ * A text-led page-hero pitched on recognition — a cold reader should see their
+ * own situation in the pain triad. The copy is deliberately agnostic about study
+ * count and about whether clients are named, so flipping a study's namePublished
+ * (or adding a study) needs no edit here. Studies render as carved "case file"
+ * tiles built from the
+ * `work` collection (sorted by `order`) through ServiceRows — the same
+ * cream-panel-as-link the homepage uses. Adding a study to the collection adds a
+ * tile here automatically.
+ */
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ServiceRows from "../../components/ServiceRows.astro";
+import type { RowData } from "../../components/ServiceRow.astro";
+
+const contactSubject = "Power BI & Fabric - one of these sounds like us";
+
+const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
+const rows: RowData[] = studies.map((s) => ({
+  href: `/work/${s.id}/`,
+  // The schema's documented contract: kicker drives the hero eyebrow AND the
+  // index tile plate, so a study that overrides it can't drift apart.
+  tab: s.data.kicker,
+  title: s.data.heading,
+  body: s.data.tileOutcome,
+  cta: "read the full story",
+}));
+---
+
+<BaseLayout
+  title="Power BI & Fabric case studies - burningsuit"
+  description="Power BI and Fabric case studies: a law firm's data team, a contact-centre lead, a university carbon model, and a museum that ran on a whiteboard."
+  contactSubject={contactSubject}
+>
+  <Fragment slot="footer-invitation"
+    >If one of these sounds like where you are, tell me about it - even if you're
+    not sure it's a project yet</Fragment
+  >
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="kicker meta enter">the work</p>
+      <h1 class="enter appear-300">you'll recognise one of these.</h1>
+      <p class="lead enter appear-450">
+        Real Power BI and Fabric engagements I've worked on: a bottleneck, a model
+        nobody quite trusts, every report still done by hand. Read the one that
+        sounds like yours.
+      </p>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-labelledby="cases">
+    <div class="wrap">
+      <h2 class="section-head" id="cases" data-reveal>case files</h2>
+      <ServiceRows rows={rows} />
+    </div>
+  </section>
+
+  <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

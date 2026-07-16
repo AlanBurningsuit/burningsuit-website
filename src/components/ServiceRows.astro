@@ -1,10 +1,10 @@
 ---
 /**
- * The offers grid: carved cream panels, two-up on desktop and equal height
- * (no clever stagger — that read as broken), stacked on mobile. A single offer
- * ("the other thing i do" door on a service page) gets the `.single`
- * full-width treatment. The panel/lift/hover behaviour lives in app.css; this
- * component is just the structure.
+ * The proof-tile grid (/work): carved cream panels, two-up on desktop and
+ * equal height (no clever stagger — that read as broken), stacked on mobile.
+ * Cream is proof-only, so this renders case-file tiles; routes into the
+ * service pages are DoorRow (dark). The panel/lift/hover behaviour lives in
+ * app.css; this component is just the structure.
  */
 import ServiceRow from "./ServiceRow.astro";
 import type { RowData } from "./ServiceRow.astro";
@@ -14,6 +14,6 @@ interface Props {
 }
 const { rows } = Astro.props;
 ---
-<div class:list={["offers", rows.length === 1 ? "single" : null]}>
+<div class="offers">
   {rows.map((row, i) => <ServiceRow {...row} index={i} />)}
 </div>

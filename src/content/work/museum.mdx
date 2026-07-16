@@ -1,85 +1,110 @@
 ---
 order: 4
-title: "The museum that ran on a whiteboard — burningsuit"
+title: "The museum that ran on a whiteboard - a Power BI case study - burningsuit"
 description: >-
-  A city-centre museum and gallery where every report was made by hand -
-  footfall read off a counter onto a whiteboard. A paid discovery turned that
-  into three systems feeding one model the team owns.
-kicker: "case file"
+  Power BI case study: a museum with data in three systems and every report
+  made by hand. I worked out the metrics with their team, then built one
+  model they run.
+kicker: "reporting strategy, then the build"
 heading:
   before: "the museum that ran on a "
   em: "whiteboard"
   after: "."
 descriptor: "a city-centre museum & gallery"
 lead: >-
-  They had no shortage of data - retail and tickets in one system, catering in
-  another, footfall in a set of people-counters - and no way to see it in one
-  place. Every report was made by hand. They had budget and a deadline and every
-  reason to rush, and they chose to look before they leapt.
+  A city-centre museum and gallery with data everywhere - tickets, catering,
+  footfall - and every report made by hand. On our first call I asked one
+  question - no one had an answer yet, which is exactly where the work
+  needed to start.
 tileOutcome: >-
-  From every report made by hand - footfall read off a counter onto a whiteboard
-  - to three systems live and feeding one shared model the team owns.
+  From a visitor number written on a whiteboard each day to reports the team
+  reads in Teams and runs themselves - three systems, one shared model
+  underneath.
 datePublished: 2026-06-23
-dateModified: 2026-06-23
-contactSubject: "Power BI & Fabric"
+dateModified: 2026-07-14
+contactSubject: "Power BI - seeing it in one place"
 footerInvitation: >-
-  If you're collecting plenty and still can't see how you're doing at a glance,
-  start with a look before a build. I'll find out what's connectable, and tell
-  you what's worth doing.
+  If your organisation collects plenty and still can't see how it's doing at a
+  glance, the place to start is which numbers would actually make a difference
+  day to day. I'll help you work that out, and tell you what it would take to
+  see them without anyone typing.
 namePublished: false
 ---
 
 {/* Anonymised tier ships today. The named tier (client + verbatim quote) is held
 OUTSIDE this public repo — design/copy/case-studies/07-named-tier-frontmatter.md,
 local-only — and returns only when namePublished is true AND written permission has
-landed. Never publish financials, API/auth detail, or funding-body cues. Copy adapted
-from design/copy/case-studies/05; pending Alan's final voice sign-off. */}
+landed. Never publish financials, API/auth detail, vendor names, exhibition names,
+or funding-body cues. Full-arc rewrite 2026-07-09 per the ops rethink brief +
+delivery source pack (design/copy/case-studies/05-*); voice-signed by Alan
+2026-07-09. Instrument-exhibit conversions 2026-07-14 (D10): the first-call
+question moved from lead + snapshot + chapter body into the one Exhibit, and
+the build chapter's triplet became the flow-diagram Exhibit (relationship
+carried by the figcaption; strokes decorative); ledger rows in ops
+brand/claims-ledger.md. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
-<li><strong>where they started:</strong> sales, catering and footfall in separate systems, none of it joined; every report manual</li>
-<li><strong>the trigger:</strong> deep in business planning for a funding round, with a modest budget to commit before year-end</li>
-<li><strong>what I did:</strong> ran a paid discovery - pinned the numbers that drive their decisions, tested whether the systems could connect, found a revenue stream and data traps they hadn't seen</li>
-<li><strong>where it got to:</strong> a clear, modular plan they could afford; three systems live and feeding one shared model the team owns</li>
+<li><strong>where they started:</strong> tickets, catering and footfall in separate systems, none of it joined up, and no way to see how they were doing at a glance</li>
+<li><strong>what I asked:</strong> the three-metrics question - they didn't have an answer yet, so we worked it out together</li>
+<li><strong>what I built:</strong> three live systems joined into one model, feeding reports the team reads in Teams, from front of house up to senior leadership</li>
+<li><strong>where it got to:</strong> they own it now - loading their own data, debating how the pages should work, taking the numbers into board conversations</li>
 </Snapshot>
 
-<Chapter id="started" kicker="where they started: every report by hand">
+<Chapter id="started" kicker="where they started">
 
-They had no shortage of data. What they didn't have was any way to see it in one place. Retail and tickets lived in one platform, catering in another, footfall in a set of people-counters, and everything else in spreadsheets, none of it joined up. Every report was made by hand. The clearest picture of it came from their own team: each day, someone on the front-of-house team looked at the people-counter, wrote the number of visitors and how many crossed into the main galleries on a whiteboard, and that was the pipeline - copied and pasted across by hand. They were good at collecting data, but turning it into the story their board and their funders needed was the bit that beat them.
-
-What finally forced it was a specific moment. They were deep in business planning ahead of a funding round, with an outside consultancy helping, and the same conclusion kept coming back: the data infrastructure wasn't sorted. On top of that sat a hard money constraint - a modest budget that had to be committed before the end of the financial year, with tighter budgets coming. It's exactly the kind of deadline that makes people want to start building straight away, before anyone's worked out what to build.
+They had no shortage of data. What they didn't have was any way to see it in one place. Retail and tickets lived in one platform, catering in another, footfall in a set of people-counters, and everything else in spreadsheets, none of it joined up. Every report was made by hand - right down to the daily visitor count, which someone on the front-of-house team read off the people-counter each day and wrote on a whiteboard, along with how many visitors crossed into the main galleries. They were good at collecting data. But turning it into the story their board and their funders needed was the bit that beat them, and they'd been hearing the same conclusion from every direction in their business planning: the data infrastructure wasn't sorted. Fixing it meant answering two questions - which reporting would actually make a difference, and then how to build it. They'd only been asking the second.
 
 </Chapter>
 
-<Chapter id="turn" kicker="the turn: discovery before a build">
+<Chapter id="question" kicker="the question they couldn't answer">
 
-They had budget and a deadline and every reason to rush. They chose to look before they leapt. They half-expected me to start building a dashboard; I sold them a discovery instead - a short, paid piece of work to answer the questions that should come before anyone builds anything: which five-to-eight numbers actually drive your decisions, and exactly how is each one calculated? Can these systems be connected automatically, or not? What would your team need to own and maintain this once it's built? And then, costed and itemised, what's actually worth building?
+<Exhibit tab="the three-metrics question" caption="asked on the first call · a city-centre museum & gallery">
+
+what three metrics, if you could see no others, would actually make a significant difference to what you're doing every day?
+
+</Exhibit>
+
+They knew their numbers well, but no one had ever had to pick. So before anything got built, we worked it out - a questionnaire to each member of the core team, then a workshop with a deliberately unfair rule: ignore the data you have. What do you need to know, day to day?
+
+Out of that came exact definitions the whole team stood behind: what counts as spend per head, how catering conversion is honestly measured, which of several footfall figures is the one to report. They could have started a dashboard on day one without asking any of this. But it would have been built bottom-up - the easiest data to get at deciding what the insights were. We went top-down instead: decide what would be genuinely useful to know, then work out how to get it out of the data.
+
+Working through their systems also turned up things the manual reports had never seen: a whole stream of revenue flowing through one platform unnoticed, and a set of data-quality traps - event bar-tabs leaking into the catering figures, items with no category - each one flagged with what to do about it. Connecting the systems automatically needed developer access only their own account owners could set up - straightforward, just theirs to do - and the build could start on manual exports in the meantime.
 
 </Chapter>
 
-<Chapter id="found" kicker="what discovery turned up">
+<Chapter id="build" kicker="three systems, one model">
 
-A focused workshop locked the exact definitions - what counts as spend-per-head, how catering conversion is really measured, which footfall figure is the honest one - so the numbers would mean the same thing to everyone. Then I went into the three live systems and worked out how to connect each one properly: the people-counter's API, the catering tills, and the retail platform. I designed one shared model the reports could all draw on, so the data is connected once and reused, rather than rebuilt per report.
+<Exhibit tab="the shape of the build" caption="three live systems, connected automatically, feeding one shared model">
+<div class="exhibit-flow">
+  <p>what the counters count</p>
+  <p>what the tills take</p>
+  <p>what the shop & ticketing sell</p>
+  <p class="model">one shared model</p>
+</div>
+</Exhibit>
 
-Two findings earned the discovery fee on their own. There was a whole stream of revenue flowing through one of their systems that their manual reports had simply never seen. And there were data-quality traps that would have quietly poisoned the numbers - event bar-tabs leaking into the catering figures, uncategorised items, the treatment of gift cards and comp tickets - each one flagged with what to do about it. Far cheaper to catch those in a two-week discovery than to find them three months into a build, with the dashboards already wired to bad numbers.
+The data is joined once and every report draws on it, rather than each report rebuilding its own version of the truth. The reports sit in Teams, where the team already works, and export cleanly for board papers.
+
+A couple of streams stay manual - cash from the donation boxes arrives as a simple monthly file drop - but the rule throughout was: automatic wherever a system can be connected, and where a person has to be involved, the smallest possible ask.
 
 </Chapter>
 
-<Chapter id="awkward" kicker="the awkward thing I had to tell them">
+<Chapter id="handover" kicker="moving it onto their machines">
 
-The most useful thing I told them was an awkward one. Connecting those systems automatically needs the account owners to set up proper developer access - and that's their job, not something I can do for them. So I framed it straight: this is a risk to the project, not a blocker. The build can start on manual exports, the dashboards work, the team starts using them, and the live feeds get switched on when the access is ready. I didn't pretend the access was sorted, and I didn't let it hold up the whole build.
-
-I was equally plain about what discovery did not cover, and I told them to hold off on formal Power BI training until they'd lived with the reports for a few months, rather than selling them a course they didn't need yet.
+When it was time to move the reports onto the museum's own systems, they did the moving - me navigating, their hands on the keyboard: publishing the report, repointing it at their own data, working the credentials through. That mattered, because their systems sit inside a council's, and the reality of council IT turned up on cue - licences that existed but hadn't been allocated, settings locked down at the council end, and one authentication bug I'd genuinely never seen before. Some of that I took away and fixed. Some of it only their IT could fix, so I coached them on exactly what to ask for. And when the retail platform's permissions needed upgrading and the vendor's own documentation didn't match what was on the screen, the account owner drove, I navigated, and it was done in minutes.
 
 </Chapter>
 
 <Chapter id="own" kicker="built for them to own">
 
-The whole thing was shaped around the museum's own team running it. The costed proposal came as separate modules they could take in any combination, with no all-or-nothing price, so they could spend exactly the budget they had. I separated using the reports from maintaining them from developing them, as three honest levels, so nobody felt they had to become a Power BI developer to get value. And I built in the dull-but-vital bits: a data dictionary with what to check if something looks wrong, a documented set of targets, an orientation session, and the rule that at least two people should know the maintenance, so it survives someone leaving. Because if it's nobody's job, it won't get done, and the reports start losing trust.
+The whole thing was shaped around the museum's own team running it. I separated using the reports from maintaining them from developing them, as three honest levels, so nobody felt they had to become a Power BI developer to get value. I built in the dull-but-vital bits: a data dictionary with what to check if something looks wrong, a documented set of targets, an orientation session, and the rule that at least two people should know the maintenance, so it survives someone leaving - because if it's nobody's job, it won't get done, and the reports start losing trust. And I told them to hold off on formal Power BI training until they'd lived with the reports for a few months, rather than selling them a course they didn't need yet.
 
 </Chapter>
 
-<Chapter id="got-to" kicker="where it got to">
+<Chapter id="got-to" kicker="where it got to: the team runs it">
 
-A vague end-of-year budget became a clear, modular plan they could actually afford. By the build phase all three core systems were live and pulling through on their own. The reports are built to be read in Teams and exported for board papers and funder reporting, from front-of-house right up to senior leadership. They came out of discovery with a single model everything draws on, and the team set up to keep it running.
+The reports are built, live in Teams, and in use. In the first walkthrough, the team did exactly what you'd hope: they interrogated the thing - chased down a spend-per-head spike, spotted a category that wasn't labelled, caught a bank holiday the date logic was quietly dropping.
+
+After a few weeks of living with it they sent me a long list of tweaks, and I was glad of it: you don't know how you want a report to work until you've seen your own numbers in it. Nearly all of it was tuning, done in the final snagging. Better still is what the list showed. They were debating among themselves how the events page should treat dates, and they were right. One of them was building a board argument straight from the retail numbers. And when a new colleague joined, they brought her along to the next session. Somewhere in that first walkthrough, someone said the reports would save writing the visitor number on the whiteboard every morning - which they do, along with rather a lot else.
 
 </Chapter>

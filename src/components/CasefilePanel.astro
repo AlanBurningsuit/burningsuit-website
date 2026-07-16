@@ -1,0 +1,58 @@
+---
+/**
+ * The carved "case file" panel — the ONE renderer of the .proof.panel.casefile
+ * skeleton and of the gated named tier (client + verbatim quote + cite).
+ *
+ * Consumers:
+ *   - Casefile.astro wraps it in the "in their words" section on study pages
+ *     (all-or-nothing: that wrapper only renders when the named tier exists);
+ *   - /power-bi renders it directly as the always-on anonymised teaser — the
+ *     narrative paragraph goes in the default slot, the read-more row in the
+ *     `links` slot, and `src` overrides the study descriptor (the teaser's
+ *     source line is its own signed copy).
+ *
+ * The gate itself is `namedTier()` in src/lib/named.ts — never re-derive it.
+ * While the gate is closed the named block is simply absent from the build
+ * (never render-then-hide).
+ */
+import type { CollectionEntry } from "astro:content";
+import { namedTier } from "../lib/named";
+
+interface Props {
+  /** The study whose named tier gates the quote block. Optional so a teaser
+   *  still renders (quoteless) if its study is renamed or missing. */
+  study?: CollectionEntry<"work">["data"];
+  /** The `.src` source line. Defaults to the study's descriptor. */
+  src?: string;
+  /** Journal-plate label. */
+  tab?: string;
+}
+const { study, src = study?.descriptor, tab = "case file" } = Astro.props;
+const named = namedTier(study);
+const hasLinks = Astro.slots.has("links");
+---
+<div class="proof panel casefile" data-reveal>
+  <span class="tab"><span class="sp" aria-hidden="true"></span>{tab}</span>
+  <div class="body">
+    {src && <p class="src">{src}</p>}
+    <slot />
+    {
+      named && (
+        <>
+          <p class="attr meta">{named.client}</p>
+          <blockquote>
+            {named.quote}
+            <cite class="meta">{named.cite}</cite>
+          </blockquote>
+        </>
+      )
+    }
+    {
+      hasLinks && (
+        <p class="more">
+          <slot name="links" />
+        </p>
+      )
+    }
+  </div>
+</div>

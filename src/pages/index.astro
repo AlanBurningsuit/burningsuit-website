@@ -1,41 +1,168 @@
 ---
-/*
- * TEMPORARY placeholder — published to `main` only to prove the GitHub Actions
- * deploy pipeline (deploy.yml -> withastro/action -> deploy-pages -> apex) end
- * to end on the real domain. Self-contained (does NOT use BaseLayout) so it has
- * no nav links to the removed pages, while still carrying the <title>, meta
- * description, canonical, and a valid JSON-LD node that `npm run check:seo`
- * (the publish-readiness gate) requires. Reverted via the `legacy-site-backup`
- * tag once the deploy is confirmed.
- */
-const canonical = "https://burningsuit.co.uk/";
-const jsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "burningsuit",
-  url: canonical,
-});
+import BaseLayout from "../layouts/BaseLayout.astro";
+import RiseHeading from "../components/RiseHeading.astro";
+import Aside from "../components/Aside.astro";
+import DoorRow from "../components/DoorRow.astro";
+import CasefilePanel from "../components/CasefilePanel.astro";
+import type { RowData } from "../components/ServiceRow.astro";
+import PrinciplesChapter from "../components/PrinciplesChapter.astro";
+import PhotoChapter from "../components/PhotoChapter.astro";
+import StatementChapter from "../components/StatementChapter.astro";
+import AboutTeaser from "../components/AboutTeaser.astro";
+import BookCta from "../components/BookCta.astro";
+import type { Line } from "../components/RiseHeading.astro";
+import { Picture } from "astro:assets";
+import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
+import { mailtoFor } from "../config/site";
+import { getEntry } from "astro:content";
+
+const contactSubject = "Power BI & Fabric";
+const contactMailto = mailtoFor(contactSubject);
+
+// The trust moment's featured study. ROTATION IS EDITORIAL: a human swaps this
+// constant at edit time — never a runtime loop (doctrine: north-star, D7). The
+// law firm must not carry the homepage alone; CasefilePanel's namePublished
+// gate handles naming, so the signed tileOutcome ships anonymised until a
+// permission lands.
+const FEATURED_STUDY = "museum";
+const featured = await getEntry("work", FEATURED_STUDY);
+
+const heroLabel = "power bi and fabric, done with you.";
+const heroLines: Line[] = ["power bi & fabric,", { before: "done ", em: "with", after: " you." }];
+
+const serviceRows: RowData[] = [
+  {
+    href: "/power-bi/",
+    title: { before: "power bi & fabric, done ", em: "with", after: " you" },
+    body: "Your reporting works, but the team can't fully own it - a black box only whoever built it can safely touch. Embedded advisory, reporting strategy and architecture review - I help the whole team feel like they've got it, so a small team gets further and the know-how stays with you when I leave.",
+    cta: "see power bi & fabric",
+  },
+  {
+    href: "/ai-fit-for-teams/",
+    title: { before: "ai ", em: "fit", after: " for teams" },
+    body: "You're licensed for Copilot, and it hasn't quite paid off - some of it sitting idle, some of it writing DAX nobody can fully vouch for. What pays off is getting genuinely good with AI without handing over your judgement, so a stretched team does more, and better. I help you work out what to hand over, what to keep, and who checks what.",
+    cta: "see ai fit for teams",
+  },
+];
+
+const principles = [
+  {
+    title: "the answers are yours",
+    body: "I help your team reach the answers that fit how you actually work, instead of arriving with mine. Understand your own models and data well enough to judge what's safe to hand to a tool.",
+  },
+  {
+    title: "what not to automate",
+    body: "Knowing what not to automate matters as much as knowing what to. As the tools take on more of the build, the discipline is choosing which decisions you let them make - and staying conscious of where you've made the call.",
+  },
+  {
+    title: "mental models first",
+    body: "When a tool writes the DAX or builds the model, someone on your team still has to read it back and know whether it holds up. I help them build that judgement, so they catch a number that only looks right before it goes out.",
+  },
+];
+
+// Hand-split so every line fits the 22ch statement measure — the old
+// three-line split overflowed and stranded "ask." alone mid-statement.
+const statementLines: Line[] = [
+  "ai will build",
+  "whatever you ask.",
+  "someone still has to",
+  { before: "know what to ask ", em: "for", after: "." },
+];
 ---
-<!doctype html>
-<html lang="en-GB">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>burningsuit — updating</title>
-    <meta
-      name="description"
-      content="burningsuit — embedded Power BI & Fabric advisory, done with you. The site is being updated; back shortly."
-    />
-    <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="/placeholder.css" />
-    <script type="application/ld+json" is:inline set:html={jsonLd} />
-  </head>
-  <body>
-    <main>
-      <p class="mark">burningsuit</p>
-      <p>we're updating the site — back shortly.</p>
-      <p><a href="mailto:alan@burningsuit.co.uk">alan@burningsuit.co.uk</a></p>
-    </main>
-  </body>
-</html>
+
+<BaseLayout
+  title="Power BI & Fabric advisory, done with you - burningsuit"
+  description="Embedded Power BI and Fabric advisory, done with you - ongoing work inside your team, so the know-how stays with you when I leave, even as AI takes on the typing."
+  contactSubject={contactSubject}
+>
+  <Fragment slot="footer-invitation"
+    >Tell me what your Power BI or Fabric team is wrestling with, and where you'd
+    like it to get to. Replies come from me</Fragment
+  >
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="kicker enter">power bi &amp; fabric advisory</p>
+        <RiseHeading as="h1" kind="hero" label={heroLabel} lines={heroLines} />
+        <p class="lede enter appear-300">
+          I help your team get more capable with Power BI and Fabric, and
+          <strong>keep the work yours, even as AI takes on the typing</strong>.
+        </p>
+        <p class="hero-sig enter appear-450">
+          I'm Alan. I've spent five years with teams adopting Power BI, and a
+          decade building software before that.
+        </p>
+        <BookCta src="hero" mailtoHref={contactMailto} variant="hero" rowClass="enter appear-600" />
+      </div>
+      <figure class="hero-photo enter appear-300">
+        <Picture
+          src={heroPhoto}
+          alt="Alan, who runs burningsuit, sitting outdoors and smiling"
+          formats={["avif"]}
+          fallbackFormat="webp"
+          widths={[400, 600, 800]}
+          sizes="(min-width: 62rem) 40vw, 100vw"
+          quality={66}
+          loading="eager"
+        />
+      </figure>
+    </div>
+  </section>
+
+  <div class="thread thread-snug" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-labelledby="in-practice">
+    <div class="wrap">
+      <h2 class="section-head" id="in-practice" data-reveal>in practice</h2>
+      <CasefilePanel study={featured?.data}>
+        <p>{featured?.data.tileOutcome}</p>
+        <Fragment slot="links">
+          <a class="u" href={`/work/${FEATURED_STUDY}/`}>read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
+        </Fragment>
+      </CasefilePanel>
+      {/* The talk line was cut at the 2026-07-15 shakedown — credibility is
+          tenure in the hero sig; the talk lives on /about. A credibility line
+          returns here only if the talk write-up ships as a real essay page. */}
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="what">
+    <div class="wrap what">
+      <h2 class="section-head" id="what" data-reveal>what i do</h2>
+      <div class="label">
+        {/* Signed 2026-07-15 (asides-d11-deck placement 1) — the insider key
+            to why there are two doors. */}
+        <Aside data-reveal>same ownership question, whichever door you come in by.</Aside>
+      </div>
+      <div>
+        <div class="doors">
+          <DoorRow {...serviceRows[0]} variant="lead" index={1} />
+          <DoorRow {...serviceRows[1]} variant="second" index={2} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-label="book a call">
+    <div class="wrap">
+      <BookCta src="home-proof" mailtoHref={contactMailto} reveal>
+        If either of those sounds like your team, I'm happy to talk it through - nothing to prepare.
+      </BookCta>
+    </div>
+  </section>
+
+  <PrinciplesChapter kicker="how i work" headingId="how" principles={principles} />
+
+  <PhotoChapter />
+
+  <StatementChapter
+    label="ai will build whatever you ask. someone still has to know what to ask for."
+    lines={statementLines}
+  />
+
+  <AboutTeaser />
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

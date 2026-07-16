@@ -5,12 +5,13 @@
  * variant="hero"    — two buttons in a row (primary book + ghost email), left,
  *                     inside the hero grid; positioned by `.hero .cta-row`.
  * variant="section" — the page's ACTION as a calm, full-width CENTRED invitation:
- *                     a de-risk line, ONE primary "book a call" button, and a quiet
- *                     "or email me" text link. Render it as a DIRECT child of
- *                     `.what` so it can span both grid columns (page-centred, not
- *                     centred in the off-centre content column) and sit under a
- *                     hairline — a deliberate "act here" beat, not buttons dropped
- *                     into the reading prose.
+ *                     a de-risk line, ONE primary "book a call" button, and a
+ *                     "prefer to write? email me" text link that gives email
+ *                     equal standing as a path. Rendered inside the page's single
+ *                     full-bleed band: <section class="cta-band"><div class="wrap">
+ *                     <BookCta …> — the recessed "act here" beat between chapters
+ *                     (see .cta-band in app.css), not buttons dropped into the
+ *                     reading prose.
  *
  * The booking link is external (new tab); a top-level navigation needs no CSP
  * change. The default slot is the de-risk / context microcopy for this placement.
@@ -33,14 +34,17 @@ interface Props {
 const {
   src,
   mailtoHref,
-  label = "book a 30-minute call",
-  emailLabel = "or email me",
+  label = "Book a 30-minute call",
+  emailLabel,
   variant = "section",
   reveal = false,
   rowClass = "",
 } = Astro.props;
 const hasNote = Astro.slots.has("default");
 const bookHref = bookingHref(src);
+// Email is a real second path, not an afterthought: the section variant labels
+// it as a deliberate clause; the hero keeps a short ghost-button label.
+const resolvedEmailLabel = emailLabel ?? (variant === "hero" ? "Or email me" : "prefer to write? email me");
 ---
 {
   variant === "hero" ? (
@@ -49,7 +53,7 @@ const bookHref = bookingHref(src);
         {label}
       </a>
       <a class="cta ghost" href={mailtoHref}>
-        {emailLabel}
+        {resolvedEmailLabel}
       </a>
     </div>
   ) : (
@@ -62,8 +66,8 @@ const bookHref = bookingHref(src);
       <a class="cta" href={bookHref} target="_blank" rel="noopener noreferrer">
         {label}
       </a>
-      <a class="u cta-email meta" href={mailtoHref}>
-        {emailLabel}
+      <a class="u cta-email" href={mailtoHref}>
+        {resolvedEmailLabel}
       </a>
     </div>
   )

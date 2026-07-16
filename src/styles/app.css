@@ -1,15 +1,16 @@
 /* ===========================================================================
    burningsuit — design system (Tailwind v4, CSS-first config)
 
-   v3 "the honest instrument": a warm engineering logbook in flat Everforest
-   green. Deep-forest grounds, cream entry panels, a left margin that talks
-   (the asides), Commit Mono chrome, the magenta flame as the single living
-   spark. No gradient, no scanline, no ground-morph, no mascot.
+   "The field notebook" (2026-07-11 warmth delta): a well-kept notebook from
+   someone who sits with your team, in flat Everforest green. Deep-forest
+   grounds, cream panels reserved for proof, a margin that talks (the asides),
+   display headlines that do the work, one magenta spark (CTA, mark, thread —
+   no cursor of any kind). No gradient, no scanline, no ground-morph, no
+   mascot; nothing idles or loops.
 
-   This is a RE-SKIN of the proven v2 chassis: the @layer cascade, the JS-gated
-   reveal system, the masked line-rise, the fixed-footer "basement", the
-   cross-document view-transitions, and the reduced-motion system are all
-   PRESERVED. Only the tokens, type, colour, layout, and motion change.
+   The chassis is preserved from earlier skins: the @layer cascade, the
+   JS-gated reveal system, the masked line-rise, the fixed-footer "basement",
+   the cross-document view-transitions, and the reduced-motion system.
 
    Cascade order (Tailwind v4): theme vars → base (incl. Preflight, then the
    reset which is imported AFTER so it wins) → components → utilities. The
@@ -27,7 +28,7 @@
 
 /* ---- per-element stagger + entrance delay as literal utilities ----
    stagger-N → --i:N (a unitless index; each context multiplies it: hero/lines
-   ×80ms, reveals/rules ×120ms). appear-N → --d:Nms (entrance animation-delay).
+   ×80ms, reveals ×120ms). appear-N → --d:Nms (entrance animation-delay).
    Written as literals in markup (stagger-2, appear-450) so Tailwind detects
    them; never string-built. */
 @utility stagger-* {
@@ -37,8 +38,11 @@
   --d: calc(--value(integer) * 1ms);
 }
 /* Guarantee the finite set is emitted even though stagger-N is composed by
-   index in RiseHeading (Tailwind only scans complete literal strings). */
-@source inline("stagger-{0,1,2,3,4,5,6,7}");
+   index in RiseHeading and ServiceRows (Tailwind only scans complete literal
+   strings). The /work index builds one tile per collection entry, so the range
+   runs ahead of the content: a 13th study needs this widened or the last tiles
+   silently lose their stagger (--i falls back to 0). */
+@source inline("stagger-{0,1,2,3,4,5,6,7,8,9,10,11}");
 @source inline("appear-{300,450,600}");
 
 /* ============================ base ============================ */
@@ -119,13 +123,12 @@
     margin-inline: auto;
     padding-inline: var(--gutter);
   }
-  /* mono metadata voice — fg-dim, lowercase, never competes with links */
+  /* mono metadata voice — fg-dim, natural case as written, never a link */
   .meta {
     font-family: var(--ff-mono);
     font-size: var(--mono-label);
     letter-spacing: var(--ls-mono-xwide);
     color: var(--fg-dim);
-    text-transform: lowercase;
   }
 }
 
@@ -137,6 +140,25 @@
     z-index: 1;
     background: var(--bg);
     margin-bottom: var(--footer-h);
+  }
+
+  /* skip link — the first tab stop on every page. Visually hidden until it
+     takes keyboard focus, then a plain pill pinned above the sticky header. */
+  .skip {
+    position: fixed;
+    top: var(--px);
+    left: var(--gutter);
+    z-index: 60; /* above the sticky header (50) */
+    background: var(--bg-2);
+    color: var(--fg);
+    text-decoration: none;
+    padding: 0.55em 0.95em;
+    border: var(--px) solid var(--deep);
+    border-radius: var(--r-sm);
+    transform: translateY(calc(-100% - 3 * var(--px)));
+  }
+  .skip:focus-visible {
+    transform: none;
   }
 
   /* ============ header (hides down, returns up) ============ */
@@ -153,6 +175,12 @@
   header.hh {
     transform: translateY(-100%);
   }
+  /* Keyboard escape hatch: tabbing fires no scroll event, so without this a
+     Shift+Tab into the hidden header lands focus on links translated
+     off-screen (invisible focus, WCAG 2.4.7). Focus inside → header returns. */
+  header.hh:focus-within {
+    transform: none;
+  }
   .bar {
     display: flex;
     align-items: center;
@@ -168,50 +196,72 @@
     align-items: center;
     flex-wrap: wrap;
     margin-left: auto; /* push the nav + the CTA after it to the right */
+    gap: calc(2 * clamp(0.7rem, 2vw, 1.1rem));
   }
-  /* a quiet middot divides each menu item; the spacing lives in the divider's
-     margins (no flex gap) so the dot sits centred between links */
+  /* a quiet middot centred in each gap. Positioned OUTSIDE the link box (the
+     links are position:relative via .u) so the drawn underline and the
+     current-page underline span exactly the label — a middot inside the
+     anchor made every underline start under the divider. */
   nav a + a::before {
     content: "·";
-    margin-inline: clamp(0.7rem, 2vw, 1.1rem);
+    position: absolute;
+    left: calc(-1 * clamp(0.7rem, 2vw, 1.1rem));
+    top: 50%;
+    transform: translate(-50%, -50%);
     color: var(--fg-dim);
   }
+  /* nav is chrome, not code: body face, sentence case (the 2026-07-11 case
+     relaxation — the middots stay; they're editorial, not terminal) */
   nav a {
     color: var(--fg);
     text-decoration: none;
-    font-family: var(--ff-mono);
-    font-size: var(--mono-lead);
-    text-transform: lowercase;
-    letter-spacing: var(--ls-mono);
+    font-family: var(--ff-body);
+    font-weight: 500;
+    font-size: var(--fs-ui-sm);
     white-space: nowrap; /* a label wraps as a whole unit, never mid-word */
   }
   nav a:hover,
   nav a:focus-visible {
     color: var(--amber);
   }
-  /* mobile: the nav drops to its own full-width row (logo + CTA stay on row 1)
-     so every page stays reachable without a JS menu. */
-  @media (max-width: 47.99rem) {
+  /* current-page wayfinding: amber + the drawn underline held on. Covers both
+     the exact page (aria-current="page") and an ancestor section
+     (aria-current="true", e.g. /work over /work/law-firm/). Amber on the bg is
+     5.98:1 — clears the 3:1 non-text floor for the held underline too. */
+  nav a[aria-current] {
+    color: var(--amber);
+  }
+  nav a[aria-current]::after {
+    transform: scaleX(1);
+    transform-origin: 0 50%;
+  }
+  /* Below 56rem the logo + four nav items + CTA can't share one row (the
+     inline bar runs ~800px, so even a 768px tablet wrapped it) — the nav drops
+     to its own full-width row below; logo + CTA hold row 1. Every page stays
+     reachable without a JS menu. Compressed paddings keep the two-row header
+     honest against the media-stepped --header-h in tokens.css — measure the
+     built header before touching either. */
+  @media (max-width: 55.99rem) {
     .bar {
       flex-wrap: wrap;
       justify-content: space-between;
-      row-gap: 0.7rem;
+      padding-block: 0.6rem;
+      row-gap: 0.5rem;
     }
+    .bar .cta {
+      padding: 0.45em 0.85em;
+    }
+    /* gap spacing instead of the ::before middot, so the row never strands a
+       divider at a break */
     nav {
       order: 3;
       flex-basis: 100%;
       margin-left: 0;
-      justify-content: center;
-      row-gap: 0.3rem;
-    }
-    /* the one intentional exception to the mono scale: nav shrinks below
-       --mono-fine so all three items + their dividers hold one centred row down
-       to ~340px (no dangling divider at a wrap) */
-    nav a {
-      font-size: 0.75rem;
+      justify-content: space-between;
+      gap: 0.3rem 1rem;
     }
     nav a + a::before {
-      margin-inline: 0.45rem;
+      content: none;
     }
   }
   /* drawn underline: in from the left, out to the right — never rewinds */
@@ -247,6 +297,7 @@
     font-weight: 600;
     font-size: var(--fs-ui);
     line-height: 1;
+    white-space: nowrap; /* a button label never wraps — line-height:1 makes a 2-line wrap read broken */
     display: inline-flex;
     align-items: center;
     gap: 0.5ch;
@@ -317,9 +368,12 @@
     margin: 0;
     max-width: 46ch;
   }
+  /* the email path — a deliberate clause in the body voice, not a mono
+     whisper under the button (Alan's 2026-07-15 review: it read as an
+     afterthought). Body face at UI size, full ink, drawn underline. */
   .cta-invite .cta-email {
-    color: var(--fg-dim);
-    font-size: var(--fs-ui-sm);
+    color: var(--fg);
+    font-size: var(--fs-ui);
   }
   /* footer booking button — sits above the big mailto in the basement */
   .cta-footer {
@@ -332,48 +386,14 @@
     color: var(--fg-dim);
   }
 
-  /* ---- the mono labels + the one living magenta cursor ---- */
+  /* ---- the mono labels (page-hero eyebrows + true metadata) ---- */
   .kicker {
     font-family: var(--ff-mono);
     font-weight: 400;
     letter-spacing: var(--ls-mono-wide);
     font-size: var(--mono-lead);
     line-height: var(--lh-label); /* eyebrows are real headings; don't inherit display lh */
-    text-transform: lowercase;
     color: var(--amber);
-  }
-  /* the hero "prompt": › then the typed tagline then the blinking block cursor */
-  .hero-prompt {
-    display: inline-flex;
-    align-items: baseline;
-    max-width: 100%;
-  }
-  .hero-prompt .pre {
-    color: var(--moss);
-    margin-right: 0.5ch;
-  }
-  .kt {
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 30ch;
-    max-width: 100%;
-    vertical-align: bottom;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .kt {
-      width: 0;
-      animation: type var(--t-type) steps(30, end) var(--t-ui) forwards;
-    }
-  }
-  .cursor {
-    display: inline-block;
-    width: 0.62em;
-    height: 1.02em;
-    vertical-align: -0.14em;
-    background: var(--spark);
-    margin-left: 0.18em;
-    animation: blink var(--t-blink) steps(1) infinite;
   }
 
   /* ============ load choreography (pure CSS, never gates input) ============ */
@@ -424,29 +444,19 @@
   }
   /* No-JS fallback: the .lines rise relies on the IntersectionObserver adding
      .show. With JS off those masked lines keep their 110% translate and stay
-     clipped out of view — most visibly the statement chapter, which would
-     silently break the colophon's "readable if everything clever fails" boast.
-     Reveal them flat so the page is complete without JS. */
+     clipped out of view — most visibly the statement chapter. The floor is
+     "readable if everything clever fails": reveal them flat so the page is
+     complete without JS. The .js class itself is armed by the enhance module
+     (not an inline script), so a module that never loads/executes degrades
+     through this same fallback. */
   html:not(.js) .lines .l > .i {
     transform: none;
   }
-  /* self-drawing hairlines */
-  .rule {
-    height: 1px;
-    background: currentColor;
-    opacity: 0.16;
-    border: 0;
-  }
-  .js .rule {
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--t-rule) var(--ease-draw);
-    transition-delay: calc(var(--i, 0) * var(--stagger-slow));
-  }
-  .js .rule.show {
-    transform: scaleX(1);
-  }
-  /* the stitched thread — appears exactly twice, 8px square terminal */
+  /* the stitched thread — appears exactly twice per page. The OPENER (hero →
+     first chapter) ends in a small down arrowhead: an affordance that there's
+     more below (Alan, 2026-07-15). The closing variants keep the 8px square
+     terminal. .thread-snug tightens the opener on the homepage only — the
+     other pages keep the full-height stitch (same review). */
   .thread {
     width: 2px;
     height: clamp(4rem, 10vw, 8rem);
@@ -454,15 +464,28 @@
     background: var(--spark);
     position: relative;
   }
+  .thread-snug {
+    height: clamp(3rem, 7.5vw, 6rem);
+  }
   .thread::after {
     content: "";
     position: absolute;
     left: 50%;
+    bottom: -8px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--spark);
+    translate: -50% 0;
+  }
+  .thread-end::after,
+  .thread-tight::after {
     bottom: -4px;
     width: 8px;
     height: 8px;
+    border: 0;
     background: var(--spark);
-    translate: -50% 0;
   }
   .js .thread {
     transform: scaleY(0);
@@ -479,9 +502,16 @@
   .js .thread.show::after {
     scale: 1;
   }
-  /* furniture: the second thread's spacing + the #talk scroll spacer */
+  /* furniture: the second thread's spacing + the spacer above the footer */
   .thread-end {
     margin-block: var(--space-super) 0;
+  }
+  /* the tight tail — studies + /work end on a short close, and the shared
+     tail read as a hole there (268px of dark at 1440, measured 2026-07-14).
+     Half-height stitch, block-step margin; the talk-spacer stays shared. */
+  .thread-tight {
+    margin-block: var(--space-md) 0;
+    height: clamp(2rem, 5vw, 4rem);
   }
   .talk-spacer {
     height: clamp(3rem, 8vh, 5rem);
@@ -490,11 +520,11 @@
   /* ============ hero (confident type, does a job, no mascot) ============ */
   /* The hero holds a full screen and centres its content, so the page opens as
      one composed view and the "what i do" scroll-link delivers a fresh screen
-     rather than nudging a few pixels. 3.6rem ≈ the sticky header, so the centre
-     reads true below it. min-height (not height) lets a tall stacked phone hero
-     grow past the fold. */
+     rather than nudging a few pixels. --header-h ≈ the sticky header, so the
+     centre reads true below it. min-height (not height) lets a tall stacked
+     phone hero grow past the fold. */
   .hero {
-    min-height: calc(100svh - 3.6rem);
+    min-height: calc(100svh - var(--header-h));
     display: grid;
     align-content: center;
     padding-block: clamp(1.5rem, 4vh, 3rem);
@@ -536,10 +566,7 @@
     color: var(--fg-dim);
   }
   .hero .cta-row {
-    margin-top: 2rem;
-    display: flex;
-    gap: 0.8rem;
-    flex-wrap: wrap;
+    margin-top: 2rem; /* flex/gap/wrap come from the base .cta-row */
   }
   .hero-photo {
     margin: 0;
@@ -561,10 +588,60 @@
       max-width: 20rem;
     }
   }
+  /* Phone hero: content-sized, not viewport-locked. A 664px viewport can't
+     hold the stacked hero anyway — the criterion is the conversion moment (H1
+     + primary CTA) inside the first screen, with the next section peeking. */
+  @media (max-width: 47.99rem) {
+    .hero {
+      min-height: 0;
+      padding-block: var(--space-md) var(--space-lg);
+    }
+    .hero-photo img {
+      aspect-ratio: 3 / 2;
+    }
+    .hero .cta-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .hero .cta-row .cta {
+      justify-content: center;
+    }
+  }
 
-  /* ============ the logbook spine: sticky mono label + content ============ */
+  /* ============ chapters: display heads, with a spine only where an aside rides ============ */
   .chapter {
     padding-block: var(--space-super);
+  }
+  /* the promoted section heading: the section's one signed string as display
+     type (--fs-3 tier). No eyebrow above it — eyebrows are page-hero-only.
+     The margin-bottom is the flow floor; a sibling's own margin-top (space-md
+     on leads/lists) collapses over it in block flow. */
+  .section-head {
+    font-size: var(--fs-3);
+    max-width: var(--measure-head);
+    margin-bottom: var(--space-sm);
+  }
+  /* Plain chapters keep the notebook's binding margin at ≥56rem: the display
+     head hangs at the left margin (full span) and the content sits on the
+     same 4fr column the spine uses — without it every section piles against
+     the gutter and wide screens go left-heavy with a dead right half.
+     Spine chapters (.what) and the centred statement keep their own grids. */
+  @media (min-width: 56rem) {
+    .chapter:not(.statement-ch) > .wrap:not(.what) {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      column-gap: var(--space-lg);
+    }
+    .chapter:not(.statement-ch) > .wrap:not(.what) > .section-head {
+      grid-column: 1 / -1;
+    }
+    .chapter:not(.statement-ch) > .wrap:not(.what) > :not(.section-head) {
+      grid-column: 2;
+    }
+    /* grid rows don't margin-collapse — the head's own margin-bottom is the gap */
+    .chapter:not(.statement-ch) > .wrap:not(.what) > .section-head + * {
+      margin-top: 0;
+    }
   }
   .what {
     display: grid;
@@ -574,6 +651,13 @@
   @media (min-width: 56rem) {
     .what {
       grid-template-columns: 1fr 4fr;
+      column-gap: var(--space-lg);
+      row-gap: 0; /* the head's own margin-bottom is the gap below it */
+    }
+    /* spine chapters hang their head at the margin like plain chapters do;
+       the rail below holds only the aside, beside the content */
+    .what > .section-head {
+      grid-column: 1 / -1;
     }
   }
   .what .label {
@@ -582,7 +666,8 @@
   @media (min-width: 56rem) {
     .what .label {
       position: sticky;
-      top: 96px;
+      /* header height + a breath of air, so the label never tucks under the bar */
+      top: calc(var(--header-h) + 2.4rem);
     }
   }
   /* the content column's first block carries no top margin */
@@ -601,7 +686,6 @@
     font-size: var(--mono-label);
     line-height: var(--lh-relaxed);
     letter-spacing: var(--ls-mono);
-    text-transform: lowercase;
     color: var(--fg-dim);
     max-width: 30rem;
     margin-top: 1rem;
@@ -609,49 +693,105 @@
     border-left: var(--bw-spine) solid color-mix(in srgb, var(--voice) 45%, transparent);
     text-wrap: pretty;
   }
-  .aside-muted {
-    color: var(--fg-dim);
-  }
   @media (min-width: 56rem) {
     .what .label .aside {
       margin-top: 1.35rem; /* a little air below the label, in the margin */
     }
   }
 
-  /* ============ carved cream entry panels ============ */
+  /* ============ the doors: dark editorial rows into the service pages ============ */
+  /* Cream is proof-only, so the routes into the two offers sit on the dark
+     ground as editorial rows — hairline-topped, whole-row links. The lead
+     door (Power BI) is deliberately fuller than the second (front-door
+     hierarchy, not a stagger). The hover tell is AMBER: spark on this ground
+     is 2.65:1 and never carries a state. */
+  .doors {
+    display: grid;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+  }
+  .door {
+    display: block;
+    text-decoration: none;
+    border-top: var(--bw-hair) solid var(--line);
+    padding-top: var(--space-md);
+    transition: border-top-color var(--t-flip);
+  }
+  .door h3 {
+    color: var(--fg);
+    font-size: var(--fs-2);
+    max-width: var(--measure-head);
+  }
+  .door-lead h3 {
+    font-size: var(--fs-3);
+  }
+  .door p {
+    margin-top: var(--space-block);
+    color: var(--fg-dim);
+    max-width: var(--measure-prose);
+  }
+  .door-lead p {
+    max-width: var(--measure-wide);
+  }
+  .door .go {
+    color: var(--fg-dim);
+    margin-top: var(--space-block);
+    padding-top: 0;
+  }
+  .door:hover,
+  .door:focus-visible {
+    border-top-color: var(--amber); /* the hairline warms with the tell */
+  }
+  .door:hover .go,
+  .door:focus-visible .go {
+    color: var(--amber);
+  }
+  .door:hover .go::after,
+  .door:focus-visible .go::after {
+    transform: translateX(3px);
+  }
+  @media (min-width: 62rem) {
+    /* ONE door grammar: headline top, body below, tell at the foot — same
+       stack at every size. The asymmetry is scale and width only: the lead
+       door runs the full column with the bigger h3; the second caps at 75%. */
+    .door:not(.door-lead) {
+      max-width: 75%; /* the second door reads subordinate, not equal */
+    }
+  }
+
+  /* ============ carved cream proof panels ============ */
+  /* Capped at the wide reading measure so cards never run wider than the prose
+     / case-file panel sharing the same `.what` column — the lone door card is
+     capped too, so it lines up with the other panels. */
   .offers {
     display: grid;
     gap: var(--space-xs);
     grid-template-columns: 1fr;
+    max-width: var(--measure-wide);
   }
   @media (min-width: 48rem) {
     .offers {
       grid-template-columns: 1fr 1fr;
       align-items: stretch; /* equal height — no clever stagger (it read broken) */
     }
-    /* reserve two title lines so a one-line card title ("ai fit for teams")
-       doesn't sit higher than a wrapping one ("power bi & fabric, done with
-       you"); keeps the two card bodies on the same baseline so the pair stops
-       feeling lopsided. Not on .single — a lone card has no sibling to match. */
-    .offers:not(.single) .panel h3 {
+    /* reserve two title lines so a one-line tile title doesn't sit higher
+       than a wrapping one; keeps paired tile bodies on the same baseline so
+       the pair stops feeling lopsided. */
+    .offers .panel h3 {
       min-height: calc(2 * var(--lh-display) * 1em);
     }
-  }
-  .offers.single {
-    grid-template-columns: 1fr; /* a lone "door" card spans its single column */
-  }
-  /* cap every offers grid at the wide reading measure so cards never run wider
-     than the prose / case-file panel sharing the same `.what` column — the lone
-     door card is capped too, so it lines up with the other panels rather than
-     stretching the full column width. */
-  .offers {
-    max-width: var(--measure-wide);
   }
   .panel {
     position: relative;
     display: flex;
     flex-direction: column;
     background: var(--paper);
+    /* D11 notebook paper (signed at prototype 2026-07-15): a faint dot grid
+       so cream reads as a notebook PAGE, not a generic card. Hard-stop radial
+       — a flat repeating pattern, not the banned atmospheric gradient. The
+       dot is hairline-weight (--bw-hair), NOT the 3px carved-edge --px. */
+    background-image: radial-gradient(circle, var(--paper-dot) var(--bw-hair), transparent var(--bw-hair));
+    background-size: var(--paper-grid) var(--paper-grid);
     color: var(--ink);
     height: 100%;
     border: var(--px) solid var(--deep);
@@ -680,7 +820,6 @@
     gap: 0.5ch;
     font-family: var(--ff-mono);
     font-size: var(--mono-label);
-    text-transform: lowercase;
     letter-spacing: var(--ls-mono-wide);
     color: var(--paper);
     background: var(--deep);
@@ -729,9 +868,11 @@
     content: "▸";
     transition: transform var(--t-nudge);
   }
+  /* spark at .go size on paper is 4.38:1 (fail); the press shade clears 4.63:1
+     and keeps the hover inside the press-mechanic family */
   a.panel:hover .go,
   a.panel:focus-visible .go {
-    color: var(--spark);
+    color: var(--spark-press);
   }
   a.panel:hover .go::after,
   a.panel:focus-visible .go::after {
@@ -739,6 +880,16 @@
   }
 
   /* ============ the case file panel (power-bi proof) ============ */
+  /* Links on paper: amber text on cream is 1.95:1 and spark body text 4.38:1 —
+     both fail AA. Ink (8.42:1, AAA) carries the text; the amber lives in the
+     underline, which only has to clear the 3:1 non-text floor. */
+  .panel .body a,
+  .casefile a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--amber);
+    text-decoration-thickness: var(--bw-spine);
+  }
   .casefile {
     max-width: var(--measure-wide);
   }
@@ -747,13 +898,10 @@
     font-size: var(--mono-label);
     color: var(--ink-soft);
     margin-bottom: 0.6rem;
-    text-transform: lowercase;
   }
   .casefile .attr {
     margin-top: 1rem;
     color: var(--ink-soft);
-    /* a named client renders in its own proper case, never lowercased by .meta */
-    text-transform: none;
   }
   .casefile blockquote {
     margin-top: var(--space-block);
@@ -767,13 +915,156 @@
     margin-top: 0.6rem;
     font-style: normal;
     color: var(--ink-soft);
-    /* attribution (name, role, org) keeps its natural case, not .meta lowercase */
-    text-transform: none;
   }
   /* the "read the full story" link out of the /power-bi teaser to /work/law-firm */
   .casefile .more {
     margin-top: var(--space-block);
     font-size: var(--fs-sm);
+  }
+
+  /* ============ the instrument exhibit (D10 — evidence, pinned) ============ */
+  /* A real engagement artifact typeset on the carved cream ground. The body
+     is a plain ink statement in display type — no em: the spark stays with
+     the CTA, wordmark and thread (One spark), and on cream the plate itself
+     is the emphasis. The explicit margin resets the UA figure margins (same
+     move as .figure-inset); the top step matches the prose flow it sits in. */
+  .exhibit {
+    margin: var(--space-block) 0 0;
+    /* .panel's height:100% serves the equal-height offer grid; in prose flow
+       it would stretch the figure to the grid-definite prose height. */
+    height: auto;
+  }
+  .exhibit .body p {
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: var(--fs-2);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display-tight);
+    color: var(--ink);
+    margin-top: 0;
+  }
+  .exhibit .body p + p {
+    margin-top: var(--space-block);
+  }
+  /* D11 figure grammar (prototype-gated): exhibits number themselves per page
+     — field-notebook record-keeping, mono's true-metadata job. The counter
+     lives on <main> so every page restarts at fig. 1. */
+  main {
+    counter-reset: exhibit;
+  }
+  .exhibit {
+    counter-increment: exhibit;
+  }
+  .exhibit figcaption {
+    padding: 0 var(--space-sm) var(--space-sm);
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    letter-spacing: var(--ls-mono-wide);
+    color: var(--ink-soft);
+  }
+  .exhibit figcaption::before {
+    content: "fig. " counter(exhibit) " · ";
+  }
+  /* list-shaped exhibits (a set of rules left behind): the rule line is the
+     artifact — display ink over an ink-soft explanation. The dark-ground list
+     classes (.qlist/.beats) and --line hairline fail contrast on paper, so
+     the separator uses the paper-edge tone. */
+  .exhibit .body ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .exhibit .body li {
+    color: var(--ink-soft);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-body);
+  }
+  .exhibit .body li + li {
+    margin-top: var(--space-2xs);
+    padding-top: var(--space-2xs);
+    border-top: var(--bw-hair) solid var(--paper-edge);
+  }
+  .exhibit .body li strong {
+    display: block;
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: var(--fs-1);
+    line-height: var(--lh-snug);
+    letter-spacing: var(--ls-display-tight);
+    color: var(--ink);
+    margin-bottom: var(--space-3xs);
+  }
+  /* the diagram exhibit (museum: three systems → one model): DOM text boxes
+     in reading order, the relationship carried by the figcaption sentence —
+     the strokes are empty pseudo-elements, decoration only, never announced.
+     Stroke height must equal the desktop row-gap (both --space-sm). */
+  .exhibit .body .exhibit-flow {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  .exhibit .body .exhibit-flow p {
+    margin: 0;
+    padding: var(--space-2xs);
+    border: var(--bw-hair) solid var(--paper-edge);
+    border-radius: var(--r-sm);
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-snug);
+    color: var(--ink);
+    text-align: center;
+  }
+  .exhibit .body .exhibit-flow .model {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  @media (min-width: 48rem) {
+    .exhibit .body .exhibit-flow {
+      grid-template-columns: 1fr 1fr 1fr;
+      row-gap: var(--space-sm);
+    }
+    .exhibit .body .exhibit-flow .model {
+      grid-column: 1 / -1;
+    }
+    .exhibit .body .exhibit-flow p:not(.model) {
+      position: relative;
+    }
+    .exhibit .body .exhibit-flow p:not(.model)::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      width: var(--bw-spine);
+      height: var(--space-sm);
+      background: var(--ink-soft);
+    }
+  }
+  /* the descending variant (law-firm trace): the same DOM boxes as one chain,
+     top to bottom, at every width — a wrong number followed down to source.
+     Strokes stay decorative pseudos; height equals the row gap. */
+  .exhibit .body .exhibit-flow.flow-down {
+    row-gap: var(--space-sm);
+  }
+  .exhibit .body .exhibit-flow.flow-down p:not(.model) {
+    position: relative;
+  }
+  .exhibit .body .exhibit-flow.flow-down p:not(.model)::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: var(--bw-spine);
+    height: var(--space-sm);
+    background: var(--ink-soft);
+  }
+  @media (min-width: 48rem) {
+    .exhibit .body .exhibit-flow.flow-down {
+      grid-template-columns: none;
+    }
+    .exhibit .body .exhibit-flow.flow-down .model {
+      grid-column: auto;
+    }
   }
 
   /* ============ how i work: the 3 parallel principles, UNNUMBERED ============ */
@@ -891,15 +1182,30 @@
     font-size: var(--fs-4);
     margin: 0.9rem auto 0;
     max-width: var(--measure-statement);
+    color: var(--fg); /* a conviction in full voice — matches .belief, not body-dim */
   }
   .statement-ch .statement em {
     color: var(--amber);
     font-style: normal;
   }
 
-  /* ============ about: a cream "the thread" panel (not a full-bleed band) ============ */
+  /* ============ about teaser: a dark door to /about (cream is proof-only) ============ */
   .about {
     padding-block: var(--space-super);
+  }
+  /* the whole teaser is the door — a block anchor on the dark ground with a
+     hairline top, same grammar as the service doors; the one tell (.go)
+     warms to amber. */
+  .about-door {
+    display: block;
+    text-decoration: none;
+    border-top: var(--bw-hair) solid var(--line);
+    padding-top: var(--space-md);
+    transition: border-top-color var(--t-flip);
+  }
+  .about-door:hover,
+  .about-door:focus-visible {
+    border-top-color: var(--amber); /* same door grammar as the service rows */
   }
   .about-grid {
     display: grid;
@@ -907,11 +1213,12 @@
     align-items: center;
     grid-template-columns: 1fr;
   }
-  /* converged from 52rem onto the 56rem rung so the about panel flips two-column
-     in step with the logbook spine */
+  /* converged from 52rem onto the 56rem rung so the teaser flips two-column
+     in step with the notebook spine. A landscape photo is the minority column —
+     a contained chip beside the prose, not the dominant element (a teaser). */
   @media (min-width: 56rem) {
     .about-grid {
-      grid-template-columns: 5fr 6fr;
+      grid-template-columns: 3fr 5fr;
     }
   }
   .about-grid figure {
@@ -919,43 +1226,42 @@
   }
   .about-grid img {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    /* landscape, not the old 4:5 portrait that boxed the photo too tall */
+    aspect-ratio: 3 / 2;
     object-fit: cover;
-    object-position: 50% 25%;
-    border-radius: var(--r-sm);
+    object-position: 50% 35%;
+    /* the carved-material frame, kept from the cream era — photos stay framed */
+    background: var(--bg-2);
+    border: var(--px) solid var(--deep);
+    border-radius: var(--r);
+    box-shadow:
+      0 0 0 var(--px) var(--paper-edge),
+      7px 7px 0 0 rgb(var(--shadow-ink) / 0.5);
   }
   .about-grid h2 {
-    color: var(--ink);
+    color: var(--fg);
     font-size: var(--fs-4);
     max-width: var(--measure-head);
   }
-  .about-grid h2 em {
-    color: var(--spark);
-    font-style: normal;
-  }
   .about-grid p {
-    color: var(--ink-soft);
+    color: var(--fg-dim);
     margin-top: var(--space-block);
     max-width: 34rem;
   }
   .about-grid p strong {
-    color: var(--ink);
+    color: var(--fg);
     font-weight: 600;
   }
-  .about a.u {
-    color: var(--ink-soft);
-    text-decoration: none;
-    font-family: var(--ff-display);
-    font-weight: 600;
-    display: inline-block;
-    margin-top: 1.4rem;
+  .about-door .go {
+    color: var(--fg-dim);
   }
-  .about a.u:hover,
-  .about a.u:focus-visible {
-    color: var(--spark);
+  .about-door:hover .go,
+  .about-door:focus-visible .go {
+    color: var(--amber);
   }
-  .about .meta {
-    color: var(--ink-soft);
+  .about-door:hover .go::after,
+  .about-door:focus-visible .go::after {
+    transform: translateX(3px);
   }
 
   /* ============ footer basement: the destination ============ */
@@ -976,10 +1282,6 @@
   .outro h2 {
     font-size: var(--fs-display);
     letter-spacing: var(--ls-display-loose);
-  }
-  .outro h2 em {
-    color: var(--amber);
-    font-style: normal;
   }
   .outro .sub {
     margin-top: 1.2rem;
@@ -1006,29 +1308,35 @@
     object-fit: cover;
     object-position: 50% 18%;
   }
-  .foot-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem 1.5rem;
-    border-top: var(--bw-hair) solid var(--line);
-    padding-block: 1.1rem;
-    margin-top: clamp(2rem, 5vh, 3.5rem);
-  }
-  .foot-meta a {
-    color: inherit; /* quiet furniture, not a default-blue link */
-    text-decoration: none;
-  }
   .legal {
     font-family: var(--ff-mono);
     font-size: var(--mono-fine);
     color: var(--fg-dim);
-    text-transform: lowercase;
     margin-top: 1.3rem;
     max-width: 70ch;
     line-height: var(--lh-loose);
   }
   .legal a {
     color: inherit;
+  }
+  /* the recorded hand's one survivor (D9): Alan's real signature, static ink.
+     Two homes only - here in the footer and the close of /about. Never
+     animated, never a font; regenerate from the ops raw via the capture
+     pipeline if it ever needs re-exporting. */
+  .signoff {
+    display: block;
+    height: 2.75rem;
+    width: auto;
+    margin-top: 2rem;
+    color: var(--fg-dim);
+  }
+  /* on /about it signs the Zelda frame, painter-style: bigger, tucked under
+     the carved frame's bottom-right corner instead of floating a full block
+     space below at the left edge */
+  .prose .signoff {
+    height: 4.25rem;
+    margin-top: 1.1rem;
+    margin-left: auto;
   }
   .lockup {
     width: 100%;
@@ -1088,6 +1396,11 @@
     left: 0;
     color: var(--amber);
   }
+  /* Snapshot ("the short version") reuses .beats, but there the list IS the
+     content, not supporting cast under a lead — body size, same dim voice. */
+  .beats-body li {
+    font-size: var(--fs-base);
+  }
 
   /* /ai-fit hero: the buyer's own question as the LEFT visual (variety vs
      /power-bi's right-hand portrait). Bare display type — the question answers
@@ -1107,37 +1420,21 @@
       order: -1; /* the question sits in the left column; copy leads in source for mobile */
     }
   }
+  /* the static ask: the buyer's sharpest question as bare display type —
+     no panel, no rotation, nothing idles */
   .hero-ask {
     margin: 0;
+    font-family: var(--ff-display);
+    font-weight: 800;
+    font-size: var(--fs-3);
+    line-height: var(--lh-display);
+    letter-spacing: var(--ls-display);
+    color: var(--fg);
+    max-width: var(--measure-head);
   }
-  .ask-panel {
-    height: auto;
-    width: 100%;
-    max-width: 24rem;
-  }
-  .ask-panel .body {
-    padding: clamp(1.5rem, 3.2vw, 2.1rem); /* roomier than the default card padding */
-  }
-  .ask-line {
-    font-family: var(--ff-mono);
-    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
-    line-height: var(--lh-relaxed);
-    color: var(--ink);
-    /* hold a stable height so the panel doesn't jump as the rolling questions
-       (different lengths) type and delete */
-    min-height: 3.4em;
-  }
-  .ask-pre {
-    color: var(--spark); /* magenta prompt — the constant cream-panel accent across all questions */
-    margin-right: 0.5ch;
-  }
-  .ask-note {
-    margin-top: var(--space-block);
-    padding-top: 1rem;
-    border-top: var(--bw-hair) solid color-mix(in srgb, var(--ink) 14%, transparent);
-    font-family: var(--ff-mono);
-    font-size: var(--mono-label);
-    color: var(--ink-soft);
+  .hero-ask em {
+    color: var(--amber);
+    font-style: normal;
   }
   .lead {
     margin-top: var(--space-md);
@@ -1159,22 +1456,12 @@
   .prose > * + * {
     margin-top: var(--space-block);
   }
-  .section-intro {
-    margin-top: var(--space-xs);
-    max-width: var(--measure-prose);
+  /* body-prose emphasis is the same amber colour-shift as headings — never
+     italic (the type system has no italic; the notebook's emphasis is colour). */
+  .prose em {
+    color: var(--amber);
+    font-style: normal;
   }
-  /* homepage proof line: one real outcome set apart as its own `.what` row under
-     the service cards — an amber "in practice" label in the left margin (like
-     "what i do") and a body-size line. Not a caption. */
-  .proof-line {
-    margin-top: var(--space-lg);
-  }
-  .proof-line .proof-body {
-    max-width: var(--measure-wide);
-    font-size: var(--fs-base);
-    color: var(--fg);
-  }
-
   /* the /404 way-back links */
   .notfound-links {
     display: flex;
@@ -1242,30 +1529,30 @@
   }
 
   /* the fit map list */
+  /* the fit-map document skeleton: the deliverable shown as its own
+     structure — mono section labels (the document's headings, amber like the
+     movement numerals) over the signed lines. A template is not evidence, so
+     it stays on the dark ground (D10) — never cream. */
   .fitmap {
     list-style: none;
     margin-top: var(--space-md);
-    display: grid;
-    gap: 0.9rem;
     max-width: var(--measure-prose);
   }
-  .fitmap li {
-    position: relative;
-    padding-left: 1.6rem;
+  .fitmap li + li {
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: var(--bw-hair) solid var(--line);
+  }
+  .fitmap .fm-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    letter-spacing: var(--ls-mono-wide);
+    color: var(--amber);
+  }
+  .fitmap li p {
+    margin-top: var(--space-3xs);
     color: var(--fg-dim);
-  }
-  .fitmap li strong {
-    color: var(--fg);
-    font-weight: 600;
-  }
-  .fitmap li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.6em;
-    width: 0.5rem;
-    height: 0.5rem;
-    background: var(--spark);
   }
 
   /* embedded sub-offers (power-bi "what i do") */
@@ -1325,21 +1612,6 @@
     transform: none;
   }
 }
-@keyframes blink {
-  0%,
-  55% {
-    opacity: 1;
-  }
-  56%,
-  100% {
-    opacity: 0;
-  }
-}
-@keyframes type {
-  to {
-    width: 30ch;
-  }
-}
 
 /* ============ cross-document view transitions (unlayered: progressive) ============ */
 /* Native MPA view transitions: the named chrome (header + lockup) holds while
@@ -1385,10 +1657,6 @@
     transition-duration: var(--t-ui);
     transition-delay: 0s; /* no staggered cascade under reduced motion — a plain fade */
   }
-  .js .rule {
-    transform: none;
-    transition: none;
-  }
   .js .thread {
     transform: none;
     transition: none;
@@ -1401,14 +1669,6 @@
   .js .figure-inset .ph {
     clip-path: none;
     transition: none;
-  }
-  /* the typewriter + cursor: full prompt static, no type-on, no blink */
-  .kt {
-    width: 30ch;
-    animation: none;
-  }
-  .cursor {
-    animation: none;
   }
   a.panel {
     transition: none;
@@ -1423,5 +1683,34 @@
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none !important;
+  }
+}
+
+/* ============ print: every end-state forced, nothing waits for scroll ============ */
+/* The scroll choreography reveals content as it enters the viewport, so printing
+   an unscrolled page would otherwise emit the unrevealed sections at opacity 0 /
+   translated out of their clip masks. Force the revealed end-state of every
+   mechanism (mirrors the reduced-motion end-states). Unlayered + last → wins. */
+@media print {
+  .js [data-reveal],
+  .enter {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+  .l > .i {
+    transform: none;
+    animation: none;
+  }
+  .js .thread {
+    transform: none;
+  }
+  .js .thread::after {
+    scale: 1;
+  }
+  .js .photo-ch .ph,
+  .js .figure-inset .ph {
+    clip-path: none;
   }
 }

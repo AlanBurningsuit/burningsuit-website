@@ -8,8 +8,6 @@
  * .panel / .tab / .go styling lives in app.css.
  */
 export interface RowData {
-  /** Carried for callers from the row era; not rendered on the card. */
-  n?: string;
   href: string;
   /** Journal-plate label, e.g. "offer i". Omit for a plain panel. */
   tab?: string;
@@ -35,7 +33,7 @@ const { href, tab, title, body, cta = "see how it works", index = 0 } = Astro.pr
     )
   }
   <div class="body">
-    <h3>{title.before}<em>{title.em}</em>{title.after}</h3>
+    <h3>{title.before}{title.em && <em>{title.em}</em>}{title.after}</h3>
     <p>{body}</p>
     <span class="go">{cta}</span>
   </div>

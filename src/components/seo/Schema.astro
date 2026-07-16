@@ -25,7 +25,11 @@ interface Props {
 const { schema, noindex = false } = Astro.props;
 
 const nodes = Array.isArray(schema) ? schema : [schema];
-const json = JSON.stringify({ "@context": "https://schema.org", "@graph": nodes });
+// Script-context hardening: JSON.stringify leaves "<" alone and set:html skips
+// Astro's escaping, so a literal "</script" inside any frontmatter string would
+// terminate the block mid-JSON. < is identical JSON, immune to breakout.
+const json = JSON.stringify({ "@context": "https://schema.org", "@graph": nodes })
+  .replace(/</g, "\\u003c");
 ---
 {!noindex && nodes.length > 0 && (
   <script type="application/ld+json" is:inline set:html={json} />

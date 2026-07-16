@@ -1,54 +1,57 @@
 ---
 /**
- * About teaser, as a carved cream panel on the dark green ground (cream is
- * always a contained "entry" panel in this skin, never a full-bleed ground).
- * Stance-led: p1 is what Alan is thinking about; p2 is a compact credibility beat
- * (serious software delivery + Power BI/Fabric depth + the responsibility talk),
- * aimed at the buyer's "can I trust this person?" question — the family-business
- * genealogy lives on /about, and the link carries "the longer story". No journal
- * tab — Alan found the "the thread" label too on-the-nose; the panel stands alone.
+ * About teaser, as a dark door to /about (cream is proof-only since the
+ * 2026-07-11 delta — the teaser is a route, not evidence, so it sits on the
+ * dark ground with the same door grammar as the service rows). Stance-led:
+ * p1 is what Alan is thinking about (a statement-stitch opener was tried
+ * 2026-07-15 and killed on review — clunky); p2 is a compact bridge to the
+ * longer story (where burningsuit comes from + the responsibility talk). The
+ * software-delivery credential lands once, in the home hero sig; /about
+ * carries the full version, so the teaser doesn't pre-quote it.
  *
- * "the longer story" links to /about (signed + shipped 2026-06-17). The MA
- * mention was dropped from the longer-story line per Alan's about-page sign-off.
+ * The whole teaser IS the door — the one tell, the `.go` label
+ * `the longer story ▸`, warms to amber and nudges right. The portrait keeps
+ * its carved frame and stays the minority column — this is a teaser, not the
+ * about page. Copy signed 2026-06-17; the MA mention was dropped from the
+ * longer-story line per Alan's about-page sign-off.
  */
 import { Picture } from "astro:assets";
-import about from "../assets/photos/DSC09290-Edit.jpg";
+import about from "../assets/photos/DSC08683-Edit.jpg";
 
 const longerStoryHref = "/about/";
 ---
 <section class="about" id="about" aria-labelledby="who">
   <div class="wrap">
-    <div class="panel">
-      <div class="body about-grid">
+    <a class="about-door" href={longerStoryHref}>
+      <div class="about-grid">
         <figure data-reveal>
           <Picture
             src={about}
-            alt="Alan on a stone bench, leaning forward, laughing at something off-camera"
+            alt="Alan outdoors among trees, smiling, looking off-camera"
             formats={["avif"]}
             fallbackFormat="webp"
             widths={[400, 600, 800]}
-            sizes="(min-width: 52rem) 45vw, 100vw"
+            sizes="(min-width: 56rem) 38vw, 100vw"
             quality={66}
             loading="lazy"
           />
         </figure>
         <div>
-          <h2 id="who" class="stagger-1" data-reveal>what i'm <em>thinking</em> about.</h2>
+          <h2 id="who" class="stagger-1" data-reveal>who you'd be working <em>with</em>.</h2>
           <p class="stagger-2" data-reveal>
-            Most of what's written about AI at work is about how to use the tools, how to
-            go faster, how to get more done. I'm interested in what happens to the people
-            using them. What do they still need to understand, own, and verify when AI
-            does more? That question runs through everything I do now.
+            burningsuit is me - Alan. I'll go as deep into a model as anyone, and
+            I'm happy to be the one who does, so your team can stay on the
+            actual job. But the depth was never the point. What I keep coming back to is
+            the people using these tools: what they still need to understand, own and
+            verify when AI does more of the building, so the work stays theirs.
           </p>
           <p class="stagger-3" data-reveal>
-            I spent a decade building software — large systems, some of it for
-            government — before going deep on Power BI and Fabric. I also give a talk
-            called "we're all middle management now", about being responsible for work
-            you've handed off.
+            There's more behind it - where burningsuit came from, and a talk I give
+            about being responsible for work you've handed off.
           </p>
-          <a class="u stagger-4" href={longerStoryHref} data-reveal>the longer story ↗</a>
+          <span class="go stagger-4" data-reveal>the longer story</span>
         </div>
       </div>
-    </div>
+    </a>
   </div>
 </section>

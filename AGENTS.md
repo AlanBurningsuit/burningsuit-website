@@ -4,18 +4,21 @@ Orientation for anyone — human or AI — working in this repo.
 
 ## What this is
 
-`burningsuit.co.uk` — a static marketing site. **Astro 6 + Tailwind v4**, no JS
-framework, `output: "static"`, deployed to GitHub Pages. Current design is v3
-"the honest instrument" (flat Everforest green). All styles live in
-`src/styles/` (`tokens.css` + `app.css`).
+`burningsuit.co.uk` — the marketing site for Alan Harman-Box's solo **Power BI
+& Fabric + AI advisory** (what it's FOR lives in the north-star skill; this doc
+is the how). A static site: **Astro 6 + Tailwind v4**, no JS framework,
+`output: "static"`, deployed to GitHub Pages via Actions. Current design is
+"the field notebook" (flat Everforest green, 2026-07-11 warmth delta). All
+styles live in `src/styles/` (`tokens.css` + `app.css`).
 
 ## Branches (only two)
 
-- **`main`** — production. ⚠️ Right now this is the *legacy* hand-built site
-  (`index.html` + assets at the repo root), which is what GitHub Pages actually
-  serves (see **Deploy reality**). Treat it as live; never push experiments here.
-- **`dev`** — integration branch and the home of the Astro site (all real work).
-  The Netlify preview builds from here.
+- **`main`** — production. ⚠️ Whatever is on `main` **deploys to the live apex**
+  (`deploy.yml` via Pages-Actions). Right now that is a one-page Astro
+  placeholder; the legacy site is preserved as a tag. Never push experiments
+  here — a merge to `main` IS a production deploy.
+- **`dev`** — integration branch and the home of the full Astro site (all real
+  work). The Netlify preview builds from here.
 
 Workflow:
 
@@ -32,35 +35,40 @@ URL if you enable Deploy Previews — handy for testing a feature before it touc
 
 ## Deploy reality (non-obvious — read this)
 
-- **Live site:** GitHub Pages, `build_type: legacy`, serving **`main` branch root
-  `/`**. The live page is the root `index.html` on `main` — *not* the Astro
-  build, *not* a workflow.
-- **Astro site (`dev`):** not in production yet. Preview only, via **Netlify**
-  (production branch = `dev`, `npm run build` → `dist/`). `.github/workflows/
-  deploy.yml` (`withastro/action`) exists but is **inert** until the Pages source
-  is switched to "GitHub Actions".
+Since 2026-07-02 the Pages source is **"GitHub Actions"** and `deploy.yml` is
+**live production infrastructure**:
 
-## Go-live checklist (promoting the Astro site to production)
+- **Live site:** GitHub Pages, built and published by `deploy.yml`
+  (`withastro/action`) on every push to `main`. The action runs the full
+  `npm run build` — prep:images, astro build, AND the byte-budget gate — so a
+  budget failure blocks a production deploy.
+- **What main currently holds:** a one-page Astro placeholder proving the
+  pipeline end-to-end on the apex. The pre-Astro legacy site is preserved as a
+  git tag, not on any branch.
+- **Astro site (`dev`):** the full site, preview only via **Netlify**
+  (production branch = `dev`, `npm run build` → `dist/`, hard-noindexed).
 
-`dev` descends cleanly from `main` (fast-forward), but go-live is **two
-coordinated moves — do them together**:
+## Go-live checklist (promoting the full site to production)
 
-1. **Settings → Pages → Source → "GitHub Actions"** so `deploy.yml` builds and
-   publishes the Astro `dist/`.
-2. Merge **`dev` → `main`** (this also carries `deploy.yml` onto `main`).
+Go-live is **one move**: merge **`dev` → `main`** — the Action builds and
+publishes it. Before that merge:
 
-⚠️ Never do step 2 without step 1: legacy Pages would try to serve the Astro
-*source* tree (no root `index.html`) and the live site would break. Verify the
-apex after deploying.
+1. `npm run gate` green on `dev`, and the Netlify preview eyeballed.
+2. Merge, watch the Action, then **verify the live apex** renders the site.
+
+Roll back by reverting the merge commit on `main` — the Action redeploys the
+placeholder. ⚠️ There is no "inert until switched" safety anymore: anything
+that lands on `main` ships.
 
 ## Commands
 
 | | |
 |---|---|
 | `npm run dev` | local dev server |
-| `npm run build` | `astro build` + byte-budget gate (must pass) |
+| `npm run build` | prep:images + `astro build` + byte-budget gate (must pass) |
+| `npm run gate` | **the de-facto CI**: astro check → build (+budget) → link check → SEO/JSON-LD assertions |
 | `npm run preview` | serve the built `dist/` |
-| `npm run test:visual` | Playwright visual snapshots (chromium + firefox) |
+| `npm run test:visual` | type-check tests/, then Playwright snapshots (chromium + firefox + 390px mobile) |
 | `npm run test:visual:update` | refresh snapshot baselines after an intentional visual change, then re-run `test:visual` to confirm green |
 | `npm run test:lh` / `npm run test:links` | Lighthouse + link check |
 

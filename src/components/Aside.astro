@@ -20,14 +20,12 @@
 interface Props {
   /** Element to render. Default <p> keeps it in reading order + announced. */
   as?: "p" | "aside" | "span";
-  /** Voice (fg-dim, the default) or a quieter muted grey. */
-  tone?: "voice" | "muted";
   class?: string;
   [key: string]: unknown;
 }
-const { as = "p", tone = "voice", class: extra, ...rest } = Astro.props;
+const { as = "p", class: extra, ...rest } = Astro.props;
 const Tag = as;
 ---
-<Tag class:list={["aside", tone === "muted" ? "aside-muted" : null, extra]} {...rest}>
+<Tag class:list={["aside", extra]} {...rest}>
   <slot />
 </Tag>

@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Not found - burningsuit"
+  description="That page isn't here. Here's the way back."
+  noindex
+>
+  <Fragment slot="footer-invitation"
+    >You came looking for something and didn't find it. Tell me what it was -
+    I'll point you the right way</Fragment
+  >
+
+  <section class="page-hero notfound">
+    <div class="wrap">
+      <p class="kicker meta enter">error 404</p>
+      <h1 class="enter appear-300">there's <em>nothing</em> here.</h1>
+      <p class="lead enter appear-450">
+        Either the link was wrong, or I moved something and didn't leave a
+        forwarding note. Not your fault either way.
+      </p>
+      <nav class="notfound-links enter appear-600" aria-label="Where to next">
+        <a class="u" href="/">the homepage</a>
+        <a class="u" href="/power-bi/">power bi &amp; fabric, done with you</a>
+        <a class="u" href="/ai-fit-for-teams/">ai fit for teams</a>
+        <a class="u" href="/work/">the work</a>
+        <a class="u" href="/about/">about</a>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>

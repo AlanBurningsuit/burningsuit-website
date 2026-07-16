@@ -64,7 +64,30 @@ const work = defineCollection({
         cite: z.string(),
       })
       .optional(),
-  }),
+  })
+    .superRefine((d, ctx) => {
+      // Security invariant, enforced at the layer the repo trusts (astro
+      // check/build): a committed `named` block with the gate closed is a
+      // source leak — git history is public even when the build never
+      // renders it. The named tier stays OUTSIDE the repo until the flip.
+      if (d.named && !d.namePublished) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["named"],
+          message:
+            "named tier committed while namePublished is false — client names must never enter this public repo before written permission lands (history leaks beat the render gate). Hold the named block in design/copy/ until the flip.",
+        });
+      }
+      // A heading with no text renders an empty H1, an empty Article headline,
+      // and an empty /work tile — and no gate downstream would notice.
+      if (!(d.heading.before || d.heading.em || d.heading.after)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["heading"],
+          message: "heading needs text — before/em/after are all empty/absent",
+        });
+      }
+    }),
 });
 
 export const collections = { work };

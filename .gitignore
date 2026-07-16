@@ -28,7 +28,13 @@ skills-lock.json
 .case-study-work/
 
 # kept out of the (public) repo: internal orientation doc + brand source PDF
+# (exact case matters: gitignore is case-sensitive on Linux/CI checkouts, and a
+# lowercase-only entry would let `git add .` stage CLAUDE.md there)
+CLAUDE.md
 claude.md
 Burningsuit Brand Guidelines V1.pdf
 .agents/
 .claude/
+
+# Local Netlify folder
+.netlify

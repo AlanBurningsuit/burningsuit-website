@@ -20,15 +20,11 @@ const { outcome, id = "snapshot", kicker = "the short version" } = Astro.props;
 ---
 
 <section class="chapter" aria-labelledby={id}>
-  <div class="wrap what">
-    <div class="label">
-      <h2 class="kicker meta" id={id} data-reveal>{kicker}</h2>
-    </div>
-    <div>
-      <p class="lead" data-reveal>{outcome}</p>
-      <ul class="beats" data-reveal>
-        <slot />
-      </ul>
-    </div>
+  <div class="wrap">
+    <h2 class="section-head" id={id} data-reveal>{kicker}</h2>
+    <p class="lead" data-reveal>{outcome}</p>
+    <ul class="beats beats-body" data-reveal>
+      <slot />
+    </ul>
   </div>
 </section>

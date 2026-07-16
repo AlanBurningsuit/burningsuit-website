@@ -17,6 +17,7 @@ import {
   SITE_NAME,
   ORG_DESCRIPTION,
   ORG_ADDRESS,
+  ORG_LEGAL,
   SERVICE_AREAS,
   FOUNDER,
   CONTACT_EMAIL,
@@ -53,9 +54,15 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
     "@type": "Organization",
     "@id": orgId(siteUrl),
     name: SITE_NAME,
+    legalName: ORG_LEGAL.legalName,
     description: ORG_DESCRIPTION,
     url: siteUrl,
     email: CONTACT_EMAIL,
+    identifier: {
+      "@type": "PropertyValue",
+      propertyID: "Companies House",
+      value: ORG_LEGAL.companyNumber,
+    },
     founder: { "@id": personId(siteUrl) },
     areaServed: "GB",
     address: { "@type": "PostalAddress", ...ORG_ADDRESS },
@@ -70,7 +77,9 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
     jobTitle: FOUNDER.jobTitle,
     knowsAbout: [...FOUNDER.knowsAbout],
     worksFor: { "@id": orgId(siteUrl) },
-    url: `${siteUrl}about`,
+    // Trailing slash matters: /about/ is the canonical form every page links
+    // and the sitemap emits — the entity URL must resolve the same way.
+    url: `${siteUrl}about/`,
     sameAs: [...FOUNDER.sameAs],
   });
 
