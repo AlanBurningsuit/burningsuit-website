@@ -13,6 +13,7 @@
     "build": "npm run prep:images && astro build && npm run check:budget",
     "check:budget": "node scripts/check-budget.mjs",
     "prep:images": "node scripts/prep-images.mjs",
+    "render:social": "node scripts/render-linkedin-featured.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "check:seo": "node scripts/check-seo.mjs",
