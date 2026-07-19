@@ -14,11 +14,17 @@ interface Props {
   title: string;
   /** Mark this as the lead item (amber spine). */
   lead?: boolean;
+  /** Optional mono metadata row under the title (shape · commitment · price) —
+   *  only facts already stated in the offer's own signed copy. Renders nothing
+   *  when absent, so study usages are untouched. Styled by `.offer-table`
+   *  contexts (/power-bi "what i do"). */
+  meta?: string;
 }
-const { title, lead = false } = Astro.props;
+const { title, lead = false, meta } = Astro.props;
 ---
 
 <div class:list={["offer", lead && "offer-lead"]} data-reveal>
   <h3>{title}</h3>
+  {meta && <p class="offer-meta">{meta}</p>}
   <slot />
 </div>

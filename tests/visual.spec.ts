@@ -69,6 +69,8 @@ test("power-bi — regions", async ({ page }, testInfo) => {
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`pbi-hero-${tag}.png`);
   await expect(page.locator(".proof")).toHaveScreenshot(`pbi-proof-${tag}.png`);
+  // the four offers as a ruled instrument (2026-07 review) — meta rows + rules
+  await expect(page.locator(".offer-table")).toHaveScreenshot(`pbi-offers-${tag}.png`);
 });
 
 test("about — regions", async ({ page }, testInfo) => {

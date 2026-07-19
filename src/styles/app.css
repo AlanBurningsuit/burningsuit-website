@@ -1571,6 +1571,30 @@
     margin-top: var(--space-md);
     max-width: var(--measure-prose);
   }
+  /* /power-bi's four offers as a ruled instrument (2026-07 review): hairline
+     rules between rows and a mono meta line per offer, so engagement shape,
+     commitment and price compare at a glance. Scoped to the wrapper — the
+     bare .offer inside case studies keeps its prose-flow styling. */
+  .offer-table {
+    margin-top: var(--space-md);
+    max-width: var(--measure-prose);
+  }
+  .offer-table .offer {
+    margin-top: 0;
+    padding-block: var(--space-sm);
+    border-top: var(--bw-hair) solid var(--line);
+  }
+  .offer-table .offer:last-child {
+    border-bottom: var(--bw-hair) solid var(--line);
+  }
+  .offer-meta {
+    margin-top: var(--space-3xs);
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    letter-spacing: var(--ls-mono-wide);
+    line-height: var(--lh-relaxed);
+    color: var(--fg-dim);
+  }
   /* the lead offer (embedded advisory) gets a quiet amber spine instead of a
      floating "the lead offer" label — it marks primacy without reading as a
      heading for the whole list. */
