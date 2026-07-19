@@ -7,16 +7,18 @@
  * else" as the spine, spoken cadence. Structure: prose chapters on the dark
  * ground — page-hero → thread → chapters → thread-end.
  *
- * PHOTOS: the "and the dog" section now carries Zelda (a narrow ~22rem portrait
- * inset, carved frame + clip-path reveal, same skin as PhotoChapter). The "where
- * burningsuit comes from" section still has a comment hook for the Stuart &
- * Alison photo, pending supply — add <Picture> + regenerate the visual baselines
- * when that one lands.
+ * PHOTOS (2026-07 review: three text chapters passed before the first image):
+ * the café working shot closes "i start from what people can do" (reused from
+ * the homepage PhotoChapter — same derivative), Stuart & Alison's studio shot
+ * sits in "where burningsuit comes from" (clearance recorded in the ops claims
+ * ledger), and Zelda closes "and the dog". Sequence: work → origin → dog.
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Signoff from "../components/Signoff.astro";
 import { Picture } from "astro:assets";
 import zelda from "../assets/photos/zelda.jpg";
+import material from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
+import parents from "../assets/photos/stuart-alison.jpg";
 
 const contactSubject = "Hello";
 ---
@@ -67,6 +69,20 @@ const contactSubject = "Hello";
           being handed it. If you'd sooner see that than read about me, there are
           <a class="u" href="/work/">a few case files</a>.
         </p>
+        <figure class="figure-inset" data-reveal-fig>
+          <div class="ph">
+            <Picture
+              src={material}
+              alt="Alan writing at a café table outdoors, coffee beside him"
+              formats={["avif"]}
+              fallbackFormat="webp"
+              widths={[700, 1050, 1400]}
+              sizes="(min-width: 56rem) 42rem, 100vw"
+              quality={60}
+              loading="lazy"
+            />
+          </div>
+        </figure>
       </div>
     </div>
   </section>
@@ -116,7 +132,20 @@ const contactSubject = "Hello";
           performing their work - just someone trying to get a job done. And
           that's still the focus.
         </p>
-        {/* photo: Stuart & Alison — drop in when supplied */}
+        <figure class="figure-inset" data-reveal-fig>
+          <div class="ph">
+            <Picture
+              src={parents}
+              alt="Stuart and Alison, who ran burningsuit before Alan, at a laptop together in their studio photo - Alison pointing at the screen"
+              formats={["avif"]}
+              fallbackFormat="webp"
+              widths={[700, 1050, 1400]}
+              sizes="(min-width: 56rem) 42rem, 100vw"
+              quality={60}
+              loading="lazy"
+            />
+          </div>
+        </figure>
       </div>
     </div>
   </section>

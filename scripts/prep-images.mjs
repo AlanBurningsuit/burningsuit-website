@@ -51,6 +51,10 @@ const jobs = [
   // (2000×1500); the figure-inset's 3:2 object-fit does the framing, so no
   // pre-crop. 1400px covers the 42rem prose width at 2×.
   ["1774634076501.jpg", "ai-talk.jpg", 1400],
+  // /about origin chapter — Stuart & Alison (the studio shoot's working pose:
+  // both at the Surface, Alison pointing). 2400×1920 source; the figure-inset's
+  // 3:2 object-fit crops the frame, so no pre-crop. Same 1400px prose cover.
+  ["stuart-alison.jpg", "stuart-alison.jpg", 1400],
 ];
 
 for (const [src, out, width, crop] of jobs) {
