@@ -615,6 +615,12 @@
   .chapter {
     padding-block: var(--space-super);
   }
+  /* flat tonal grouping (2026-07 rhythm trial — /ai-fit only until Alan rules
+     on roll-out): adjacent .band-2 chapters share the raised ground so related
+     sections read as one movement on a long dark scroll. Flat tone, no edges. */
+  .band-2 {
+    background: var(--bg-2);
+  }
   /* the promoted section heading: the section's one signed string as display
      type (--fs-3 tier). No eyebrow above it — eyebrows are page-hero-only.
      The margin-bottom is the flow floor; a sibling's own margin-top (space-md
@@ -1396,35 +1402,20 @@
     font-size: var(--fs-base);
   }
 
-  /* /ai-fit hero: the buyer's own question as the LEFT visual (variety vs
-     /power-bi's right-hand portrait). Bare display type — the question answers
-     the headline's claim across the grid; "checking" takes the one amber word.
-     Reuses RiseHeading's masked rise, so it needs no new motion or JS. */
-  .aifit-hero-grid {
-    display: grid;
-    gap: var(--space-lg);
-    grid-template-columns: 1fr;
-    align-items: center;
-  }
-  @media (min-width: 62rem) {
-    .aifit-hero-grid {
-      grid-template-columns: 0.82fr 1.25fr;
-    }
-    .aifit-hero-grid > .hero-ask {
-      order: -1; /* the question sits in the left column; copy leads in source for mobile */
-    }
-  }
-  /* the static ask: the buyer's sharpest question as bare display type —
-     no panel, no rotation, nothing idles */
+  /* /ai-fit hero: the buyer's own question as bare display type, tight under
+     the claim — the hook, not a stranded pull-quote (the old two-column grid
+     left it in empty space on desktop and after a long intro on mobile;
+     2026-07 review). "checking" takes the one amber word. Reuses RiseHeading's
+     masked rise, so it needs no new motion or JS. */
   .hero-ask {
-    margin: 0;
+    margin: var(--space-sm) 0 0;
     font-family: var(--ff-display);
     font-weight: 800;
     font-size: var(--fs-3);
     line-height: var(--lh-display);
     letter-spacing: var(--ls-display);
     color: var(--fg);
-    max-width: var(--measure-head);
+    max-width: 24ch; /* one line at full size; the H1's 16ch cap would break it after "the" */
   }
   .hero-ask em {
     color: var(--amber);
@@ -1522,15 +1513,39 @@
     color: var(--fg-dim);
   }
 
-  /* the fit map list */
-  /* the fit-map document skeleton: the deliverable shown as its own
-     structure — mono section labels (the document's headings, amber like the
-     movement numerals) over the signed lines. A template is not evidence, so
-     it stays on the dark ground (D10) — never cream. */
+  /* the fit-map field document: the page's named deliverable as its own
+     carved instrument — the same plate/carve grammar as the proof panels, but
+     on the raised dark ground (a template is not evidence, so it never earns
+     cream — D10). Numbered ruled rows like an instrument's index; mono section
+     labels stay amber like the movement numerals. 2026-07 review: as a plain
+     separated list it had less presence than the work cards. */
+  .fitmap-doc {
+    margin: var(--space-md) 0 0;
+    max-width: var(--measure-prose);
+    background: var(--bg-3);
+    border: var(--px) solid var(--deep);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-off-panel) var(--shadow-off-panel) 0 0 rgb(var(--shadow-ink) / 0.55);
+  }
   .fitmap {
     list-style: none;
-    margin-top: var(--space-md);
-    max-width: var(--measure-prose);
+    counter-reset: fm;
+    padding: var(--space-xs) var(--space-sm) var(--space-sm);
+  }
+  .fitmap li {
+    counter-increment: fm;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: var(--space-xs);
+  }
+  .fitmap li::before {
+    content: counter(fm, decimal-leading-zero);
+    grid-row: 1 / span 2;
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    letter-spacing: var(--ls-mono-wide);
+    line-height: var(--lh-relaxed); /* sit the numeral on the label's baseline */
+    color: var(--fg-dim);
   }
   .fitmap li + li {
     margin-top: var(--space-sm);
@@ -1542,9 +1557,11 @@
     font-family: var(--ff-mono);
     font-size: var(--mono-label);
     letter-spacing: var(--ls-mono-wide);
+    line-height: var(--lh-relaxed);
     color: var(--amber);
   }
   .fitmap li p {
+    grid-column: 2;
     margin-top: var(--space-3xs);
     color: var(--fg-dim);
   }

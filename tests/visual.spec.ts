@@ -58,7 +58,10 @@ test("ai-fit-for-teams — regions", async ({ page }, testInfo) => {
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`aifit-hero-${tag}.png`);
   await expect(page.locator(".movements")).toHaveScreenshot(`aifit-movements-${tag}.png`);
-  await expect(page.locator(".fitmap")).toHaveScreenshot(`aifit-fitmap-${tag}.png`);
+  // the carved field document (the page's signature object since 2026-07)
+  await expect(page.locator(".fitmap-doc")).toHaveScreenshot(`aifit-fitmap-${tag}.png`);
+  // the offer band: tonal --bg-2 grouping + the talk photo inset (rhythm trial)
+  await expect(page.locator(".chapter:has(#how-it-works)")).toHaveScreenshot(`aifit-offer-band-${tag}.png`);
 });
 
 test("power-bi — regions", async ({ page }, testInfo) => {

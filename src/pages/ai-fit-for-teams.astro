@@ -7,6 +7,8 @@ import type { RowData } from "../components/ServiceRow.astro";
 import type { Line } from "../components/RiseHeading.astro";
 import BookCta from "../components/BookCta.astro";
 import { mailtoFor } from "../config/site";
+import { Picture } from "astro:assets";
+import aiTalk from "../assets/photos/ai-talk.jpg";
 
 const contactSubject = "AI in Power BI & Fabric";
 const contactMailto = mailtoFor(contactSubject);
@@ -87,30 +89,29 @@ const door: RowData = {
   >
 
   <section class="page-hero aifit-hero">
-    <div class="wrap aifit-hero-grid">
+    <div class="wrap">
       <div class="hero-copy">
         {/* No eyebrow: service pages carry none (the H1 names the offer; the
             eyebrow only repeated it) — ruled in the 2026-07-15 review. */}
         <RiseHeading as="h1" kind="hero" label="make ai fit the team." lines={heroLines} />
-        <p class="lead enter appear-300">
+        {/* The buyer's own question as bare display type, tight under the
+            claim — the hook, not a stranded pull-quote (2026-07 review: the
+            old two-column grid left it in empty space on desktop and after a
+            long intro on mobile). Real line, no fabricated log/metrics. */}
+        <RiseHeading
+          as="p"
+          kind="hero"
+          class="hero-ask"
+          label="who's checking the dax?"
+          lines={[{ before: "who's ", em: "checking", after: " the dax?" }]}
+          startIndex={1}
+        />
+        <p class="lead enter appear-450">
           Your team's licensed for Copilot, and so far it hasn't quite paid off - some of it
-          sitting idle, some of it writing DAX nobody can fully vouch for. What pays off is
-          getting genuinely good with AI, without handing over your judgement - so a stretched
-          team does more, and better. If that's roughly where you are, I help you work out what
-          to hand over, what to keep, and who checks what: where it earns its place, and where it
-          costs you more than it saves.
+          sitting idle, some of it writing DAX nobody can fully vouch for. I help you work out
+          what to hand over, what to keep, and who checks what.
         </p>
       </div>
-      {/* The buyer's own question as bare display type: claim (h1, right)
-          faces question (left). Real line, no fabricated log/metrics. */}
-      <RiseHeading
-        as="p"
-        kind="hero"
-        class="hero-ask"
-        label="who's checking the dax?"
-        lines={[{ before: "who's ", em: "checking", after: " the dax?" }]}
-        startIndex={2}
-      />
     </div>
   </section>
 
@@ -130,7 +131,11 @@ const door: RowData = {
     </div>
   </section>
 
-  <section class="chapter" aria-labelledby="how-it-works">
+  {/* The offer band: how-it-works + the fit map share a raised tonal ground
+      (--bg-2) so the page's core chapters read as one grouped movement — the
+      2026-07 rhythm trial (flat tone, no edges; roll-out decided after this
+      page ships). */}
+  <section class="chapter band-2" aria-labelledby="how-it-works">
     <div class="wrap">
       <h2 class="section-head" id="how-it-works" data-reveal>how it works</h2>
       <div>
@@ -151,11 +156,28 @@ const door: RowData = {
             ))
           }
         </ol>
+        {/* The work as it actually looks: Alan mid-talk, walking a room
+            through what a coding agent really does. A real artefact, not a
+            stock gesture — clearance recorded in the ops claims ledger. */}
+        <figure class="figure-inset" data-reveal-fig>
+          <div class="ph">
+            <Picture
+              src={aiTalk}
+              alt="Alan presenting to a room, pointing at a slide that walks through what a coding agent actually does"
+              formats={["avif"]}
+              fallbackFormat="webp"
+              widths={[700, 1050, 1400]}
+              sizes="(min-width: 56rem) 42rem, 100vw"
+              quality={60}
+              loading="lazy"
+            />
+          </div>
+        </figure>
       </div>
     </div>
   </section>
 
-  <section class="chapter" aria-labelledby="fitmap">
+  <section class="chapter band-2" aria-labelledby="fitmap">
     <div class="wrap what">
       <h2 class="section-head" id="fitmap" data-reveal>what's in the fit map</h2>
       <div class="label">
@@ -164,16 +186,23 @@ const door: RowData = {
         <Aside data-reveal>a good chunk of it is knowing what to stop worrying about.</Aside>
       </div>
       <div>
-        <ul class="fitmap">
-          {
-            fitmap.map((s) => (
-              <li data-reveal>
-                <span class="fm-label">{s.label}</span>
-                <p>{s.body}</p>
-              </li>
-            ))
-          }
-        </ul>
+        {/* The named deliverable as the page's signature object: a carved dark
+            field document (a template is not evidence, so it never earns
+            cream) — plate title, numbered ruled rows (2026-07 review: it was
+            styled as a plain list with less presence than the work cards). */}
+        <figure class="fitmap-doc" data-reveal>
+          <span class="tab"><span class="sp" aria-hidden="true"></span>the fit map</span>
+          <ul class="fitmap">
+            {
+              fitmap.map((s) => (
+                <li>
+                  <span class="fm-label">{s.label}</span>
+                  <p>{s.body}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </figure>
       </div>
     </div>
   </section>

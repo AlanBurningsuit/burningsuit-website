@@ -46,6 +46,11 @@ const jobs = [
   // landscape framed on her face + the blanket roll, so it fills the prose
   // content width in the "and the dog" chapter. 1400px covers 42rem at 2×.
   ["PXL_20230723_093559913.PORTRAIT.jpg", "zelda.jpg", 1400, { left: 0, top: 800, width: 3072, height: 2048 }],
+  // /ai-fit-for-teams — Alan mid-talk ("welcome to the machine", the coding-
+  // agent explainer) in the how-it-works chapter. Landscape phone shot
+  // (2000×1500); the figure-inset's 3:2 object-fit does the framing, so no
+  // pre-crop. 1400px covers the 42rem prose width at 2×.
+  ["1774634076501.jpg", "ai-talk.jpg", 1400],
 ];
 
 for (const [src, out, width, crop] of jobs) {
