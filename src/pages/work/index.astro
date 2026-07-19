@@ -14,9 +14,12 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ServiceRows from "../../components/ServiceRows.astro";
+import BookCta from "../../components/BookCta.astro";
 import type { RowData } from "../../components/ServiceRow.astro";
+import { mailtoFor } from "../../config/site";
 
 const contactSubject = "Power BI & Fabric - one of these sounds like us";
+const contactMailto = mailtoFor(contactSubject);
 
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
 const rows: RowData[] = studies.map((s) => ({
@@ -58,6 +61,17 @@ const rows: RowData[] = studies.map((s) => ({
     <div class="wrap">
       <h2 class="section-head" id="cases" data-reveal>case files</h2>
       <ServiceRows rows={rows} />
+    </div>
+  </section>
+
+  {/* The page's action beat — /work used to dump from the tiles straight into
+      the footer basement; the band closes the scroll deliberately. */}
+  <section class="cta-band" aria-label="book a call">
+    <div class="wrap">
+      <BookCta src="work" mailtoHref={contactMailto} reveal>
+        If one of these sounds like where you are, I'm happy to talk it through - nothing
+        to&nbsp;prepare.
+      </BookCta>
     </div>
   </section>
 

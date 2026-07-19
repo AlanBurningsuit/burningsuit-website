@@ -139,18 +139,31 @@ test("study + /work tails — the final-thread→footer gap is the tight variant
   // Studies and /work end on a short close, so they carry .thread-tight
   // (margin --space-md + a halved stitch) instead of the shared 268px tail.
   // Geometry, not a screenshot: the region snapshots never captured this gap.
+  // /work now closes on its cta-band (2026-07 review fix), so its gap is
+  // measured from the band, not the last chapter — same tight tail after it.
   // Asserted on chromium only — the clamp() maths is viewport-dependent.
   test.skip(testInfo.project.name !== "chromium", "gap asserted once, at the 1280×720 chromium viewport");
-  for (const path of ["/work/law-firm/", "/work/"]) {
+  for (const { path, anchor } of [
+    { path: "/work/law-firm/", anchor: "main .chapter" },
+    { path: "/work/", anchor: "main .cta-band" },
+  ]) {
     await page.goto(path);
-    const gap = await page.evaluate(() => {
-      const chapters = document.querySelectorAll("main .chapter");
-      const last = chapters[chapters.length - 1].getBoundingClientRect();
+    const gap = await page.evaluate((sel) => {
+      const nodes = document.querySelectorAll(sel);
+      const last = nodes[nodes.length - 1].getBoundingClientRect();
       const main = document.querySelector("main")!.getBoundingClientRect();
       return Math.round(main.bottom - last.bottom);
-    });
+    }, anchor);
     // --space-md (38) + clamp(2rem,5vw,4rem) thread (64) + talk-spacer (58) ≈ 160
     expect(gap, `${path} tail gap`).toBeGreaterThan(120);
     expect(gap, `${path} tail gap`).toBeLessThan(200);
   }
+});
+
+test("work — cta band region", async ({ page }, testInfo) => {
+  // /work's closing action beat (2026-07 review: short pages ended in a dump
+  // to the basement) — snapshot the band so the invite stack stays covered.
+  await prepare(page, "/work/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".cta-band")).toHaveScreenshot(`work-cta-band-${tag}.png`);
 });
