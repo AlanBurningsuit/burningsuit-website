@@ -140,6 +140,20 @@ test("work contact-centre — exhibit region", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#safe)")).toHaveScreenshot(`work-contactcentre-safe-${tag}.png`);
 });
 
+test("work contact-centre — who's-who exhibit region", async ({ page }, testInfo) => {
+  // the master-data rule exhibit added 2026-07 to break the front-half prose run.
+  await prepare(page, "/work/contact-centre/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".chapter:has(#built)")).toHaveScreenshot(`work-contactcentre-built-${tag}.png`);
+});
+
+test("work carbon — why-one-model exhibit region", async ({ page }, testInfo) => {
+  // the strategy-rationale exhibit added 2026-07 to break the front-half prose run.
+  await prepare(page, "/work/carbon-footprint/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".chapter:has(#useful)")).toHaveScreenshot(`work-carbon-useful-${tag}.png`);
+});
+
 test("study + /work tails — the final-thread→footer gap is the tight variant", async ({ page }, testInfo) => {
   // Studies and /work end on a short close, so they carry .thread-tight
   // (margin --space-md + a halved stitch) instead of the shared 268px tail.

@@ -1447,6 +1447,12 @@
     color: var(--amber);
     font-style: normal;
   }
+  /* a chapter's landing sentence at full foreground — colour only, body
+     weight (2026-07 density review: the strongest sentence in a long chapter
+     surfaces without cream and without bold shouting). Use sparingly. */
+  .prose .takeaway {
+    color: var(--fg);
+  }
   /* the /404 way-back links */
   .notfound-links {
     display: flex;
