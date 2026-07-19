@@ -992,11 +992,11 @@
      in reading order, the relationship carried by the figcaption sentence —
      the strokes are empty pseudo-elements, decoration only, never announced.
      Stroke height must equal the desktop row-gap (both --space-sm). */
-  .exhibit .body .exhibit-flow {
+  .proof .body .exhibit-flow {
     display: grid;
     gap: var(--space-2xs);
   }
-  .exhibit .body .exhibit-flow p {
+  .proof .body .exhibit-flow p {
     margin: 0;
     padding: var(--space-2xs);
     border: var(--bw-hair) solid var(--paper-edge);
@@ -1008,23 +1008,23 @@
     color: var(--ink);
     text-align: center;
   }
-  .exhibit .body .exhibit-flow .model {
+  .proof .body .exhibit-flow .model {
     background: var(--ink);
     border-color: var(--ink);
     color: var(--paper);
   }
   @media (min-width: 48rem) {
-    .exhibit .body .exhibit-flow {
+    .proof .body .exhibit-flow {
       grid-template-columns: 1fr 1fr 1fr;
       row-gap: var(--space-sm);
     }
-    .exhibit .body .exhibit-flow .model {
+    .proof .body .exhibit-flow .model {
       grid-column: 1 / -1;
     }
-    .exhibit .body .exhibit-flow p:not(.model) {
+    .proof .body .exhibit-flow p:not(.model) {
       position: relative;
     }
-    .exhibit .body .exhibit-flow p:not(.model)::after {
+    .proof .body .exhibit-flow p:not(.model)::after {
       content: "";
       position: absolute;
       left: 50%;
@@ -1037,13 +1037,13 @@
   /* the descending variant (law-firm trace): the same DOM boxes as one chain,
      top to bottom, at every width — a wrong number followed down to source.
      Strokes stay decorative pseudos; height equals the row gap. */
-  .exhibit .body .exhibit-flow.flow-down {
+  .proof .body .exhibit-flow.flow-down {
     row-gap: var(--space-sm);
   }
-  .exhibit .body .exhibit-flow.flow-down p:not(.model) {
+  .proof .body .exhibit-flow.flow-down p:not(.model) {
     position: relative;
   }
-  .exhibit .body .exhibit-flow.flow-down p:not(.model)::after {
+  .proof .body .exhibit-flow.flow-down p:not(.model)::after {
     content: "";
     position: absolute;
     left: 50%;
@@ -1053,10 +1053,10 @@
     background: var(--ink-soft);
   }
   @media (min-width: 48rem) {
-    .exhibit .body .exhibit-flow.flow-down {
+    .proof .body .exhibit-flow.flow-down {
       grid-template-columns: none;
     }
-    .exhibit .body .exhibit-flow.flow-down .model {
+    .proof .body .exhibit-flow.flow-down .model {
       grid-column: auto;
     }
   }
