@@ -190,9 +190,12 @@ const door: RowData = {
             field document (a template is not evidence, so it never earns
             cream) — plate title, numbered ruled rows (2026-07 review: it was
             styled as a plain list with less presence than the work cards). */}
-        <figure class="fitmap-doc" data-reveal>
+        <figure class="fitmap-doc" aria-label="the fit map" data-reveal>
           <span class="tab"><span class="sp" aria-hidden="true"></span>the fit map</span>
-          <ul class="fitmap">
+          {/* <ol>, not <ul>: the rows are sequenced (the CSS counter numbers
+              them) and list-style:none on a ul strips list semantics in
+              VoiceOver/Safari. */}
+          <ol class="fitmap">
             {
               fitmap.map((s) => (
                 <li>
@@ -201,7 +204,7 @@ const door: RowData = {
                 </li>
               ))
             }
-          </ul>
+          </ol>
         </figure>
       </div>
     </div>

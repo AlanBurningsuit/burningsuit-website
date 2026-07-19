@@ -120,7 +120,9 @@ const statementLines: Line[] = [
           museum build diagram (same DOM-text markup as the study's exhibit) —
           under the study's own offer-name plate instead of a generic "case
           file" tab. The sentence after the diagram carries the relationship
-          for screen readers (the connector strokes are decorative pseudos). */}
+          for screen readers (the connector strokes are decorative pseudos).
+          The flow div is placed bare (not via <Exhibit>) on purpose: a teaser
+          panel earns no "fig. N" counter — that grammar belongs to studies. */}
       <CasefilePanel study={featured?.data} tab={featured?.data.kicker}>
         <div class="exhibit-flow">
           <p>what the counters count</p>
@@ -128,7 +130,7 @@ const statementLines: Line[] = [
           <p>what the shop & ticketing sell</p>
           <p class="model">one shared model</p>
         </div>
-        <p>three live systems, connected automatically, feeding one shared model - the team runs it themselves.</p>
+        <p>three live systems, connected automatically, feeding one model the team runs themselves.</p>
         <Fragment slot="links">
           <a class="u" href={`/work/${FEATURED_STUDY}/`}>read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
         </Fragment>

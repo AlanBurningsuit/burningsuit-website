@@ -1551,7 +1551,7 @@
     font-size: var(--mono-label);
     letter-spacing: var(--ls-mono-wide);
     line-height: var(--lh-relaxed); /* sit the numeral on the label's baseline */
-    color: var(--fg-dim);
+    color: var(--fg); /* fg-dim on the raised --bg-3 ground is 4.44:1 — just under AA */
   }
   .fitmap li + li {
     margin-top: var(--space-sm);
@@ -1569,7 +1569,7 @@
   .fitmap li p {
     grid-column: 2;
     margin-top: var(--space-3xs);
-    color: var(--fg-dim);
+    color: var(--fg); /* document content, not muted commentary — and fg-dim fails AA on --bg-3 */
   }
 
   /* embedded sub-offers (power-bi "what i do") */
