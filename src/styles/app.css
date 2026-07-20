@@ -1163,6 +1163,18 @@
   .js .figure-inset.show .ph {
     clip-path: inset(0 round var(--r));
   }
+  /* the log-entry line under a framed photo (2026-07-20: Alan reversed the
+     no-captions rule — with exhibits self-captioning, bare photos read as
+     inconsistency, not restraint). Mono METADATA only (who/where), never
+     commentary, and no "fig." counter — numbering is the exhibits' grammar. */
+  .ph-note {
+    margin-top: 0.6rem;
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    letter-spacing: var(--ls-mono-wide);
+    line-height: var(--lh-relaxed);
+    color: var(--fg-dim);
+  }
   .figure-inset img {
     width: 100%;
     height: 100%;

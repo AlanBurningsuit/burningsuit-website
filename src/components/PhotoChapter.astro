@@ -4,9 +4,10 @@
  * cream-matted carved frame (border + paper-edge ring + hard shadow); a
  * clip-path curtain reveals it on scroll (kept from v2, gated off under reduced
  * motion in app.css). The old grayscale / mix-blend grade is dropped — the
- * green skin shows the photo in honest colour. No caption (Alan didn't want
- * captions). astro:assets emits AVIF/WebP; no inline style, so style-src 'self'
- * holds — object-fit/position live in app.css.
+ * green skin shows the photo in honest colour. Captioned since 2026-07-20
+ * (Alan reversed the earlier no-captions call): the .ph-note is the log-entry
+ * line — mono metadata, never commentary. astro:assets emits AVIF/WebP; no
+ * inline style, so style-src 'self' holds — object-fit/position in app.css.
  */
 import { Picture } from "astro:assets";
 import material from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
@@ -26,6 +27,7 @@ import material from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
           loading="lazy"
         />
       </div>
+      <figcaption class="ph-note">the office, some days</figcaption>
     </figure>
   </div>
 </section>
