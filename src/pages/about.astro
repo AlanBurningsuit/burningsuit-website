@@ -8,16 +8,17 @@
  * ground — page-hero → thread → chapters → thread-end.
  *
  * PHOTOS (2026-07 review: three text chapters passed before the first image):
- * the café working shot closes "i start from what people can do" (reused from
- * the homepage PhotoChapter — same derivative), Stuart & Alison's studio shot
- * sits in "where burningsuit comes from" (clearance recorded in the ops claims
- * ledger), and Zelda closes "and the dog". Sequence: work → origin → dog.
+ * the "we're all middle management now" talk shot sits in "the part that isn't
+ * really technical" — beside the very sentence that names the talk (the café
+ * shot stays homepage-only; Alan: no doubling). Stuart & Alison's studio shot
+ * sits in "where burningsuit comes from" (clearances in the ops claims
+ * ledger), and Zelda closes "and the dog". Sequence: talk → origin → dog.
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Signoff from "../components/Signoff.astro";
 import { Picture } from "astro:assets";
 import zelda from "../assets/photos/zelda.jpg";
-import material from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
+import mmnTalk from "../assets/photos/mmn-talk.jpg";
 import parents from "../assets/photos/stuart-alison.jpg";
 
 const contactSubject = "Hello";
@@ -69,21 +70,6 @@ const contactSubject = "Hello";
           being handed it. If you'd sooner see that than read about me, there are
           <a class="u" href="/work/">a few case files</a>.
         </p>
-        <figure class="figure-inset" data-reveal-fig>
-          <div class="ph">
-            <Picture
-              src={material}
-              alt="Alan writing at a café table outdoors, coffee beside him"
-              formats={["avif"]}
-              fallbackFormat="webp"
-              widths={[700, 1050, 1400]}
-              sizes="(min-width: 56rem) 42rem, 100vw"
-              quality={60}
-              loading="lazy"
-            />
-          </div>
-          <figcaption class="ph-note">the office, some days</figcaption>
-        </figure>
       </div>
     </div>
   </section>
@@ -112,6 +98,23 @@ const contactSubject = "Hello";
           fail on the people side, well before the technology really comes into
           it.
         </p>
+        {/* The talk the paragraph above names, as it actually happens —
+            evidence beside its claim. Clearance row in the ops ledger. */}
+        <figure class="figure-inset" data-reveal-fig>
+          <div class="ph">
+            <Picture
+              src={mmnTalk}
+              alt="Alan giving the 'we're all middle management now' talk at a user group, the title slide up beside him"
+              formats={["avif"]}
+              fallbackFormat="webp"
+              widths={[700, 1050, 1400]}
+              sizes="(min-width: 56rem) 42rem, 100vw"
+              quality={60}
+              loading="lazy"
+            />
+          </div>
+          <figcaption class="ph-note">the talk, live - we're all middle management now</figcaption>
+        </figure>
       </div>
     </div>
   </section>

@@ -55,6 +55,10 @@ const jobs = [
   // both at the Surface, Alison pointing). 2400×1920 source; the figure-inset's
   // 3:2 object-fit crops the frame, so no pre-crop. Same 1400px prose cover.
   ["stuart-alison.jpg", "stuart-alison.jpg", 1400],
+  // /about human chapter — Alan giving THE talk the prose names ("we're all
+  // middle management now") at a user group. 1920×1080 phone shot, filtered but
+  // honest field material; 3:2 object-fit crops it, no pre-crop.
+  ["1771858591870.jpg", "mmn-talk.jpg", 1400],
 ];
 
 for (const [src, out, width, crop] of jobs) {
