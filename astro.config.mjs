@@ -47,6 +47,25 @@ export default defineConfig({
     "/who-we-are/how-we-train": "/power-bi/",
     // Contact intent → the page that ends in the person + contact paths
     "/contact": "/about/",
+    // Second sweep (GSC impressions, 2026-07-22 — the pre-relaunch URL-prefix
+    // property still held 90 days of history). Training-era offer pages →
+    // /power-bi/ ("done with you" absorbed training); people/contact → /about/;
+    // case-study archive → /work/; legal → /privacy/.
+    "/fully-flexible-training-dax-skills": "/power-bi/",
+    "/fully-flexible-training-dax-skills/our-courses-power-bi-training": "/power-bi/",
+    "/fully-flexible-training-dax-skills/our-courses-power-bi-training/3-power-bi-advanced":
+      "/power-bi/",
+    "/fully-flexible-training-dax-skills/our-courses-power-bi-training/10-power-bi-dax-fundamentals":
+      "/power-bi/",
+    "/fully-flexible-training-dax-skills/our-courses-power-bi-training/11-power-bi-dax-advanced":
+      "/power-bi/",
+    "/experts-microsoft-consultancy-and-training-burningsuit": "/power-bi/",
+    "/team-member/alan-harman-box": "/about/",
+    "/get-in-touch": "/about/",
+    "/case-study": "/work/",
+    "/case-study/analysing-survey-data": "/work/",
+    "/privacy-policy": "/privacy/",
+    "/terms-conditions": "/privacy/",
   },
   build: {
     // Keep CSS external so `style-src 'self'` covers it without inline hashes.
