@@ -76,6 +76,10 @@ for (const path of pages) {
       }
     });
     await page.waitForTimeout(700);
+    // Exactly 1 by construction: the mock tracker body IS the single fetch
+    // above and never flushes the enhance.ts queue, so custom events (404,
+    // Email click) queue without ever becoming beacons here. The queue-level
+    // contract for those events lives in analytics.spec.ts.
     expect(analyticsBeacons, "the analytics tracker did not send its event beacon").toBe(1);
     expect(problems, problems.join("\n")).toEqual([]);
   });

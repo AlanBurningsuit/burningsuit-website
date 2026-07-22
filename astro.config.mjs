@@ -20,6 +20,34 @@ export default defineConfig({
   base: "/", // apex custom domain — no project sub-path
   output: "static",
   trailingSlash: "ignore",
+
+  // Legacy WordPress/intermediate-site URLs that still receive organic search
+  // traffic (Plausible, 2026-07 post-go-live). Static output renders each as a
+  // stub page: 0s meta refresh + noindex + canonical→target — the strongest
+  // permanent-redirect signal plain GitHub Pages can carry. Keys must be the
+  // non-slash form only (both variants as keys is unsupported; Pages 301s
+  // /foo → /foo/ itself).
+  redirects: {
+    // Power BI technique posts → the Power BI hub (topical successor; no blog)
+    "/blog/2019/04/7-secrets-of-the-matrix-visual": "/power-bi/",
+    "/blog/7-secrets-matrix-visual": "/power-bi/",
+    "/blog/7-secrets-line-chart": "/power-bi/",
+    "/blog/2018/03/dax-how-to-use-a-slicer-to-select-different-measures": "/power-bi/",
+    "/blog/2018/02/power-bi-free-vs-pro": "/power-bi/",
+    "/blog/2021/06/charticulator-in-power-bi-5": "/power-bi/",
+    "/blog/charticulator-power-bi-6": "/power-bi/",
+    "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim": "/power-bi/",
+    // Company-news post → the credibility page
+    "/blog/burningsuit-featured-microsoft-business-applications-summit": "/about/",
+    // "Power BI in practice" archive → the case-study index
+    "/category/power-bi-in-practice": "/work/",
+    // Old offer pages → their successors ("done with you" absorbed training)
+    "/our-power-bi-consultancy": "/power-bi/",
+    "/microsoft-training/custom-training": "/power-bi/",
+    "/who-we-are/how-we-train": "/power-bi/",
+    // Contact intent → the page that ends in the person + contact paths
+    "/contact": "/about/",
+  },
   build: {
     // Keep CSS external so `style-src 'self'` covers it without inline hashes.
     inlineStylesheets: "never",
