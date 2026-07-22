@@ -66,6 +66,14 @@ export default defineConfig({
     "/case-study/analysing-survey-data": "/work/",
     "/privacy-policy": "/privacy/",
     "/terms-conditions": "/privacy/",
+    // Third sweep (2026-07-22): URLs still in Google's index or linked from
+    // live Google Business Profile listings.
+    "/get-touch": "/about/",
+    "/power-bi-training": "/power-bi/",
+    "/training/expert-power-bi-training": "/power-bi/",
+    "/who-we-are/person-power-bi-training": "/power-bi/",
+    "/who-we-are/how-we-train/online-powerbi-training": "/power-bi/",
+    "/who-we-are/our-clients": "/work/",
   },
   build: {
     // Keep CSS external so `style-src 'self'` covers it without inline hashes.
