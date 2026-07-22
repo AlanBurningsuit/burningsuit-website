@@ -36,5 +36,8 @@ Burningsuit Brand Guidelines V1.pdf
 .agents/
 .claude/
 
+# Plausible API key — live credential, never commit
+.plausible/
+
 # Local Netlify folder
 .netlify
