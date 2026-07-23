@@ -39,6 +39,7 @@ Burningsuit Brand Guidelines V1.pdf
 # analytics credentials — live secrets, never commit
 .plausible/
 .gsc/
+.bingwebm/
 
 # Local Netlify folder
 .netlify
