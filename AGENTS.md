@@ -92,3 +92,10 @@ Node 22 (`.nvmrc`).
   after changing a source photo, and commit the regenerated derivatives.
 - The **`about-dog` visual snapshot** can flake (its clip-path photo reveal
   settles non-deterministically); a re-run usually goes green.
+- **Renaming or removing a route? Add a redirect for the old path** in the
+  `redirects` block in `astro.config.mjs` (legacy URLs from the old sites live
+  there too). The SEO gate verifies every stub's target exists in the build, so
+  a rename that strands existing stubs fails the gate — but only a human knows
+  the old path needs a new entry. Redirect stubs are meta-refresh pages (the
+  only redirect GitHub Pages supports); they're skipped by the SEO page
+  contract and excluded from the sitemap automatically.

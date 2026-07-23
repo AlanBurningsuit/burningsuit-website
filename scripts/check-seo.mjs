@@ -40,6 +40,7 @@ const attr = (tag, name) => {
 };
 
 let failed = false;
+let redirectStubs = 0;
 const problems = [];
 const fail = (route, msg) => {
   failed = true;
@@ -49,6 +50,24 @@ const fail = (route, msg) => {
 for (const rel of pages) {
   const route = "/" + rel.replace(/index\.html$/, "").replace(/\.html$/, "");
   const html = readFileSync(join(DIST, rel), "utf8");
+  // Astro static-redirect stubs (meta refresh + noindex + canonical→target)
+  // are intentionally not real pages — exempt them from the page contract,
+  // but verify the target they point at actually exists in this build. Stubs
+  // are linked from nowhere, so the link checker never crawls them: without
+  // this, renaming a page silently strands every stub pointing at it.
+  // No real page emits meta refresh (BaseLayout doesn't; a hand-added one
+  // would be a bug worth surfacing in review, not here).
+  const refresh = html.match(/<meta http-equiv="refresh" content="\d+;url=([^"]+)"/i);
+  if (refresh) {
+    redirectStubs++;
+    const target = refresh[1].replace(/^https?:\/\/[^/]+/, "");
+    const targetFile = (target.endsWith("/") ? target + "index.html" : target + "/index.html")
+      .replace(/^\//, "");
+    if (!pages.includes(targetFile)) {
+      fail(route, `redirect stub points at ${target}, which is not in this build`);
+    }
+    continue;
+  }
   // Head-only slice for the <title> count: an accessible inline-SVG <title>
   // in the body must not read as a duplicate document title.
   const headEnd = html.indexOf("</head>");
@@ -116,7 +135,9 @@ for (const rel of pages) {
   }
 }
 
-console.log(`SEO gate: checked ${pages.length} pages`);
+console.log(
+  `SEO gate: checked ${pages.length - redirectStubs} pages (${redirectStubs} redirect stubs skipped)`,
+);
 if (failed) {
   console.error(`\nSEO gate FAILED — ${problems.length} problem(s):\n${problems.join("\n")}\n`);
   process.exit(1);

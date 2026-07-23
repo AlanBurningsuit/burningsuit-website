@@ -72,6 +72,24 @@ if (optOut) {
   }
 }
 
+/* ---- 404 tracking: surfaces legacy/broken inbound URLs in the dashboard
+   without server logs. GitHub Pages serves 404.html at the REQUESTED path, so
+   location.pathname is the missed URL. `interactive: false` because the
+   tracker defaults custom events to interactive — without it every 404
+   landing would count as engagement and suppress the bounce it really is. ---- */
+if (document.querySelector("[data-track-404]")) {
+  w.plausible("404", { props: { path: location.pathname }, interactive: false });
+}
+
+/* ---- email-intent tracking: one delegated listener covers every mailto
+   (footer, CTAs, /privacy). Cal.com clicks already carry per-placement UTMs
+   via the outbound-links goal; this closes the other conversion path. ---- */
+document.addEventListener("click", (e) => {
+  if ((e.target as Element)?.closest?.('a[href^="mailto:"]')) {
+    w.plausible!("Email click");
+  }
+});
+
 const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
 /* ---- scroll reveals: fire once at ~85% viewport, never un-reveal ---- */
