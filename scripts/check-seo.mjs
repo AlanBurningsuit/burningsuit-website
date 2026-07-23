@@ -51,11 +51,21 @@ for (const rel of pages) {
   const route = "/" + rel.replace(/index\.html$/, "").replace(/\.html$/, "");
   const html = readFileSync(join(DIST, rel), "utf8");
   // Astro static-redirect stubs (meta refresh + noindex + canonical→target)
-  // are intentionally not real pages — exempt them from the page contract.
+  // are intentionally not real pages — exempt them from the page contract,
+  // but verify the target they point at actually exists in this build. Stubs
+  // are linked from nowhere, so the link checker never crawls them: without
+  // this, renaming a page silently strands every stub pointing at it.
   // No real page emits meta refresh (BaseLayout doesn't; a hand-added one
   // would be a bug worth surfacing in review, not here).
-  if (/<meta http-equiv="refresh"/i.test(html)) {
+  const refresh = html.match(/<meta http-equiv="refresh" content="\d+;url=([^"]+)"/i);
+  if (refresh) {
     redirectStubs++;
+    const target = refresh[1].replace(/^https?:\/\/[^/]+/, "");
+    const targetFile = (target.endsWith("/") ? target + "index.html" : target + "/index.html")
+      .replace(/^\//, "");
+    if (!pages.includes(targetFile)) {
+      fail(route, `redirect stub points at ${target}, which is not in this build`);
+    }
     continue;
   }
   // Head-only slice for the <title> count: an accessible inline-SVG <title>
