@@ -103,43 +103,47 @@ const aiDoor: RowData = {
           <em>capable</em> of owning it - with or without me.
         </p>
 
-        <Offer title="embedded advisory" lead>
-          <p>
-            I join your team for a stretch - office hours, workshops, one-on-ones - working on
-            your real models and real problems, in your own workspace, across Power BI and Fabric.
-            It runs as a working relationship rather than a scheduled course, so the team gets more
-            capable on the problems you actually have: able to change the model without fear of
-            breaking it, and to catch a wrong number before it goes out, without checking with me
-            first.
-          </p>
-          <p class="aside">Ongoing and month-to-month, sized to your team. Usually £3,000 to £6,000 a month.</p>
-        </Offer>
+        {/* The four offers as a ruled instrument (2026-07 review): each row
+            carries a mono meta line so shape, commitment and price compare at
+            a glance. Meta facts are lifted from the offers' own signed copy —
+            the two old p.aside lines moved up into their rows, not rewritten. */}
+        <div class="offer-table">
+          <Offer title="embedded advisory" lead meta="ongoing, month-to-month · sized to your team · usually £3,000 to £6,000 a month">
+            <p>
+              I join your team for a stretch - office hours, workshops, one-on-ones - working on
+              your real models and real problems, in your own workspace, across Power BI and Fabric.
+              It runs as a working relationship rather than a scheduled course, so the team gets more
+              capable on the problems you actually have: able to change the model without fear of
+              breaking it, and to catch a wrong number before it goes out, without checking with me
+              first.
+            </p>
+          </Offer>
 
-        <Offer title="reporting strategy">
-          <p>
-            Before anything gets built: what are you actually measuring, and why? We work out the
-            questions the team needs to be able to answer, and what a good answer looks like for
-            each - so everyone means the same thing by the same number. You walk away with a clear
-            picture of what's worth reporting and what to leave out.
-          </p>
-        </Offer>
+          <Offer title="reporting strategy" meta="before anything gets built · a worked-out picture of what's worth reporting">
+            <p>
+              Before anything gets built: what are you actually measuring, and why? We work out the
+              questions the team needs to be able to answer, and what a good answer looks like for
+              each - so everyone means the same thing by the same number. You walk away with a clear
+              picture of what's worth reporting and what to leave out.
+            </p>
+          </Offer>
 
-        <Offer title="architecture review">
-          <p>
-            Then the plumbing: does your model actually serve that strategy, or quietly get in the
-            way? I'll tell you what's carrying its weight and what isn't - including when the honest
-            answer is that a new model won't fix the real problem. And if you're weighing up Fabric,
-            I'll tell you straight whether it earns its keep for you.
-          </p>
-          <p class="aside">A fixed, shorter piece. Scoped and priced up front.</p>
-        </Offer>
+          <Offer title="architecture review" meta="a fixed, shorter piece · scoped and priced up front">
+            <p>
+              Then the plumbing: does your model actually serve that strategy, or quietly get in the
+              way? I'll tell you what's carrying its weight and what isn't - including when the honest
+              answer is that a new model won't fix the real problem. And if you're weighing up Fabric,
+              I'll tell you straight whether it earns its keep for you.
+            </p>
+          </Offer>
 
-        <Offer title="build work, case by case">
-          <p>
-            And if you have a specific, well-thought-through Power BI build in mind, ask - I take
-            those on case by case.
-          </p>
-        </Offer>
+          <Offer title="build work, case by case" meta="a specific, well-thought-through build · taken on case by case">
+            <p>
+              And if you have a specific, well-thought-through Power BI build in mind, ask - I take
+              those on case by case.
+            </p>
+          </Offer>
+        </div>
       </div>
     </div>
   </section>
@@ -175,7 +179,7 @@ const aiDoor: RowData = {
     <div class="wrap">
       <BookCta src="power-bi-engagement" mailtoHref={contactMailto} reveal>
         Even a first call should leave you with something useful - a clearer read on where it's
-        stuck. 30 minutes, nothing to prepare.
+        stuck. 30 minutes, nothing to&nbsp;prepare.
       </BookCta>
     </div>
   </section>

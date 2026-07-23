@@ -5,7 +5,7 @@ description: >-
   Power BI case study: a museum with data in three systems and every report
   made by hand. I worked out the metrics with their team, then built one
   model they run.
-kicker: "reporting strategy, then the build"
+kicker: "strategy, then build"
 heading:
   before: "the museum that ran on a "
   em: "whiteboard"
@@ -21,7 +21,7 @@ tileOutcome: >-
   reads in Teams and runs themselves - three systems, one shared model
   underneath.
 datePublished: 2026-06-23
-dateModified: 2026-07-14
+dateModified: 2026-07-19
 contactSubject: "Power BI - seeing it in one place"
 footerInvitation: >-
   If your organisation collects plenty and still can't see how it's doing at a
@@ -41,7 +41,11 @@ delivery source pack (design/copy/case-studies/05-*); voice-signed by Alan
 question moved from lead + snapshot + chapter body into the one Exhibit, and
 the build chapter's triplet became the flow-diagram Exhibit (relationship
 carried by the figcaption; strokes decorative); ledger rows in ops
-brand/claims-ledger.md. */}
+brand/claims-ledger.md.
+Density pass 2026-07-19 (review WS-E): split four long chapters (where they
+started, moving it onto their machines, built for them to own, where it got
+to) and marked one .takeaway landing sentence - all pure splits, no wording
+changes. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
 <li><strong>where they started:</strong> tickets, catering and footfall in separate systems, none of it joined up, and no way to see how they were doing at a glance</li>
@@ -52,7 +56,13 @@ brand/claims-ledger.md. */}
 
 <Chapter id="started" kicker="where they started">
 
-They had no shortage of data. What they didn't have was any way to see it in one place. Retail and tickets lived in one platform, catering in another, footfall in a set of people-counters, and everything else in spreadsheets, none of it joined up. Every report was made by hand - right down to the daily visitor count, which someone on the front-of-house team read off the people-counter each day and wrote on a whiteboard, along with how many visitors crossed into the main galleries. They were good at collecting data. But turning it into the story their board and their funders needed was the bit that beat them, and they'd been hearing the same conclusion from every direction in their business planning: the data infrastructure wasn't sorted. Fixing it meant answering two questions - which reporting would actually make a difference, and then how to build it. They'd only been asking the second.
+They had no shortage of data. What they didn't have was any way to see it in one place. Retail and tickets lived in one platform, catering in another, footfall in a set of people-counters, and everything else in spreadsheets, none of it joined up.
+
+Every report was made by hand - right down to the daily visitor count, which someone on the front-of-house team read off the people-counter each day and wrote on a whiteboard, along with how many visitors crossed into the main galleries.
+
+They were good at collecting data. But turning it into the story their board and their funders needed was the bit that beat them, and they'd been hearing the same conclusion from every direction in their business planning: the data infrastructure wasn't sorted. Fixing it meant answering two questions - which reporting would actually make a difference, and then how to build it.
+
+<p class="takeaway">They'd only been asking the second.</p>
 
 </Chapter>
 
@@ -91,13 +101,17 @@ A couple of streams stay manual - cash from the donation boxes arrives as a simp
 
 <Chapter id="handover" kicker="moving it onto their machines">
 
-When it was time to move the reports onto the museum's own systems, they did the moving - me navigating, their hands on the keyboard: publishing the report, repointing it at their own data, working the credentials through. That mattered, because their systems sit inside a council's, and the reality of council IT turned up on cue - licences that existed but hadn't been allocated, settings locked down at the council end, and one authentication bug I'd genuinely never seen before. Some of that I took away and fixed. Some of it only their IT could fix, so I coached them on exactly what to ask for. And when the retail platform's permissions needed upgrading and the vendor's own documentation didn't match what was on the screen, the account owner drove, I navigated, and it was done in minutes.
+When it was time to move the reports onto the museum's own systems, they did the moving - me navigating, their hands on the keyboard: publishing the report, repointing it at their own data, working the credentials through. That mattered, because their systems sit inside a council's, and the reality of council IT turned up on cue - licences that existed but hadn't been allocated, settings locked down at the council end, and one authentication bug I'd genuinely never seen before.
+
+Some of that I took away and fixed. Some of it only their IT could fix, so I coached them on exactly what to ask for. And when the retail platform's permissions needed upgrading and the vendor's own documentation didn't match what was on the screen, the account owner drove, I navigated, and it was done in minutes.
 
 </Chapter>
 
 <Chapter id="own" kicker="built for them to own">
 
-The whole thing was shaped around the museum's own team running it. I separated using the reports from maintaining them from developing them, as three honest levels, so nobody felt they had to become a Power BI developer to get value. I built in the dull-but-vital bits: a data dictionary with what to check if something looks wrong, a documented set of targets, an orientation session, and the rule that at least two people should know the maintenance, so it survives someone leaving - because if it's nobody's job, it won't get done, and the reports start losing trust. And I told them to hold off on formal Power BI training until they'd lived with the reports for a few months, rather than selling them a course they didn't need yet.
+The whole thing was shaped around the museum's own team running it. I separated using the reports from maintaining them from developing them, as three honest levels, so nobody felt they had to become a Power BI developer to get value.
+
+I built in the dull-but-vital bits: a data dictionary with what to check if something looks wrong, a documented set of targets, an orientation session, and the rule that at least two people should know the maintenance, so it survives someone leaving - because if it's nobody's job, it won't get done, and the reports start losing trust. And I told them to hold off on formal Power BI training until they'd lived with the reports for a few months, rather than selling them a course they didn't need yet.
 
 </Chapter>
 
@@ -105,6 +119,8 @@ The whole thing was shaped around the museum's own team running it. I separated 
 
 The reports are built, live in Teams, and in use. In the first walkthrough, the team did exactly what you'd hope: they interrogated the thing - chased down a spend-per-head spike, spotted a category that wasn't labelled, caught a bank holiday the date logic was quietly dropping.
 
-After a few weeks of living with it they sent me a long list of tweaks, and I was glad of it: you don't know how you want a report to work until you've seen your own numbers in it. Nearly all of it was tuning, done in the final snagging. Better still is what the list showed. They were debating among themselves how the events page should treat dates, and they were right. One of them was building a board argument straight from the retail numbers. And when a new colleague joined, they brought her along to the next session. Somewhere in that first walkthrough, someone said the reports would save writing the visitor number on the whiteboard every morning - which they do, along with rather a lot else.
+After a few weeks of living with it they sent me a long list of tweaks, and I was glad of it: you don't know how you want a report to work until you've seen your own numbers in it. Nearly all of it was tuning, done in the final snagging.
+
+Better still is what the list showed. They were debating among themselves how the events page should treat dates, and they were right. One of them was building a board argument straight from the retail numbers. And when a new colleague joined, they brought her along to the next session. Somewhere in that first walkthrough, someone said the reports would save writing the visitor number on the whiteboard every morning - which they do, along with rather a lot else.
 
 </Chapter>

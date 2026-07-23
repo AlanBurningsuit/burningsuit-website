@@ -17,9 +17,10 @@ lead: >-
   dashboard, on her data, with me alongside coaching her through it.
 tileOutcome: >-
   From giving up on Power BI more than once - to opening it most days, on her
-  own data, to keep her hand in.
+  own data, to keep her hand in. She owns and maintains a real dashboard now,
+  hers to keep running and extend.
 datePublished: 2026-06-23
-dateModified: 2026-07-14
+dateModified: 2026-07-19
 contactSubject: "Power BI - someone who keeps bouncing off it"
 footerInvitation: >-
   If there's someone on your team who could be brilliant with this but keeps
@@ -36,7 +37,13 @@ adapted from design/copy/case-studies/02; voice-signed by Alan 2026-07-08.
 Instrument-exhibit conversion 2026-07-14 (D10): the bad-data rule moved from
 the safe chapter's prose into the Exhibit (rule stated impersonally - the
 done-with-her framing stays in the prose); ledger row in ops
-brand/claims-ledger.md. */}
+brand/claims-ledger.md.
+Density pass + new exhibit 2026-07-19 (review WS-E): added the who's-who
+master-data rule as a second Exhibit in the "built" chapter (rule stated
+impersonally; the prose narrative around it is unchanged - a pure split),
+source design/copy/case-studies/02-contact-centre-lead.md; split three long
+chapters; marked one .takeaway landing sentence; thickened tileOutcome by one
+sentence; ledger row pending in ops brand/claims-ledger.md. */}
 
 <Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
 <li><strong>who:</strong> a contact-centre team lead - not a data person, and happy to say so</li>
@@ -49,7 +56,9 @@ brand/claims-ledger.md. */}
 
 She'd put her hand up and said there was a gap in her Power BI she couldn't close on her own. Her team was about to grow from two to three, so she'd soon be bringing new people up to speed as well, and the whole thing had been sitting on her to-do list, and her performance review, for the best part of a year.
 
-She ran the team's reporting out of Excel. She'd worked through the online Power BI modules and could follow them fine, right up to the point where she swapped the sample data for her own: call stats, adherence, quality scores and messages from several systems, none of which agreed on how to spell an agent's name or which ID belonged to whom. When something broke, she'd take it to the internal data team, who'd do their bit and hand it back working - and she'd nod along without understanding what they'd done, aware she was leaning on their goodwill.
+She ran the team's reporting out of Excel. She'd worked through the online Power BI modules and could follow them fine, right up to the point where she swapped the sample data for her own: call stats, adherence, quality scores and messages from several systems, none of which agreed on how to spell an agent's name or which ID belonged to whom.
+
+When something broke, she'd take it to the internal data team, who'd do their bit and hand it back working - and she'd nod along without understanding what they'd done, aware she was leaning on their goodwill.
 
 So it went in cycles. She'd have a go, get frustrated, push it away, and come back to it a couple of months later. What she actually wanted was to do something with her own data herself, and not feel like she was failing a part of her job by handing it off.
 
@@ -57,13 +66,23 @@ So it went in cycles. She'd have a go, get frustrated, push it away, and come ba
 
 <Chapter id="turn" kicker="the turn was hers">
 
-The decision that mattered was already hers: she wanted to build this herself, not be handed a report someone else had made. A classroom course was never going to get her there, because the wall she hit was the bit courses skip: her own data, in all its mess. So I pitched her learning and development manager the other way round: a long, side-by-side training-and-build. She built her actual dashboard, on her actual data, from the first session - live on calls, with me coaching her through what she was seeing and what to do about it - the whole thing paced to fit around her actual week.
+The decision that mattered was already hers: she wanted to build this herself, not be handed a report someone else had made. A classroom course was never going to get her there, because the wall she hit was the bit courses skip: her own data, in all its mess.
+
+So I pitched her learning and development manager the other way round: a long, side-by-side training-and-build. She built her actual dashboard, on her actual data, from the first session - live on calls, with me coaching her through what she was seeing and what to do about it - the whole thing paced to fit around her actual week.
 
 </Chapter>
 
 <Chapter id="built" kicker="what she built">
 
-The first job was untangling who everyone was: her systems each had their own version of every agent, and none of them agreed. So she built one trustworthy list of agents from the phone platform - me explaining why that list had to come first - and we used it to find the mismatches: leavers still in the call logs, the chatbot and her own name showing up where they shouldn't. From there she grew it into a proper model: a clean set of fact tables for calls, time, messages, quality and sentiment, hung off shared agent and date tables, with the calculations written out explicitly so she could read them back.
+The first job was untangling who everyone was: her systems each had their own version of every agent, and none of them agreed.
+
+<Exhibit tab="who's who comes first" caption="the first thing we built · a national contact centre">
+
+nothing about people adds up until every system agrees on who they are - so the list of who's who is where the model has to start.
+
+</Exhibit>
+
+So she built one trustworthy list of agents from the phone platform - me explaining why that list had to come first - and we used it to find the mismatches: leavers still in the call logs, the chatbot and her own name showing up where they shouldn't. From there she grew it into a proper model: a clean set of fact tables for calls, time, messages, quality and sentiment, hung off shared agent and date tables, with the calculations written out explicitly so she could read them back.
 
 And she did the doing. She fixed a broken query herself mid-session, and reached for the right function before I got there, recognising it from Excel. The teaching was always on the symptom in front of her: when every agent showed the same total, I showed her why the number was wrong, so she'd recognise it herself next time.
 
@@ -79,7 +98,9 @@ remove the bad rows at source and write down why - so if it ever happens again i
 
 </Exhibit>
 
-You're always collaborating with someone, even when it's only yourself in six months' time, and that person deserves to be able to see the reasoning. And when she asked about modelling agents who move between teams over time, I was straight with her - a real problem, a genuinely hard one, and too big for where we were, so we'd save it. Knowing what to leave for later is part of how she ends up with a model she can keep running herself.
+<p class="takeaway">You're always collaborating with someone, even when it's only yourself in six months' time, and that person deserves to be able to see the reasoning.</p>
+
+And when she asked about modelling agents who move between teams over time, I was straight with her - a real problem, a genuinely hard one, and too big for where we were, so we'd save it. Knowing what to leave for later is part of how she ends up with a model she can keep running herself.
 
 </Chapter>
 

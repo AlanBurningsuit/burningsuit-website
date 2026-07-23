@@ -1,0 +1,6 @@
+{
+  "projectId": "2cb77c50-c8c6-437c-8afc-da9f74ea04f3",
+  "shape": "styles-only",
+  "readmeHeader": ".design-sync/conventions.md",
+  "note": "Off-script degraded import by user choice (2026-07-20): this repo is an Astro static site with no React component library, so only tokens, styles, and fonts are synced. No component bundle, no _ds_sync.json anchor — a re-sync rebuilds and re-uploads the small styles surface."
+}

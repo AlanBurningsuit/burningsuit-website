@@ -58,7 +58,10 @@ test("ai-fit-for-teams — regions", async ({ page }, testInfo) => {
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`aifit-hero-${tag}.png`);
   await expect(page.locator(".movements")).toHaveScreenshot(`aifit-movements-${tag}.png`);
-  await expect(page.locator(".fitmap")).toHaveScreenshot(`aifit-fitmap-${tag}.png`);
+  // the carved field document (the page's signature object since 2026-07)
+  await expect(page.locator(".fitmap-doc")).toHaveScreenshot(`aifit-fitmap-${tag}.png`);
+  // the offer band: tonal --bg-2 grouping + the talk photo inset (rhythm trial)
+  await expect(page.locator(".chapter:has(#how-it-works)")).toHaveScreenshot(`aifit-offer-band-${tag}.png`);
 });
 
 test("power-bi — regions", async ({ page }, testInfo) => {
@@ -66,6 +69,8 @@ test("power-bi — regions", async ({ page }, testInfo) => {
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`pbi-hero-${tag}.png`);
   await expect(page.locator(".proof")).toHaveScreenshot(`pbi-proof-${tag}.png`);
+  // the four offers as a ruled instrument (2026-07 review) — meta rows + rules
+  await expect(page.locator(".offer-table")).toHaveScreenshot(`pbi-offers-${tag}.png`);
 });
 
 test("about — regions", async ({ page }, testInfo) => {
@@ -75,8 +80,8 @@ test("about — regions", async ({ page }, testInfo) => {
   // chapters scoped by their heading id so each `.chapter` locator is unambiguous.
   await expect(page.locator(".chapter:has(#capable)")).toHaveScreenshot(`about-capable-${tag}.png`);
   await expect(page.locator(".chapter:has(#human)")).toHaveScreenshot(`about-human-${tag}.png`);
-  // origin is still text-only (Stuart & Alison photo pending); dog now carries
-  // the Zelda inset — regenerate origin's baseline when its photo lands too.
+  // origin carries the Stuart & Alison studio inset since 2026-07; capable
+  // carries the café working shot — both covered by their chapter regions.
   await expect(page.locator(".chapter:has(#origin)")).toHaveScreenshot(`about-origin-${tag}.png`);
   await expect(page.locator(".chapter:has(#dog)")).toHaveScreenshot(`about-dog-${tag}.png`);
 });
@@ -135,22 +140,49 @@ test("work contact-centre — exhibit region", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#safe)")).toHaveScreenshot(`work-contactcentre-safe-${tag}.png`);
 });
 
+test("work contact-centre — who's-who exhibit region", async ({ page }, testInfo) => {
+  // the master-data rule exhibit added 2026-07 to break the front-half prose run.
+  await prepare(page, "/work/contact-centre/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".chapter:has(#built)")).toHaveScreenshot(`work-contactcentre-built-${tag}.png`);
+});
+
+test("work carbon — why-one-model exhibit region", async ({ page }, testInfo) => {
+  // the strategy-rationale exhibit added 2026-07 to break the front-half prose run.
+  await prepare(page, "/work/carbon-footprint/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".chapter:has(#useful)")).toHaveScreenshot(`work-carbon-useful-${tag}.png`);
+});
+
 test("study + /work tails — the final-thread→footer gap is the tight variant", async ({ page }, testInfo) => {
   // Studies and /work end on a short close, so they carry .thread-tight
   // (margin --space-md + a halved stitch) instead of the shared 268px tail.
   // Geometry, not a screenshot: the region snapshots never captured this gap.
+  // /work now closes on its cta-band (2026-07 review fix), so its gap is
+  // measured from the band, not the last chapter — same tight tail after it.
   // Asserted on chromium only — the clamp() maths is viewport-dependent.
   test.skip(testInfo.project.name !== "chromium", "gap asserted once, at the 1280×720 chromium viewport");
-  for (const path of ["/work/law-firm/", "/work/"]) {
+  for (const { path, anchor } of [
+    { path: "/work/law-firm/", anchor: "main .chapter" },
+    { path: "/work/", anchor: "main .cta-band" },
+  ]) {
     await page.goto(path);
-    const gap = await page.evaluate(() => {
-      const chapters = document.querySelectorAll("main .chapter");
-      const last = chapters[chapters.length - 1].getBoundingClientRect();
+    const gap = await page.evaluate((sel) => {
+      const nodes = document.querySelectorAll(sel);
+      const last = nodes[nodes.length - 1].getBoundingClientRect();
       const main = document.querySelector("main")!.getBoundingClientRect();
       return Math.round(main.bottom - last.bottom);
-    });
+    }, anchor);
     // --space-md (38) + clamp(2rem,5vw,4rem) thread (64) + talk-spacer (58) ≈ 160
     expect(gap, `${path} tail gap`).toBeGreaterThan(120);
     expect(gap, `${path} tail gap`).toBeLessThan(200);
   }
+});
+
+test("work — cta band region", async ({ page }, testInfo) => {
+  // /work's closing action beat (2026-07 review: short pages ended in a dump
+  // to the basement) — snapshot the band so the invite stack stays covered.
+  await prepare(page, "/work/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".cta-band")).toHaveScreenshot(`work-cta-band-${tag}.png`);
 });

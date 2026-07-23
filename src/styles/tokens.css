@@ -65,6 +65,12 @@
   --deep: var(--color-deep);
   --line: rgb(211 198 170 / 0.12); /* fg @ 12% — the hairline divider */
   --shadow-ink: 8 20 12; /* near-black blue-green for carved drop-shadows; channels only — wrap as rgb(var(--shadow-ink) / α) */
+  /* carved-shadow offsets — three semantic depths (panel rest / photo frame /
+     panel hover lift); reduced at phone widths where four stacked frames read
+     heavy (see the media block at the end of this file). */
+  --shadow-off-panel: 6px;
+  --shadow-off-photo: 7px;
+  --shadow-off-lift: 9px;
 
   --fg: var(--color-fg);
   --fg-dim: var(--color-fg-dim);
@@ -184,5 +190,16 @@
 @media (max-width: 55.99rem) {
   :root {
     --header-h: 5.625rem; /* measured 88.6px (two-row bar, short labels), rounded up to 90px */
+  }
+}
+
+/* carved-shadow offsets, phone step — stacked carved frames at phone widths get
+   visually heavy at the desktop depths, so every offset drops ~2px on the
+   ladder's phone rung. The hover lift stays one step above the panel rest. */
+@media (max-width: 47.99rem) {
+  :root {
+    --shadow-off-panel: 4px;
+    --shadow-off-photo: 5px;
+    --shadow-off-lift: 6px;
   }
 }
