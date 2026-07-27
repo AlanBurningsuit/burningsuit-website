@@ -69,7 +69,7 @@ export const SITE_NAME = "burningsuit";
 /** The org's own description (ProfessionalService). Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =
-  "Embedded Power BI and Fabric advisory, done with you - I help your team get more capable with Power BI and Fabric, and keep the work yours.";
+  "Embedded Power BI and Fabric advisory, done with you - your team builds the reports and models with me, and gets more capable by doing it.";
 
 /** Postal identity (no street — area-served advisory, not a storefront). */
 export const ORG_ADDRESS = {
