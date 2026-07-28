@@ -7,8 +7,6 @@ import type { RowData } from "../components/ServiceRow.astro";
 import type { Line } from "../components/RiseHeading.astro";
 import BookCta from "../components/BookCta.astro";
 import { mailtoFor } from "../config/site";
-import { Picture } from "astro:assets";
-import aiTalk from "../assets/photos/ai-talk.jpg";
 
 const contactSubject = "AI in Power BI & Fabric";
 const contactMailto = mailtoFor(contactSubject);
@@ -75,7 +73,7 @@ const door: RowData = {
 ---
 
 <BaseLayout
-  title="AI for Power BI & Fabric teams - burningsuit"
+  title="AI fit for teams - Power BI, Copilot and the fit map - burningsuit"
   description="Licensed for Copilot but it hasn't paid off? I help Power BI and Fabric teams get good at AI without handing over judgement - you leave with a fit map."
   ogImage="/social/linkedin-ai-fit.png"
   ogImageAlt="make ai fit the team, beside a field-notebook decision map"
@@ -89,7 +87,7 @@ const door: RowData = {
   >
 
   <section class="page-hero aifit-hero">
-    <div class="wrap">
+    <div class="wrap hero-grid">
       <div class="hero-copy">
         {/* No eyebrow: service pages carry none (the H1 names the offer; the
             eyebrow only repeated it) — ruled in the 2026-07-15 review. */}
@@ -107,42 +105,49 @@ const door: RowData = {
           startIndex={1}
         />
         <p class="lead enter appear-450">
-          Your team's licensed for Copilot, and so far it hasn't quite paid off - some of it
-          sitting idle, some of it writing DAX nobody can fully vouch for. I help you work out
-          what to hand over, what to keep, and who checks what.
+          We work out where AI genuinely helps your team - and where it doesn't yet.
+          You leave with a <strong>fit map</strong> you can act on.
         </p>
-        <BookCta src="ai-fit-hero" mailtoHref={contactMailto} variant="hero" rowClass="enter appear-600" />
       </div>
+      {/* The deliverable as the hero visual (2026-07-28): the fit map document
+          itself sits beside the lede that promises it — the page shows what
+          you leave with. (A template is not evidence: dark ground, never
+          cream, per D10.) */}
+      <figure class="fitmap-doc enter appear-300" aria-label="the fit map">
+        <span class="tab"><span class="sp" aria-hidden="true"></span>the fit map</span>
+        <ol class="fitmap">
+          {
+            fitmap.map((s) => (
+              <li>
+                <span class="fm-label">{s.label}</span>
+                <p>{s.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </figure>
     </div>
   </section>
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
-
-  <section class="chapter" aria-labelledby="not-behind">
-    <div class="wrap">
-      <h2 class="section-head" id="not-behind" data-reveal>you're not behind</h2>
-      <div class="prose">
-        <p data-reveal>
-          I won't walk in assuming your team's fallen behind on AI, or that the people are the
-          problem. The teams I sit with usually know their own data and models inside out. What
-          they're short of is an unhurried hour to work out which of these tools earns its place,
-          and which is a demo that won't survive contact with their real reports.
-        </p>
-      </div>
-    </div>
-  </section>
 
   {/* The offer band: how-it-works + the fit map share a raised tonal ground
       (--bg-2) so the page's core chapters read as one grouped movement — the
       2026-07 rhythm trial (flat tone, no edges; roll-out decided after this
       page ships). */}
   <section class="chapter band-2" aria-labelledby="how-it-works">
-    <div class="wrap">
+    <div class="wrap what">
       <h2 class="section-head" id="how-it-works" data-reveal>how it works</h2>
+      <div class="label">
+        {/* Signed 2026-07-15 (asides-d11-deck placement 4) — migrated here
+            2026-07-28 when the fit map moved into the hero; still points at
+            the map's "stop worrying about" row. */}
+        <Aside data-reveal>a good chunk of it is knowing what to stop worrying about.</Aside>
+      </div>
       <div>
         <p class="lead" data-reveal>
-          It's a short piece of work, spread over two or three weeks and fitted around how the
-          team already works. It starts with a conversation, and ends with a map you can act on.
+          It runs over two or three weeks, around the team's normal work. It starts
+          with a conversation, and ends with the map.
         </p>
         <ol class="movements">
           {
@@ -160,54 +165,6 @@ const door: RowData = {
         {/* The work as it actually looks: Alan mid-talk, walking a room
             through what a coding agent really does. A real artefact, not a
             stock gesture — clearance recorded in the ops claims ledger. */}
-        <figure class="figure-inset" data-reveal-fig>
-          <div class="ph">
-            <Picture
-              src={aiTalk}
-              alt="Alan presenting to a room, pointing at a slide that walks through what a coding agent actually does"
-              formats={["avif"]}
-              fallbackFormat="webp"
-              widths={[700, 1050, 1400]}
-              sizes="(min-width: 56rem) 42rem, 100vw"
-              quality={60}
-              loading="lazy"
-            />
-          </div>
-          <figcaption class="ph-note">walking a room through what a coding agent actually does</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="chapter band-2" aria-labelledby="fitmap">
-    <div class="wrap what">
-      <h2 class="section-head" id="fitmap" data-reveal>what's in the fit map</h2>
-      <div class="label">
-        {/* Signed 2026-07-15 (asides-d11-deck placement 4) — replaced the
-            "means to an end" line Alan called chunky; points at a real row. */}
-        <Aside data-reveal>a good chunk of it is knowing what to stop worrying about.</Aside>
-      </div>
-      <div>
-        {/* The named deliverable as the page's signature object: a carved dark
-            field document (a template is not evidence, so it never earns
-            cream) — plate title, numbered ruled rows (2026-07 review: it was
-            styled as a plain list with less presence than the work cards). */}
-        <figure class="fitmap-doc" aria-label="the fit map" data-reveal>
-          <span class="tab"><span class="sp" aria-hidden="true"></span>the fit map</span>
-          {/* <ol>, not <ul>: the rows are sequenced (the CSS counter numbers
-              them) and list-style:none on a ul strips list semantics in
-              VoiceOver/Safari. */}
-          <ol class="fitmap">
-            {
-              fitmap.map((s) => (
-                <li>
-                  <span class="fm-label">{s.label}</span>
-                  <p>{s.body}</p>
-                </li>
-              ))
-            }
-          </ol>
-        </figure>
       </div>
     </div>
   </section>
@@ -218,6 +175,20 @@ const door: RowData = {
       <ul class="qlist">
         {worries.map((q) => <li data-reveal>{q}</li>)}
       </ul>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="not-behind">
+    <div class="wrap">
+      <h2 class="section-head" id="not-behind" data-reveal>you're not behind</h2>
+      <div class="prose">
+        <p data-reveal>
+          I won't walk in assuming your team's fallen behind on AI, or that the people are the
+          problem. The teams I sit with usually know their own data and models inside out. What
+          they're short of is an unhurried hour to work out which of these tools earns its place,
+          and which is a demo that won't survive contact with their real reports.
+        </p>
+      </div>
     </div>
   </section>
 

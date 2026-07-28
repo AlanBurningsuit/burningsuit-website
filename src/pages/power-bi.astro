@@ -38,8 +38,8 @@ const aiDoor: RowData = {
 ---
 
 <BaseLayout
-  title="Power BI & Fabric advisory: embedded, review, capability - burningsuit"
-  description="Embedded advisory, reporting strategy and architecture review for Power BI and Fabric teams - so your team owns it, and the know-how stays when I leave."
+  title="Embedded Power BI & Fabric advisory, done with you - burningsuit"
+  description="Ongoing Power BI and Fabric work with your team - real models, office hours, workshops - and a second opinion on the architecture, the hire, the plan you're being asked to sign off."
   ogImage="/social/linkedin-power-bi.png"
   ogImageAlt="power bi & fabric, done with you, beside a field-notebook model diagram"
   ogImageWidth={1200}
@@ -57,11 +57,15 @@ const aiDoor: RowData = {
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="power bi and fabric, done with you." lines={heroLines} />
         <p class="lead enter appear-300">
-          Your reporting works, but the team can't fully own it. Embedded advisory, reporting
-          strategy and architecture review - I help the whole team <strong>feel like they've
-          got it</strong>, so the know-how stays with you when I leave.
+          Ongoing work with your team - real models, office hours, workshops - and
+          <strong>a second opinion</strong> on the architecture, the hire, the plan
+          you're being asked to sign off.
         </p>
-        <BookCta src="power-bi-hero" mailtoHref={contactMailto} variant="hero" rowClass="enter appear-450" />
+        <p class="hero-sig enter appear-450">
+          Whatever the shape of the work, the aim is the same: a team that can explain
+          its own reporting, change it without fear, and vouch for the numbers that go
+          out - with or without me.
+        </p>
       </div>
       <figure class="hero-photo enter appear-300">
         <Picture
@@ -80,29 +84,7 @@ const aiDoor: RowData = {
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  <section class="chapter" aria-labelledby="thestory">
-    <div class="wrap">
-      <h2 class="section-head" id="thestory" data-reveal>the story rarely changes</h2>
-      <div class="prose">
-        <p data-reveal>
-          I've spent five years alongside teams adopting Power BI. A team gets the licences,
-          builds the first reports, and <em>then</em> the difficult part starts:
-        </p>
-        <ul class="beats" data-reveal>
-          <li>the one person who really knows the model becomes the bottleneck;</li>
-          <li>things break when anyone else touches them;</li>
-          <li>the training course made sense until you tried it on your own data.</li>
-        </ul>
-        <p data-reveal>
-          And there's always more: Fabric to move onto, Copilot writing DAX, agents building
-          whole reports. The more the tools take on, the sharper one question gets: who's making
-          the calls - you, or the tools?
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="chapter" aria-labelledby="whatido">
+  <section class="chapter band-2" aria-labelledby="whatido">
     <div class="wrap what">
       <h2 class="section-head" id="whatido" data-reveal>what i do</h2>
       <div class="label">
@@ -111,11 +93,6 @@ const aiDoor: RowData = {
         <Aside data-reveal>no one person has to understand the full stack to every level of detail.</Aside>
       </div>
       <div>
-        <p class="lead" data-reveal>
-          Whatever the shape of the work, the aim is the same: your team ends up more
-          <em>capable</em> of owning it - with or without me.
-        </p>
-
         {/* The four offers as a ruled instrument (2026-07 review): each row
             carries a mono meta line so shape, commitment and price compare at
             a glance. Meta facts are lifted from the offers' own signed copy —
@@ -161,6 +138,18 @@ const aiDoor: RowData = {
     </div>
   </section>
 
+  <section class="chapter" aria-labelledby="thestory">
+    <div class="wrap">
+      <h2 class="section-head" id="thestory" data-reveal>the things teams tell me</h2>
+      <ul class="qlist">
+        <li data-reveal>“When she's not here, we're screwed.”</li>
+        <li data-reveal>“We don't dare touch it in case it breaks.”</li>
+        <li data-reveal>“The course was great - then we tried it on our own data.”</li>
+        <li data-reveal>“The model broke, and we don't know where.”</li>
+      </ul>
+    </div>
+  </section>
+
   <section class="chapter" aria-labelledby="proof">
     <div class="wrap what">
       <h2 class="section-head" id="proof" data-reveal>a team that owned it</h2>
@@ -177,8 +166,7 @@ const aiDoor: RowData = {
             smallest change, the whole thing resting on one or two people. A few months of
             working together, and they were running their own diagnostic sessions, tracing data
             lineage end to end, and walking into handover conversations with the likely cause
-            already in hand. The reliance moved from a single expert to the
-            team.
+            already in hand.
           </p>
           <Fragment slot="links">
             <a class="u" href="/work/law-firm/">read the full story ▸</a> · <a class="u" href="/work/">more of the work ▸</a>
@@ -201,10 +189,6 @@ const aiDoor: RowData = {
     <div class="wrap">
       <h2 class="section-head" id="aipressure" data-reveal>what ai's already touching</h2>
       <div>
-        <p class="lead" data-reveal>
-          A team that can own and verify its own reporting is also the team that's ready for what
-          AI adds to the job.
-        </p>
         <DoorRow {...aiDoor} variant="second" index={1} />
       </div>
     </div>
