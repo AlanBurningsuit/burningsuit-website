@@ -9,7 +9,7 @@ import type { RowData } from "../components/ServiceRow.astro";
 import type { Line } from "../components/RiseHeading.astro";
 import { getEntry } from "astro:content";
 import { Picture } from "astro:assets";
-import pbiHero from "../assets/photos/DSC08810-Edit.jpg";
+import pbiHero from "../assets/photos/DSC08846-Edit_cropped.jpg";
 import BookCta from "../components/BookCta.astro";
 import { mailtoFor } from "../config/site";
 
@@ -57,25 +57,16 @@ const aiDoor: RowData = {
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="power bi and fabric, done with you." lines={heroLines} />
         <p class="lead enter appear-300">
-          <strong>I've spent five years alongside teams adopting Power BI</strong>, and the story
-          rarely changes. A team gets the licences, builds the first reports, and <em>then</em> the
-          difficult part starts:
+          Your reporting works, but the team can't fully own it. Embedded advisory, reporting
+          strategy and architecture review - I help the whole team <strong>feel like they've
+          got it</strong>, so the know-how stays with you when I leave.
         </p>
-        <ul class="beats enter appear-450">
-          <li>the one person who really knows the model becomes the bottleneck;</li>
-          <li>things break when anyone else touches them;</li>
-          <li>the training course made sense until you tried it on your own data.</li>
-        </ul>
-        <p class="lead enter appear-600">
-          And there's always more: Fabric to move onto, Copilot writing DAX, agents building
-          whole reports. The more the tools take on, the sharper one question gets: who's making
-          the calls - you, or the tools?
-        </p>
+        <BookCta src="power-bi-hero" mailtoHref={contactMailto} variant="hero" rowClass="enter appear-450" />
       </div>
       <figure class="hero-photo enter appear-300">
         <Picture
           src={pbiHero}
-          alt="Alan in a red checked overshirt, smiling, against a dark wall"
+          alt="Alan in a red checked overshirt, smiling, in a narrow brick alley"
           formats={["avif"]}
           fallbackFormat="webp"
           widths={[400, 600, 800]}
@@ -88,6 +79,28 @@ const aiDoor: RowData = {
   </section>
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-labelledby="thestory">
+    <div class="wrap">
+      <h2 class="section-head" id="thestory" data-reveal>the story rarely changes</h2>
+      <div class="prose">
+        <p data-reveal>
+          I've spent five years alongside teams adopting Power BI. A team gets the licences,
+          builds the first reports, and <em>then</em> the difficult part starts:
+        </p>
+        <ul class="beats" data-reveal>
+          <li>the one person who really knows the model becomes the bottleneck;</li>
+          <li>things break when anyone else touches them;</li>
+          <li>the training course made sense until you tried it on your own data.</li>
+        </ul>
+        <p data-reveal>
+          And there's always more: Fabric to move onto, Copilot writing DAX, agents building
+          whole reports. The more the tools take on, the sharper one question gets: who's making
+          the calls - you, or the tools?
+        </p>
+      </div>
+    </div>
+  </section>
 
   <section class="chapter" aria-labelledby="whatido">
     <div class="wrap what">
@@ -130,7 +143,7 @@ const aiDoor: RowData = {
 
           <Offer title="architecture review" meta="a fixed, shorter piece · scoped and priced up front">
             <p>
-              Then the plumbing: does your model actually serve that strategy, or quietly get in the
+              Then the plumbing: does your model actually serve that strategy, or get in the
               way? I'll tell you what's carrying its weight and what isn't - including when the honest
               answer is that a new model won't fix the real problem. And if you're weighing up Fabric,
               I'll tell you straight whether it earns its keep for you.
