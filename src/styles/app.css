@@ -1373,8 +1373,56 @@
      The headline is the display grotesque, sized to the narrower column — NOT
      the big mono kicker the page used before. Photo top-aligns beside the
      headline; the copy runs on below it. */
+  /* the mirrored hero sits against the raised offer band below it — the seam
+     needs the full section step, not the default hero end padding. */
+  .pbi-hero {
+    padding-block-end: var(--space-super);
+  }
   .pbi-hero .hero-grid {
     align-items: start;
+  }
+  /* mirrored hero (2026-07-28): portrait left, copy right — differentiates the
+     service page from the home hero it shares its grid with. Desktop only; the
+     mobile stack stays copy-first so the H1 keeps the fold. */
+  @media (min-width: 62rem) {
+    .pbi-hero .hero-grid {
+      grid-template-columns: 0.82fr 1.25fr;
+    }
+    .pbi-hero .hero-photo {
+      order: -1;
+      /* the copy column sets the row height; the portrait fills it exactly
+         (object-fit crop, framed on the face) so the two columns hold equal
+         visual weight whatever the copy's length. */
+      position: relative;
+      align-self: stretch;
+    }
+    .pbi-hero .hero-photo img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 25%;
+    }
+  }
+  /* /ai-fit hero (2026-07-28): the fit map document is the hero visual — the
+     deliverable beside the lede that promises it. The doc takes the wider
+     column and tightens its row rhythm one step; the copy centres against it
+     so the height difference reads composed, not lop-sided. */
+  .aifit-hero .hero-grid {
+    align-items: center;
+  }
+  .aifit-hero .fitmap-doc {
+    margin-top: 0;
+  }
+  @media (min-width: 62rem) {
+    .aifit-hero .hero-grid {
+      grid-template-columns: 1fr 1.15fr;
+    }
+    .aifit-hero .fitmap li + li {
+      margin-top: var(--space-2xs);
+      padding-top: var(--space-2xs);
+    }
   }
   .pbi-hero h1 {
     margin-top: 0;
