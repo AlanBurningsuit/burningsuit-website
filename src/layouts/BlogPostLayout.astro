@@ -1,0 +1,84 @@
+---
+/**
+ * /blog/<slug> — a single field note.
+ *
+ * Wraps BaseLayout with the shared post shell: a text-led page-hero (kicker +
+ * dateline on the mono meta line, lowercase H1 with one amber em, standfirst),
+ * then the chaptered MDX body via the default slot. Mirrors CaseStudyLayout
+ * minus the case-study furniture (no Casefile, no /power-bi door) — a note
+ * ends on its own last line and lets the footer close carry the ask. The
+ * Article JSON-LD author is the Person @id, grounded by the first-person copy.
+ */
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import { articleNode, breadcrumbList } from "../lib/schema";
+
+interface Props {
+  post: CollectionEntry<"blog">["data"];
+}
+const { post } = Astro.props;
+const { kicker, heading, lead, title, description, contactSubject, footerInvitation } = post;
+
+// Per-post structured data: an Article (authored by Alan, published by the org
+// — both linked by @id to the site graph) plus a Home → Field notes → page
+// BreadcrumbList. dateModified flows through only when the entry carries it.
+const siteUrl = Astro.site?.href ?? "https://burningsuit.co.uk/";
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const publishedTime = post.datePublished.toISOString();
+const modifiedTime = post.dateModified?.toISOString();
+const article = articleNode({
+  siteUrl,
+  pageUrl,
+  headline: [heading.before, heading.em, heading.after].filter(Boolean).join("").trim(),
+  description,
+  datePublished: publishedTime,
+  dateModified: modifiedTime,
+});
+const crumbs = breadcrumbList([
+  { name: "Home", url: siteUrl },
+  { name: "Field notes", url: `${siteUrl}blog/` },
+  { name: title.replace(/ - burningsuit$/, ""), url: pageUrl },
+]);
+
+// The visible dateline — the schema discipline (dates the Article node claims
+// must be visible on the page) applied to the freshness signal. UTC pinned so
+// the build machine's timezone can't shift a midnight date backwards a day.
+const dateline = post.datePublished.toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+const datetime = publishedTime.slice(0, 10);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  contactSubject={contactSubject}
+  ogType="article"
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  jsonLd={[article, crumbs]}
+>
+  {footerInvitation && <Fragment slot="footer-invitation">{footerInvitation}</Fragment>}
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="kicker meta enter">
+        {kicker} · <time datetime={datetime}>{dateline}</time>
+      </p>
+      <h1 class="enter appear-300">
+        {heading.before}{heading.em && <em>{heading.em}</em>}{heading.after}
+      </h1>
+      <p class="lead enter appear-450">{lead}</p>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <slot />
+
+  <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

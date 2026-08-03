@@ -1,0 +1,68 @@
+---
+/**
+ * /blog — the field-notes index.
+ *
+ * Follows /work: a text-led page-hero, then the `blog` collection rendered as
+ * carved cream tiles through ServiceRows, newest first. Adding a post to the
+ * collection adds a tile here automatically; while the collection is empty the
+ * index says so quietly and points at the case files instead of rendering an
+ * empty grid.
+ */
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ServiceRows from "../../components/ServiceRows.astro";
+import type { RowData } from "../../components/ServiceRow.astro";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.datePublished.getTime() - a.data.datePublished.getTime(),
+);
+const rows: RowData[] = posts.map((p) => ({
+  href: `/blog/${p.id}/`,
+  // The schema's documented contract: kicker drives the hero eyebrow AND the
+  // index tile plate, so a post that overrides it can't drift apart.
+  tab: p.data.kicker,
+  title: p.data.heading,
+  body: p.data.description,
+  cta: "read the note",
+}));
+---
+
+<BaseLayout
+  title="Field notes on Power BI, Fabric and data teams - burningsuit"
+  description="Short pieces on Power BI, Microsoft Fabric and the judgement calls around them, written from live client work by Alan Harman-Box."
+  contactSubject="Power BI & Fabric - something you wrote"
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <h1 class="enter appear-300">field notes.</h1>
+      <p class="lead enter appear-450">
+        Short pieces on Power BI, Fabric and the judgement calls that come up in
+        real client work - written down while they're still fresh.
+      </p>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-labelledby="notes">
+    <div class="wrap">
+      <h2 class="section-head" id="notes" data-reveal>the notes</h2>
+      {
+        rows.length > 0 ? (
+          <ServiceRows rows={rows} />
+        ) : (
+          <div class="prose">
+            <p data-reveal>
+              The first notes are being written up. Until they land, the nearest
+              thing is the <a class="u" href="/work/">case files</a> - real
+              engagements, told in full.
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

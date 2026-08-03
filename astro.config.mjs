@@ -81,12 +81,13 @@ export default defineConfig({
   },
 
   integrations: [
-    // MDX powers the `work` case-study collection (and the future blog). The
-    // .mdx bodies render through the case-study component kit (Chapter/Snapshot/
+    // MDX powers the `work` case-study collection and the `blog` field notes.
+    // The .mdx bodies render through the shared component kit (Chapter/Snapshot/
     // Offer); no client JS is shipped — it's a build-time transform only.
     mdx(),
     // Auto-discovers built pages. /, /about, /ai-fit-for-teams, /power-bi,
-    // /colophon and /work (+ /work/<slug>) are indexable; 404 is excluded.
+    // /colophon, /work (+ /work/<slug>) and /blog (+ /blog/<slug>) are
+    // indexable; 404 is excluded.
     sitemap(),
   ],
 

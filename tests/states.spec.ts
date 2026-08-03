@@ -12,6 +12,7 @@ const pages = [
   "/about/",
   "/work/",
   "/work/law-firm/",
+  "/blog/",
   "/privacy/",
 ];
 
