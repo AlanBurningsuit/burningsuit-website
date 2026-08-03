@@ -1,0 +1,30 @@
+---
+/**
+ * /blog/<slug> — renders one entry of the `blog` collection.
+ *
+ * The MDX body is authored against the same kit as the case studies; the
+ * components are passed to <Content> here so the .mdx files stay import-free.
+ */
+import { getCollection, render } from "astro:content";
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+import Chapter from "../../components/Chapter.astro";
+import Snapshot from "../../components/Snapshot.astro";
+import Offer from "../../components/Offer.astro";
+import Aside from "../../components/Aside.astro";
+import Exhibit from "../../components/Exhibit.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BlogPostLayout post={entry.data}>
+  <Content components={{ Chapter, Snapshot, Offer, Aside, Exhibit }} />
+</BlogPostLayout>

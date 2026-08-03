@@ -59,11 +59,15 @@ gate is a **regression tripwire**, not a pixel oracle.
 
 ## Content
 
-Two tracks:
+Three tracks:
 
 - **Case studies / proof** → an `.mdx` entry in the `work` collection
   (`src/content/work/`; schema in `src/content.config.ts`). The filename is the
   slug; the route and the `/work` tile are automatic.
+- **Field notes / blog** → an `.mdx` entry in the `blog` collection
+  (`src/content/blog/`; schema in `src/content.config.ts`, same MDX kit as the
+  case studies). The filename is the slug; the route and the `/blog` tile are
+  automatic, sorted newest first by `datePublished`.
 - **Standing pages** → bespoke `.astro` under `src/pages/`.
 
 **Naming is gated per study** by `namePublished` frontmatter: the named client +
