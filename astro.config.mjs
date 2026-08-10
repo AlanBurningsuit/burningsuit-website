@@ -74,6 +74,20 @@ export default defineConfig({
     "/who-we-are/person-power-bi-training": "/power-bi/",
     "/who-we-are/how-we-train/online-powerbi-training": "/power-bi/",
     "/who-we-are/our-clients": "/work/",
+    // Fourth sweep (Plausible 404 events, 2026-07-16 → 2026-08-10): every real
+    // content URL visitors actually hit. All technique/training-era pages, so
+    // /power-bi/ is the topical successor throughout; /blog was the old index.
+    "/blog": "/power-bi/",
+    "/blog/i-have-powerquery-using-power-query-call-rest-apis": "/power-bi/",
+    "/blog/categorising-measures-numeric-ranges-or-bins": "/power-bi/",
+    "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins": "/power-bi/",
+    "/blog/2021/08/context-transition-where-the-row-context-becomes-a-filter-context":
+      "/power-bi/",
+    "/blog/2015/01/excel-power-pivot-just-how-big-is-big": "/power-bi/",
+    "/blog/using-continuous-x-axis-column-charts-year-and-month-labels": "/power-bi/",
+    "/power-bi-composite-models-whats-the-big-deal": "/power-bi/",
+    "/7-secrets-of-the-matrix-visual": "/power-bi/",
+    "/training/power-bi-training/power-bi-fundamentals": "/power-bi/",
   },
   build: {
     // Keep CSS external so `style-src 'self'` covers it without inline hashes.
