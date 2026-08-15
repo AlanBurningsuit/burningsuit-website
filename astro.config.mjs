@@ -88,6 +88,15 @@ export default defineConfig({
     "/power-bi-composite-models-whats-the-big-deal": "/power-bi/",
     "/7-secrets-of-the-matrix-visual": "/power-bi/",
     "/training/power-bi-training/power-bi-fundamentals": "/power-bi/",
+    // Fifth sweep (Plausible 404 events, 2026-08-10 → 2026-08-13): five legacy
+    // content URLs that surfaced only after sweep 4 shipped. All Power BI /
+    // Charticulator-era pages (incl. the book page and a WP-slug variant of the
+    // already-stubbed fundamentals course), so /power-bi/ throughout.
+    "/blog/2020/07/7-secrets-of-the-pie-chart": "/power-bi/",
+    "/blog/2021/06/charticulator-in-power-bi-1": "/power-bi/",
+    "/charticulator-in-power-bi-1": "/power-bi/",
+    "/our-book-introducing-charticulator-for-power-bi": "/power-bi/",
+    "/power-bi-training/power-bi-fundamentals": "/power-bi/",
   },
   build: {
     // Keep CSS external so `style-src 'self'` covers it without inline hashes.
