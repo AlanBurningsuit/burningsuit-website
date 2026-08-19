@@ -38,18 +38,20 @@ export function mailtoFor(subject?: string): string {
 }
 
 /**
- * Cookieless Plausible analytics (Workstream D). The matching
- * `ANALYTICS_ENABLED` flag in astro.config.mjs must stay enabled so the provider
- * host remains in script-src + connect-src. The personalised tracker embeds the
- * site id in the URL (no data-domain attribute); it only starts once
- * `plausible.init()` runs, which lives in the bundled enhance.ts module — the
- * account's inline init snippet is deliberately NOT pasted into the layout
- * (the site ships no inline scripts). Visitors can exclude themselves via the
- * `plausible_ignore` localStorage flag (the /privacy opt-out toggle).
+ * Cookieless Umami Cloud analytics (replaced Plausible, 2026-08-19). The
+ * matching `ANALYTICS_ENABLED` flag in astro.config.mjs must stay enabled so
+ * both provider hosts remain in the CSP — the script host (cloud.umami.is) in
+ * script-src and the beacon host (gateway.umami.is, where the tracker POSTs
+ * /api/send) in connect-src. The tracker auto-tracks pageviews on load and
+ * needs no init call or inline snippet; the site id rides in the tag's
+ * data-website-id attribute. Custom events go through `umami.track()` in
+ * enhance.ts. Visitors can exclude themselves via the `umami.disabled`
+ * localStorage flag (the /privacy opt-out toggle).
  */
 export const ANALYTICS = {
   enabled: true,
-  scriptSrc: "https://plausible.io/js/pa-36aM528GLdATzATwx2J-6.js",
+  scriptSrc: "https://cloud.umami.is/script.js",
+  websiteId: "7a27ff45-e9ce-4aec-8940-260c61c35dff",
 } as const;
 
 /* ------------------------------------------------------------------ *

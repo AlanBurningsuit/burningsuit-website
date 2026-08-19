@@ -9,7 +9,7 @@
  * scripts: the `.js` reveal gate is armed inside the bundled enhance.ts module
  * (which the build inlines as a module script and auto-hashes into script-src —
  * hashes exist, and they're byte-sensitive, hence the LF-only rule), and the
- * cookieless Plausible tracker is governed by its explicit CSP host.
+ * cookieless Umami tracker is governed by its explicit CSP hosts.
  */
 import { Font } from "astro:assets";
 import Header from "../components/Header.astro";
@@ -117,12 +117,15 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     <Font cssVariable="--font-albert" preload />
     <Font cssVariable="--font-commit" preload />
 
-    {/* Cookieless analytics. The matching ANALYTICS_ENABLED flag in
-        astro.config.mjs adds the provider host to script-src + connect-src.
-        is:inline keeps the external src untouched; it is governed by the
-        script-src host, not a hash. Init lives in enhance.ts (the queue stub
-        is safe in either load order), so no inline snippet is needed. */}
-    {ANALYTICS.enabled && <script is:inline async src={ANALYTICS.scriptSrc} />}
+    {/* Cookieless analytics (Umami). The matching ANALYTICS_ENABLED flag in
+        astro.config.mjs adds the script host to script-src and the beacon
+        host to connect-src. is:inline keeps the external src untouched; it is
+        governed by the script-src host, not a hash. The tracker auto-tracks
+        on load — no init, no inline snippet; custom events call umami.track()
+        from enhance.ts (guarded, so adblock/outage costs nothing). */}
+    {ANALYTICS.enabled && (
+      <script is:inline defer src={ANALYTICS.scriptSrc} data-website-id={ANALYTICS.websiteId} />
+    )}
   </head>
   <body>
     <a class="skip" href="#main">skip to content</a>

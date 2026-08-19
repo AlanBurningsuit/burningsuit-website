@@ -2,31 +2,38 @@ import { test, expect } from "@playwright/test";
 import { ANALYTICS } from "../src/config/site";
 
 /**
- * The two custom events (404 tracking, email-intent) queue correctly through
- * the enhance.ts stub. The tracker script is routed to an empty body so
- * `window.plausible` stays the queue stub — assertions read the queue itself,
- * with no beacon mocking or counting (csp.spec.ts owns the beacon contract).
+ * The two custom events (404 tracking, email-intent) reach umami.track()
+ * correctly. The tracker script is routed to a recording stub that defines
+ * window.umami before enhance.ts runs (the mocked tag is a defer script in
+ * <head>, the module runs at end of body), so assertions read the recorded
+ * calls — no beacon mocking or counting (csp.spec.ts owns the beacon
+ * contract).
  */
 
-const readQueue = (page: import("@playwright/test").Page) =>
-  page.evaluate(() => (window as { plausible?: { q?: unknown[][] } }).plausible?.q ?? []);
+type Recorder = { __umamiCalls?: unknown[][] };
+
+const readCalls = (page: import("@playwright/test").Page) =>
+  page.evaluate(() => (window as Recorder).__umamiCalls ?? []);
 
 test.beforeEach(async ({ page }) => {
   await page.route(ANALYTICS.scriptSrc, (route) =>
-    route.fulfill({ contentType: "application/javascript", body: "" }),
+    route.fulfill({
+      contentType: "application/javascript",
+      body: "window.umami = { track: (n, d) => (window.__umamiCalls = window.__umamiCalls || []).push(d === undefined ? [n] : [n, d]) };",
+    }),
   );
 });
 
-test("404 page queues a non-interactive 404 event carrying the missed path", async ({ page }) => {
+test("404 page tracks a 404 event carrying the missed path", async ({ page }) => {
   // http-server does not rewrite missing paths to 404.html — hit the file
   // directly. In production GitHub Pages serves it at the requested path, so
   // location.pathname is the missed URL; here that means "/404.html" itself.
   await page.goto("/404.html", { waitUntil: "load" });
-  const q = await readQueue(page);
-  expect(q).toContainEqual(["404", { props: { path: "/404.html" }, interactive: false }]);
+  const calls = await readCalls(page);
+  expect(calls).toContainEqual(["404", { path: "/404.html" }]);
 });
 
-test("mailto click queues an Email click event; regular pages queue no 404", async ({ page }) => {
+test("mailto click tracks an Email click event; regular pages track no 404", async ({ page }) => {
   await page.goto("/", { waitUntil: "load" });
 
   // Keep headless browsers from attempting the external mailto protocol —
@@ -46,7 +53,7 @@ test("mailto click queues an Email click event; regular pages queue no 404", asy
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await page.locator('footer a[href^="mailto:"]').click();
 
-  const q = await readQueue(page);
-  expect(q).toContainEqual(["Email click"]);
-  expect(q.some((ev) => ev[0] === "404")).toBe(false);
+  const calls = await readCalls(page);
+  expect(calls).toContainEqual(["Email click"]);
+  expect(calls.some((ev) => ev[0] === "404")).toBe(false);
 });

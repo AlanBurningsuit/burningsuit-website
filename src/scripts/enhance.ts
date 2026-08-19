@@ -21,49 +21,44 @@
    possible one-frame reveal flash on slow connections. ---- */
 document.documentElement.classList.add("js");
 
-/* ---- Plausible init: the CSP-safe home for the account snippet's inline
-   half. The queue stub works in either load order — if the async tracker
-   won the race it defined the real plausible/init and these `||` keep it;
-   if this module ran first, the stub queues and `plausible.o = {}` tells
-   the tracker to start on arrival. ---- */
-type PlausibleStub = {
-  (...args: unknown[]): void;
-  q?: unknown[];
-  o?: object;
-  init?: (opts?: object) => void;
+/* ---- Umami custom events: the tracker (a defer script in <head>) auto-
+   tracks pageviews and normally defines window.umami before this end-of-body
+   module runs. The guard covers the exceptions — adblock or a provider
+   outage drops the event silently, and if this module somehow wins the race
+   the event fires from the tag's load event instead. ---- */
+type Umami = { track: (name: string, data?: Record<string, unknown>) => void };
+const track = (name: string, data?: Record<string, unknown>) => {
+  const w = window as { umami?: Umami };
+  if (w.umami) w.umami.track(name, data);
+  else
+    document
+      .querySelector<HTMLScriptElement>("script[data-website-id]")
+      ?.addEventListener(
+        "load",
+        () => (window as { umami?: Umami }).umami?.track(name, data),
+        { once: true },
+      );
 };
-const w = window as { plausible?: PlausibleStub };
-w.plausible =
-  w.plausible ||
-  function (...args: unknown[]) {
-    (w.plausible!.q = w.plausible!.q || []).push(args);
-  };
-w.plausible.init =
-  w.plausible.init ||
-  function (opts?: object) {
-    w.plausible!.o = opts || {};
-  };
-w.plausible.init();
 
-/* ---- /privacy analytics opt-out: Plausible's supported exclusion is the
-   `plausible_ignore` localStorage flag (verified against the deployed
-   tracker). The button's two labels live in its data attributes so the copy
-   stays in the page; without JS the tracker never runs, so the hidden
-   toggle costs nothing. localStorage can throw in locked-down browsers —
-   the button then stays inert rather than erroring. ---- */
+/* ---- /privacy analytics opt-out: Umami's supported exclusion is the
+   `umami.disabled` localStorage flag (value "1", per docs.umami.is). The
+   button's two labels live in its data attributes so the copy stays in the
+   page; without JS the tracker never runs, so the hidden toggle costs
+   nothing. localStorage can throw in locked-down browsers — the button then
+   stays inert rather than erroring. ---- */
 const optOut = document.querySelector<HTMLButtonElement>("[data-analytics-optout]");
 if (optOut) {
-  const KEY = "plausible_ignore";
+  const KEY = "umami.disabled";
   try {
     const render = () => {
-      const off = localStorage.getItem(KEY) === "true";
+      const off = localStorage.getItem(KEY) === "1";
       optOut.setAttribute("aria-pressed", String(off));
       const label = off ? optOut.dataset.labelOff : optOut.dataset.labelOn;
       if (label) optOut.textContent = label;
     };
     optOut.addEventListener("click", () => {
-      if (localStorage.getItem(KEY) === "true") localStorage.removeItem(KEY);
-      else localStorage.setItem(KEY, "true");
+      if (localStorage.getItem(KEY) === "1") localStorage.removeItem(KEY);
+      else localStorage.setItem(KEY, "1");
       render();
     });
     render();
@@ -74,19 +69,18 @@ if (optOut) {
 
 /* ---- 404 tracking: surfaces legacy/broken inbound URLs in the dashboard
    without server logs. GitHub Pages serves 404.html at the REQUESTED path, so
-   location.pathname is the missed URL. `interactive: false` because the
-   tracker defaults custom events to interactive — without it every 404
-   landing would count as engagement and suppress the bounce it really is. ---- */
+   location.pathname is the missed URL. Event name + `path` prop are the
+   contract the redirect-sweep pipeline reads — keep both stable. ---- */
 if (document.querySelector("[data-track-404]")) {
-  w.plausible("404", { props: { path: location.pathname }, interactive: false });
+  track("404", { path: location.pathname });
 }
 
 /* ---- email-intent tracking: one delegated listener covers every mailto
    (footer, CTAs, /privacy). Cal.com clicks already carry per-placement UTMs
-   via the outbound-links goal; this closes the other conversion path. ---- */
+   via booking-record UTM params; this closes the other conversion path. ---- */
 document.addEventListener("click", (e) => {
   if ((e.target as Element)?.closest?.('a[href^="mailto:"]')) {
-    w.plausible!("Email click");
+    track("Email click");
   }
 });
 

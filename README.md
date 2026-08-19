@@ -100,8 +100,10 @@ front. Everything else in the policy (`default-src 'none'`,
 `script-src 'self'`, `style-src 'self'`, etc.) is enforced, and
 `tests/csp.spec.ts` asserts both the policy and its runtime cleanliness.
 
-Analytics: **ON.** The site uses cookieless Plausible behind two deliberately
+Analytics: **ON.** The site uses cookieless Umami Cloud behind two deliberately
 coupled flags (`ANALYTICS.enabled` in `src/config/site.ts` and
-`ANALYTICS_ENABLED` in `astro.config.mjs`). The CSP permits only Plausible's
-tracker script and event beacon. `tests/csp.spec.ts` asserts the script, domain
-and both CSP permissions together so the two configuration points cannot drift.
+`ANALYTICS_ENABLED` in `astro.config.mjs`). The CSP permits only Umami's two
+hosts — the tracker script (`cloud.umami.is`, script-src) and its event beacon
+(`gateway.umami.is`, connect-src). `tests/csp.spec.ts` asserts the script tag,
+website id and both CSP permissions together so the configuration points
+cannot drift.
