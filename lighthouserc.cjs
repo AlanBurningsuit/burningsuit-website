@@ -14,13 +14,15 @@ module.exports = {
         "http://localhost/work/law-firm/index.html",
       ],
       numberOfRuns: 1,
-      // The Plausible tracker is excluded from the lab run (owner ruling,
-      // 2026-07-16): Lantern charges the third-party origin ~1.5s of SIMULATED
-      // FCP even though observed paint is identical with and without it
-      // (454ms vs 474ms, TBT 0ms, 3KB async). Blocking it keeps the 0.95
-      // perf assertion sensitive to regressions in the site's own code
-      // instead of Lighthouse's third-party modelling.
-      settings: { preset: "desktop", blockedUrlPatterns: ["*plausible.io*"] },
+      // The analytics tracker is excluded from the lab run (owner ruling,
+      // 2026-07-16, established on Plausible and carried over to Umami):
+      // Lantern charges the third-party origin ~1.5s of SIMULATED FCP even
+      // though observed paint was identical with and without it (454ms vs
+      // 474ms, TBT 0ms). Blocking it keeps the 0.95 perf assertion sensitive
+      // to regressions in the site's own code instead of Lighthouse's
+      // third-party modelling. The pattern covers both Umami hosts
+      // (cloud.umami.is script + gateway.umami.is beacon).
+      settings: { preset: "desktop", blockedUrlPatterns: ["*umami.is*"] },
     },
     assert: {
       // Scores are tightened to ERROR at 0.95 for performance + best-practices

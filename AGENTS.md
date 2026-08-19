@@ -14,8 +14,8 @@ styles live in `src/styles/` (`tokens.css` + `app.css`).
 ## Branches (only two)
 
 - **`main`** — production. ⚠️ Whatever is on `main` **deploys to the live apex**
-  (`deploy.yml` via Pages-Actions). Right now that is a one-page Astro
-  placeholder; the legacy site is preserved as a tag. Never push experiments
+  (`deploy.yml` via Pages-Actions). Since go-live (2026-08) that is the full
+  Astro site; the legacy site is preserved as a tag. Never push experiments
   here — a merge to `main` IS a production deploy.
 - **`dev`** — integration branch and the home of the full Astro site (all real
   work). The Netlify preview builds from here.

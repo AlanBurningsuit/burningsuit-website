@@ -29,10 +29,10 @@ for (const path of pages) {
     await page.route(ANALYTICS.scriptSrc, (route) =>
       route.fulfill({
         contentType: "application/javascript",
-        body: 'void fetch("https://plausible.io/api/event", { method: "POST", mode: "no-cors", body: "{}" });',
+        body: 'void fetch("https://gateway.umami.is/api/send", { method: "POST", mode: "no-cors", body: "{}" });',
       }),
     );
-    await page.route("https://plausible.io/api/event", (route) => {
+    await page.route("https://gateway.umami.is/api/send", (route) => {
       analyticsBeacons++;
       return route.fulfill({ status: 202, body: "{}" });
     });
@@ -56,14 +56,15 @@ for (const path of pages) {
     expect(csp, "the CSP <meta> must exist").toBeTruthy();
     expect(csp).toContain("default-src 'none'");
     expect(csp).toMatch(/script-src[^;]*'self'/);
-    expect(csp).toMatch(/script-src[^;]*https:\/\/plausible\.io/);
-    expect(csp).toMatch(/connect-src[^;]*https:\/\/plausible\.io/);
+    expect(csp).toMatch(/script-src[^;]*https:\/\/cloud\.umami\.is/);
+    expect(csp).toMatch(/connect-src[^;]*https:\/\/gateway\.umami\.is/);
     expect(csp).toMatch(/style-src[^;]*'self'/);
 
-    // The personalised tracker embeds the site id in its URL; init lives in
-    // enhance.ts, so there is no data-domain attribute to assert.
+    // The site id rides in the tag's data-website-id attribute — pin it to
+    // site.ts so the deployed tag can't silently drift from the config.
     const tracker = page.locator(`script[src="${ANALYTICS.scriptSrc}"]`);
     await expect(tracker).toHaveCount(1);
+    await expect(tracker).toHaveAttribute("data-website-id", ANALYTICS.websiteId);
 
     // Half 2: exercise the page — walk it so below-the-fold lazy resources
     // are actually requested and can surface violations inside the window.
@@ -77,9 +78,9 @@ for (const path of pages) {
     });
     await page.waitForTimeout(700);
     // Exactly 1 by construction: the mock tracker body IS the single fetch
-    // above and never flushes the enhance.ts queue, so custom events (404,
-    // Email click) queue without ever becoming beacons here. The queue-level
-    // contract for those events lives in analytics.spec.ts.
+    // above and never defines window.umami, so enhance.ts's guarded track()
+    // calls (404, Email click) no-op without ever becoming beacons here. The
+    // event-level contract for those lives in analytics.spec.ts.
     expect(analyticsBeacons, "the analytics tracker did not send its event beacon").toBe(1);
     expect(problems, problems.join("\n")).toEqual([]);
   });
