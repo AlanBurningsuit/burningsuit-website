@@ -2,8 +2,8 @@ import { test, expect } from "@playwright/test";
 import { ANALYTICS } from "../src/config/site";
 
 /**
- * The three custom events (404 tracking, email-intent, booking-intent) reach
- * umami.track() correctly. The tracker script is routed to a recording stub that defines
+ * The four custom events (404 tracking, email-intent, booking-intent,
+ * study-read) reach umami.track() correctly. The tracker script is routed to a recording stub that defines
  * window.umami before enhance.ts runs (the mocked tag is a defer script in
  * <head>, the module runs at end of body), so assertions read the recorded
  * calls — no beacon mocking or counting (csp.spec.ts owns the beacon
@@ -80,4 +80,23 @@ test("booking click tracks a Booking click event carrying the placement", async 
 
   const calls = await readCalls(page);
   expect(calls).toContainEqual(["Booking click", { placement: "footer" }]);
+});
+
+test("reaching a case study's closing door tracks a Study read event", async ({ page }) => {
+  await page.goto("/work/law-firm/", { waitUntil: "load" });
+  // Scroll the closing door itself into view — an instant jump to
+  // scrollHeight can land with the section already above the viewport
+  // (the fixed-basement footer fills the final screen on desktop), and an
+  // IntersectionObserver never fires for a section the viewport skipped.
+  await page.locator("[data-track-study-end]").scrollIntoViewIfNeeded();
+  // The observer fires asynchronously after the scroll settles.
+  await page.waitForFunction(() =>
+    ((window as { __umamiCalls?: unknown[][] }).__umamiCalls ?? []).some(
+      (ev) => ev[0] === "Study read",
+    ),
+  );
+  const calls = await readCalls(page);
+  expect(calls).toContainEqual(["Study read", { study: "/work/law-firm/" }]);
+  // Scrolling a study fires the read event exactly once.
+  expect(calls.filter((ev) => ev[0] === "Study read")).toHaveLength(1);
 });

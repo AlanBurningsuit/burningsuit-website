@@ -71,7 +71,10 @@ const crumbs = breadcrumbList([
 
   <Casefile study={study} />
 
-  <section class="chapter" aria-label="working together">
+  {/* data-track-study-end: reaching this closing door fires the "Study read"
+      event (enhance.ts) — the signal that a study was read to its ask, which
+      pageviews can't see. */}
+  <section class="chapter" aria-label="working together" data-track-study-end>
     <div class="wrap">
       <div class="prose" data-reveal>
         <p>

@@ -93,6 +93,22 @@ document.addEventListener("click", (e) => {
   }
 });
 
+/* ---- study-read tracking: a case study counts as READ when its closing
+   "working together" door (data-track-study-end, CaseStudyLayout) enters the
+   viewport — the one engagement question pageviews can't answer: do openers
+   reach the ask? Fires once per pageview; no IntersectionObserver support
+   simply means no event. ---- */
+const studyEnd = document.querySelector("[data-track-study-end]");
+if (studyEnd && "IntersectionObserver" in window) {
+  const seen = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) {
+      track("Study read", { study: location.pathname });
+      seen.disconnect();
+    }
+  });
+  seen.observe(studyEnd);
+}
+
 const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
 /* ---- scroll reveals: fire once at ~85% viewport, never un-reveal ---- */
