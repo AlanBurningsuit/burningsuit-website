@@ -75,12 +75,21 @@ if (document.querySelector("[data-track-404]")) {
   track("404", { path: location.pathname });
 }
 
-/* ---- email-intent tracking: one delegated listener covers every mailto
-   (footer, CTAs, /privacy). Cal.com clicks already carry per-placement UTMs
-   via booking-record UTM params; this closes the other conversion path. ---- */
+/* ---- conversion-intent tracking: one delegated listener covers every
+   mailto (footer, CTAs, /privacy) and every Cal.com booking link. Booking
+   clicks carry the link's own utm_content as the placement (bookingHref in
+   site.ts builds it), because Cal.com only shows UTMs per completed booking
+   — clicks that never become bookings (the zero-slots incident's signal)
+   are visible only here. New-tab links, so no navigation race. ---- */
 document.addEventListener("click", (e) => {
-  if ((e.target as Element)?.closest?.('a[href^="mailto:"]')) {
+  const el = e.target as Element | null;
+  if (el?.closest?.('a[href^="mailto:"]')) {
     track("Email click");
+  }
+  const book = el?.closest?.('a[href^="https://cal.com/"]');
+  if (book) {
+    const placement = new URL((book as HTMLAnchorElement).href).searchParams.get("utm_content");
+    track("Booking click", placement ? { placement } : undefined);
   }
 });
 

@@ -2,8 +2,8 @@ import { test, expect } from "@playwright/test";
 import { ANALYTICS } from "../src/config/site";
 
 /**
- * The two custom events (404 tracking, email-intent) reach umami.track()
- * correctly. The tracker script is routed to a recording stub that defines
+ * The three custom events (404 tracking, email-intent, booking-intent) reach
+ * umami.track() correctly. The tracker script is routed to a recording stub that defines
  * window.umami before enhance.ts runs (the mocked tag is a defer script in
  * <head>, the module runs at end of body), so assertions read the recorded
  * calls — no beacon mocking or counting (csp.spec.ts owns the beacon
@@ -56,4 +56,28 @@ test("mailto click tracks an Email click event; regular pages track no 404", asy
   const calls = await readCalls(page);
   expect(calls).toContainEqual(["Email click"]);
   expect(calls.some((ev) => ev[0] === "404")).toBe(false);
+});
+
+test("booking click tracks a Booking click event carrying the placement", async ({ page }) => {
+  await page.goto("/", { waitUntil: "load" });
+
+  // Booking links open a new tab — cancel that so the assertion stays in
+  // this page; the site's bubble-phase listener still fires.
+  await page.evaluate(() => {
+    document.addEventListener(
+      "click",
+      (e) => {
+        const el = e.target as Element | null;
+        if (el?.closest?.('a[href^="https://cal.com/"]')) e.preventDefault();
+      },
+      true,
+    );
+  });
+
+  // The footer is the fixed basement — reveal it before clicking.
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.locator('footer a[href^="https://cal.com/"]').click();
+
+  const calls = await readCalls(page);
+  expect(calls).toContainEqual(["Booking click", { placement: "footer" }]);
 });
