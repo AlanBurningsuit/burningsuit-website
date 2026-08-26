@@ -36,7 +36,10 @@ Burningsuit Brand Guidelines V1.pdf
 .agents/
 .claude/
 
-# analytics credentials — live secrets, never commit
+# analytics credentials — never commit. Live credentials moved OUT of this
+# public repo to ~/.config/<service>/ on 2026-08-26; .mailchimp/ and
+# .plausible/ may still hold dead keys pending cleanup. Entries kept as
+# insurance in case a folder is ever recreated here by habit.
 .plausible/
 .gsc/
 .bingwebm/
