@@ -14,7 +14,7 @@ styles live in `src/styles/` (`tokens.css` + `app.css`).
 ## Branches (only two)
 
 - **`main`** — production. ⚠️ Whatever is on `main` **deploys to the live apex**
-  (`deploy.yml` via Pages-Actions). Since go-live (2026-08) that is the full
+  (`deploy.yml` via Pages-Actions). Since go-live (2026-07-16) that is the full
   Astro site; the legacy site is preserved as a tag. Never push experiments
   here — a merge to `main` IS a production deploy.
 - **`dev`** — integration branch and the home of the full Astro site (all real
@@ -42,10 +42,10 @@ Since 2026-07-02 the Pages source is **"GitHub Actions"** and `deploy.yml` is
   (`withastro/action`) on every push to `main`. The action runs the full
   `npm run build` — prep:images, astro build, AND the byte-budget gate — so a
   budget failure blocks a production deploy.
-- **What main currently holds:** a one-page Astro placeholder proving the
-  pipeline end-to-end on the apex. The pre-Astro legacy site is preserved as a
-  git tag, not on any branch.
-- **Astro site (`dev`):** the full site, preview only via **Netlify**
+- **What main holds:** the full Astro site, live on the apex since go-live
+  2026-07-16 (Pages run 29486479876). The pre-Astro legacy site is preserved
+  as the `legacy-site-backup` git tag, not on any branch.
+- **Netlify preview (`dev`):** Netlify builds the preview from `dev`
   (production branch = `dev`, `npm run build` → `dist/`, hard-noindexed).
 
 ## Go-live checklist (promoting the full site to production)
@@ -56,9 +56,9 @@ publishes it. Before that merge:
 1. `npm run gate` green on `dev`, and the Netlify preview eyeballed.
 2. Merge, watch the Action, then **verify the live apex** renders the site.
 
-Roll back by reverting the merge commit on `main` — the Action redeploys the
-placeholder. ⚠️ There is no "inert until switched" safety anymore: anything
-that lands on `main` ships.
+Roll back by reverting the offending merge commit on `main` — the Action
+redeploys the previous state. ⚠️ There is no "inert until switched" safety:
+anything that lands on `main` ships.
 
 ## Commands
 
