@@ -2,10 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import Chapter from "../components/Chapter.astro";
-import Offer from "../components/Offer.astro";
 import ServiceRows from "../components/ServiceRows.astro";
-import DoorRow from "../components/DoorRow.astro";
 import type { RowData } from "../components/ServiceRow.astro";
+import StatementChapter from "../components/StatementChapter.astro";
 import PhotoChapter from "../components/PhotoChapter.astro";
 import AboutTeaser from "../components/AboutTeaser.astro";
 import BookCta from "../components/BookCta.astro";
@@ -18,29 +17,25 @@ const contactSubject = "Power BI & Fabric";
 const contactMailto = mailtoFor(contactSubject);
 const heroLines: Line[] = ["Power BI your", { before: "team can ", em: "own", after: "." }];
 const evidenceRows: RowData[] = [
-  { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "A team lead had tried Power BI courses, then stalled on her own data. With me alongside, she built a dashboard she could run, maintain and extend herself.", cta: "Read the contact-centre story" },
-  { href: "/work/law-firm/", tab: "An international law firm", title: { before: "They ", em: "owned", after: " a build they hadn't done." }, body: "A consultancy built their Fabric system. I worked with the team while it was happening. By handover, they were tracing wrong numbers through the new stack and finding the likely cause themselves.", cta: "Read the law-firm story" },
+  { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "A team lead had tried Power BI courses, then stalled on her own data. With me alongside, she built a dashboard she now looks after herself.", cta: "Read the contact-centre story" },
+  { href: "/work/law-firm/", tab: "An international law firm", title: { before: "They ", em: "owned", after: " a build they didn't do." }, body: "A consultancy built their Fabric system. I worked with the team while it was happening. By handover, they were tracing wrong numbers through the new stack and finding the likely cause themselves.", cta: "Read the law-firm story" },
 ];
 const situations = [
-  { title: "01 · We need to develop our skills", body: "Learn the parts of Power BI your reporting needs, with time to practise and somewhere to bring the questions that follow." },
-  { title: "02 · We've got reporting to deliver", body: "Your team builds it, with me teaching the next step and helping when the data or the model won't behave." },
-  { title: "03 · Someone else built our system", body: "Get beyond the handover documents, so the team understands how the reporting works and can start making changes themselves." },
-  { title: "04 · I'd like a second opinion", body: "If the decisions land on you, I can help you think through the architecture, the hire or the plan you're being asked to sign off." },
-  { title: "05 · We're underway and need backup", body: "Bring the awkward DAX, the unexplained number or the change you'd like someone experienced to look over." },
+  { id: "skills", title: "01 · We need to develop our skills", body: "Learn the parts of Power BI your reporting needs, with time to practise and somewhere to bring the questions that follow." },
+  { id: "deliver", title: "02 · We've got reporting to deliver", body: "Your team builds it, with me teaching the next step and helping when the data or the model won't behave." },
+  { id: "handover", title: "03 · Someone else built our system", body: "Get beyond the handover documents, so the team understands how the reporting works and can start making changes themselves." },
+  { id: "second-opinion", title: "04 · I'd like a second opinion", body: "If the decisions land on you, I can help you think through what you're being asked to sign off." },
+  { id: "backup", title: "05 · We're underway and need backup", body: "Bring the change you'd like someone experienced to look over, or the number you can't explain." },
 ];
-const movements = [
-  { title: "Learn the next useful thing", body: "I prepare and teach workshops around a skill your team needs now, using examples shaped like your reporting or the system itself." },
-  { title: "Put it to work", body: "The team needs time to apply the technique between sessions. That's where the learning starts to become part of the day job." },
-  { title: "Bring back what's stuck", body: "Office hours and email support give you somewhere to take the questions that only turn up when you try." },
-  { title: "Adjust as you go", body: "We change the balance as the work moves on, and agree how to reduce the time and cost as the team needs less help." },
-];
-const aiRows: RowData[] = [
-  { href: "/ai-fit-for-teams/", title: { before: "Work out where AI would ", em: "help" }, body: "AI Fit for Teams is a two-to-three-week decision project to work out what's worth trying, what needs to wait and what the team needs to learn.", cta: "Explore AI Fit for Teams" },
-  { href: "/power-bi/#practical-ai", title: { before: "Use the tools you already ", em: "have" }, body: "If the team already has Copilot, we can work on using it in the day job: choosing tasks, trying the tools and checking the output before relying on it.", cta: "See practical Copilot support" },
+const statementLines: Line[] = [
+  "AI will build",
+  "whatever you ask.",
+  "Someone still has to",
+  { before: "know what to ask ", em: "for", after: "." },
 ];
 ---
 
-<BaseLayout title="Power BI your team can own - burningsuit" description="Alan Harman-Box works alongside your team so they can build, understand and check their Power BI reporting. Bespoke training, project support and experienced backup." contactSubject={contactSubject}>
+<BaseLayout title="Power BI your team can own - burningsuit" description="Alan Harman-Box works alongside teams on Power BI and Fabric. Find the help that fits your reporting, or bring the question to a free hour on a call." contactSubject={contactSubject}>
   <Fragment slot="footer-invitation">Tell me what your Power BI or Fabric team is wrestling with, and where you'd like it to get to. Replies come from me</Fragment>
 
   <section class="hero">
@@ -48,7 +43,7 @@ const aiRows: RowData[] = [
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="Power BI your team can own." lines={heroLines} />
         <p class="lede enter appear-300">I work alongside your team so they can understand their reporting, make changes and <strong>check the numbers</strong> that come out.</p>
-        <p class="hero-sig enter appear-450">I'm Alan Harman-Box. I teach the next useful skill and help your team apply it, in Power BI and Microsoft Fabric.</p>
+        <p class="hero-sig enter appear-450">Hey - I'm Alan. I've spent five years with teams adopting Power BI, and a decade building software before that. Lately, I've been figuring out where teams should use AI - and where they shouldn't.</p>
         <BookCta src="home-hero" mailtoHref={contactMailto} variant="hero" />
       </div>
       <figure class="hero-photo enter appear-300"><Picture src={heroPhoto} alt="Alan, who runs burningsuit, sitting outdoors and smiling" formats={["avif"]} fallbackFormat="webp" widths={[400, 600, 800]} sizes="(min-width: 62rem) 40vw, 100vw" quality={66} loading="eager" fetchpriority="high" /></figure>
@@ -58,42 +53,28 @@ const aiRows: RowData[] = [
   <div class="thread thread-snug" data-reveal-raw aria-hidden="true"></div>
 
   <section class="chapter" aria-labelledby="in-practice">
-    <div class="wrap"><h2 class="section-head" id="in-practice" data-reveal>What that looks like in practice</h2><ServiceRows rows={evidenceRows} /></div>
+    <div class="wrap">
+      <h2 class="section-head" id="in-practice" data-reveal>What that looks like in practice</h2>
+      <ServiceRows rows={evidenceRows} />
+      <p class="prose" data-reveal><a class="u" href="/work/">All four case studies ▸</a></p>
+    </div>
   </section>
 
   <Chapter id="situations" kicker="Where is your team now?">
-    <div class="offer-table">{situations.map((situation) => <Offer title={situation.title}><p>{situation.body}</p></Offer>)}</div>
+    <div class="offer-table">
+      {situations.map((situation) => <div class="offer"><h3><a class="u" href={`/power-bi/#${situation.id}`}>{situation.title}</a></h3><p>{situation.body}</p></div>)}
+    </div>
     <p>Arranging training for a team? We'll agree an outcome people can demonstrate with their reporting, so you can check what the learning has achieved.</p>
-    <p><a class="u" href="/power-bi/">Find your starting point ▸</a></p>
+    <p><a class="u" href="/hour/">Not sure which? Tell me what your reporting can't do (yet) ▸</a></p>
   </Chapter>
 
-  <section class="cta-band" aria-label="Book an hour"><div class="wrap"><BookCta src="home-situations" mailtoHref={contactMailto}>Tell me what you're trying to make possible. We can talk it through on an hour; there's nothing to prepare.</BookCta></div></section>
+  <div class="wrap">
+    <p class="prose" data-reveal>Discovery is £1,950. Ongoing work with a team is usually £3,000 to £6,000 a month, and lighter arrangements are quoted separately. All prices exclude VAT. <a class="u" href="/power-bi/#pricing">How the arrangements work ▸</a></p>
+  </div>
 
-  <Chapter id="how" kicker="How the work fits together">
-    <p>We work together over time, with the mix of sessions changing as your team gets further.</p>
-    <ol class="movements">{movements.map((movement, i) => <li class="movement"><span class="n" aria-hidden="true">{i + 1}</span><div><h3>{movement.title}</h3><p>{movement.body}</p></div></li>)}</ol>
-  </Chapter>
-
-  <Chapter id="starting-and-pricing" kicker="Start with what you need">
-    <Offer title="Discovery" meta="£1,950 excluding VAT">
-      <p>Two conversations to work out the initial reporting requirements, the project and skills roadmaps, and whether the ambition fits the team and time available. Taking those outputs away and carrying the work forward internally is a valid finish.</p>
-    </Offer>
-    <Offer title="Substantial team engagements" meta="£3,000–£6,000 a month excluding VAT">
-      <p>A guide for ongoing work with a team, including the agreed sessions, preparation, materials and email support.</p>
-    </Offer>
-    <Offer title="Lighter support" meta="Quoted separately">
-      <p>Office hours, a regular slot for the lead, or occasional experienced backup can be a smaller arrangement. The monthly guide is not a minimum spend.</p>
-    </Offer>
-    <p><a class="u" href="/power-bi/#pricing">Read how the arrangements, prices and Discovery credit work ▸</a></p>
-  </Chapter>
-
-  <section class="chapter" aria-labelledby="ai">
-    <div class="wrap"><h2 class="section-head" id="ai" data-reveal>Deciding where AI fits, or learning to use it?</h2><div class="doors"><DoorRow {...aiRows[0]} variant="lead" index={1} /><DoorRow {...aiRows[1]} variant="second" index={2} /></div></div>
-  </section>
-
+  <StatementChapter label="AI will build whatever you ask. Someone still has to know what to ask for." lines={statementLines} linkHref="/writing/we-are-all-middle-management-now/" linkLabel="Read the essay ▸" />
   <PhotoChapter />
   <AboutTeaser />
-  <section class="cta-band" aria-label="Book an hour"><div class="wrap"><BookCta src="home-situations" mailtoHref={contactMailto}>Tell me what you're trying to make possible. We can talk it through on an hour; there's nothing to prepare.</BookCta></div></section>
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
   <div class="talk-spacer"></div>
 </BaseLayout>
