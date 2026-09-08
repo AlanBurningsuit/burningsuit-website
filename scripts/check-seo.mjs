@@ -12,6 +12,8 @@
  *     "@context" plus "@graph" (or "@type")
  *   - indexable pages emit ≥1 JSON-LD block; noindex pages (meta robots
  *     noindex) emit NONE — the schema gate and the index gate must agree
+ *   - the Organization has its existing logo, resolved to an absolute URL and
+ *     a built asset; Alan's LinkedIn belongs to the Person only
  *
  * Run after `npm run build` (needs dist/). FAILS the gate (exit 1) on any
  * violation. Mirrors scripts/check-budget.mjs in style.
@@ -22,6 +24,8 @@ import { join } from "node:path";
 const DIST = "dist";
 // The canonical origin. astro.config.mjs `site` is authoritative — keep in sync.
 const SITE = "https://burningsuit.co.uk";
+const ORG_LOGO_PATH = "social/burningsuit-mark-on-green.png";
+const FOUNDER_PROFILE = "https://www.linkedin.com/in/alan-harman-box";
 
 const all = readdirSync(DIST, { recursive: true }).map((f) => String(f).replaceAll("\\", "/"));
 const pages = all.filter((f) => f.endsWith(".html")).sort();
@@ -121,6 +125,7 @@ for (const rel of pages) {
     if (blocks.length) fail(route, `noindex page emits ${blocks.length} JSON-LD block(s) — should emit none`);
   } else {
     if (!blocks.length) fail(route, "indexable page has no JSON-LD");
+    const nodes = [];
     for (const raw of blocks) {
       let parsed;
       try {
@@ -131,6 +136,25 @@ for (const rel of pages) {
       }
       if (!parsed["@context"]) fail(route, "JSON-LD missing @context");
       if (!parsed["@graph"] && !parsed["@type"]) fail(route, "JSON-LD missing @graph/@type");
+      if (Array.isArray(parsed["@graph"])) nodes.push(...parsed["@graph"]);
+      else if (parsed["@type"]) nodes.push(parsed);
+    }
+    const organizations = nodes.filter((node) => node?.["@type"] === "Organization");
+    const people = nodes.filter((node) => node?.["@type"] === "Person");
+    if (organizations.length !== 1) fail(route, `expected 1 Organization, found ${organizations.length}`);
+    if (people.length !== 1) fail(route, `expected 1 Person, found ${people.length}`);
+    const organization = organizations[0];
+    const person = people[0];
+    if (organization) {
+      if (organization.logo !== `${SITE}/${ORG_LOGO_PATH}`) {
+        fail(route, "Organization logo must be the absolute URL of the existing company PNG");
+      }
+      if (!all.includes(ORG_LOGO_PATH)) fail(route, "Organization logo is missing from dist/");
+      const profiles = Array.isArray(organization.sameAs) ? organization.sameAs : [organization.sameAs];
+      if (profiles.includes(FOUNDER_PROFILE)) fail(route, "Organization sameAs contains Alan's personal LinkedIn");
+    }
+    if (person && (!Array.isArray(person.sameAs) || !person.sameAs.includes(FOUNDER_PROFILE))) {
+      fail(route, "Person sameAs is missing Alan's confirmed LinkedIn");
     }
   }
 }
@@ -142,4 +166,4 @@ if (failed) {
   console.error(`\nSEO gate FAILED — ${problems.length} problem(s):\n${problems.join("\n")}\n`);
   process.exit(1);
 }
-console.log("SEO gate passed ✓ (title, description, canonical, valid JSON-LD on every page)\n");
+console.log("SEO gate passed ✓ (title, description, canonical, JSON-LD and identity on every page)\n");

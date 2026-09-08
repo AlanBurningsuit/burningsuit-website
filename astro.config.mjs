@@ -2,10 +2,9 @@
 import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
-// Tailwind v4 is wired through PostCSS (postcss.config.mjs), not the Vite
-// plugin: @tailwindcss/vite is currently incompatible with Astro 6's default
-// rolldown-vite (withastro/astro#16542). PostCSS is the same engine, same
-// @theme/@utility/@source directives — just a different integration point.
+// Tailwind v4 uses the established PostCSS integration (postcss.config.mjs).
+// Astro 6.4.8 resolves Vite; the earlier rolldown-vite compatibility workaround
+// no longer describes its bundler. The PostCSS integration stays unchanged.
 
 // Cookieless analytics (Umami Cloud). MUST match `ANALYTICS.enabled` in
 // src/config/site.ts. The CSP permits only the two provider hosts: the script

@@ -1,7 +1,7 @@
 /**
  * Site-wide constants + helpers — the single source of truth for the contact
  * email and the external booking link, so the conversion path stays consistent
- * and placement attribution (?src=) is built exactly one way.
+ * and placement attribution (utm_content) is built exactly one way.
  *
  * Why a booking LINK (not an embed): a top-level navigation is not governed by
  * the page CSP (`default-src 'none'` covers fetches, not link clicks), so an
@@ -62,16 +62,18 @@ export const ANALYTICS = {
  * structured data that describes content the user can't see. Schema
  * strings duplicated as literals in a layout drift; sourced from here
  * they can't. The Companies House registration is wired below (ORG_LEGAL,
- * confirmed against the register), and the founder sameAs now carries Alan's
- * confirmed LinkedIn. Logo stays omitted until a real asset exists — keep that
- * discipline for any field you can't yet stand behind, and never fabricate one.
+ * confirmed against the register). Alan's confirmed LinkedIn identifies the
+ * Person; the existing company mark identifies the Organization.
  * ------------------------------------------------------------------ */
 export const SITE_NAME = "burningsuit";
 
-/** The org's own description (ProfessionalService). Distinct from a page's
+/** Existing 400×400 company PNG; the graph resolves this against Astro.site. */
+export const ORG_LOGO = "/social/burningsuit-mark-on-green.png";
+
+/** The Organization's description. Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =
-  "Embedded Power BI and Fabric advisory, done with you - your team builds the reports and models with me, and gets more capable by doing it.";
+  "Power BI and Fabric training, project support and experienced backup with Alan Harman-Box, so teams can build, understand and check their reporting.";
 
 /** Postal identity (no street — area-served advisory, not a storefront). */
 export const ORG_ADDRESS = {
@@ -105,14 +107,13 @@ export const SERVICE_AREAS = [
  * URLs (LinkedIn, etc.) that let answer engines tie the named author to a
  * real identity — the single biggest authority signal for an advisory.
  * Owner-confirmed only: never fabricate a profile link (it fails the voice
- * skill's truth test and Google's). These flow into Person + Organization
- * automatically, and compact() in schema.ts omits the field while it's empty.
+ * skill's truth test and Google's). These identify the Person only, and
+ * compact() in schema.ts omits the field while it's empty.
  */
 export const FOUNDER = {
   name: "Alan Harman-Box",
   // Mirrors the visible ranking (owner call, 2026-07-02): Power BI & Fabric are
-  // the front door; AI stays in knowsAbout/SERVICE_AREAS (ordered last), matching
-  // the copy's "the main work" / "the other thing I do" framing.
+  // the front door; AI stays in knowsAbout/SERVICE_AREAS (ordered last).
   jobTitle: "Power BI & Fabric advisor",
   knowsAbout: [
     "Power BI",

@@ -29,19 +29,19 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.3",
-    "@astrojs/sitemap": "^3.7.3",
-    "astro": "^6.4.7",
-    "sharp": "^0.35.1"
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^6.4.8",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
     "@lhci/cli": "^0.15.1",
-    "@playwright/test": "^1.61.0",
-    "@tailwindcss/postcss": "^4.3.1",
-    "@types/node": "^26.1.0",
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.5.0",
     "http-server": "^14.1.1",
     "linkinator": "^7.6.1",
-    "tailwindcss": "^4.3.1",
-    "typescript": "^5.9.0"
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
   }
 }

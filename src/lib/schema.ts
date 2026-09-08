@@ -18,6 +18,7 @@ import {
   ORG_DESCRIPTION,
   ORG_ADDRESS,
   ORG_LEGAL,
+  ORG_LOGO,
   SERVICE_AREAS,
   FOUNDER,
   CONTACT_EMAIL,
@@ -57,6 +58,7 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
     legalName: ORG_LEGAL.legalName,
     description: ORG_DESCRIPTION,
     url: siteUrl,
+    logo: new URL(ORG_LOGO, siteUrl).href,
     email: CONTACT_EMAIL,
     identifier: {
       "@type": "PropertyValue",
@@ -67,7 +69,6 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
     areaServed: "GB",
     address: { "@type": "PostalAddress", ...ORG_ADDRESS },
     knowsAbout: [...SERVICE_AREAS],
-    sameAs: [...FOUNDER.sameAs],
   });
 
   const person = compact({
