@@ -13,12 +13,11 @@ import { bookingHref } from "../config/site";
 interface Props {
   mailtoHref?: string;
 }
-// Short sentence-case labels (the 2026-07-11 chrome relaxation, Phase-2 copy
-// batch). The long lowercase forms live on in each page's own H1.
+// Short sentence-case labels; URLs stay stable for links and attribution.
 const nav = [
   { href: "/power-bi/", label: "Power BI" },
-  { href: "/ai-fit-for-teams/", label: "AI fit" },
-  { href: "/work/", label: "Work" },
+  { href: "/ai-fit-for-teams/", label: "AI" },
+  { href: "/work/", label: "Case studies" },
   { href: "/about/", label: "About" },
 ];
 // aria-current wayfinding — server-rendered per page, zero runtime cost.

@@ -2,25 +2,24 @@
 order: 3
 title: "A university's carbon footprint, moved off one person's spreadsheet - a Power BI case study - burningsuit"
 description: >-
-  Power BI case study: a university's carbon footprint lived in one person's
-  spreadsheets - rebuilt as one model for all their carbon reporting, and
-  handed over.
-kicker: "build work, handed over"
+  A university's carbon reporting owner can refresh and check one Power BI
+  model, replacing a yearly cycle of rebuilding spreadsheets by hand.
+kicker: "Reporting its owner can run and check"
 heading:
-  before: "a university's carbon footprint, moved off one person's "
+  before: "A university's carbon footprint, moved off one person's "
   em: "spreadsheet"
   after: "."
 descriptor: "a UK university's sustainability team"
 lead: >-
-  A UK university's whole Scope 3 carbon footprint reporting sat with one
-  person - expert in the method, self-taught in Power BI and Excel - the
-  workings spread across spreadsheets only he could follow. I rebuilt those
-  workings as one data model, and handed it over so he could run it himself.
+  A university's carbon reporting owner can now refresh one model in under
+  half a day and follow every calculation back to its workings. I rebuilt
+  his spreadsheet method in Power BI, then handed it over with him driving
+  on his own laptop.
 tileOutcome: >-
-  One model now sits under all their carbon reporting - built from the
-  spreadsheets it used to live in, and run by the person who owns the number.
+  He refreshes the annual carbon reporting in under half a day, checks the
+  workings and connects new reports to the model himself.
 datePublished: 2026-06-23
-dateModified: 2026-07-19
+dateModified: 2026-09-08
 contactSubject: "Power BI - off one spreadsheet"
 footerInvitation: >-
   If something your organisation reports on really lives in one person's
@@ -45,14 +44,14 @@ source design/copy/case-studies/03-delivery-source-pack.md section 2; split
 the opening chapter and marked one .takeaway landing sentence; ledger row
 pending in ops brand/claims-ledger.md. */}
 
-<Snapshot kicker="the short version" outcome={frontmatter.tileOutcome}>
+<Snapshot kicker="The short version" outcome={frontmatter.tileOutcome}>
 <li><strong>who:</strong> the sustainability team at a UK university, whose whole Scope 3 carbon footprint reporting sat with one person - expert in the method, self-taught in Power BI and Excel</li>
 <li><strong>where he was:</strong> all of it ran out of several sprawling Excel spreadsheets and hand-applied corrections; a single faculty report could mean days of Excel, and there was one for every faculty</li>
 <li><strong>what I did:</strong> designed and built one data model that all their carbon reporting draws on - a done-for-them build, deliberately - then handed it over across two sessions with him driving</li>
 <li><strong>where it got to:</strong> finished, validated against his own figures, and owned - the annual refresh takes him under half a day, and he's come back with the next piece of carbon reporting</li>
 </Snapshot>
 
-<Chapter id="started" kicker="where he was">
+<Chapter id="started" kicker="Where he was">
 
 When he first got in touch, the university's whole Scope 3 carbon footprint reporting was, in practice, one person. He owned the number: the supply-chain spend, the business travel, the waste and water, all of it worked out to a method he'd built up over years. He knew that job cold - the self-taught part was Power BI and Excel.
 
@@ -64,7 +63,7 @@ Power BI was the thing they suspected might help. The ask that reached me was he
 
 </Chapter>
 
-<Chapter id="useful" kicker="working out what would actually be useful">
+<Chapter id="useful" kicker="Working out what would actually be useful">
 
 The university's carbon reporting isn't one report. There's the annual figure, the faculty briefings, the year-on-year commentary, business travel broken down by mode and cabin class. A dashboard built for any one of those would answer that one and nothing else, and every new question would land back on him.
 
@@ -82,7 +81,7 @@ Most of my work is done with the team. This piece I did for them - a foundation 
 
 </Chapter>
 
-<Chapter id="build" kicker="the build: a model that shows its own working">
+<Chapter id="build" kicker="The build: a model that shows its own working">
 
 They chose the model, and a good part of the build turned out to be getting the method out of his head and his spreadsheets and writing it down as the model. Water worked out from metered cubic metres rather than estimated from spend; waste from actual tonnage; the taxi calculation that works backwards from cost to distance. Each of those was a correction he'd been applying by hand every year; now it's just how the model works.
 
@@ -102,13 +101,13 @@ It validated against his own spreadsheet to within rounding.
 
 </Chapter>
 
-<Chapter id="handover" kicker="the handover: until he could run it himself">
+<Chapter id="handover" kicker="The handover: until he could run it himself">
 
 The point of all this was that he could run it. So the handover was two unhurried sessions with him driving on his own laptop - even on a machine that took a couple of minutes to open the model and kept freezing - because muscle memory only forms if your hands are on the keys. We went through Power Query versus DAX, publishing, splitting the model from the report, and the once-a-year refresh. He'd had a gap since his last training, so we started gently. By the end he could state the split back to me himself: Power Query transforms the data on the way in, DAX does the work inside the model.
 
 </Chapter>
 
-<Chapter id="got-to" kicker="where it got to">
+<Chapter id="got-to" kicker="Where it got to">
 
 The work is finished and handed over, and what's left behind is his. The once-a-year refresh now takes him under half a day: collect the raw exports, make a few hand corrections, and the model does the rest. The whole method - every calculation the footprint depends on - is in a reference document, and the code that ingests and transforms the data is written to be read: well commented, named so it explains itself, because the point was always that the next person could follow it. And because the model and the reports are separate, the faculty view, the whole-university view and whatever comes next all read from one model; he can point a new report at it himself. He's since come back for a follow-on piece of work: the next kind of carbon reporting on the university's list.
 

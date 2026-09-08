@@ -3,7 +3,7 @@
  * /work/<slug> — a single case study.
  *
  * Wraps BaseLayout with the shared case-study shell: a text-led page-hero (kicker
- * + lowercase H1 with one amber em + standfirst; no visible byline — the Article
+ * + sentence-case H1 with one amber em + standfirst; no visible byline — the Article
  * JSON-LD author is the Person @id, grounded by the first-person copy), the chaptered MDX body via the
  * default slot, then the gated <Casefile> testimonial and a quiet door to /power-bi
  * (the considering reader's next question: shape, rhythm, price). Structure mirrors
@@ -39,7 +39,7 @@ const article = articleNode({
 });
 const crumbs = breadcrumbList([
   { name: "Home", url: siteUrl },
-  { name: "Work", url: `${siteUrl}work/` },
+  { name: "Case studies", url: `${siteUrl}work/` },
   { name: title.replace(/ - burningsuit$/, ""), url: pageUrl },
 ]);
 ---
@@ -78,8 +78,7 @@ const crumbs = breadcrumbList([
     <div class="wrap">
       <div class="prose" data-reveal>
         <p>
-          This is the sort of work I do embedded with a team, month to month.
-          <a class="u" href="/power-bi/">what working together looks like - shape, rhythm, price ▸</a>
+          <a class="u" href="/power-bi/">Find out how we could work together ▸</a>
         </p>
       </div>
     </div>

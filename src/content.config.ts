@@ -25,7 +25,7 @@ const work = defineCollection({
     description: z.string(),
     /** Page-hero eyebrow + index tile plate. */
     kicker: z.string().default("case file"),
-    /** H1, lowercase, with at most one amber <em>. */
+    /** H1, sentence case with product capitals, with at most one amber <em>. */
     heading: z.object({
       before: z.string().optional(),
       em: z.string().optional(),
