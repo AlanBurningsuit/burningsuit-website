@@ -11,6 +11,7 @@ test-results/
 /playwright/.cache/
 .lighthouseci/
 .release-review/
+.review-pass/
 
 # design + source material — kept on disk locally, not tracked in the repo.
 # The built site only needs the optimised derivatives already committed under

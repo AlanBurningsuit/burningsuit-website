@@ -232,7 +232,7 @@
     transform: scaleX(1);
     transform-origin: 0 50%;
   }
-  /* Below 56rem the logo + four nav items + CTA can't share one row (the
+  /* Below 56rem the logo + nav items + CTA can't share one row (the
      inline bar runs ~800px, so even a 768px tablet wrapped it) — the nav drops
      to its own full-width row below; logo + CTA hold row 1. Every page stays
      reachable without a JS menu. Compressed paddings keep the two-row header
@@ -247,6 +247,12 @@
     }
     .bar .cta {
       padding: 0.45em 0.85em;
+    }
+    .bar > a:first-child {
+      max-width: calc(100% - var(--header-booking-room));
+    }
+    .bar > a img {
+      max-width: 100%;
     }
     /* gap spacing instead of the ::before middot, so the row never strands a
        divider at a break */

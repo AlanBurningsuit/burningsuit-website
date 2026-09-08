@@ -10,19 +10,22 @@
 export const CONTACT_EMAIL = "alan@burningsuit.co.uk";
 
 /**
- * The hosted Cal.com scheduling page — Alan's 30-minute event, direct (skips the
- * profile menu) so the click matches the booking labels. The full label is
- * "book a 30-minute call" (footer, BookCta); the header deliberately abbreviates
- * to "book a call" because the long form wraps at mid widths (owner call,
- * 2026-07-02) — the Cal page itself states the duration either way.
+ * Branch draft: the proposed 60-minute event URL is a stub, pending Alan's
+ * confirmation and event setup. Keep the old 30min event live but unlisted.
+ * All booking buttons use the same "Book an hour" label.
  */
-export const BOOKING_URL = "https://cal.com/alan-burningsuit/30min";
+export const BOOKING_URL = "https://cal.com/alan-burningsuit/hour";
 
 /**
  * Booking link tagged with the placement for attribution. Cal.com stores UTM
  * params with each booking, so `utm_content` shows the placement split in the
  * booking record/export — no analytics script or CSP change needed. Merges
  * cleanly if BOOKING_URL ever grows its own query string.
+ *
+ * Placements renamed on 2026-09-08: header, footer, home-hero,
+ * home-situations (when present), power-bi-hero, power-bi-pricing, hour-page,
+ * work. Historical hero, home-proof and power-bi-engagement names apply only
+ * before this date. Study-read events retain their per-study URL identity.
  */
 export function bookingHref(src?: string): string {
   if (!src) return BOOKING_URL;

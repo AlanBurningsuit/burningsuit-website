@@ -2,7 +2,7 @@
 /**
  * The document's final contact section, in normal flow so every action remains
  * reachable by keyboard — the invitation line + face chip, then the two contact actions side by
- * side (primary "Book a 30-minute call", ghost "Email me", as in the hero), the
+ * side (primary "Book an hour", ghost "Email me", as in the hero), the
  * plain © line, and the full-width lockup signing the page.
  *
  * The invitation line is a named slot so each page can supply its own CTA copy
@@ -28,7 +28,7 @@ const { mailtoHref = mailtoFor() } = Astro.props;
     </p>
     <div class="cta-row cta-footer">
       <a class="cta" href={bookingHref("footer")} target="_blank" rel="noopener noreferrer"
-        >Book a 30-minute call</a
+        >Book an hour</a
       >
       <a class="cta ghost" href={mailtoHref}>Email me</a>
     </div>

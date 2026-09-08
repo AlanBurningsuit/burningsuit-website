@@ -2,11 +2,11 @@
 /**
  * Sticky header, hiding down and returning up, with a keyboard focus escape.
  * It stays visible under reduced motion. Nav links the
- * pages that ship — power-bi (the front door) first, the
- * ai-fit bridge, then /work (the proof) and /about. /contact is not emitted; the
- * two contact paths (book a call + email) live in the footer close. The drawn
+ * main pages — /power-bi first, then /work and /about. The hour and essay
+ * have contextual text links. The two contact paths (booking + email) also
+ * live in the footer close. The drawn
  * underline (.u) and instant-flip CTA live in app.css. The header's one action is
- * the book-a-call CTA; `mailtoHref` is accepted so BaseLayout can pass header and
+ * "Book an hour" CTA; `mailtoHref` is accepted so BaseLayout can pass header and
  * footer the same props, but the header itself renders no mailto.
  */
 import { bookingHref } from "../config/site";
@@ -16,7 +16,6 @@ interface Props {
 // Short sentence-case labels; URLs stay stable for links and attribution.
 const nav = [
   { href: "/power-bi/", label: "Power BI" },
-  { href: "/ai-fit-for-teams/", label: "AI" },
   { href: "/work/", label: "Case studies" },
   { href: "/about/", label: "About" },
 ];
@@ -47,6 +46,6 @@ const currentFor = (href: string): "page" | "true" | undefined => {
         <a class="u" href={n.href} aria-current={currentFor(n.href)}>{n.label}</a>
       ))}
     </nav>
-    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">Book a call</a>
+    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">Book an hour</a>
   </div>
 </header>

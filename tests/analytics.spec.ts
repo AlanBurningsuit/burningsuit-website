@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { ANALYTICS } from "../src/config/site";
+import { ANALYTICS, BOOKING_URL } from "../src/config/site";
 
 /**
  * The four custom events (404 tracking, email-intent, booking-intent,
@@ -56,8 +56,13 @@ test("mailto click tracks an Email click event; regular pages track no 404", asy
   expect(calls.some((ev) => ev[0] === "404")).toBe(false);
 });
 
-test("booking click tracks a Booking click event carrying the placement", async ({ page }) => {
-  await page.goto("/", { waitUntil: "load" });
+for (const [path, placement] of [
+  ["/", "header"], ["/", "footer"], ["/", "home-hero"],
+  ["/power-bi/", "power-bi-hero"], ["/power-bi/", "power-bi-pricing"],
+  ["/work/", "work"],
+]) {
+test(`booking click on ${placement} keeps its event URL and attribution`, async ({ page }) => {
+  await page.goto(path, { waitUntil: "load" });
 
   // Booking links open a new tab — cancel that so the assertion stays in
   // this page; the site's bubble-phase listener still fires.
@@ -72,11 +77,15 @@ test("booking click tracks a Booking click event carrying the placement", async 
     );
   });
 
-  await page.locator('footer a[href^="https://cal.com/"]').click();
+  const booking = page.locator(`a[href*="utm_content=${placement}"]`);
+  await expect(booking).toHaveText("Book an hour");
+  await expect(booking).toHaveAttribute("href", `${BOOKING_URL}?utm_source=burningsuit&utm_content=${placement}`);
+  await booking.click();
 
   const calls = await readCalls(page);
-  expect(calls).toContainEqual(["Booking click", { placement: "footer" }]);
+  expect(calls).toContainEqual(["Booking click", { placement }]);
 });
+}
 
 test("reaching a case study's closing door tracks a Study read event", async ({ page }) => {
   await page.goto("/work/law-firm/", { waitUntil: "load" });

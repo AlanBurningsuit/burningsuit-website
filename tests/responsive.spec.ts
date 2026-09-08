@@ -124,7 +124,7 @@ test("skip link is the first tab stop and lands on #main", async ({ page }) => {
   await expect(page.locator("main#main")).toBeVisible();
 });
 
-for (const route of ROUTES.filter((r) => r !== "/")) {
+for (const route of ["/power-bi/", "/work/", "/about/", "/work/law-firm/"]) {
   test(`current page is marked in the nav on ${route}`, async ({ page }) => {
     await page.goto(route);
     const current = page.locator("header nav a[aria-current]");
