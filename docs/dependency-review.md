@@ -1,6 +1,8 @@
 # Dependency review — 8 September 2026
 
-This change raises Astro's declared floor to 6.4.8 and updates dependencies within their existing supported ranges. It uses Node 22.23.2 and npm 11.15.0. No forced audit fixes, unsupported overrides or tooling downgrades were applied. Weekly npm and GitHub Actions Dependabot updates target `dev` for review.
+This change raises Astro's declared floor to 6.4.8 and updates dependencies within their existing supported ranges. A clean `npm ci` was verified using Node 22.23.2 and npm 11.13.0, followed by the gate and functional checks. No forced audit fixes, unsupported overrides or tooling downgrades were applied. Weekly npm and GitHub Actions Dependabot updates target `dev` for review.
+
+The declared Node minimum is now 22.20.0 to match the updated dependency requirements: unifont's undici dependency requires at least 22.19.0, and Rollup's optional Linux LZMA package requires 22.20 on the Node 22 line. CI continues to select the current Node 22 release.
 
 Direct updates include Astro 6.4.8, @astrojs/check 0.9.10, @astrojs/sitemap 3.7.4, Playwright 1.63.0, Tailwind and its PostCSS integration 4.3.3, @types/node 26.5.0 and Sharp 0.35.4. TypeScript remains at 5.9.3, now reflected in its declared floor. MDX 6.0.3, LHCI 0.15.1 and linkinator 7.6.1 remain on their existing major versions. The lockfile also updates compatible parser, stylesheet, image, language-server and utility dependency chains.
 

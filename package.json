@@ -5,7 +5,7 @@
   "private": true,
   "description": "burningsuit.co.uk — Power BI, Fabric and AI advisory (Astro 6 + Tailwind v4, static, GitHub Pages)",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.20.0"
   },
   "scripts": {
     "dev": "astro dev",
@@ -24,6 +24,7 @@
     "test:functional": "npm run check:tests && playwright test --project=chromium --grep-invert @visual",
     "test:links": "linkinator dist --recurse --silent --skip \"^mailto:|^https?://(?!localhost)\"",
     "test:lh": "lhci autorun",
+    "test:lh:mobile": "lhci autorun --config=./lighthouserc.mobile.cjs",
     "gate": "npm run check && npm run build && npm run test:links && npm run check:seo"
   },
   "dependencies": {
