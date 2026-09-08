@@ -1,0 +1,172 @@
+---
+import { Picture } from "astro:assets";
+import heroPhoto from "../../assets/photos/DSC08670-Edit.jpg";
+import cafePhoto from "../../assets/photos/DSC09119-2-Edit-Edit.jpg";
+import OwnershipActions from "./OwnershipActions.astro";
+
+interface Props {
+  basePath: string;
+}
+
+const { basePath } = Astro.props;
+const powerBiHref = `${basePath}/power-bi/`;
+const contactSubject = "Power BI & Fabric";
+---
+
+<section class="o-section o-hero" aria-labelledby="home-heading">
+  <div class="o-wrap o-hero-grid">
+    <div class="o-hero-copy">
+      <p class="o-eyebrow">Power BI, Fabric and your team</p>
+      <h1 id="home-heading">Power BI your team <em>can own.</em></h1>
+      <p class="o-lead">I work alongside your team so they can understand their reporting, make changes and check the numbers that come out.</p>
+      <p class="o-intro">I'm Alan Harman-Box. I teach the next useful skill and help your team apply it, in Power BI and Microsoft Fabric.</p>
+      <OwnershipActions placement="hero" subject={contactSubject} />
+    </div>
+    <figure class="o-hero-photo">
+      <Picture src={heroPhoto} alt="Alan, who runs burningsuit, sitting outdoors and smiling" formats={["avif"]} fallbackFormat="webp" widths={[400, 600, 800]} sizes="(min-width: 62rem) 42vw, 100vw" quality={66} loading="eager" fetchpriority="high" />
+      <figcaption class="o-caption">Alan Harman-Box · burningsuit</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="o-section o-proof" aria-labelledby="home-proof-heading">
+  <div class="o-wrap">
+    <div class="o-section-head">
+      <p class="o-eyebrow">From the work</p>
+      <h2 id="home-proof-heading">What that looks like in practice</h2>
+    </div>
+    <div class="o-proof-grid">
+      <article class="o-proof-item">
+        <p class="o-eyebrow">A national contact centre</p>
+        <h3>She built the dashboard herself.</h3>
+        <p>A team lead had tried Power BI courses, then stalled on her own data. With me alongside, she built a dashboard she could run, maintain and extend herself.</p>
+        <a class="o-text-link" href="/work/contact-centre/">Read the contact-centre story <span aria-hidden="true">↗</span></a>
+      </article>
+      <article class="o-proof-item">
+        <p class="o-eyebrow">An international law firm</p>
+        <h3>They owned a build they hadn't done.</h3>
+        <p>A consultancy built their Fabric system. I worked with the team while it was happening. By handover, they were tracing wrong numbers through the new stack and finding the likely cause themselves.</p>
+        <a class="o-text-link" href="/work/law-firm/">Read the law-firm story <span aria-hidden="true">↗</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="o-section o-situations" aria-labelledby="home-situations-heading">
+  <div class="o-wrap">
+    <div class="o-section-head">
+      <p class="o-eyebrow">Where I can help</p>
+      <h2 id="home-situations-heading">Where is your team now?</h2>
+    </div>
+    <div class="o-situation-list">
+      <article class="o-situation">
+        <span class="o-number" aria-hidden="true">01</span>
+        <h3>We need to develop our skills</h3>
+        <p>Learn the parts of Power BI your reporting needs, with time to practise and somewhere to bring the questions that follow.</p>
+      </article>
+      <article class="o-situation">
+        <span class="o-number" aria-hidden="true">02</span>
+        <h3>We've got reporting to deliver</h3>
+        <p>Your team builds it, with me teaching the next step and helping when the data or the model won't behave.</p>
+      </article>
+      <article class="o-situation">
+        <span class="o-number" aria-hidden="true">03</span>
+        <h3>Someone else built our system</h3>
+        <p>Get beyond the handover documents, so the team understands how the reporting works and can start making changes themselves.</p>
+      </article>
+      <article class="o-situation">
+        <span class="o-number" aria-hidden="true">04</span>
+        <h3>I'd like a second opinion</h3>
+        <p>If the decisions land on you, I can help you think through the architecture, the hire or the plan you're being asked to sign off.</p>
+      </article>
+      <article class="o-situation">
+        <span class="o-number" aria-hidden="true">05</span>
+        <h3>We're underway and need backup</h3>
+        <p>Bring the awkward DAX, the unexplained number or the change you'd like someone experienced to look over.</p>
+      </article>
+    </div>
+    <p class="o-note">Arranging training for a team? We'll agree what people need to be able to do with their reporting, then build the learning around that.</p>
+    <a class="o-text-link" href={powerBiHref}>Find your starting point <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<section class="o-section o-method" aria-labelledby="home-method-heading">
+  <div class="o-wrap">
+    <div class="o-section-head">
+      <p class="o-eyebrow">Alongside your team</p>
+      <h2 id="home-method-heading">How the work fits together</h2>
+      <p>We work together over time, with the mix of sessions changing as your team gets further.</p>
+    </div>
+    <ol class="o-method-steps">
+      <li><h3>Learn the next useful thing</h3><p>Workshops focus on a skill your team needs now, using examples shaped like your reporting or the system itself.</p></li>
+      <li><h3>Put it to work</h3><p>The team applies the technique between sessions. That's where the learning starts to become part of the day job.</p></li>
+      <li><h3>Bring back what's stuck</h3><p>Office hours and email support give you somewhere to take the questions that only turn up when you try.</p></li>
+      <li><h3>Adjust as you go</h3><p>We change the balance as the work moves on, and reduce the time together as the team needs less help.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="o-section o-pricing" aria-labelledby="home-pricing-heading">
+  <div class="o-wrap">
+    <div class="o-section-head">
+      <p class="o-eyebrow">Starting and pricing</p>
+      <h2 id="home-pricing-heading">Start with what you need</h2>
+    </div>
+    <div class="o-price-grid">
+      <article class="o-price-item">
+        <h3>Discovery</h3>
+        <p class="o-price">£1,950</p>
+        <p>Two conversations to work out the reporting requirements, the project and skills roadmaps, and whether the ambition fits the team and time available.</p>
+      </article>
+      <article class="o-price-item">
+        <h3>Substantial team engagements</h3>
+        <p class="o-price">£3,000–£6,000 <span>a month</span></p>
+        <p>A guide for ongoing work with a team, including the agreed sessions, preparation, materials and email support.</p>
+      </article>
+      <article class="o-price-item">
+        <h3>Lighter support</h3>
+        <p class="o-price o-price-words">Quoted separately</p>
+        <p>Office hours, a regular slot for the lead, or occasional experienced backup can be a smaller arrangement.</p>
+      </article>
+    </div>
+    <p class="o-note">All prices exclude VAT. The monthly guide is for substantial team work; lighter support is available below that range. I'll quote for the arrangement we agree.</p>
+    <a class="o-text-link" href={`${powerBiHref}#pricing`}>Read how the engagements and prices work <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<section class="o-section o-ai" aria-labelledby="home-ai-heading">
+  <div class="o-wrap">
+    <div class="o-section-head">
+      <p class="o-eyebrow">And when the question is AI</p>
+      <h2 id="home-ai-heading">Deciding where it fits, or learning to use it?</h2>
+    </div>
+    <div class="o-ai-grid">
+      <article class="o-ai-item">
+        <h3>Work out where AI would help</h3>
+        <p>AI Fit for Teams is a two-to-three-week project to work out what's worth trying, what needs to wait and what the team needs to learn.</p>
+        <a class="o-text-link" href="/ai-fit-for-teams/">Explore AI Fit for Teams <span aria-hidden="true">→</span></a>
+      </article>
+      <article class="o-ai-item">
+        <h3>Use the tools you already have</h3>
+        <p>If the team already has Copilot, we can work on using it in the day job: choosing tasks, trying the tools and checking the output before relying on it.</p>
+        <a class="o-text-link" href={`${powerBiHref}#practical-ai`}>See practical Copilot support <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="o-section o-personal" aria-labelledby="home-personal-heading">
+  <div class="o-wrap o-personal-grid">
+    <figure class="o-personal-photo">
+      <Picture src={cafePhoto} alt="Alan writing at a café table outdoors, with a coffee beside him" formats={["avif"]} fallbackFormat="webp" widths={[600, 800, 1280]} sizes="(min-width: 62rem) 48vw, 100vw" quality={60} loading="lazy" />
+      <figcaption class="o-caption">The office, some days.</figcaption>
+    </figure>
+    <div class="o-personal-copy">
+      <p class="o-eyebrow">Who you'd be working with</p>
+      <h2 id="home-personal-heading">burningsuit is me, Alan.</h2>
+      <p>Before working with teams on Power BI, I spent a decade building software. I'll go as deep into a model as anyone, but I'm most interested in helping the people who have to live with it.</p>
+      <a class="o-text-link" href="/about/">A little more about me <span aria-hidden="true">→</span></a>
+      <OwnershipActions placement="home-proof" subject={contactSubject} />
+    </div>
+  </div>
+</section>

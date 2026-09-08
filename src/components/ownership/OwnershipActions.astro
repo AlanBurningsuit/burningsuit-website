@@ -1,0 +1,15 @@
+---
+import { bookingHref, mailtoFor } from "../../config/site";
+
+interface Props {
+  placement: string;
+  subject: string;
+}
+
+const { placement, subject } = Astro.props;
+---
+
+<div class="o-actions">
+  <a class="o-button" href={bookingHref(placement)} target="_blank" rel="noopener noreferrer">Book a 30-minute call</a>
+  <a class="o-button o-button-secondary" href={mailtoFor(subject)}>Or email me</a>
+</div>

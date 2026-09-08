@@ -2,11 +2,11 @@
 /**
  * The document shell. Renders <head> (meta/OG, self-hosted <Font> tags, the
  * bundled enhancement module and analytics tracker), the sticky Header, the
- * page's <main>, and the fixed basement Footer.
+ * page's <main>, and the normal-flow Footer.
  *
  * The CSP <meta http-equiv> is injected automatically by Astro's `security.csp`
  * feature — do NOT add one here by hand. The page ships NO hand-written inline
- * scripts: the `.js` reveal gate is armed inside the bundled enhance.ts module
+ * scripts: the bundled enhance.ts module
  * (which the build inlines as a module script and auto-hashes into script-src —
  * hashes exist, and they're byte-sensitive, hence the LF-only rule), and the
  * cookieless Umami tracker is governed by its explicit CSP hosts.
@@ -143,10 +143,8 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
       }
     </Footer>
 
-    <!-- Progressive enhancement, bundled to a first-party external module. It
-         arms the html.js reveal gate first thing, so if it ever fails to load or
-         execute, no hidden state is armed and the page stays fully visible. It
-         also carries the console greeting for anyone reading the source. -->
+    <!-- Contact-intent tracking, study-read measurement and analytics opt-out.
+         Content, navigation and contact links work without this module. -->
     <script>
       import "../scripts/enhance.ts";
     </script>

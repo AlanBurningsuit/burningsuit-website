@@ -8,42 +8,18 @@
    no cursor of any kind). No gradient, no scanline, no ground-morph, no
    mascot; nothing idles or loops.
 
-   The chassis is preserved from earlier skins: the @layer cascade, the
-   JS-gated reveal system, the masked line-rise, the fixed-footer "basement",
-   the cross-document view-transitions, and the reduced-motion system.
+   Content is always visible. The header stays available while scrolling and
+   the footer follows the main content in normal document flow.
 
    Cascade order (Tailwind v4): theme vars → base (incl. Preflight, then the
    reset which is imported AFTER so it wins) → components → utilities. The
-   view-transition + reduced-motion layers are intentionally UNLAYERED at the
-   end so they win over everything (reduced-motion must always override).
+   reduced-motion layer is intentionally UNLAYERED at the end so it wins over
+   the restrained hover and focus feedback.
    =========================================================================== */
 
 @import "tailwindcss";
 
 @import "./tokens.css";
-
-/* ---- variants for the JS-gate (for use in markup) ---- */
-@custom-variant js (&:where(html.js *));
-@custom-variant no-js (&:where(html:not(.js) *));
-
-/* ---- per-element stagger + entrance delay as literal utilities ----
-   stagger-N → --i:N (a unitless index; each context multiplies it: hero/lines
-   ×80ms, reveals ×120ms). appear-N → --d:Nms (entrance animation-delay).
-   Written as literals in markup (stagger-2, appear-450) so Tailwind detects
-   them; never string-built. */
-@utility stagger-* {
-  --i: --value(integer);
-}
-@utility appear-* {
-  --d: calc(--value(integer) * 1ms);
-}
-/* Guarantee the finite set is emitted even though stagger-N is composed by
-   index in RiseHeading and ServiceRows (Tailwind only scans complete literal
-   strings). The /work index builds one tile per collection entry, so the range
-   runs ahead of the content: a 13th study needs this widened or the last tiles
-   silently lose their stagger (--i falls back to 0). */
-@source inline("stagger-{0,1,2,3,4,5,6,7,8,9,10,11}");
-@source inline("appear-{300,450,600}");
 
 /* ============================ base ============================ */
 @layer base {
@@ -55,7 +31,7 @@
   }
   html {
     background: var(--bg);
-    scroll-behavior: smooth;
+    scroll-padding-block-start: var(--header-h);
   }
   body {
     color: var(--fg);
@@ -134,12 +110,9 @@
 
 /* ========================= components ========================= */
 @layer components {
-  /* main slides over the fixed footer basement */
+  /* The footer follows main in normal flow, including on short screens. */
   main {
-    position: relative;
-    z-index: 1;
     background: var(--bg);
-    margin-bottom: var(--footer-h);
   }
 
   /* skip link — the first tab stop on every page. Visually hidden until it
@@ -161,25 +134,13 @@
     transform: none;
   }
 
-  /* ============ header (hides down, returns up) ============ */
+  /* ============ persistent navigation ============ */
   header {
     position: sticky;
     top: 0;
     z-index: 50;
     background: var(--bg);
     border-bottom: var(--bw-hair) solid var(--line);
-    transition: transform var(--t-ui) var(--ease-out);
-    /* hold the chrome steady across cross-document navigations */
-    view-transition-name: site-header;
-  }
-  header.hh {
-    transform: translateY(-100%);
-  }
-  /* Keyboard escape hatch: tabbing fires no scroll event, so without this a
-     Shift+Tab into the hidden header lands focus on links translated
-     off-screen (invisible focus, WCAG 2.4.7). Focus inside → header returns. */
-  header.hh:focus-within {
-    transform: none;
   }
   .bar {
     display: flex;
@@ -375,7 +336,7 @@
     color: var(--fg);
     font-size: var(--fs-ui);
   }
-  /* footer booking button — sits above the big mailto in the basement */
+  /* footer contact actions */
   .cta-footer {
     margin-top: 1.1rem;
   }
@@ -399,61 +360,10 @@
     color: var(--amber);
   }
 
-  /* ============ load choreography (pure CSS, never gates input) ============ */
-  /* masked line rise — clip-path keeps descenders, 110% travel, 80ms stagger */
-  .l {
-    display: block;
-    clip-path: inset(0 0 -0.2em 0);
-  }
+  /* Existing hand-set heading lines stay static and fully readable. */
+  .l,
   .l > .i {
     display: block;
-    transform: translateY(110%);
-  }
-  .hero .l > .i,
-  .page-hero .l > .i {
-    animation: rise var(--t-move) var(--ease-out) both;
-    animation-delay: calc(var(--i) * var(--stagger-fast));
-  }
-  /* two-track entrance: opacity fast, transform long, started together */
-  .enter {
-    opacity: 0;
-    transform: translateY(var(--rise));
-    animation:
-      fadein var(--t-fade) ease-out both,
-      settle var(--t-move) var(--ease-out) both;
-    animation-delay: var(--d, 0ms);
-  }
-
-  /* ============ scroll reveals (below the fold; html.js only) ============ */
-  .js [data-reveal] {
-    opacity: 0;
-    transform: translateY(var(--rise));
-    transition:
-      opacity var(--t-fade) ease-out,
-      transform var(--t-move) var(--ease-out);
-    transition-delay: calc(var(--i, 0) * var(--stagger-slow));
-  }
-  .js [data-reveal].show {
-    opacity: 1;
-    transform: none;
-  }
-  .js .lines .l > .i {
-    transform: translateY(110%);
-    transition: transform var(--t-move) var(--ease-out);
-    transition-delay: calc(var(--i, 0) * var(--stagger-fast));
-  }
-  .js .lines.show .l > .i {
-    transform: none;
-  }
-  /* No-JS fallback: the .lines rise relies on the IntersectionObserver adding
-     .show. With JS off those masked lines keep their 110% translate and stay
-     clipped out of view — most visibly the statement chapter. The floor is
-     "readable if everything clever fails": reveal them flat so the page is
-     complete without JS. The .js class itself is armed by the enhance module
-     (not an inline script), so a module that never loads/executes degrades
-     through this same fallback. */
-  html:not(.js) .lines .l > .i {
-    transform: none;
   }
   /* the stitched thread — appears exactly twice per page. The OPENER (hero →
      first chapter) ends in a small down arrowhead: an affordance that there's
@@ -489,21 +399,6 @@
     height: 8px;
     border: 0;
     background: var(--spark);
-  }
-  .js .thread {
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform var(--t-draw) var(--ease-out);
-  }
-  .js .thread::after {
-    scale: 0;
-    transition: scale var(--t-ui) var(--ease-out) var(--t-draw);
-  }
-  .js .thread.show {
-    transform: scaleY(1);
-  }
-  .js .thread.show::after {
-    scale: 1;
   }
   /* furniture: the second thread's spacing + the spacer above the footer */
   .thread-end {
@@ -890,6 +785,11 @@
     text-decoration-color: var(--amber);
     text-decoration-thickness: var(--bw-spine);
   }
+  /* An amber ring disappears against paper; ink clears 3:1 on this surface.
+     The panel's own outer ring stays amber against its dark surroundings. */
+  .panel :focus-visible {
+    outline-color: var(--ink);
+  }
   .casefile {
     max-width: var(--measure-wide);
   }
@@ -1117,17 +1017,6 @@
       0 0 0 var(--px) var(--paper-edge),
       var(--shadow-off-photo) var(--shadow-off-photo) 0 0 rgb(var(--shadow-ink) / 0.5);
   }
-  /* the clip-path curtain reveal (kept; flat photo — no grayscale/blend grade).
-     `round var(--r)` keeps the clip region's corners matched to the frame's
-     border-radius — without it the sharp inset clipped the rounded corners
-     square (the corner glitch). */
-  .js .photo-ch .ph {
-    clip-path: inset(0 0 100% 0 round var(--r));
-    transition: clip-path var(--t-reveal) var(--ease-out);
-  }
-  .js .photo-ch figure.show .ph {
-    clip-path: inset(0 round var(--r));
-  }
   .photo-ch img {
     width: 100%;
     height: 100%;
@@ -1136,7 +1025,7 @@
   }
 
   /* a photo set into a prose chapter (Zelda on /about) — same carved cream frame
-     and clip-path curtain as .photo-ch, sized to fill the prose content width so
+     as .photo-ch, sized to fill the prose content width so
      it lines up with the paragraphs above it. Cropped 3:2 in prep-images so it
      reads as a landscape band, not a tall portrait. The explicit top margin (not
      relying on `.prose > * + *`) also resets the UA figure margin so it aligns
@@ -1155,13 +1044,6 @@
     box-shadow:
       0 0 0 var(--px) var(--paper-edge),
       var(--shadow-off-photo) var(--shadow-off-photo) 0 0 rgb(var(--shadow-ink) / 0.5);
-  }
-  .js .figure-inset .ph {
-    clip-path: inset(0 0 100% 0 round var(--r));
-    transition: clip-path var(--t-reveal) var(--ease-out);
-  }
-  .js .figure-inset.show .ph {
-    clip-path: inset(0 round var(--r));
   }
   /* the log-entry line under a framed photo (2026-07-20: Alan reversed the
      no-captions rule — with exhibits self-captioning, bare photos read as
@@ -1276,14 +1158,8 @@
     transform: translateX(3px);
   }
 
-  /* ============ footer basement: the destination ============ */
+  /* ============ footer: the final section in document flow ============ */
   footer {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    height: auto;
     background: var(--bg-dim);
     color: var(--fg);
     border-top: var(--px) solid var(--deep);
@@ -1357,7 +1233,6 @@
   .lockup img {
     width: 100%;
     height: auto;
-    view-transition-name: site-lockup; /* the signature holds across navigations */
   }
 
   /* ============ service pages (recoloured to the green instrument) ============ */
@@ -1466,7 +1341,7 @@
      the claim — the hook, not a stranded pull-quote (the old two-column grid
      left it in empty space on desktop and after a long intro on mobile;
      2026-07 review). "checking" takes the one amber word. Reuses RiseHeading's
-     masked rise, so it needs no new motion or JS. */
+     static heading treatment, with no motion or JS. */
   .hero-ask {
     margin: var(--space-sm) 0 0;
     font-family: var(--ff-display);
@@ -1697,121 +1572,17 @@
   }
 }
 
-/* ============ keyframes (global) ============ */
-@keyframes rise {
-  to {
-    transform: none;
-  }
-}
-@keyframes fadein {
-  to {
-    opacity: 1;
-  }
-}
-@keyframes settle {
-  to {
-    transform: none;
-  }
-}
-
-/* ============ cross-document view transitions (unlayered: progressive) ============ */
-/* Native MPA view transitions: the named chrome (header + lockup) holds while
-   the page content cross-fades. No JS, no CSP allowance needed. Browsers
-   without support fall back to a hard cut — the prior behaviour, untouched. */
-@view-transition {
-  navigation: auto;
-}
-/* keep the morph quick and on-brand (this is a ui move) */
-::view-transition-group(site-header),
-::view-transition-group(site-lockup) {
-  animation-duration: var(--t-ui);
-  animation-timing-function: var(--ease-out);
-}
-
-/* ============ reduced motion: a designed system, not a kill switch ============ */
-/* Unlayered + last → wins over the component layer. */
+/* Interaction feedback is immediate when motion is reduced. */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  :root {
-    --t-move: 0.3s;
-    --rise: 0px;
-  }
-  .hero .l > .i,
-  .page-hero .l > .i,
-  .js .lines .l > .i {
-    transform: none;
-    animation: none;
-  }
-  .hero .l > .i,
-  .page-hero .l > .i {
-    opacity: 0;
-    animation: fadein var(--t-ui) ease-out both;
-    animation-delay: calc(var(--i) * var(--stagger-fast));
-  } /* order still narrates */
-  .enter {
-    transform: none;
-  }
-  .js [data-reveal] {
-    transform: none;
-    transition-duration: var(--t-ui);
-    transition-delay: 0s; /* no staggered cascade under reduced motion — a plain fade */
-  }
-  .js .thread {
-    transform: none;
+  *,
+  *::before,
+  *::after {
     transition: none;
-  }
-  .js .thread::after {
-    scale: 1;
-    transition: none;
-  }
-  .js .photo-ch .ph,
-  .js .figure-inset .ph {
-    clip-path: none;
-    transition: none;
-  }
-  a.panel {
-    transition: none;
-  }
-  /* view transitions off entirely under reduced motion — a hard cut, with no
-     transition created at all. The pseudo animation:none is a belt-and-braces
-     guard for engines that don't honour @view-transition nested in @media. */
-  @view-transition {
-    navigation: none;
-  }
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
   }
 }
-
-/* ============ print: every end-state forced, nothing waits for scroll ============ */
-/* The scroll choreography reveals content as it enters the viewport, so printing
-   an unscrolled page would otherwise emit the unrevealed sections at opacity 0 /
-   translated out of their clip masks. Force the revealed end-state of every
-   mechanism (mirrors the reduced-motion end-states). Unlayered + last → wins. */
+/* Keep the document header from repeating over printed content. */
 @media print {
-  .js [data-reveal],
-  .enter {
-    opacity: 1;
-    transform: none;
-    animation: none;
-    transition: none;
-  }
-  .l > .i {
-    transform: none;
-    animation: none;
-  }
-  .js .thread {
-    transform: none;
-  }
-  .js .thread::after {
-    scale: 1;
-  }
-  .js .photo-ch .ph,
-  .js .figure-inset .ph {
-    clip-path: none;
+  header {
+    position: static;
   }
 }

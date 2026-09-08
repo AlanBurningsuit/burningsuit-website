@@ -9,19 +9,15 @@ tokens + semantic classes in `src/styles/`).
 images (AVIF/WebP) · published to **GitHub Pages** by GitHub Actions
 (`.github/workflows/deploy.yml`, on push to `main`).
 
-**Branch reality:** `main` is production — right now it serves a one-page
-placeholder while the full site is finished; the complete Astro site lives on
-**`dev`** with a Netlify preview. **Merging `dev` → `main` is the go-live act**
-— see `AGENTS.md` for the checklist. Never push experiments to `main`.
+**Branch reality:** `main` is production and serves the full Astro site. `dev` is integration with a Netlify preview. Merging `dev` → `main` deploys to the live apex; see `AGENTS.md` for the checklist. Ask before pushing any branch.
+
+The ownership redesign is at its design-selection milestone: [open and review the two local treatments](docs/ownership-preview-review.md). The public page treatment stays in place until Alan selects A or B.
 
 ## Local development
 
 Requires **Node 22.12+** (see `.nvmrc`).
 
-> **Develop from a clone OUTSIDE OneDrive** (e.g. `C:\dev\burningsuit`). Running
-> `npm install`/`astro build` inside the OneDrive-synced folder causes sync
-> locks on `node_modules`/`dist`. The OneDrive copy stays the canonical store;
-> push real work through git.
+> **Develop outside OneDrive**, under `~/dev/Projects/`. OneDrive is for shared deliverables, never a git checkout. GitHub is the canonical remote.
 
 ```bash
 npm install
@@ -47,6 +43,8 @@ npm run prep:images
 npm run gate         # the de-facto CI: astro check → build (+byte budget)
                      #   → linkinator on dist/ → SEO/JSON-LD assertions
 npm run serve        # serves dist/ on :4321 (Playwright runs against this)
+npm run test:functional # type-checks tests/, then Chromium behavioural checks
+npm run test:previews # development-only comparison checks and local captures
 npm run test:visual  # type-checks tests/, then Playwright region snapshots
                      #   (chromium + firefox + a 390px mobile project)
 npm run test:lh      # Lighthouse CI (perf/a11y; slow lane, run pre-merge)

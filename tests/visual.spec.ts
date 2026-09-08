@@ -12,7 +12,7 @@ async function prepare(page: Page, path: string) {
   await page.clock.setFixedTime(new Date("2026-07-02T10:30:00+01:00"));
   await page.goto(path);
   await page.evaluate(() => document.fonts.ready);
-  // fire every reveal, then settle at the top
+  // Load below-the-fold images, then return to the top.
   await page.evaluate(async () => {
     const step = Math.round(window.innerHeight * 0.6);
     for (let y = 0; y <= document.body.scrollHeight; y += step) {
@@ -34,6 +34,7 @@ async function prepare(page: Page, path: string) {
   });
 }
 
+test.describe("visual regions @visual", () => {
 test("home — regions", async ({ page }, testInfo) => {
   await prepare(page, "/");
   const tag = testInfo.project.name;
@@ -43,13 +44,7 @@ test("home — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#what)")).toHaveScreenshot(`home-services-${tag}.png`);
   await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
   await expect(page.locator(".about")).toHaveScreenshot(`home-about-${tag}.png`);
-  // The footer is the FIXED basement (main slides over it), so scrollIntoView
-  // is a no-op and the capture shows whatever main content overlays its box.
-  // Pin absolute-bottom scroll so the basement is actually exposed — without
-  // this the shot depends on the incidental scroll the .about capture leaves,
-  // which shifts whenever page height changes (bit us 2026-07-15).
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-  await page.waitForTimeout(250);
+  // The footer is a normal-flow region; the locator scrolls it into view.
   await expect(page.locator("footer")).toHaveScreenshot(`home-footer-${tag}.png`);
 });
 
@@ -185,4 +180,5 @@ test("work — cta band region", async ({ page }, testInfo) => {
   await prepare(page, "/work/");
   const tag = testInfo.project.name;
   await expect(page.locator(".cta-band")).toHaveScreenshot(`work-cta-band-${tag}.png`);
+});
 });

@@ -49,8 +49,6 @@ test("mailto click tracks an Email click event; regular pages track no 404", asy
     );
   });
 
-  // The footer is the fixed basement — reveal it before clicking.
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await page.locator('footer a[href^="mailto:"]').click();
 
   const calls = await readCalls(page);
@@ -74,8 +72,6 @@ test("booking click tracks a Booking click event carrying the placement", async 
     );
   });
 
-  // The footer is the fixed basement — reveal it before clicking.
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await page.locator('footer a[href^="https://cal.com/"]').click();
 
   const calls = await readCalls(page);
@@ -86,7 +82,7 @@ test("reaching a case study's closing door tracks a Study read event", async ({ 
   await page.goto("/work/law-firm/", { waitUntil: "load" });
   // Scroll the closing door itself into view — an instant jump to
   // scrollHeight can land with the section already above the viewport
-  // (the fixed-basement footer fills the final screen on desktop), and an
+  // (the footer can fill the final screen on desktop), and an
   // IntersectionObserver never fires for a section the viewport skipped.
   await page.locator("[data-track-study-end]").scrollIntoViewIfNeeded();
   // The observer fires asynchronously after the scroll settles.
