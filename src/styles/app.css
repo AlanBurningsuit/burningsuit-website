@@ -174,7 +174,7 @@
   /* Keyboard escape hatch: tabbing fires no scroll event, so without this a
      Shift+Tab into the hidden header lands focus on links translated
      off-screen (invisible focus, WCAG 2.4.7). Focus inside → header returns. */
-  header.hh:focus-within {
+  header:focus-within {
     transform: none;
     transition: none;
   }
@@ -1785,6 +1785,32 @@ html:not(.js) .figure-inset .ph {
   }
   header {
     position: static;
+  }
+  /* A fixed offscreen control can repeat inside printed page margins. */
+  .skip {
+    display: none;
+  }
+  .what {
+    display: block;
+  }
+  .what .label {
+    position: static;
+    margin-block-end: var(--space-lg);
+  }
+  h1,
+  h2,
+  h3,
+  .kicker {
+    break-inside: avoid;
+    break-after: avoid;
+  }
+  .panel,
+  .offer,
+  .movement,
+  .door,
+  .about-grid > div,
+  figure {
+    break-inside: avoid;
   }
   header,
   header.hh,

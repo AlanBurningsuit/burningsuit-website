@@ -102,6 +102,30 @@ for (const viewport of [
 }
 
 test("header hides down, returns up, and returns through natural keyboard focus", async ({ page }) => {
+  const expectImmediateHeaderFocus = async () => {
+    // Read once immediately after the key. Polling would allow an offscreen
+    // focused link to animate back before the assertion and miss the defect.
+    const state = await page.evaluate(() => {
+      const active = document.activeElement as HTMLElement;
+      const box = active.getBoundingClientRect();
+      const style = getComputedStyle(active);
+      const ring = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+      const top = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2);
+      return {
+        inHeader: !!active.closest("header"),
+        headerTop: document.querySelector("header")!.getBoundingClientRect().top,
+        ringTop: box.top - ring,
+        ringBottom: box.bottom + ring,
+        viewportHeight: innerHeight,
+        unobscured: !!top && (top === active || active.contains(top)),
+      };
+    });
+    expect(state.inHeader).toBe(true);
+    expect(state.headerTop, "focus must expose the header immediately").toBe(0);
+    expect(state.ringTop, "the focused control's ring is not above the viewport").toBeGreaterThanOrEqual(0);
+    expect(state.ringBottom).toBeLessThanOrEqual(state.viewportHeight);
+    expect(state.unobscured).toBe(true);
+  };
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   await page.mouse.wheel(0, 1400);
@@ -118,13 +142,24 @@ test("header hides down, returns up, and returns through natural keyboard focus"
   await page.keyboard.press("Tab");
   await expect(page.locator(":focus")).toHaveClass(/skip/);
   await page.keyboard.press("Tab");
-  expect(await page.locator(":focus").evaluate((el) => !!el.closest("header"))).toBe(true);
-  await expect(header).not.toHaveClass(/hh/);
-  await expect.poll(async () => (await header.boundingBox())!.y).toBe(0);
+  await expectImmediateHeaderFocus();
   await page.keyboard.press("Tab");
   await page.keyboard.press("Shift+Tab");
-  expect(await page.locator(":focus").evaluate((el) => !!el.closest("header"))).toBe(true);
-  await expect(page.locator(":focus")).toBeInViewport({ ratio: 1 });
+  await expectImmediateHeaderFocus();
+
+  // Reach the first content link naturally, hide the header, then Shift+Tab
+  // straight into its booking control while it is fully offscreen.
+  for (let step = 0; step < 20; step++) {
+    await page.keyboard.press("Tab");
+    if (await page.locator(":focus").evaluate((el) => !!el.closest("main"))) break;
+  }
+  expect(await page.locator(":focus").evaluate((el) => !!el.closest("main"))).toBe(true);
+  await page.mouse.wheel(0, 1400);
+  await expect(header).toHaveClass(/hh/);
+  await expect.poll(async () => (await header.boundingBox())!.y + (await header.boundingBox())!.height).toBeLessThanOrEqual(1);
+  await page.keyboard.press("Shift+Tab");
+  await expectImmediateHeaderFocus();
+  await expect(page.locator(":focus")).toHaveAttribute("href", /utm_content=header/);
 });
 
 test("reduced motion keeps the header visible while scrolling", async ({ page }) => {

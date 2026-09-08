@@ -82,6 +82,7 @@ for (const path of pages) {
     await page.goto(path);
     await expectReadableContent(page);
     expect(await page.locator("header").evaluate((el) => getComputedStyle(el).position)).toBe("static");
+    await expect(page.locator(".skip")).toBeHidden();
   });
 }
 
