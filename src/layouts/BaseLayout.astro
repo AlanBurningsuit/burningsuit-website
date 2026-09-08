@@ -2,13 +2,12 @@
 /**
  * The document shell. Renders <head> (meta/OG, self-hosted <Font> tags, the
  * bundled enhancement module and analytics tracker), the sticky Header, the
- * page's <main>, and the normal-flow Footer.
+ * page's <main>, and the Footer, which remains in document flow while sticky.
  *
  * The CSP <meta http-equiv> is injected automatically by Astro's `security.csp`
  * feature — do NOT add one here by hand. The page ships NO hand-written inline
  * scripts: the bundled enhance.ts module
- * (which the build inlines as a module script and auto-hashes into script-src —
- * hashes exist, and they're byte-sensitive, hence the LF-only rule), and the
+ * (kept external by the build and allowed through script-src 'self'), and the
  * cookieless Umami tracker is governed by its explicit CSP hosts.
  */
 import { Font } from "astro:assets";
@@ -35,7 +34,7 @@ interface Props {
    *  stay out of the index. */
   noindex?: boolean;
   /** Prefilled mailto subject for the page's email path (the footer "email me"
-   *  and any page-level mailto). Part of the two-path funnel — book a call +
+   *  and any page-level mailto). Part of the two contact paths — Book an hour +
    *  email — giving the reader a contextual starting line. Omit for a bare
    *  mailto. */
   contactSubject?: string;

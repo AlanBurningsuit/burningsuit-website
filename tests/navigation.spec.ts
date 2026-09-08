@@ -62,41 +62,96 @@ async function focusedLinkState(page: Page) {
   });
 }
 
-for (const viewport of [
-  { width: 1280, height: 720 },
-  { width: 844, height: 390 },
-  { width: 896, height: 414 },
-  { width: 320, height: 568 },
-  // 1280×720 at 200% browser zoom has this effective CSS viewport.
-  { width: 640, height: 360 },
-]) {
-  test(`Tab reaches every footer action unobscured at ${viewport.width}×${viewport.height}`, async ({ page }) => {
-    await page.setViewportSize(viewport);
-    await page.goto("/");
-    await page.evaluate(() => document.fonts.ready);
-    const expected = await page.locator("footer a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-    const reached: (string | null)[] = [];
-    // Start at the document, never focus or scroll the footer programmatically.
-    for (let step = 0; step < 100 && reached.length < expected.length; step++) {
-      await page.keyboard.press("Tab");
-      const state = await focusedLinkState(page);
-      if (!state.footer) continue;
-      expect(state.visible, `${state.href} is visible`).toBe(true);
-      expect(state.insideViewport, `${state.href} and its focus ring fit below the header`).toBe(true);
-      expect(state.unobscured, `${state.href} is not covered by other content`).toBe(true);
-      expect(state.outline, `${state.href} has a visible focus ring`).toBe(true);
-      expect(state.contrast, `${state.href} focus ring contrast`).toBeGreaterThanOrEqual(3);
-      reached.push(state.href);
-    }
-    expect(reached, "all footer actions must be reachable in document order").toEqual(expected);
-    for (const href of expected.slice(0, -1).reverse()) {
-      await page.keyboard.press("Shift+Tab");
-      const state = await focusedLinkState(page);
-      expect(state.href).toBe(href);
-      expect(state.insideViewport).toBe(true);
-      expect(state.unobscured).toBe(true);
-      expect(state.outline).toBe(true);
-      expect(state.contrast).toBeGreaterThanOrEqual(3);
+// Replace the existing five footer tests in tests/navigation.spec.ts with this
+// block. It deliberately reuses that file's focusedLinkState helper.
+for (const mode of ["normal", "reduce", "no-js"] as const) {
+  test.describe(`footer navigation with ${mode}`, () => {
+    test.use({
+      contextOptions: { reducedMotion: mode === "reduce" ? "reduce" : "no-preference" },
+      javaScriptEnabled: mode !== "no-js",
+    });
+    for (const viewport of [
+      { width: 1280, height: 720 },
+      { width: 844, height: 390 },
+      { width: 896, height: 414 },
+      { width: 320, height: 568 },
+      { width: 640, height: 360 },
+    ]) {
+      test(`natural footer focus is visible at ${viewport.width}×${viewport.height}`, async ({ page }) => {
+        await page.setViewportSize(viewport);
+        // Long, medium and short documents exercise both sides of the seam.
+        for (const route of ["/", "/power-bi/", "/hour/"]) {
+          const open = async () => {
+            await page.goto(route);
+            await page.evaluate(() => document.fonts.ready);
+          };
+          const checkFocus = async (href: string | null, observed?: Awaited<ReturnType<typeof focusedLinkState>>) => {
+            // One immediate read: polling could hide a transient covered focus.
+            const state = observed ?? await focusedLinkState(page);
+            expect(state.href).toBe(href);
+            expect(state.visible, `${route} ${href} is opaque`).toBe(true);
+            expect(state.insideViewport, `${route} ${href} and its ring fit below the header`).toBe(true);
+            expect(state.unobscured, `${route} ${href} is above the opaque main`).toBe(true);
+            expect(state.outline).toBe(true);
+            expect(state.contrast).toBeGreaterThanOrEqual(3);
+          };
+          await open();
+          const expected = await page.locator("footer a").evaluateAll(links => links.map(link => link.getAttribute("href")));
+          const reached: (string | null)[] = [];
+          for (let step = 0; step < 160 && reached.length < expected.length; step++) {
+            await page.keyboard.press("Tab");
+            const state = await focusedLinkState(page);
+            if (!state.footer) continue;
+            await checkFocus(expected[reached.length], state);
+            reached.push(state.href);
+          }
+          expect(reached).toEqual(expected);
+          // A fresh document's Shift+Tab enters the last footer action while
+          // the footer is still covered, then crosses into main and back.
+          await open();
+          for (const href of expected.slice().reverse()) {
+            await page.keyboard.press("Shift+Tab");
+            await checkFocus(href);
+          }
+          await page.keyboard.press("Shift+Tab");
+          expect(await page.locator(":focus").evaluate(el => !!el.closest("main"))).toBe(true);
+          const seam = await focusedLinkState(page);
+          // A whole linked teaser can be taller than the usable viewport.
+          // Require its visible portion and focus ring to be exposed; retain
+          // full containment for ordinary links that are small enough to fit.
+          // Inline links may wrap, so hit-test their real line rectangles,
+          // not the whitespace at the center of their combined bounding box.
+          const fragment = await page.locator(":focus").evaluate(el => {
+            const box = el.getBoundingClientRect();
+            const style = getComputedStyle(el);
+            const ring = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+            const headerBottom = Math.max(0, document.querySelector("header")!.getBoundingClientRect().bottom);
+            const visible = [...el.getClientRects()].some(rect => {
+              const left = Math.max(0, rect.left);
+              const right = Math.min(innerWidth, rect.right);
+              const top = Math.max(headerBottom, rect.top);
+              const bottom = Math.min(innerHeight, rect.bottom);
+              if (right - left < Math.min(24, rect.width) || bottom - top < Math.min(24, rect.height)) return false;
+              const hit = document.elementFromPoint((left + right) / 2, (top + bottom) / 2);
+              return !!hit && (hit === el || el.contains(hit));
+            });
+            return {
+              visible,
+              fitsAvailableHeight: box.height + 2 * ring <= innerHeight - headerBottom,
+              sideOutlinesFit: box.left - ring >= 0 && box.right + ring <= innerWidth,
+            };
+          });
+          expect(seam.visible).toBe(true);
+          expect(seam.outline).toBe(true);
+          expect(seam.surfaces.length).toBeGreaterThan(0);
+          expect(seam.contrast).toBeGreaterThanOrEqual(3);
+          expect(fragment.sideOutlinesFit).toBe(true);
+          expect(fragment.visible, `${route} exposes a real focused link fragment below the header`).toBe(true);
+          if (fragment.fitsAvailableHeight) expect(seam.insideViewport).toBe(true);
+          await page.keyboard.press("Tab");
+          await checkFocus(expected[0]);
+        }
+      });
     }
   });
 }

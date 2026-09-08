@@ -2,18 +2,17 @@
  * Progressive enhancement for the burningsuit site.
  *
  * Everything here is an enhancement on top of a page that is already complete
- * and readable without JS: scroll reveals and the auto-hiding header.
+ * and readable without JS: scroll reveals, the auto-hiding header and footer.
  * Nothing idles or loops — the 2026-07 warmth
  * delta retired the clock, the console greeting and the /ai-fit rotation.
  *
- * NOTE on CSP: the build inlines this bundle as a module script and Astro
- * auto-hashes it into script-src (the hashes are byte-sensitive — LF only).
+ * NOTE on CSP: the build keeps this bundle external under script-src 'self'.
  * Visibility is controlled by CSS classes; there are no inline-style writes.
  */
 /* ---- arm the reveal gate FIRST, only if the observer is supported:
    reveal-hidden states exist only while this module is actually running.
    The class used to be added by a separate inline
-   head script; arming it here instead keeps it inside the one auto-hashed
+   head script; arming it here instead keeps it inside the external
    bundle and makes the failure mode safe — if this module never loads or
    executes (dropped connection, bad deploy), no .js class is added, the
    html:not(.js) fallbacks hold, and the page stays fully visible. Cost: a
@@ -147,3 +146,16 @@ if (motionOK) {
     );
   }
 }
+
+/* ---- sticky footer: keyboard focus returns it to its document position ---- */
+/* CSS unpins on :focus-within before this event runs. Scrolling the specific
+   target (not the page end) also works when the footer is taller than the
+   viewport. Instant scrolling never leaves a focused action hidden while a
+   smooth scroll catches up. Reduced motion and no-JS keep a static footer. */
+document.querySelector("footer")?.addEventListener("focusin", (event) => {
+  if (!matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
+  const target = event.target;
+  if (target instanceof HTMLElement) {
+    target.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
+  }
+});

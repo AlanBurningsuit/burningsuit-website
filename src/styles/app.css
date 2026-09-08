@@ -135,8 +135,10 @@
 
 /* ========================= components ========================= */
 @layer components {
-  /* The content and contact footer share normal document flow. */
+  /* Opaque content slides over the sticky footer; both remain in flow. */
   main {
+    position: relative;
+    z-index: 1;
     background: var(--bg);
   }
 
@@ -1283,6 +1285,24 @@
     color: var(--fg);
     border-top: var(--px) solid var(--deep);
   }
+  /* The top inset protects the start of a footer taller than the viewport.
+     The browser adjusts the opposite sticky inset; no height measurement is
+     needed. A focused footer returns to its normal position before its
+     focusin handler scrolls the actual action into view. */
+  @media (prefers-reduced-motion: no-preference) {
+    .js footer {
+      position: sticky;
+      top: 0;
+      bottom: 0;
+      z-index: 0;
+    }
+    .js footer:focus-within {
+      position: relative;
+    }
+  }
+  footer a {
+    scroll-margin-block: var(--space-xs);
+  }
   .outro {
     padding-block: var(--space-super) 1.5rem;
   }
@@ -1720,7 +1740,8 @@ html:not(.js) .figure-inset .ph {
     animation: none;
     transition: none;
   }
-  header {
+  header,
+  footer {
     position: static;
   }
   /* A fixed offscreen control can repeat inside printed page margins. */
