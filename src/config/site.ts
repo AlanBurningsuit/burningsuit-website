@@ -76,7 +76,7 @@ export const ORG_LOGO = "/social/burningsuit-mark-on-green.png";
 /** The Organization's description. Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =
-  "Power BI and Fabric training, project support and experienced backup with Alan Harman-Box, so teams can build, understand and check their reporting.";
+  "Alan Harman-Box works alongside Power BI and Fabric teams so they can take ownership of their reporting.";
 
 /** Postal identity (no street — area-served advisory, not a storefront). */
 export const ORG_ADDRESS = {
