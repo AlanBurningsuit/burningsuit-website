@@ -38,10 +38,8 @@ URL if you enable Deploy Previews — handy for testing a feature before it touc
 Since 2026-07-02 the Pages source is **"GitHub Actions"** and `deploy.yml` is
 **live production infrastructure**:
 
-- **Live site:** GitHub Pages, built and published by `deploy.yml`
-  (`withastro/action`) on every push to `main`. The action runs the full
-  `npm run build` — prep:images, astro build, AND the byte-budget gate — so a
-  budget failure blocks a production deploy.
+- **Live site:** GitHub Pages, validated and published by `deploy.yml` on every push to `main`. Explicit steps check out the source, set up Node 22 with npm caching, run `npm ci` and `npm run gate`, install Playwright Chromium with OS dependencies, then run `npm run test:functional` against the built `dist/`. Pages uploads that same tested artifact without rebuilding it. Only the deployment job can publish, and its guard permits `main` only.
+- **Pull requests and integration:** `validate.yml` runs the same installation, gate and functional checks for PRs targeting `dev` or `main`, and pushes to `dev`. It has read-only repository permissions and does not publish. Windows screenshot baselines remain a local check because Linux rendering differs.
 - **What main holds:** the full Astro site, live on the apex since go-live
   2026-07-16 (Pages run 29486479876). The pre-Astro legacy site is preserved
   as the `legacy-site-backup` git tag, not on any branch.
@@ -50,10 +48,9 @@ Since 2026-07-02 the Pages source is **"GitHub Actions"** and `deploy.yml` is
 
 ## Go-live checklist (promoting the full site to production)
 
-Go-live is **one move**: merge **`dev` → `main`** — the Action builds and
-publishes it. Before that merge:
+Go-live is **one move**: merge **`dev` → `main`** — the Action validates and publishes the tested artifact. Before that merge:
 
-1. `npm run gate` green on `dev`, and the Netlify preview eyeballed.
+1. `npm run gate` and `npm run test:functional` green on `dev`, release visual/performance checks completed, and the Netlify preview eyeballed.
 2. Merge, watch the Action, then **verify the live apex** renders the site.
 
 Roll back by reverting the offending merge commit on `main` — the Action
@@ -66,7 +63,8 @@ anything that lands on `main` ships.
 |---|---|
 | `npm run dev` | local dev server |
 | `npm run build` | prep:images + `astro build` + byte-budget gate (must pass) |
-| `npm run gate` | **the de-facto CI**: astro check → build (+budget) → link check → SEO/JSON-LD assertions |
+| `npm run gate` | astro check → build (+budget) → link check → SEO/JSON-LD assertions |
+| `npm run test:functional` | type-check tests/, then Chromium behaviour checks against the existing `dist/`; does not rebuild |
 | `npm run preview` | serve the built `dist/` |
 | `npm run test:visual` | type-check tests/, then Playwright snapshots (chromium + firefox + 390px mobile) |
 | `npm run test:visual:update` | refresh snapshot baselines after an intentional visual change, then re-run `test:visual` to confirm green |

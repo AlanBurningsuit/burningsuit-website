@@ -40,7 +40,7 @@ npm run prep:images
 ## Verification gates
 
 ```bash
-npm run gate         # the de-facto CI: astro check → build (+byte budget)
+npm run gate         # astro check → build (+byte budget)
                      #   → linkinator on dist/ → SEO/JSON-LD assertions
 npm run serve        # serves dist/ on :4321 (Playwright runs against this)
 npm run test:functional # type-checks tests/, then Chromium behavioural checks
@@ -73,13 +73,11 @@ for future build-time copy flags.
 
 ## Deployment (GitHub Pages)
 
-The Pages source is **GitHub Actions**: `deploy.yml` builds whatever Astro
-project is on `main` (the full `npm run build`, byte budget included) and
-publishes `dist/` to the apex. The deploy job is guarded to `main`.
+The Pages source is **GitHub Actions**. `deploy.yml` checks out the source, sets up Node 22 with npm caching, runs `npm ci` and `npm run gate`, installs Playwright Chromium with OS dependencies, then runs `npm run test:functional` against the existing `dist/`. It uploads that tested artifact, including `.nojekyll`, without another build. Only the deployment job has publishing permissions, and its guard permits `main` only. The Pages environment and concurrency protection remain in place.
 
-**Go-live** (promoting the full site) is one move — merge `dev` → `main` —
-plus verifying the apex afterwards. Roll back by reverting the merge on `main`;
-the Action redeploys the placeholder.
+`validate.yml` runs the same installation and validation steps for pushes to `dev` and PRs targeting `dev` or `main`, with read-only repository permissions and no publishing. Functional tests include test type-checking and use the built site. Windows screenshot baselines stay out of Linux CI because rendering and baseline names are platform-specific. The CSP tests retain deterministic tracker and beacon stubs.
+
+**Go-live** means promoting `dev` → `main` after the required checks and preview review, then verifying the apex. Ask before pushing; preview publication and production promotion are separate authorisations. Roll back by reverting the release merge on `main`; the Action validates and redeploys the previous site. [Workflow verification and pending Dependabot reconciliation](docs/workflow-review.md) records the pinned releases and remaining remote follow-up.
 
 `public/CNAME` preserves the apex domain; `public/.nojekyll` stops Jekyll
 touching `_astro/`. DNS (Mythic Beasts, apex → GitHub Pages) is configured
