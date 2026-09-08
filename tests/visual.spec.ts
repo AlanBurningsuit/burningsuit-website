@@ -39,10 +39,12 @@ test("home — regions", async ({ page }, testInfo) => {
   await prepare(page, "/");
   const tag = testInfo.project.name;
   await expect(page.locator(".hero")).toHaveScreenshot(`home-hero-${tag}.png`);
-  // the trust moment (cream proof beat + credibility line), then the doors
+  // Paired evidence, five starting situations, working mechanism and prices.
   await expect(page.locator(".chapter:has(#in-practice)")).toHaveScreenshot(`home-trust-${tag}.png`);
-  await expect(page.locator(".chapter:has(#what)")).toHaveScreenshot(`home-services-${tag}.png`);
-  await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
+  await expect(page.locator(".chapter:has(#situations)")).toHaveScreenshot(`home-services-${tag}.png`);
+  await expect(page.locator(".chapter:has(#how)")).toHaveScreenshot(`home-how-${tag}.png`);
+  await expect(page.locator(".chapter:has(#starting-and-pricing)")).toHaveScreenshot(`home-pricing-${tag}.png`);
+  await expect(page.locator(".chapter:has(#ai)")).toHaveScreenshot(`home-ai-${tag}.png`);
   await expect(page.locator(".about")).toHaveScreenshot(`home-about-${tag}.png`);
   // The footer is a normal-flow region; the locator scrolls it into view.
   await expect(page.locator("footer")).toHaveScreenshot(`home-footer-${tag}.png`);

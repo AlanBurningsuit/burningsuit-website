@@ -55,10 +55,10 @@ test("cream is reserved for evidence", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".about .panel")).toHaveCount(0);
   await expect(page.locator(".about .about-door")).toHaveCount(1);
-  const panels = page.locator(".chapter:has(#in-practice) .panel.casefile");
-  await expect(panels).toHaveCount(1);
-  expect(await panels.first().evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(241, 236, 217)");
-  expect(await panels.first().locator("a").first().getAttribute("href")).not.toContain("law-firm");
+  const panels = page.locator("main .panel");
+  await expect(panels).toHaveCount(2);
+  expect(await panels.evaluateAll((elements) => elements.map(el => el.getAttribute("href")))).toEqual(["/work/contact-centre/", "/work/law-firm/"]);
+  for (const panel of await panels.all()) expect(await panel.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(241, 236, 217)");
   await page.goto("/about/");
   await expect(page.locator("main .panel")).toHaveCount(0);
   await page.goto("/work/");
