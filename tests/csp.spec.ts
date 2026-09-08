@@ -12,7 +12,7 @@ import { ANALYTICS } from "../src/config/site";
  */
 const pages = [
   "/",
-  "/ai-fit-for-teams/", "/writing/we-are-all-middle-management-now/", "/hour/",
+  "/writing/we-are-all-middle-management-now/", "/hour/",
   "/power-bi/",
   "/about/",
   "/work/",

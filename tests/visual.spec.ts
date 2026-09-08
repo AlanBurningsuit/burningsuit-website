@@ -45,26 +45,13 @@ test("home — regions", async ({ page }, testInfo) => {
   await prepare(page, "/");
   const tag = testInfo.project.name;
   await expect(page.locator(".hero")).toHaveScreenshot(`home-hero-${tag}.png`);
-  // Paired evidence, five starting situations, working mechanism and prices.
+  // The Home router: paired evidence, linked situations and the stance.
   await expect(page.locator(".chapter:has(#in-practice)")).toHaveScreenshot(`home-trust-${tag}.png`);
   await expect(page.locator(".chapter:has(#situations)")).toHaveScreenshot(`home-services-${tag}.png`);
-  await expect(page.locator(".chapter:has(#how)")).toHaveScreenshot(`home-how-${tag}.png`);
-  await expect(page.locator(".chapter:has(#starting-and-pricing)")).toHaveScreenshot(`home-pricing-${tag}.png`);
-  await expect(page.locator(".chapter:has(#ai)")).toHaveScreenshot(`home-ai-${tag}.png`);
+  await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
   await expect(page.locator(".about")).toHaveScreenshot(`home-about-${tag}.png`);
   // The footer is a normal-flow region; the locator scrolls it into view.
   await expect(page.locator("footer")).toHaveScreenshot(`home-footer-${tag}.png`);
-});
-
-test("ai-fit-for-teams — regions", async ({ page }, testInfo) => {
-  await prepare(page, "/ai-fit-for-teams/");
-  const tag = testInfo.project.name;
-  await expect(page.locator(".page-hero")).toHaveScreenshot(`aifit-hero-${tag}.png`);
-  await expect(page.locator(".movements")).toHaveScreenshot(`aifit-movements-${tag}.png`);
-  // the carved field document (the page's signature object since 2026-07)
-  await expect(page.locator(".fitmap-doc")).toHaveScreenshot(`aifit-fitmap-${tag}.png`);
-  // the offer band: tonal --bg-2 grouping + the talk photo inset (rhythm trial)
-  await expect(page.locator(".chapter:has(#how-it-works)")).toHaveScreenshot(`aifit-offer-band-${tag}.png`);
 });
 
 test("hour — page", async ({ page }, testInfo) => {
@@ -87,6 +74,8 @@ test("power-bi — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".offer-table")).toHaveScreenshot(`pbi-offers-${tag}.png`);
   await expect(page.locator(".chapter:has(#discovery)")).toHaveScreenshot(`pbi-discovery-${tag}.png`);
   await expect(page.locator(".chapter:has(#pricing)")).toHaveScreenshot(`pbi-pricing-${tag}.png`);
+  await expect(page.locator(".chapter:has(#ongoing)")).toHaveScreenshot(`pbi-ongoing-${tag}.png`);
+  await expect(page.locator(".chapter:has(#ai)")).toHaveScreenshot(`pbi-ai-${tag}.png`);
 });
 
 test("about — regions", async ({ page }, testInfo) => {

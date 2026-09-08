@@ -30,6 +30,8 @@ export default defineConfig({
   // non-slash form only (both variants as keys is unsupported; Pages 301s
   // /foo → /foo/ itself).
   redirects: {
+    // The retired AI page now leads to the practical AI chapter.
+    "/ai-fit-for-teams": "/power-bi/#ai",
     // One essay does not need a separate writing index yet.
     "/writing": "/writing/we-are-all-middle-management-now/",
     // Power BI technique posts → the Power BI hub (topical successor; no blog)
@@ -112,9 +114,8 @@ export default defineConfig({
     // .mdx bodies render through the case-study component kit (Chapter/Snapshot/
     // Offer); no client JS is shipped — it's a build-time transform only.
     mdx(),
-    // Auto-discovers built pages. /, /about, /ai-fit-for-teams, /power-bi,
-    // /colophon, /work (+ /work/<slug>) and /writing/<slug> are indexable;
-    // redirect stubs and 404 are excluded.
+    // Auto-discovers built pages, including /hour/, /work/<slug> and
+    // /writing/<slug>. Redirect stubs and the 404 page are excluded.
     sitemap(),
   ],
 

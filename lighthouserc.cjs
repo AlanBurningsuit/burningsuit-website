@@ -7,7 +7,6 @@ module.exports = {
       staticDistDir: "./dist",
       url: [
         "http://localhost/index.html",
-        "http://localhost/ai-fit-for-teams/index.html",
         "http://localhost/writing/we-are-all-middle-management-now/index.html",
         "http://localhost/hour/index.html",
         "http://localhost/power-bi/index.html",

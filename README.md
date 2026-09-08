@@ -5,13 +5,15 @@ The burningsuit company site. Static, hand-built, no CMS. Current design is
 tokens + semantic classes in `src/styles/`).
 
 **Stack:** Astro 6 · Tailwind v4 (via PostCSS) · MDX content collections (the
-`/work` case studies) · self-hosted fonts (Astro Fonts API) · `astro:assets`
+`/work` case studies and `/writing` essays) · self-hosted fonts (Astro Fonts API) · `astro:assets`
 images (AVIF/WebP) · published to **GitHub Pages** by GitHub Actions
 (`.github/workflows/deploy.yml`, on push to `main`).
 
 **Branch reality:** `main` is production and serves the full Astro site. `dev` is integration with a Netlify preview. Merging `dev` → `main` deploys to the live apex; see `AGENTS.md` for the checklist. Ask before pushing any branch.
 
 Both ownership comparison treatments were rejected; their copy was broadly accepted. The existing field-notebook design is retained, with no selection pending. The [implementation record](docs/ownership-preview-review.md) tracks the content transfer and validation.
+
+The [September review pass](docs/ownership-redesign-implementation.md) records the free hour, Home routing, AI fold and essay work, including authorised placeholders still awaiting Alan's final inputs. Header navigation is Power BI, Case studies and About, plus Book an hour. Contextual links lead to `/hour/` and the essay.
 
 ## Local development
 
@@ -61,12 +63,13 @@ If mobile fails, inspect the reports for font, image and motion shifts. Retain t
 
 ## Content
 
-Two tracks:
+Content tracks:
 
 - **Case studies / proof** → an `.mdx` entry in the `work` collection
   (`src/content/work/`; schema in `src/content.config.ts`). The filename is the
   slug; the route and the `/work` tile are automatic.
 - **Standing pages** → bespoke `.astro` under `src/pages/`.
+- **Essays** → an `.mdx` entry in `src/content/writing/`, rendered through `EssayLayout` with Article metadata and a Home → title breadcrumb. With one essay, `/writing/` redirects to it. Replace that redirect with an index when a second essay is published. Publication dates and talk appearances are supplied editorial facts; omit them until known.
 
 **Naming is gated per study** by `namePublished` frontmatter: the named client +
 quote render only when it is `true` AND written permission has landed. While

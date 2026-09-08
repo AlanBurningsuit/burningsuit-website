@@ -11,6 +11,10 @@ is the how). A static site: **Astro 6 + Tailwind v4**, no JS framework,
 "the field notebook" (flat Everforest green, 2026-07-11 warmth delta). All
 styles live in `src/styles/` (`tokens.css` + `app.css`).
 
+Header navigation is Power BI, Case studies and About, followed by **Book an hour**. Home routes readers to five situation anchors on Power BI. `/hour/` explains the free call; booking buttons go directly to Cal.com. The four `/work/<slug>/` studies and `/writing/<slug>/` essays are MDX collections. There is one essay, so `/writing/` redirects to it until a second essay warrants an index. The retired AI Fit route redirects to `/power-bi/#ai`; legacy blog redirects retain their Power BI destination. Privacy and 404 complete the reading routes.
+
+On `feat/ownership-redesign`, the booking event URL and essay remain explicitly authorised placeholders. See `docs/ownership-redesign-implementation.md` for the inputs Alan will replace before release.
+
 ## Branches (only two)
 
 - **`main`** — production. ⚠️ Whatever is on `main` **deploys to the live apex**
@@ -69,8 +73,9 @@ anything that lands on `main` ships.
 | `npm run test:visual` | type-check tests/, then Playwright snapshots (chromium + firefox + 390px mobile) |
 | `npm run test:visual:update` | refresh snapshot baselines after an intentional visual change, then re-run `test:visual` to confirm green |
 | `npm run test:lh` / `npm run test:links` | Lighthouse + link check |
+| `npm run test:lh:mobile` | Three mobile audits each for Home and Power BI, including analytics |
 
-Node 22 (`.nvmrc`).
+Node 22.20+ (`.nvmrc`). Lighthouse audits the existing build; rebuild after source changes.
 
 ## Conventions & gotchas
 
