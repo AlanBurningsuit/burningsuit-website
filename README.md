@@ -44,7 +44,6 @@ npm run gate         # astro check → build (+byte budget)
                      #   → linkinator on dist/ → SEO/JSON-LD assertions
 npm run serve        # serves dist/ on :4321 (Playwright runs against this)
 npm run test:functional # type-checks tests/, then Chromium behavioural checks
-npm run test:previews # development-only comparison checks and local captures
 npm run test:visual  # type-checks tests/, then Playwright region snapshots
                      #   (chromium + firefox + a 390px mobile project)
 npm run test:lh      # Lighthouse CI (perf/a11y; slow lane, run pre-merge)

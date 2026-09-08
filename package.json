@@ -20,12 +20,11 @@
     "check:tests": "tsc --noEmit -p tsconfig.tests.json",
     "serve": "http-server dist -p 4321 -s -c-1",
     "test:visual": "npm run check:tests && playwright test --grep @visual",
-    "test:visual:update": "playwright test --grep @visual --update-snapshots",
+    "test:visual:update": "npm run check:tests && playwright test --grep @visual --update-snapshots",
     "test:functional": "npm run check:tests && playwright test --project=chromium --grep-invert @visual",
     "test:links": "linkinator dist --recurse --silent --skip \"^mailto:|^https?://(?!localhost)\"",
     "test:lh": "lhci autorun",
-    "gate": "npm run check && npm run build && npm run test:links && npm run check:seo",
-    "test:previews": "npm run check:tests && playwright test --config playwright.previews.config.ts"
+    "gate": "npm run check && npm run build && npm run test:links && npm run check:seo"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.3",
