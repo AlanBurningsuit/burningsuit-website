@@ -63,9 +63,10 @@ test("power-bi — regions", async ({ page }, testInfo) => {
   await prepare(page, "/power-bi/");
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`pbi-hero-${tag}.png`);
-  await expect(page.locator(".proof")).toHaveScreenshot(`pbi-proof-${tag}.png`);
-  // the four offers as a ruled instrument (2026-07 review) — meta rows + rules
+  // Five starting situations reuse the established ruled rows.
   await expect(page.locator(".offer-table")).toHaveScreenshot(`pbi-offers-${tag}.png`);
+  await expect(page.locator(".chapter:has(#discovery)")).toHaveScreenshot(`pbi-discovery-${tag}.png`);
+  await expect(page.locator(".chapter:has(#pricing)")).toHaveScreenshot(`pbi-pricing-${tag}.png`);
 });
 
 test("about — regions", async ({ page }, testInfo) => {

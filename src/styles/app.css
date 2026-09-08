@@ -555,8 +555,9 @@
     font-size: var(--fs-sm);
     color: var(--fg-dim);
   }
-  .hero .cta-row {
-    margin-top: 2rem; /* flex/gap/wrap come from the base .cta-row */
+  .hero .cta-row,
+  .pbi-hero .cta-row {
+    margin-top: var(--space-cta); /* flex/gap/wrap come from the base .cta-row */
   }
   .hero-photo {
     margin: 0;
@@ -589,11 +590,13 @@
     .hero-photo img {
       aspect-ratio: 3 / 2;
     }
-    .hero .cta-row {
+    .hero .cta-row,
+    .pbi-hero .cta-row {
       flex-direction: column;
       align-items: stretch;
     }
-    .hero .cta-row .cta {
+    .hero .cta-row .cta,
+    .pbi-hero .cta-row .cta {
       justify-content: center;
     }
   }
@@ -1697,6 +1700,21 @@
   to {
     transform: none;
   }
+}
+
+/* Keyboard focus is immediate, including a link in a still-revealing block.
+   Otherwise natural Tab can land on an invisible panel or prose link. */
+[data-reveal]:focus-within,
+.enter:focus-within {
+  opacity: 1;
+  transform: none;
+  animation: none;
+  transition: none;
+}
+.lines:focus-within .l > .i {
+  transform: none;
+  animation: none;
+  transition: none;
 }
 
 /* ============ immediate readability without JavaScript ============ */

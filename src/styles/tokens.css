@@ -172,6 +172,7 @@
   --space-xl: clamp(2rem, 5vw, 3.5rem); /* page-hero end padding */
   --space-super: clamp(2.6rem, 5.5vw, 4rem); /* the section step — padding-block of a band */
   --space-block: 1.1rem; /* the common fixed margin above a sub-block */
+  --space-cta: 2rem; /* established hero-copy to contact-row gap */
   --gutter: clamp(1.15rem, 4vw, 3rem); /* the page inline gutter */
   /* The sticky header bar's MEASURED height (built site, header boundingBox
      65.1px at ≥896px, 2026-07-11 — the old 3.6rem was a stale estimate). One

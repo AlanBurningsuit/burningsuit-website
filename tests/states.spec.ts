@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 
-const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/privacy/"];
+const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/404.html"];
 
 /** Check the reading surface before any scroll or class manipulation. */
 async function expectReadableContent(page: Page) {
@@ -41,10 +41,12 @@ async function expectReadableContent(page: Page) {
 
 /** The original geometry gate, including hero heading inners. No forced reveals. */
 async function expectEndStateGeometry(page: Page) {
-  for (const selector of [".l > .i", ".thread"]) {
+  for (const selector of [".l > .i", ".thread", "[data-reveal]", ".enter"]) {
     const transforms = await page.locator(selector).evaluateAll((elements) => elements.map((el) => getComputedStyle(el).transform));
     for (const transform of transforms) expect(transform, `${selector} must be un-translated and unscaled`).toBe("none");
   }
+  const terminals = await page.locator(".thread").evaluateAll((elements) => elements.map((el) => getComputedStyle(el, "::after").scale));
+  for (const scale of terminals) expect(scale, "thread terminals are unscaled").toBe("1");
   const curtains = await page.locator("[data-reveal-fig] .ph, .photo-ch .ph").evaluateAll((elements) => elements.map((el) => getComputedStyle(el).clipPath));
   for (const clip of curtains) expect(clip, "photo curtain must be unclipped").toBe("none");
 }
@@ -68,16 +70,20 @@ test("cream is reserved for evidence", async ({ page }) => {
 test("IntersectionObserver fallback exposes all reading content", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.addInitScript(() => { delete (window as unknown as { IntersectionObserver?: unknown }).IntersectionObserver; });
-  await page.goto("/power-bi/");
-  await expectReadableContent(page);
+  for (const path of pages) {
+    await page.goto(path);
+    await expectReadableContent(page);
+  }
 });
 
-test("print exposes all reading content and uses a static header", async ({ page }) => {
-  await page.emulateMedia({ media: "print", reducedMotion: "no-preference" });
-  await page.goto("/");
-  await expectReadableContent(page);
-  expect(await page.locator("header").evaluate((el) => getComputedStyle(el).position)).toBe("static");
-});
+for (const path of pages) {
+  test(`print exposes all reading content and uses a static header: ${path}`, async ({ page }) => {
+    await page.emulateMedia({ media: "print", reducedMotion: "no-preference" });
+    await page.goto(path);
+    await expectReadableContent(page);
+    expect(await page.locator("header").evaluate((el) => getComputedStyle(el).position)).toBe("static");
+  });
+}
 
 test("contact controls have no entrance or reveal gates", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
