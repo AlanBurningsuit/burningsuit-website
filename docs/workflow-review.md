@@ -18,13 +18,13 @@ Release tags and their 40-character commit objects were verified through the Git
 | [upload-pages-artifact v5.0.0](https://github.com/actions/upload-pages-artifact/releases/tag/v5.0.0) | `fc324d3547104276b827a68afc52ff2a11cc49c9` |
 | [deploy-pages v5.0.1](https://github.com/actions/deploy-pages/releases/tag/v5.0.1) | `368f82528645a54fb793d4d04e342629a3f51346` |
 
-The workflows have been parsed and inspected locally for the required sequence, permissions, triggers, deployment guard, Pages configuration, environment, concurrency and artifact upload. A hosted Actions run remains to be observed after an authorised push; local inspection is not evidence that GitHub has executed these workflows.
+The workflows have been parsed and inspected locally for the required sequence, permissions, triggers, deployment guard, Pages configuration, environment, concurrency and artifact upload. The authorised feature-branch push on 8 September 2026 did not trigger an Actions run: validation runs on PRs targeting `dev`/`main` or pushes to `dev`. A hosted run remains to be verified when one of those events occurs; local inspection is not evidence that GitHub has executed these workflows.
 
-## Dependabot reconciliation after an authorised push
+## Dependabot reconciliation
 
-The following open PRs target `dev` and propose edits to the old deployment workflow. Once the authorised push has incorporated this rewrite, confirm that each change is present or superseded, then close the obsolete proposals rather than merging their old workflow lines. No PR has been merged, commented on or closed as part of the local implementation.
+After Alan authorised the push on 8 September 2026, `feat/ownership-redesign` was pushed and its remote head verified at `585d77f`. The four PRs below were inspected live: each targeted `dev` and contained only a one-line edit to the old deployment workflow. All were closed as superseded by the feature branch, without merging their obsolete workflow changes. This does not mean the rewrite has been integrated into `dev` or deployed to production.
 
-| PR | Disposition after incorporation |
+| PR | Closed as superseded |
 |---|---|
 | [#2: deploy-pages 4.0.5 → 5.0.0](https://github.com/AlanBurningsuit/burningsuit-website/pull/2) | Superseded by the verified 5.0.1 release. |
 | [#3: configure-pages 5.0.0 → 6.0.0](https://github.com/AlanBurningsuit/burningsuit-website/pull/3) | The 6.0.0 update is incorporated. |
