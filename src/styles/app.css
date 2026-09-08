@@ -1463,8 +1463,7 @@
     font-size: var(--fs-lead);
     color: var(--fg-dim);
   }
-/* Insert inside app.css's components layer, after the generic .page-hero,
-   .lead, .prose and .beats rules. No fixed height or clipped overflow. */
+/* The short hour page: natural flow and a compact desktop layout. */
 .hour-hero {
   padding-block: var(--space-cta);
 }

@@ -9,10 +9,9 @@ import type { CollectionEntry } from "astro:content";
  * safe in the anonymising direction). Build-time only: while this returns
  * undefined, nothing named reaches the static HTML.
  *
- * Never re-derive this inline. Every consumer — Casefile/CasefilePanel and
- * the homepage proof line — routes through here, so when written permission
- * lands, a single frontmatter flip upgrades every surface together (and the
- * flip path stays testable in one place).
+ * Never re-derive this inline. Casefile routes through here, so the
+ * permission decision remains in one testable place when a named
+ * testimonial is added.
  */
 export function namedTier(
   study?: CollectionEntry<"work">["data"],

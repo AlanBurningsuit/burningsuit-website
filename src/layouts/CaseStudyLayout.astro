@@ -5,10 +5,9 @@
  * Wraps BaseLayout with the shared case-study shell: a text-led page-hero (kicker
  * + sentence-case H1 with one amber em + standfirst; no visible byline — the Article
  * JSON-LD author is the Person @id, grounded by the first-person copy), the chaptered MDX body via the
- * default slot, then the gated <Casefile> testimonial and a quiet door to /power-bi
- * (the considering reader's next question: shape, rhythm, price). Structure mirrors
- * /about (no hero photo — "no real screenshots" is a hard rule and these are text
- * pages). "The ask" is the footer close + the page's two contact paths (book a call
+ * default slot, then the gated <Casefile> testimonial and a quiet door to /hour/.
+ * Structure mirrors /about (no hero photo — "no real screenshots" is a hard rule
+ * and these are text pages). "The ask" is the footer close + the two contact paths (Book an hour
  * + email), each carrying this study's contactSubject.
  */
 import type { CollectionEntry } from "astro:content";
@@ -74,11 +73,12 @@ const crumbs = breadcrumbList([
   {/* data-track-study-end: reaching this closing door fires the "Study read"
       event (enhance.ts) — the signal that a study was read to its ask, which
       pageviews can't see. */}
-  <section class="chapter" aria-label="working together" data-track-study-end>
+  <section class="chapter" aria-label="Working together" data-track-study-end>
     <div class="wrap">
       <div class="prose" data-reveal>
         <p>
-          <a class="u" href="/power-bi/">Find out how we could work together ▸</a>
+          If this sounds close to where you are, we can talk through what your reporting needs to do next.
+          <a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a>
         </p>
       </div>
     </div>

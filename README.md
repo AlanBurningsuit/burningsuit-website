@@ -84,7 +84,7 @@ The Pages source is **GitHub Actions**. `deploy.yml` checks out the source, sets
 
 `validate.yml` runs the same installation and validation steps for pushes to `dev` and PRs targeting `dev` or `main`, with read-only repository permissions and no publishing. Functional tests include test type-checking and use the built site. Windows screenshot baselines stay out of Linux CI because rendering and baseline names are platform-specific. The CSP tests retain deterministic tracker and beacon stubs.
 
-**Go-live** means promoting `dev` → `main` after the required checks and preview review, then verifying the apex. Ask before pushing; preview publication and production promotion are separate authorisations. Roll back by reverting the release merge on `main`; the Action validates and redeploys the previous site. [Workflow verification and pending Dependabot reconciliation](docs/workflow-review.md) records the pinned releases and remaining remote follow-up.
+**Go-live** means promoting `dev` → `main` after the required checks and preview review, then verifying the apex. Ask before pushing; preview publication and production promotion are separate authorisations. Roll back by reverting the release merge on `main`; the Action validates and redeploys the previous site. [Workflow verification and Dependabot reconciliation](docs/workflow-review.md) records the pinned releases and remaining remote follow-up.
 
 `public/CNAME` preserves the apex domain; `public/.nojekyll` stops Jekyll
 touching `_astro/`. DNS (Mythic Beasts, apex → GitHub Pages) is configured

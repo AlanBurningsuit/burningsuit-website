@@ -1,4 +1,3 @@
-// Copy into tests/ only after applying and building the source implementation.
 // These tests inject neither footer CSS nor footer behavior.
 import { test, expect } from "@playwright/test";
 

@@ -5,18 +5,18 @@
  * An outcome standfirst (`.lead`) over a dashed `.beats` list (the same list the
  * /power-bi hero uses). Rides the `.what` spine like every other chapter. The
  * `<li>` items are the default slot, authored in MDX with a bold label each:
- *   <Snapshot kicker="the short version" outcome="…">
- *   <li><strong>who:</strong> a small data team inside a large law firm</li>
+ *   <Snapshot kicker="The short version" outcome="…">
+ *   <li><strong>Who:</strong> a small data team inside a large law firm</li>
  *   …
  *   </Snapshot>
  */
 interface Props {
-  /** The one-line outcome hook (the draft's 60-second italic). */
+  /** The concise outcome hook. */
   outcome: string;
   id?: string;
   kicker?: string;
 }
-const { outcome, id = "snapshot", kicker = "the short version" } = Astro.props;
+const { outcome, id = "snapshot", kicker = "The short version" } = Astro.props;
 ---
 
 <section class="chapter" aria-labelledby={id}>

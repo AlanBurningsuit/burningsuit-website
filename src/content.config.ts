@@ -25,7 +25,7 @@ const work = defineCollection({
     /** Meta description (anonymised). */
     description: z.string(),
     /** Page-hero eyebrow + index tile plate. */
-    kicker: z.string().default("case file"),
+    kicker: z.string().default("Case study"),
     /** H1, sentence case with product capitals, with at most one amber <em>. */
     heading: z.object({
       before: z.string().optional(),

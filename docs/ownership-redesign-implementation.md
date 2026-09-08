@@ -18,4 +18,17 @@ Booking attribution was renamed on 8 September 2026. Read historical analytics a
 
 ## Validation
 
-Milestone and final validation results will be recorded here after completion. Raw local evidence is kept in the ignored `.review-pass/` directory.
+Each milestone below passed `npm run gate` and the complete functional suite before its commit. The gate includes Astro checking, the production build, byte budgets, local links and SEO/JSON-LD assertions. Raw local evidence is kept in the ignored `.review-pass/` directory.
+
+| Milestone | Commit | Functional checks |
+| --- | --- | --- |
+| Booking labels, event stub and positional attribution | `5d1a0e6` | 103 passed |
+| Hour page and writing foundations | `b99ffa2` | 114 passed |
+| Power BI situations, pricing ladder and AI chapter | `37b30f4` | 114 passed |
+| Home router and restored stance | `fedbc76` | 114 passed |
+| AI fold, redirects and route coverage | `012e3a0` | 109 passed |
+| About revert and voice pass | `b17a504` | 109 passed |
+
+The hour's full content occupies 393px below the header at the 1280×720 desktop viewport; its contact actions are visible without scrolling. Narrow screens retain natural vertical flow. The writing SEO checker was also exercised against ten isolated fixtures: two valid variants and eight deliberately invalid author, breadcrumb, redirect and date cases were handled as expected.
+
+Final footer, screenshot and Lighthouse results will follow after acceptance.

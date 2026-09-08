@@ -62,8 +62,7 @@ async function focusedLinkState(page: Page) {
   });
 }
 
-// Replace the existing five footer tests in tests/navigation.spec.ts with this
-// block. It deliberately reuses that file's focusedLinkState helper.
+// Exercise natural entry and return across the main/footer boundary.
 for (const mode of ["normal", "reduce", "no-js"] as const) {
   test.describe(`footer navigation with ${mode}`, () => {
     test.use({

@@ -97,7 +97,7 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
 }
 
 /**
- * An Article node for editorial pages (case studies, future blog posts).
+ * An Article node for editorial pages (case studies, essays).
  * `author`/`publisher` reference the site graph by @id; dates are emitted
  * only when present (the freshness signal answer engines weight heavily).
  */

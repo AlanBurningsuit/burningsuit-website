@@ -85,8 +85,7 @@ test("about — regions", async ({ page }, testInfo) => {
   // chapters scoped by their heading id so each `.chapter` locator is unambiguous.
   await expect(page.locator(".chapter:has(#capable)")).toHaveScreenshot(`about-capable-${tag}.png`);
   await expect(page.locator(".chapter:has(#human)")).toHaveScreenshot(`about-human-${tag}.png`);
-  // origin carries the Stuart & Alison studio inset since 2026-07; capable
-  // carries the café working shot — both covered by their chapter regions.
+  // The human chapter carries the talk; origin carries the studio inset.
   await expect(page.locator(".chapter:has(#origin)")).toHaveScreenshot(`about-origin-${tag}.png`);
   await expect(page.locator(".chapter:has(#dog)")).toHaveScreenshot(`about-dog-${tag}.png`);
 });

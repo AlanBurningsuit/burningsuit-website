@@ -21,7 +21,7 @@ interface Props extends RowData {
   /** Reveal-stagger index within the grid. */
   index?: number;
 }
-const { href, tab, title, body, cta = "see how it works", index = 0 } = Astro.props;
+const { href, tab, title, body, cta = "See how it works", index = 0 } = Astro.props;
 ---
 <a class:list={["panel", `stagger-${index}`]} href={href} data-reveal>
   {
