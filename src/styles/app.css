@@ -1481,6 +1481,48 @@
     font-size: var(--fs-lead);
     color: var(--fg-dim);
   }
+/* Insert inside app.css's components layer, after the generic .page-hero,
+   .lead, .prose and .beats rules. No fixed height or clipped overflow. */
+.hour-hero {
+  padding-block: var(--space-cta);
+}
+.hour-hero .hour-layout {
+  display: grid;
+  gap: var(--space-lg);
+}
+.hour-hero h1 {
+  margin-top: 0;
+  font-size: var(--fs-4);
+  max-width: var(--measure-statement);
+}
+.hour-hero .lead {
+  margin-top: var(--space-xs);
+}
+.hour-hero .beats {
+  margin-top: 0;
+}
+.hour-hero .cta-row {
+  margin-top: var(--space-cta);
+}
+@media (min-width: 62rem) {
+  .hour-hero .hour-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+  .hour-hero .hour-details {
+    padding-top: var(--space-3xs);
+  }
+}
+@media (max-width: 47.99rem) {
+  .hour-hero .cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hour-hero .cta {
+    justify-content: center;
+  }
+}
+
   .lead em {
     color: var(--amber);
     font-style: normal;

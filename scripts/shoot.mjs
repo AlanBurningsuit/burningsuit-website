@@ -18,6 +18,7 @@ await mkdir(OUT, { recursive: true });
 const targets = [
   { url: "http://localhost:4321/", name: "home" },
   { url: "http://localhost:4321/ai-fit-for-teams/", name: "ai-fit" },
+  { url: "http://localhost:4321/writing/we-are-all-middle-management-now/", name: "essay" },
   { url: "http://localhost:4321/power-bi/", name: "power-bi" },
   { url: "http://localhost:4321/about/", name: "about" },
   { url: "http://localhost:4321/work/", name: "work" },

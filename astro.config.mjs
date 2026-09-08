@@ -30,6 +30,8 @@ export default defineConfig({
   // non-slash form only (both variants as keys is unsupported; Pages 301s
   // /foo → /foo/ itself).
   redirects: {
+    // One essay does not need a separate writing index yet.
+    "/writing": "/writing/we-are-all-middle-management-now/",
     // Power BI technique posts → the Power BI hub (topical successor; no blog)
     "/blog/2019/04/7-secrets-of-the-matrix-visual": "/power-bi/",
     "/blog/7-secrets-matrix-visual": "/power-bi/",
@@ -106,12 +108,13 @@ export default defineConfig({
   },
 
   integrations: [
-    // MDX powers the `work` case-study collection (and the future blog). The
+    // MDX powers the `work` case studies and `writing` essays. The
     // .mdx bodies render through the case-study component kit (Chapter/Snapshot/
     // Offer); no client JS is shipped — it's a build-time transform only.
     mdx(),
     // Auto-discovers built pages. /, /about, /ai-fit-for-teams, /power-bi,
-    // /colophon and /work (+ /work/<slug>) are indexable; 404 is excluded.
+    // /colophon, /work (+ /work/<slug>) and /writing/<slug> are indexable;
+    // redirect stubs and 404 are excluded.
     sitemap(),
   ],
 

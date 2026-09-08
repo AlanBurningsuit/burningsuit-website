@@ -1,0 +1,78 @@
+---
+/**
+ * /writing/<slug> — an essay in the site's existing chaptered reading layout.
+ * The Article references Alan's Person node; the breadcrumb goes directly
+ * from Home to the essay because there is no writing index yet.
+ */
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import { articleNode, breadcrumbList } from "../lib/schema";
+
+interface Props {
+  essay: CollectionEntry<"writing">["data"];
+}
+const { essay } = Astro.props;
+const { kicker, heading, lead, title, description, contactSubject, footerInvitation, givenAt } = essay;
+const siteUrl = Astro.site?.href ?? "https://burningsuit.co.uk/";
+const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
+const publishedTime = essay.datePublished?.toISOString();
+const modifiedTime = essay.dateModified?.toISOString();
+const article = articleNode({
+  siteUrl,
+  pageUrl,
+  headline: [heading.before, heading.em, heading.after].filter(Boolean).join("").trim(),
+  description,
+  datePublished: publishedTime,
+  dateModified: modifiedTime,
+});
+const crumbs = breadcrumbList([
+  { name: "Home", url: siteUrl },
+  { name: title.replace(/ - burningsuit$/, ""), url: pageUrl },
+]);
+const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", {
+  day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
+}).format(date);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  contactSubject={contactSubject}
+  ogType="article"
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  jsonLd={[article, crumbs]}
+>
+  <Fragment slot="footer-invitation">{footerInvitation}</Fragment>
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="kicker meta enter">{kicker}</p>
+      <h1 class="enter appear-300">
+        {heading.before}<em>{heading.em}</em>{heading.after}
+      </h1>
+      <p class="lead enter appear-450">{lead}</p>
+      {givenAt && givenAt.length > 0 && (
+        <div class="prose">
+          {givenAt.map(({ event, date }) => <p class="meta">Given at {event}, <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>.</p>)}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <slot />
+
+  <section class="chapter" aria-label="A conversation about your reporting">
+    <div class="wrap">
+      <div class="prose" data-reveal>
+        <p>If this leaves you with a question about your own reporting, we can talk it through.</p>
+        <p><a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

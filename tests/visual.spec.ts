@@ -67,6 +67,18 @@ test("ai-fit-for-teams — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#how-it-works)")).toHaveScreenshot(`aifit-offer-band-${tag}.png`);
 });
 
+test("hour — page", async ({ page }, testInfo) => {
+  await prepare(page, "/hour/");
+  await expect(page.locator(".hour-hero")).toHaveScreenshot(`hour-${testInfo.project.name}.png`);
+});
+
+test("writing essay — regions", async ({ page }, testInfo) => {
+  await prepare(page, "/writing/we-are-all-middle-management-now/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".page-hero")).toHaveScreenshot(`essay-hero-${tag}.png`);
+  await expect(page.locator(".chapter:has(#essay-draft)")).toHaveScreenshot(`essay-body-${tag}.png`);
+});
+
 test("power-bi — regions", async ({ page }, testInfo) => {
   await prepare(page, "/power-bi/");
   const tag = testInfo.project.name;

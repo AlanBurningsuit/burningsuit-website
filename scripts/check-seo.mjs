@@ -51,6 +51,9 @@ const fail = (route, msg) => {
   problems.push(`  ✗ ${route}  —  ${msg}`);
 };
 
+if (!pages.includes("writing/index.html")) fail("/writing/", "missing redirect to the first essay");
+if (!pages.includes("writing/we-are-all-middle-management-now/index.html")) fail("/writing/", "first essay is missing from the build");
+
 for (const rel of pages) {
   const route = "/" + rel.replace(/index\.html$/, "").replace(/\.html$/, "");
   const html = readFileSync(join(DIST, rel), "utf8");
@@ -64,14 +67,38 @@ for (const rel of pages) {
   const refresh = html.match(/<meta http-equiv="refresh" content="\d+;url=([^"]+)"/i);
   if (refresh) {
     redirectStubs++;
-    const target = refresh[1].replace(/^https?:\/\/[^/]+/, "");
+    let targetUrl;
+    try {
+      targetUrl = new URL(refresh[1], SITE);
+    } catch {
+      fail(route, `redirect stub has an invalid target: ${refresh[1]}`);
+      continue;
+    }
+    const target = targetUrl.pathname;
     const targetFile = (target.endsWith("/") ? target + "index.html" : target + "/index.html")
       .replace(/^\//, "");
-    if (!pages.includes(targetFile)) {
-      fail(route, `redirect stub points at ${target}, which is not in this build`);
+    if (targetUrl.origin !== SITE || !pages.includes(targetFile)) {
+      fail(route, `redirect stub points at ${targetUrl.href}, which is not in this build`);
+    } else if (targetUrl.hash) {
+      let fragment;
+      try {
+        fragment = decodeURIComponent(targetUrl.hash.slice(1));
+      } catch {
+        fail(route, `redirect stub has an invalid fragment: ${targetUrl.hash}`);
+        continue;
+      }
+      const targetHtml = readFileSync(join(DIST, targetFile), "utf8");
+      const ids = [...targetHtml.matchAll(/<[^>]+\bid="([^"]+)"/gi)].map((match) => match[1]);
+      if (!ids.includes(fragment)) fail(route, `redirect fragment #${fragment} does not exist on ${target}`);
+    }
+    if (route === "/writing/" && (target !== "/writing/we-are-all-middle-management-now/" || targetUrl.hash)) {
+      fail(route, "writing has no index yet: its redirect must lead directly to the first essay");
     }
     continue;
   }
+
+  if (route === "/writing/") fail(route, "writing must remain a redirect until there is a second essay");
+
   // Head-only slice for the <title> count: an accessible inline-SVG <title>
   // in the body must not read as a duplicate document title.
   const headEnd = html.indexOf("</head>");
@@ -93,6 +120,8 @@ for (const rel of pages) {
   const noindex = metaTags(html).some(
     (t) => attr(t, "name") === "robots" && /noindex/i.test(attr(t, "content") ?? ""),
   );
+
+  if (route.startsWith("/writing/") && noindex) fail(route, "essay page is unexpectedly noindexed");
 
   // <link rel="canonical"> — mirrors the JSON-LD rule: noindex pages emit NO
   // canonical (a canonical on a noindexed page is a mixed signal); indexable
@@ -155,6 +184,40 @@ for (const rel of pages) {
     }
     if (person && (!Array.isArray(person.sameAs) || !person.sameAs.includes(FOUNDER_PROFILE))) {
       fail(route, "Person sameAs is missing Alan's confirmed LinkedIn");
+    }
+    if (route.startsWith("/writing/") && route !== "/writing/") {
+      const articles = nodes.filter((node) => node?.["@type"] === "Article");
+      const breadcrumbs = nodes.filter((node) => node?.["@type"] === "BreadcrumbList");
+      if (articles.length !== 1) fail(route, `expected 1 essay Article, found ${articles.length}`);
+      if (breadcrumbs.length !== 1) fail(route, `expected 1 essay BreadcrumbList, found ${breadcrumbs.length}`);
+      const article = articles[0];
+      if (article) {
+        if (article.author?.["@id"] !== person?.["@id"]) fail(route, "essay author must reference Alan's Person node");
+        if (article.publisher?.["@id"] !== organization?.["@id"]) fail(route, "essay publisher must reference the Organization node");
+        if (article.url !== SITE + route || article.mainEntityOfPage !== SITE + route) fail(route, "essay Article must identify its own canonical page");
+        if (typeof article.headline !== "string" || !article.headline.trim()) fail(route, "essay Article headline is empty");
+        const publishedTags = metaTags(head).filter((tag) => attr(tag, "property") === "article:published_time");
+        const modifiedTags = metaTags(head).filter((tag) => attr(tag, "property") === "article:modified_time");
+        for (const [field, tags] of [["datePublished", publishedTags], ["dateModified", modifiedTags]]) {
+          const value = article[field];
+          if (value === undefined) {
+            if (tags.length) fail(route, `${field} is absent in Article but its Open Graph date is emitted`);
+          } else {
+            const date = typeof value === "string" ? new Date(value) : new Date(NaN);
+            if (!Number.isFinite(date.getTime()) || date.toISOString() !== value) fail(route, `essay ${field} must be a valid ISO timestamp`);
+            if (tags.length !== 1 || attr(tags[0], "content") !== value) fail(route, `essay ${field} must match one Open Graph date`);
+          }
+        }
+        if (article.dateModified && !article.datePublished) fail(route, "essay modification date needs a publication date");
+        if (article.datePublished && article.dateModified && new Date(article.dateModified) < new Date(article.datePublished)) fail(route, "essay modification date precedes publication");
+      }
+      const items = breadcrumbs[0]?.itemListElement;
+      if (!Array.isArray(items) || items.length !== 2) {
+        fail(route, "essay breadcrumb must be Home → title, with no Writing index crumb");
+      } else {
+        if (items[0].position !== 1 || items[0].name !== "Home" || items[0].item !== `${SITE}/`) fail(route, "essay breadcrumb must start at Home");
+        if (items[1].position !== 2 || items[1].item !== SITE + route || typeof items[1].name !== "string" || !items[1].name.trim()) fail(route, "essay breadcrumb must end at its own title and URL");
+      }
     }
   }
 }

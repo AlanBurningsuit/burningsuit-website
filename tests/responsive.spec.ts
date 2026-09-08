@@ -21,7 +21,7 @@ const VIEWPORTS = [
   { width: 1280, height: 720 },
 ];
 
-const ROUTES = ["/", "/power-bi/", "/ai-fit-for-teams/", "/work/", "/about/", "/work/law-firm/"];
+const ROUTES = ["/", "/power-bi/", "/ai-fit-for-teams/", "/writing/we-are-all-middle-management-now/", "/hour/", "/work/", "/about/", "/work/law-firm/"];
 const READING_ROUTES = [...ROUTES, "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/404.html"];
 
 async function headerHeights(page: Page) {

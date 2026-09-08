@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 
-const pages = ["/", "/ai-fit-for-teams/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/404.html"];
+const pages = ["/", "/ai-fit-for-teams/", "/writing/we-are-all-middle-management-now/", "/hour/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/404.html"];
 
 /** Check the reading surface before any scroll or class manipulation. */
 async function expectReadableContent(page: Page) {

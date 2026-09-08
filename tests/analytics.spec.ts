@@ -60,6 +60,7 @@ for (const [path, placement] of [
   ["/", "header"], ["/", "footer"], ["/", "home-hero"],
   ["/power-bi/", "power-bi-hero"], ["/power-bi/", "power-bi-pricing"],
   ["/work/", "work"],
+  ["/hour/", "hour-page"],
 ]) {
 test(`booking click on ${placement} keeps its event URL and attribution`, async ({ page }) => {
   await page.goto(path, { waitUntil: "load" });
