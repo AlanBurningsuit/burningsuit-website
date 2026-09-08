@@ -31,6 +31,12 @@ async function prepare(page: Page, path: string) {
     for (const el of document.querySelectorAll<HTMLElement>("header#hd, a.skip")) {
       el.style.visibility = "hidden";
     }
+    // The hidden header needs no anchor clearance in region captures. Leaving
+    // its scroll padding active can place a nearly viewport-height region's
+    // bottom outside mobile Chromium's painted viewport, truncating the PNG.
+    // This changes scroll alignment only; real anchor clearance is tested in
+    // navigation.spec, and the readability matrix uses no such overrides.
+    document.documentElement.style.scrollPaddingBlockStart = "0px";
   });
 }
 
