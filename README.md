@@ -11,7 +11,7 @@ images (AVIF/WebP) · published to **GitHub Pages** by GitHub Actions
 
 **Branch reality:** `main` is production and serves the full Astro site. `dev` is integration with a Netlify preview. Merging `dev` → `main` deploys to the live apex; see `AGENTS.md` for the checklist. Ask before pushing any branch.
 
-The ownership redesign is at its design-selection milestone: [open and review the two local treatments](docs/ownership-preview-review.md). The public page treatment stays in place until Alan selects A or B.
+Both ownership comparison treatments were rejected; their copy was broadly accepted. The existing field-notebook design is retained, with no selection pending. The [implementation record](docs/ownership-preview-review.md) tracks the content transfer and validation.
 
 ## Local development
 

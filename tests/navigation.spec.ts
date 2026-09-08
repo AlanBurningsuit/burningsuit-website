@@ -44,6 +44,7 @@ async function focusedLinkState(page: Page) {
 for (const viewport of [
   { width: 1280, height: 720 },
   { width: 844, height: 390 },
+  { width: 896, height: 414 },
   { width: 320, height: 568 },
   // 1280×720 at 200% browser zoom has this effective CSS viewport.
   { width: 640, height: 360 },
@@ -67,20 +68,52 @@ for (const viewport of [
       reached.push(state.href);
     }
     expect(reached, "all footer actions must be reachable in document order").toEqual(expected);
+    for (const href of expected.slice(0, -1).reverse()) {
+      await page.keyboard.press("Shift+Tab");
+      const state = await focusedLinkState(page);
+      expect(state.href).toBe(href);
+      expect(state.insideViewport).toBe(true);
+      expect(state.unobscured).toBe(true);
+      expect(state.outline).toBe(true);
+      expect(state.contrast).toBeGreaterThanOrEqual(3);
+    }
   });
 }
 
-test("navigation stays available while scrolling down", async ({ page }) => {
+test("header hides down, returns up, and returns through natural keyboard focus", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   await page.mouse.wheel(0, 1400);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(500);
-  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
-  for (const link of await page.locator("header nav a").all()) {
-    await expect(link).toBeInViewport({ ratio: 1 });
-  }
-  const headerBox = (await page.locator("header").boundingBox())!;
-  expect(headerBox.y, "the header must stay at the top of the screen").toBe(0);
+  const header = page.locator("header");
+  await expect(header).toHaveClass(/hh/);
+  await expect.poll(async () => (await header.boundingBox())!.y + (await header.boundingBox())!.height).toBeLessThanOrEqual(1);
+  await page.mouse.wheel(0, -200);
+  await expect(header).not.toHaveClass(/hh/);
+  await expect.poll(async () => (await header.boundingBox())!.y).toBe(0);
+  await page.mouse.wheel(0, 400);
+  await expect(header).toHaveClass(/hh/);
+  // Starting from the document, Tab reaches skip then logo; no programmatic focus.
+  await page.keyboard.press("Tab");
+  await expect(page.locator(":focus")).toHaveClass(/skip/);
+  await page.keyboard.press("Tab");
+  expect(await page.locator(":focus").evaluate((el) => !!el.closest("header"))).toBe(true);
+  await expect(header).not.toHaveClass(/hh/);
+  await expect.poll(async () => (await header.boundingBox())!.y).toBe(0);
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Shift+Tab");
+  expect(await page.locator(":focus").evaluate((el) => !!el.closest("header"))).toBe(true);
+  await expect(page.locator(":focus")).toBeInViewport({ ratio: 1 });
+});
+
+test("reduced motion keeps the header visible while scrolling", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.mouse.wheel(0, 1400);
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(500);
+  await expect(page.locator("header")).not.toHaveClass(/hh/);
+  expect((await page.locator("header").boundingBox())!.y).toBe(0);
+  for (const link of await page.locator("header nav a").all()) await expect(link).toBeInViewport({ ratio: 1 });
 });
 
 test("links inside cream evidence panels have a contrasting focus ring", async ({ page }) => {

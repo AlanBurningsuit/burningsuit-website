@@ -1,13 +1,25 @@
 /**
  * Progressive enhancement for the burningsuit site.
  *
- * The document is complete and readable without JS. This module only records
- * contact intent and study engagement, and handles the analytics opt-out.
+ * Everything here is an enhancement on top of a page that is already complete
+ * and readable without JS: scroll reveals and the auto-hiding header.
+ * Nothing idles or loops — the 2026-07 warmth
+ * delta retired the clock, the console greeting and the /ai-fit rotation.
  *
  * NOTE on CSP: the build inlines this bundle as a module script and Astro
  * auto-hashes it into script-src (the hashes are byte-sensitive — LF only).
- * It does not write styles or control the visibility of any page content.
+ * Visibility is controlled by CSS classes; there are no inline-style writes.
  */
+/* ---- arm the reveal gate FIRST, only if the observer is supported:
+   reveal-hidden states exist only while this module is actually running.
+   The class used to be added by a separate inline
+   head script; arming it here instead keeps it inside the one auto-hashed
+   bundle and makes the failure mode safe — if this module never loads or
+   executes (dropped connection, bad deploy), no .js class is added, the
+   html:not(.js) fallbacks hold, and the page stays fully visible. Cost: a
+   possible one-frame reveal flash on slow connections. A browser without
+   IntersectionObserver uses the same complete, immediate CSS fallback. ---- */
+if ("IntersectionObserver" in window) document.documentElement.classList.add("js");
 
 /* ---- Umami custom events: the tracker (a defer script in <head>) auto-
    tracks pageviews and normally defines window.umami before this end-of-body
@@ -94,4 +106,44 @@ if (studyEnd && "IntersectionObserver" in window) {
     }
   });
   seen.observe(studyEnd);
+}
+
+const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
+
+/* ---- scroll reveals: fire once at ~85% viewport, never un-reveal ---- */
+const targets = document.querySelectorAll(
+  "[data-reveal],[data-reveal-raw],[data-reveal-lines],[data-reveal-fig]",
+);
+if (motionOK && "IntersectionObserver" in window) {
+  const io = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("show");
+          io.unobserve(e.target);
+        }
+      }),
+    { rootMargin: "0px 0px -15% 0px" },
+  );
+  targets.forEach((el) => io.observe(el));
+} else {
+  targets.forEach((el) => el.classList.add("show"));
+}
+
+/* ---- header: hides scrolling down, returns scrolling up ---- */
+if (motionOK) {
+  const hd = document.getElementById("hd");
+  if (hd) {
+    let last = scrollY;
+    hd.addEventListener("focusin", () => hd.classList.remove("hh"));
+    addEventListener(
+      "scroll",
+      () => {
+        const y = scrollY;
+        hd.classList.toggle("hh", y > 160 && y > last);
+        last = y;
+      },
+      { passive: true },
+    );
+  }
 }

@@ -26,10 +26,6 @@ interface Props {
   label?: string;
   emailLabel?: string;
   variant?: "hero" | "section";
-  /** section only: add data-reveal so the block animates in on scroll. */
-  reveal?: boolean;
-  /** hero only: load-choreography classes for the row, e.g. "enter appear-450". */
-  rowClass?: string;
 }
 const {
   src,
@@ -37,8 +33,6 @@ const {
   label = "Book a 30-minute call",
   emailLabel,
   variant = "section",
-  reveal = false,
-  rowClass = "",
 } = Astro.props;
 const hasNote = Astro.slots.has("default");
 const bookHref = bookingHref(src);
@@ -48,7 +42,7 @@ const resolvedEmailLabel = emailLabel ?? (variant === "hero" ? "Or email me" : "
 ---
 {
   variant === "hero" ? (
-    <div class:list={["cta-row", rowClass]}>
+    <div class="cta-row">
       <a class="cta" href={bookHref} target="_blank" rel="noopener noreferrer">
         {label}
       </a>
@@ -57,7 +51,7 @@ const resolvedEmailLabel = emailLabel ?? (variant === "hero" ? "Or email me" : "
       </a>
     </div>
   ) : (
-    <div class="cta-invite" {...(reveal ? { "data-reveal": true } : {})}>
+    <div class="cta-invite">
       {hasNote && (
         <p class="cta-note">
           <slot />
