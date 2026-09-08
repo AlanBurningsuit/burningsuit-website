@@ -442,6 +442,13 @@
     opacity: 1;
     transform: none;
   }
+  /* Hash navigation must align against a stable target, including before its
+     reveal observer runs. A rising target otherwise settles under the header. */
+  .js [data-reveal]:target {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
   .js .lines .l > .i {
     transform: translateY(110%);
     transition: transform var(--t-move) var(--ease-out);
@@ -1765,6 +1772,7 @@ html:not(.js) .figure-inset .ph {
   .offer,
   .movement,
   .door,
+  .cta-invite,
   .about-grid > div,
   figure {
     break-inside: avoid;

@@ -57,7 +57,7 @@ Baselines are committed for **this Windows machine** (`…-win32.png`); on other
 platforms regenerate a set first (`npm run test:visual:update`). The visual
 gate is a **regression tripwire**, not a pixel oracle.
 
-Both Lighthouse commands audit the existing `dist/`; neither builds it. Run `npm run gate` or `npm run build` successfully first, and rebuild after any source change before repeating either command. The desktop gate is unchanged. Mobile uses default mobile emulation and throttling, includes analytics, and requires median performance ≥0.95 and median CLS ≤0.1 over three runs per URL. Exported mobile reports are retained in `.lighthouseci/mobile/`; preserve raw `.lighthouseci/lhr-*` reports before the next collection clears them.
+Both Lighthouse commands audit the existing `dist/`; neither builds it. Run `npm run gate` or `npm run build` successfully first, and rebuild after any source change before repeating either command. The desktop gate is unchanged. Mobile uses default mobile emulation and throttling, includes analytics, and requires median performance ≥0.95 and median CLS of zero over three runs per URL. The footer review also checks every individual run for zero CLS. Exported mobile reports are retained in `.lighthouseci/mobile/`; preserve raw `.lighthouseci/lhr-*` reports before the next collection clears them.
 
 If mobile fails, inspect the reports for font, image and motion shifts. Retain those results before repeating the same mobile configuration with analytics blocked to isolate its contribution. Fix site-caused shortfalls; any proposed tracker exception needs both reports, audit rows and observed FCP/LCP, with Alan's documented decision.
 

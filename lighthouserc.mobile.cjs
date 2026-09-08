@@ -20,7 +20,7 @@ module.exports = {
         ],
         "cumulative-layout-shift": [
           "error",
-          { maxNumericValue: 0.1, aggregationMethod: "median" },
+          { maxNumericValue: 0, aggregationMethod: "median" },
         ],
       },
     },

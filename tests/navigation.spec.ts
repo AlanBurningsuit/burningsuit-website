@@ -248,12 +248,16 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
   });
 }
 
-for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 664 }, { width: 768, height: 1024 }, { width: 1280, height: 720 }, { width: 896, height: 414 }]) {
-  test(`Power BI anchors clear the header at ${viewport.width}×${viewport.height}`, async ({ page }) => {
+for (const motion of ["reduce", "no-preference"] as const) {
+for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 664 }, { width: 768, height: 1024 }, { width: 1280, height: 720 }, { width: 896, height: 414 }, { width: 844, height: 390 }]) {
+  test(`Power BI anchors clear the header with ${motion} at ${viewport.width}×${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport);
+    await page.emulateMedia({ reducedMotion: motion });
     for (const id of ["discovery", "pricing", "ai", "skills", "deliver", "handover", "second-opinion", "backup"]) {
       await page.goto(`/power-bi/#${id}`);
+      await page.evaluate(() => document.fonts.ready);
       const destination = page.locator(`#${id}`);
+      expect(await destination.evaluate(el => getComputedStyle(el).transform), `${id} must not move after the hash scroll`).toBe("none");
       const heading = await destination.locator("h3").count() ? destination.locator("h3") : destination;
       await expect(heading).toBeInViewport({ ratio: 1 });
       const header = (await page.locator("header").boundingBox())!;
@@ -261,4 +265,5 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 664 }
       expect(target.y, `${id} starts below the sticky header`).toBeGreaterThanOrEqual(header.y + header.height);
     }
   });
+}
 }
