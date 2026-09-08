@@ -197,9 +197,10 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
 for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 664 }, { width: 768, height: 1024 }, { width: 1280, height: 720 }, { width: 896, height: 414 }]) {
   test(`Power BI anchors clear the header at ${viewport.width}×${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    for (const id of ["discovery", "pricing", "practical-ai"]) {
+    for (const id of ["discovery", "pricing", "ai", "skills", "deliver", "handover", "second-opinion", "backup"]) {
       await page.goto(`/power-bi/#${id}`);
-      const heading = page.locator(`#${id}`);
+      const destination = page.locator(`#${id}`);
+      const heading = await destination.locator("h3").count() ? destination.locator("h3") : destination;
       await expect(heading).toBeInViewport({ ratio: 1 });
       const header = (await page.locator("header").boundingBox())!;
       const target = (await heading.boundingBox())!;

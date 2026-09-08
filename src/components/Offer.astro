@@ -6,11 +6,13 @@
  * concrete things side by side. `lead` adds the quiet amber spine (`.offer-lead`)
  * to mark the primary one.
  *
- *   <Offer title="they ran their own diagnostics">
+ *   <Offer title="They ran their own diagnostics">
  *   When a year-to-date number looked wrong, I didn't go and fix it…
  *   </Offer>
  */
 interface Props {
+  /** Stable in-page destination for a situation or offer. */
+  id?: string;
   title: string;
   /** Mark this as the lead item (amber spine). */
   lead?: boolean;
@@ -20,10 +22,10 @@ interface Props {
    *  contexts (/power-bi "what i do"). */
   meta?: string;
 }
-const { title, lead = false, meta } = Astro.props;
+const { id, title, lead = false, meta } = Astro.props;
 ---
 
-<div class:list={["offer", lead && "offer-lead"]} data-reveal>
+<div id={id} class:list={["offer", lead && "offer-lead"]} data-reveal>
   <h3>{title}</h3>
   {meta && <p class="offer-meta">{meta}</p>}
   <slot />
