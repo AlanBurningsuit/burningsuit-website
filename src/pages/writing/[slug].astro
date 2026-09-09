@@ -5,6 +5,7 @@ import EssayLayout from "../../layouts/EssayLayout.astro";
 import Chapter from "../../components/Chapter.astro";
 import Aside from "../../components/Aside.astro";
 import Exhibit from "../../components/Exhibit.astro";
+import EssayFigure from "../../components/EssayFigure.astro";
 
 export async function getStaticPaths() {
   const essays = await getCollection("writing");
@@ -19,5 +20,5 @@ const { Content } = await render(entry);
 ---
 
 <EssayLayout essay={entry.data}>
-  <Content components={{ Chapter, Aside, Exhibit }} />
+  <Content components={{ Chapter, Aside, Exhibit, EssayFigure }} />
 </EssayLayout>

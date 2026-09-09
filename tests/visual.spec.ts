@@ -64,6 +64,9 @@ test("writing essay — regions", async ({ page }, testInfo) => {
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`essay-hero-${tag}.png`);
   await expect(page.locator(".chapter:has(#daniels-story)")).toHaveScreenshot(`essay-body-${tag}.png`);
+  for (const kind of ["agent", "validation", "delegation", "experience"]) {
+    await expect(page.locator(`.essay-figure:has(#essay-figure-${kind}-caption)`)).toHaveScreenshot(`essay-figure-${kind}-${tag}.png`);
+  }
 });
 
 test("power-bi — regions", async ({ page }, testInfo) => {

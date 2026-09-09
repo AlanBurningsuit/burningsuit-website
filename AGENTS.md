@@ -13,7 +13,7 @@ styles live in `src/styles/` (`tokens.css` + `app.css`).
 
 Header navigation is Power BI, Case studies and About, followed by **Book an hour**. Home routes readers to five situation anchors on Power BI. `/hour/` explains the free call; booking buttons go directly to Cal.com. The four `/work/<slug>/` studies and `/writing/<slug>/` essays are MDX collections. There is one essay, so `/writing/` redirects to it until a second essay warrants an index. The retired AI Fit route redirects to `/power-bi/#ai`; legacy blog redirects retain their Power BI destination. Privacy and 404 complete the reading routes.
 
-On `feat/ownership-redesign`, Alan has confirmed the booking event URL and supplied the essay text. Its four figure placeholders, publication dates and confirmed talk venues remain outstanding. See `docs/ownership-redesign-implementation.md` for the remaining release inputs.
+On `feat/ownership-redesign`, Alan has confirmed the booking event URL and supplied the essay text and reference slides for its four figures. Publication dates and confirmed talk venues remain outstanding. See `docs/ownership-redesign-implementation.md` for the remaining release inputs.
 
 ## Branches (only two)
 

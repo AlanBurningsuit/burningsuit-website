@@ -6,7 +6,7 @@ This pass implements `ownership-redesign-review.md` on `feat/ownership-redesign`
 
 - Alan confirmed `BOOKING_URL` as `https://cal.com/alan-burningsuit/hour` on 9 September 2026. The event configuration still needs checking against the release requirements: retain the old `30min` event live but unlisted and include the two required questions, “What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?” The event description should match the hour page.
 - The hour page, both hero signatures and the Power BI AI chapter use branch draft copy. Alan will supply final wording and confirm the positional attribution names.
-- Alan supplied the essay text on 9 September 2026; it now replaces the dummy MDX. Its four figure placeholders are preserved pending artwork. Publication dates and confirmed talk venues/year remain unset; none have been invented.
+- Alan supplied the essay text and reference slide deck on 9 September 2026. The dummy MDX and four figure placeholders have been replaced. Publication dates and confirmed talk venues/year remain unset; none have been invented.
 - The About revert awaits Alan's final sign-off.
 - The Power BI share image remains the existing image, with alt text accurately describing its “done with you” wording, pending Alan's replacement.
 
@@ -71,5 +71,13 @@ Alan's supplied essay replaces the dummy content at the existing writing URL. Th
 Validation: `npm run gate` and all 137 Chromium functional tests pass. The rendered essay matches all 34 source text blocks at 1280px and 390px after accounting for the site's automatic smart punctuation. Neither viewport overflows horizontally, and the print stylesheet leaves the essay text visible. Eight updated hero/body screenshots were visually reviewed across Chromium, Firefox and both mobile sizes; all four essay visual tests pass against the adopted baselines. Full paginated print review remains part of final release review once the figures are supplied.
 
 Local evidence: `.review-pass/essay-gate.log`, `essay-functional.log`, `essay-check.json` and `essay-visual-confirm.log`.
+
+## Essay figures — 9 September 2026
+
+The four placeholders now use static HTML and SVG diagrams adapted from Alan's supplied talk deck: the context/tool interaction on slides 12–13, the visual validation loop on slide 23, and the delegation slopes on slides 27–28. Animated builds and overlapping slide labels are not reproduced. The domain-experience figure compares the two slopes on shared axes; the charts are explicitly conceptual, with no invented measurements.
+
+The loops use text at reading size, and the charts scale within the prose column. Figure captions and SVG descriptions provide text equivalents; the experience comparison uses dashed and solid lines as well as colour. The original deck and manuscript are unchanged. All 30 non-placeholder source text blocks still match the rendered essay at desktop and phone widths.
+
+Validation passes: the full gate, 137 Chromium functional checks and four essay visual tests. All 16 new figure snapshots were inspected across Chromium, Firefox and both mobile sizes before adoption. Desktop and 390px checks show four figures, no horizontal overflow and visible print text. Full paginated print review remains a release check. Local evidence is under `.review-pass/essay-figures/`.
 
 Local evidence: `.review-pass/nav-fix-gate.log`, `nav-fix-functional.log`, `nav-fix-cross-browser.log`, `nav-fix-smoke.json`, `nav-firefox-evidence.json` and their focused-state screenshots.

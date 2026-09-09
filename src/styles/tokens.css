@@ -125,6 +125,7 @@
   --fs-rich: 1.05rem; /* display-font prose — pull quote, 404 link */
   --fs-ui: 0.96rem; /* primary button */
   --fs-ui-sm: 0.92rem; /* small UI — card arrow link, header button */
+  --fs-diagram-label: 2rem; /* SVG viewBox label: remains readable when the chart scales to a phone */
   --header-booking-room: 10rem; /* Book an hour + the mobile header gap */
 
   --px: 3px; /* carved-edge weight — also the focus-ring width */

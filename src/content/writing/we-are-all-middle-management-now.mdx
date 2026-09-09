@@ -39,7 +39,7 @@ Now replace "contractors" with "AI", and Daniel's whole operation with yourself.
 
 A chatbot generates each response from its context: everything said so far, plus a hidden system prompt telling it where it is and how to behave. An agent is that, plus a harness that gives the model tools. When the model emits a tool invocation — "read this file" — the harness runs it and pushes the result back into the context. That's the whole trick. Tools can act on the outside world, but the model only ever knows what the tool passes back. Everything in agentic development — CLAUDE.md files, MCP servers, the lot — is about getting the right material into context, or giving the agent tools to fetch more of it.
 
-> **[Figure 1: The agentic system — model, system prompt, harness, and tool results flowing back into context]**
+<EssayFigure kind="agent" />
 
 This matters for Power BI because of the `.pbip` format, which unwraps the old `.pbix` binary into plain text files describing the report and the semantic model. Text files are something an agent can read and write — which means an agent can now do Power BI development.
 
@@ -61,7 +61,7 @@ The numbers loop is the smaller one. Give the agent a tool to query the data mod
 
 The looks loop is harder — the agent has to _see_ the page. My version: push the report to Fabric, render it via the API, screenshot it with Playwright, and hand the image back to the agent to judge. It worked; it was also flaky, slow, and produced ugly reports.
 
-> **[Figure 2: The visual validation loop — publish → render → screenshot → back into the agent's context]**
+<EssayFigure kind="validation" />
 
 The point is that both loops _can_ be closed. But honestly: today it takes real effort or real risk, and validation still sits with the developer. Not impossible; one day, probably easy; right now, hard.
 
@@ -81,11 +81,11 @@ And what we're delegating is not just labour but judgement. Every solution is a 
 
 So how much should you delegate? Consider two prompts: "build me a report", and "in this table's M code, apply a filter after line four using these functions to remove data before this date". They delegate wildly different amounts of decision-making. Which to use depends on the worst case if every decision goes wrong. A throwaway weekend report? Vibe the whole thing. Something the board will act on? Make the decisions yourself, up front — pages, sources, cleaning patterns, security — because every decision stated in the prompt is one the agent doesn't make, and the result can be checked against a structure you defined rather than one it invented.
 
-> **[Figure 3: Prompt scope vs consequence of failure — the "vibe zone" chart]**
+<EssayFigure kind="delegation" />
 
 There's a third axis: domain experience. Ask an agent to work in a technology you've never touched and the risk slope steepens sharply, because your ability to judge its choices collapses just when it matters.
 
-> **[Figure 4: The third axis — domain experience steepening the slope]**
+<EssayFigure kind="experience" />
 
 The trouble is that most work lives in the vibe zone, and the more time we spend letting agents make great stacks of decisions, the less capable we become of judging them. A spell checker erodes our spelling; this may erode not just our ability to do the work, but our ability to know whether it was done right. I don't have a solution to that yet — I don't think anyone has done enough agentic Power BI work to have truly felt the erosion. But the shape of it is visible.
 

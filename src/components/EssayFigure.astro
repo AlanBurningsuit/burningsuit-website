@@ -1,0 +1,85 @@
+---
+/** Static, accessible adaptations of the diagrams in Alan's supplied talk. */
+interface Props {
+  kind: "agent" | "validation" | "delegation" | "experience";
+}
+const { kind } = Astro.props;
+const figures = {
+  agent: { number: 1, title: "The agentic system", caption: "The harness runs the requested tool and returns its result to the model's context." },
+  validation: { number: 2, title: "The visual validation loop", caption: "The screenshot returns to the agent, which checks the result and can revise the report." },
+  delegation: { number: 3, title: "The vibe zone", caption: "As the consequences of failure grow, make more of the decisions yourself." },
+  experience: { number: 4, title: "Domain experience", caption: "Less experience makes it harder to judge the agent's decisions. The slope steepens." },
+};
+const figure = figures[kind];
+const id = `essay-figure-${kind}`;
+const validationSteps = [
+  ["Update the report", "The agent changes the report files."],
+  ["Publish to Fabric", "Commit and push to the repository; sync the workspace."],
+  ["Render the pages", "Request the report pages through the Fabric API."],
+  ["Take a screenshot", "Open the pages with Playwright and save a PNG."],
+  ["Return it to the agent", "The image becomes part of the context for the next response."],
+];
+---
+
+<figure class="essay-figure" aria-labelledby={`${id}-caption`}>
+  <div class="essay-figure-heading" aria-hidden="true"><span>Figure {figure.number}</span><strong>{figure.title}</strong></div>
+
+  {kind === "agent" && (
+    <div class="essay-loop">
+      <ol class="essay-flow">
+        <li><strong>Context</strong><span>System prompt, conversation and previous tool results</span></li>
+        <li><strong>Model</strong><span>Generates a response or requests a tool</span></li>
+        <li><strong>Harness</strong><span>Runs the tool the model requested</span></li>
+        <li><strong>Tool result</strong><span>For example, the contents of a file</span></li>
+      </ol>
+      <div class="essay-loop-return"><span aria-hidden="true">↺</span> Back into context</div>
+    </div>
+  )}
+
+  {kind === "validation" && (
+    <div class="essay-loop">
+      <ol class="essay-flow">
+        {validationSteps.map(([label, detail]) => <li><strong>{label}</strong><span>{detail}</span></li>)}
+      </ol>
+      <div class="essay-loop-return"><span aria-hidden="true">↺</span> Check, then revise if needed</div>
+    </div>
+  )}
+
+  {(kind === "delegation" || kind === "experience") && (
+    <div class="essay-chart">
+      <div class="essay-chart-axis">Decisions to delegate <span aria-hidden="true">↑</span></div>
+      {kind === "experience" && (
+        <ul class="essay-chart-legend" aria-label="Line key">
+          <li><span class="essay-key experienced" aria-hidden="true"></span>More domain experience</li>
+          <li><span class="essay-key" aria-hidden="true"></span>Less domain experience</li>
+        </ul>
+      )}
+      <svg viewBox="0 0 600 350" role="img" aria-labelledby={`${id}-title ${id}-description`}>
+        <title id={`${id}-title`}>{figure.title}</title>
+        <desc id={`${id}-description`}>
+          {kind === "delegation"
+            ? "A conceptual chart, with consequence of failure increasing to the right and decisions delegated increasing upwards. A descending line separates the safer region below from the region of risk above. Higher consequences call for fewer delegated decisions."
+            : "A conceptual comparison of two descending lines on the same axes. The dashed line represents more domain experience. The solid line for less experience falls more steeply, reducing the space for delegation as consequences increase. These are qualitative relationships, not measured thresholds."}
+        </desc>
+        <path class="essay-chart-axis-line" d="M 28 18 V 316 H 580 M 20 30 L 28 18 L 36 30 M 568 308 L 580 316 L 568 324" />
+        {kind === "delegation" ? (
+          <>
+            <path class="essay-chart-region" d="M 54 50 L 554 272 L 54 272 Z" />
+            <path class="essay-chart-boundary" d="M 54 50 L 554 272" />
+            <text x="318" y="86">Region of risk</text>
+            <text x="76" y="230">Safer region</text>
+          </>
+        ) : (
+          <>
+            <path class="essay-chart-reference" d="M 54 50 L 554 272" />
+            <path class="essay-chart-boundary" d="M 54 50 L 318 272" />
+          </>
+        )}
+      </svg>
+      <div class="essay-chart-axis essay-chart-axis-x">Consequence of failure <span aria-hidden="true">→</span></div>
+      <div class="essay-chart-note">Conceptual diagram</div>
+    </div>
+  )}
+
+  <figcaption id={`${id}-caption`}><span class="sr-only">Figure {figure.number}: {figure.title}. </span>{figure.caption}</figcaption>
+</figure>
