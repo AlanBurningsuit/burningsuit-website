@@ -6,7 +6,7 @@ This pass implements `ownership-redesign-review.md` on `feat/ownership-redesign`
 
 - Alan confirmed `BOOKING_URL` as `https://cal.com/alan-burningsuit/hour` on 9 September 2026. The event configuration still needs checking against the release requirements: retain the old `30min` event live but unlisted and include the two required questions, “What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?” The event description should match the hour page.
 - The hour page, both hero signatures and the Power BI AI chapter use branch draft copy. Alan will supply final wording and confirm the positional attribution names.
-- The essay is visibly dummy content. Replace its MDX with Alan's essay and add publication dates and confirmed talk venues/year. No talk venues or dates have been invented.
+- Alan supplied the essay text on 9 September 2026; it now replaces the dummy MDX. Its four figure placeholders are preserved pending artwork. Publication dates and confirmed talk venues/year remain unset; none have been invented.
 - The About revert awaits Alan's final sign-off.
 - The Power BI share image remains the existing image, with alt text accurately describing its “done with you” wording, pending Alan's replacement.
 
@@ -63,5 +63,13 @@ The root smooth-scroll rule animated keyboard focus movement, briefly leaving fo
 The six anchor failures also exposed test timing: same-document hash navigation could still be scrolling when geometry was checked. Anchor tests now wait for visible, stable scroll and header positions before checking full visibility and header clearance in one geometry read. All keyboard-focus checks remain immediate, and now check descendant readability and full Work-card containment. Font readiness is polled as synchronous browser state so Firefox tests with JavaScript disabled do not stall on a page promise.
 
 Final validation passes: `npm run gate`, all 137 Chromium functional tests, and all 62 navigation checks across Firefox and the 390px mobile project. The focused About teaser and Firefox Work cards were also inspected visually. No navigation failures remain from these runs.
+
+## Essay integration — 9 September 2026
+
+Alan's supplied essay replaces the dummy content at the existing writing URL. The seven source headings and all prose are preserved, with the source subtitle used for the hero lead and metadata description. The introductory paragraph uses the existing reading layout; the remaining sections use `Chapter`. Four authored figure markers remain visible until artwork is supplied. No publication dates or talk appearances have been added.
+
+Validation: `npm run gate` and all 137 Chromium functional tests pass. The rendered essay matches all 34 source text blocks at 1280px and 390px after accounting for the site's automatic smart punctuation. Neither viewport overflows horizontally, and the print stylesheet leaves the essay text visible. Eight updated hero/body screenshots were visually reviewed across Chromium, Firefox and both mobile sizes; all four essay visual tests pass against the adopted baselines. Full paginated print review remains part of final release review once the figures are supplied.
+
+Local evidence: `.review-pass/essay-gate.log`, `essay-functional.log`, `essay-check.json` and `essay-visual-confirm.log`.
 
 Local evidence: `.review-pass/nav-fix-gate.log`, `nav-fix-functional.log`, `nav-fix-cross-browser.log`, `nav-fix-smoke.json`, `nav-firefox-evidence.json` and their focused-state screenshots.

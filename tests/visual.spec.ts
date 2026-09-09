@@ -63,7 +63,7 @@ test("writing essay — regions", async ({ page }, testInfo) => {
   await prepare(page, "/writing/we-are-all-middle-management-now/");
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`essay-hero-${tag}.png`);
-  await expect(page.locator(".chapter:has(#essay-draft)")).toHaveScreenshot(`essay-body-${tag}.png`);
+  await expect(page.locator(".chapter:has(#daniels-story)")).toHaveScreenshot(`essay-body-${tag}.png`);
 });
 
 test("power-bi — regions", async ({ page }, testInfo) => {
