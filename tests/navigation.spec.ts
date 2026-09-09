@@ -1,4 +1,29 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Locator, type Page } from "@playwright/test";
+
+async function waitForAnchorScroll(heading: Locator) {
+  // A same-document hash change can resolve while smooth scrolling is still
+  // passing the target. Wait for both the scroll and sticky header to settle;
+  // keyboard focus checks below deliberately keep their immediate assertions.
+  await heading.evaluate(element => new Promise<void>((resolve, reject) => {
+    let previous = "";
+    let stableSince = performance.now();
+    const deadline = stableSince + 5_000;
+    const sample = (now: number) => {
+      const header = document.querySelector("header")!.getBoundingClientRect();
+      const target = element.getBoundingClientRect();
+      const position = [scrollY, header.top, header.bottom, target.top, target.bottom].join(",");
+      if (position !== previous) {
+        previous = position;
+        stableSince = now;
+      }
+      const inViewport = target.top >= 0 && target.bottom <= innerHeight;
+      if (inViewport && now - stableSince >= 100) resolve();
+      else if (now >= deadline) reject(new Error("Anchor scroll did not settle within five seconds"));
+      else requestAnimationFrame(sample);
+    };
+    requestAnimationFrame(sample);
+  }));
+}
 
 async function focusedLinkState(page: Page) {
   return page.evaluate(() => {
@@ -49,10 +74,18 @@ async function focusedLinkState(page: Page) {
       const computed = getComputedStyle(node);
       if (computed.visibility !== "visible" || computed.display === "none" || Number(computed.opacity) !== 1) visible = false;
     }
+    // A whole card can receive focus while its child text is still revealing.
+    // The focus outline alone does not make that destination readable.
+    const contentsVisible = [...element.querySelectorAll("[data-reveal]")].every(node => {
+      const computed = getComputedStyle(node);
+      return computed.visibility === "visible" && computed.display !== "none" &&
+        Number(computed.opacity) === 1 && computed.transform === "none";
+    });
     return {
       href: element.getAttribute("href"),
       footer: !!element.closest("footer"),
       visible,
+      contentsVisible,
       outline: style.outlineStyle !== "none" && ring >= 2,
       contrast: Math.min(...contrasts),
       surfaces,
@@ -82,13 +115,16 @@ for (const mode of ["normal", "reduce", "no-js"] as const) {
         for (const route of ["/", "/power-bi/", "/hour/"]) {
           const open = async () => {
             await page.goto(route);
-            await page.evaluate(() => document.fonts.ready);
+            // Read status synchronously: Firefox with JavaScript disabled may
+            // not settle a promise returned from evaluate, even after loading.
+            await expect.poll(() => page.evaluate(() => document.fonts.status)).toBe("loaded");
           };
           const checkFocus = async (href: string | null, observed?: Awaited<ReturnType<typeof focusedLinkState>>) => {
             // One immediate read: polling could hide a transient covered focus.
             const state = observed ?? await focusedLinkState(page);
             expect(state.href).toBe(href);
             expect(state.visible, `${route} ${href} is opaque`).toBe(true);
+            expect(state.contentsVisible, `${route} ${href} content is immediately readable`).toBe(true);
             expect(state.insideViewport, `${route} ${href} and its ring fit below the header`).toBe(true);
             expect(state.unobscured, `${route} ${href} is above the opaque main`).toBe(true);
             expect(state.outline).toBe(true);
@@ -141,6 +177,7 @@ for (const mode of ["normal", "reduce", "no-js"] as const) {
             };
           });
           expect(seam.visible).toBe(true);
+          expect(seam.contentsVisible, `${route} focused content is immediately readable`).toBe(true);
           expect(seam.outline).toBe(true);
           expect(seam.surfaces.length).toBeGreaterThan(0);
           expect(seam.contrast).toBeGreaterThanOrEqual(3);
@@ -238,6 +275,8 @@ for (const reducedMotion of ["reduce", "no-preference"] as const) {
       if (!await page.locator(":focus").evaluate((el) => el.matches(".offers a.panel"))) continue;
       const state = await focusedLinkState(page);
       expect(state.visible, `${state.href} and its ancestors are visible on focus`).toBe(true);
+      expect(state.contentsVisible, `${state.href} content is immediately readable`).toBe(true);
+      expect(state.insideViewport, `${state.href} and its focus ring fit below the header`).toBe(true);
       expect(state.outline).toBe(true);
       expect(state.surfaces.length, "the outline has a sampled adjacent surface").toBeGreaterThan(0);
       expect(state.contrast, `${state.href} focus against ${state.surfaces.join(", ")}`).toBeGreaterThanOrEqual(3);
@@ -259,10 +298,13 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 664 }
       const destination = page.locator(`#${id}`);
       expect(await destination.evaluate(el => getComputedStyle(el).transform), `${id} must not move after the hash scroll`).toBe("none");
       const heading = await destination.locator("h3").count() ? destination.locator("h3") : destination;
+      await waitForAnchorScroll(heading);
       await expect(heading).toBeInViewport({ ratio: 1 });
-      const header = (await page.locator("header").boundingBox())!;
-      const target = (await heading.boundingBox())!;
-      expect(target.y, `${id} starts below the sticky header`).toBeGreaterThanOrEqual(header.y + header.height);
+      const geometry = await heading.evaluate(el => ({
+        targetTop: el.getBoundingClientRect().top,
+        headerBottom: document.querySelector("header")!.getBoundingClientRect().bottom,
+      }));
+      expect(geometry.targetTop, `${id} starts below the sticky header`).toBeGreaterThanOrEqual(geometry.headerBottom);
     }
   });
 }

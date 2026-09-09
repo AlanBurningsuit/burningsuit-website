@@ -159,3 +159,13 @@ document.querySelector("footer")?.addEventListener("focusin", (event) => {
     target.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
   }
 });
+
+/* A browser may focus the next card while only its top edge is visible.
+   Bring the whole card into view when it fits, including its focus ring.
+   Pointer focus keeps the browser's normal scrolling behaviour. */
+document.addEventListener("focusin", (event) => {
+  const target = event.target;
+  if (target instanceof HTMLElement && target.matches("a.panel:focus-visible")) {
+    target.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
+  }
+});

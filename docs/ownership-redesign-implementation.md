@@ -52,6 +52,16 @@ Local evidence: `.review-pass/final-gate.log`, `final-functional.log`, `visual-u
 
 ## Booking parameter update — 9 September 2026
 
-`bookingHref()` now sends the same URL-encoded button location in `utm_content` and `placement`. The gate passes, and all seven booking-link and click-attribution checks pass. The full functional run reports 119 passed and 18 navigation failures involving scrolling and focus. An isolated build of the unchanged branch at `171191f` reproduces the same 18 failing tests, so these are not introduced by the booking parameter update; they remain outstanding for release. Navigation code and assertions have not been changed by this update.
+`bookingHref()` now sends the same URL-encoded button location in `utm_content` and `placement`. The gate passes, and all seven booking-link and click-attribution checks pass. The full functional run reported 119 passed and 18 navigation failures involving scrolling and focus. An isolated build of the unchanged branch at `171191f` reproduced the same 18 failing tests, so these were not introduced by the booking parameter update. The navigation follow-up below resolves them.
 
 Local evidence: `.review-pass/booking-placement-gate.log`, `booking-placement-functional.log`, `booking-baseline-build.log` and `booking-baseline-functional.log`.
+
+## Navigation follow-up — 9 September 2026
+
+The root smooth-scroll rule animated keyboard focus movement, briefly leaving focused links outside the viewport. Scrolling is now immediate while keyboard focus is visible; pointer navigation retains smooth scrolling. A focused card also exposes its descendant reveal content immediately, including the About teaser's text and portrait. Firefox could leave the next Work card only partly visible, so linked panels now scroll into view on keyboard focus with token-based space for their outline.
+
+The six anchor failures also exposed test timing: same-document hash navigation could still be scrolling when geometry was checked. Anchor tests now wait for visible, stable scroll and header positions before checking full visibility and header clearance in one geometry read. All keyboard-focus checks remain immediate, and now check descendant readability and full Work-card containment. Font readiness is polled as synchronous browser state so Firefox tests with JavaScript disabled do not stall on a page promise.
+
+Final validation passes: `npm run gate`, all 137 Chromium functional tests, and all 62 navigation checks across Firefox and the 390px mobile project. The focused About teaser and Firefox Work cards were also inspected visually. No navigation failures remain from these runs.
+
+Local evidence: `.review-pass/nav-fix-gate.log`, `nav-fix-functional.log`, `nav-fix-cross-browser.log`, `nav-fix-smoke.json`, `nav-firefox-evidence.json` and their focused-state screenshots.

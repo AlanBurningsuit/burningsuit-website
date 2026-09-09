@@ -812,6 +812,7 @@
     outline-color: var(--ink);
   }
   a.panel {
+    scroll-margin-block: var(--space-xs);
     transition:
       transform var(--t-tap) var(--ease-step3),
       box-shadow var(--t-tap) var(--ease-step3);
@@ -1665,8 +1666,12 @@
   }
 }
 
-/* Keyboard focus is immediate, including a link in a still-revealing block.
-   Otherwise natural Tab can land on an invisible panel or prose link. */
+/* Keyboard focus scrolls immediately and exposes the link, its content and
+   any revealing ancestors. Pointer navigation keeps its smooth scrolling. */
+html:has(:focus-visible) {
+  scroll-behavior: auto;
+}
+:focus-visible [data-reveal],
 [data-reveal]:focus-within,
 .enter:focus-within {
   opacity: 1;
