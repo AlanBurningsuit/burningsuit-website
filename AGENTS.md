@@ -5,8 +5,7 @@ Orientation for anyone — human or AI — working in this repo.
 ## What this is
 
 `burningsuit.co.uk` — the marketing site for Alan Harman-Box's solo **Power BI
-& Fabric + AI advisory** (what it's FOR lives in the north-star skill; this doc
-is the how). A static site: **Astro 6 + Tailwind v4**, no JS framework,
+& Fabric + AI advisory**. A static site: **Astro 6 + Tailwind v4**, no JS framework,
 `output: "static"`, deployed to GitHub Pages via Actions. Current design is
 "the field notebook" (flat Everforest green, 2026-07-11 warmth delta). All
 styles live in `src/styles/` (`tokens.css` + `app.css`).
@@ -14,6 +13,12 @@ styles live in `src/styles/` (`tokens.css` + `app.css`).
 Header navigation is Power BI, Case studies and About, followed by **Book an hour**. Home routes readers to five situation anchors on Power BI. `/hour/` explains the free call; booking buttons go directly to Cal.com. The four `/work/<slug>/` studies and `/writing/<slug>/` essays are MDX collections. There is one essay, so `/writing/` redirects to it until a second essay warrants an index. The retired AI Fit route redirects to `/power-bi/#ai`; legacy blog redirects retain their Power BI destination. Privacy and 404 complete the reading routes.
 
 On `feat/ownership-redesign`, Alan has confirmed the booking event URL and supplied the essay text and reference slides for its four figures. Publication dates and confirmed talk venues remain outstanding. See `docs/ownership-redesign-implementation.md` for the remaining release inputs.
+
+## Writing guidance
+
+For writing as Alan, use `../burningsuit-ops/skills/writing-like-alan/SKILL.md` with its relevant playbook. The private sibling repository's `site/current-brief.md` owns the website writing scope; `brand/business-context.md` and `brand/claims-ledger.md` own business context and evidence. Keep private source material out of this public repository.
+
+The website implementation is paused during the guidance workshop. This guidance migration does not change the pages or authorise a push or deployment. Earlier approved copy and page sequences are not permanent writing requirements. The technical and release requirements below remain in force.
 
 ## Branches (only two)
 
