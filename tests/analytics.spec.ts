@@ -80,7 +80,7 @@ test(`booking click on ${placement} keeps its event URL and attribution`, async 
 
   const booking = page.locator(`a[href*="utm_content=${placement}"]`);
   await expect(booking).toHaveText("Book an hour");
-  await expect(booking).toHaveAttribute("href", `${BOOKING_URL}?utm_source=burningsuit&utm_content=${placement}`);
+  await expect(booking).toHaveAttribute("href", `${BOOKING_URL}?utm_source=burningsuit&utm_content=${placement}&placement=${placement}`);
   await booking.click();
 
   const calls = await readCalls(page);

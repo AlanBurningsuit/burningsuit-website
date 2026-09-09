@@ -1,7 +1,7 @@
 /**
  * Site-wide constants + helpers — the single source of truth for the contact
  * email and the external booking link, so the conversion path stays consistent
- * and placement attribution (utm_content) is built exactly one way.
+ * and placement attribution (utm_content and placement) is built exactly one way.
  *
  * Why a booking LINK (not an embed): a top-level navigation is not governed by
  * the page CSP (`default-src 'none'` covers fetches, not link clicks), so an
@@ -10,17 +10,16 @@
 export const CONTACT_EMAIL = "alan@burningsuit.co.uk";
 
 /**
- * Branch draft: the proposed 60-minute event URL is a stub, pending Alan's
- * confirmation and event setup. Keep the old 30min event live but unlisted.
+ * Alan confirmed this 60-minute event URL on 2026-09-09.
+ * Keep the old 30min event live but unlisted.
  * All booking buttons use the same "Book an hour" label.
  */
 export const BOOKING_URL = "https://cal.com/alan-burningsuit/hour";
 
 /**
- * Booking link tagged with the placement for attribution. Cal.com stores UTM
- * params with each booking, so `utm_content` shows the placement split in the
- * booking record/export — no analytics script or CSP change needed. Merges
- * cleanly if BOOKING_URL ever grows its own query string.
+ * Booking link tagged with the button location in both `utm_content` and
+ * `placement`. Existing UTM attribution and analytics events keep the same
+ * location value. Merges cleanly if BOOKING_URL grows its own query string.
  *
  * Placements renamed on 2026-09-08: header, footer, home-hero,
  * home-situations (when present), power-bi-hero, power-bi-pricing, hour-page,
@@ -30,7 +29,8 @@ export const BOOKING_URL = "https://cal.com/alan-burningsuit/hour";
 export function bookingHref(src?: string): string {
   if (!src) return BOOKING_URL;
   const sep = BOOKING_URL.includes("?") ? "&" : "?";
-  return `${BOOKING_URL}${sep}utm_source=burningsuit&utm_content=${encodeURIComponent(src)}`;
+  const placement = encodeURIComponent(src);
+  return `${BOOKING_URL}${sep}utm_source=burningsuit&utm_content=${placement}&placement=${placement}`;
 }
 
 /** Build a mailto with an optional prefilled subject (mirrors BaseLayout). */

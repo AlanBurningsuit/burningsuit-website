@@ -4,7 +4,7 @@ This pass implements `ownership-redesign-review.md` on `feat/ownership-redesign`
 
 ## Inputs still to replace before release
 
-- `BOOKING_URL` uses the proposed `https://cal.com/alan-burningsuit/hour` as an unverified stub. Alan will create and confirm the 60-minute event, retain the old `30min` event live but unlisted, and add the two required questions: “What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?” The event description should match the hour page.
+- Alan confirmed `BOOKING_URL` as `https://cal.com/alan-burningsuit/hour` on 9 September 2026. The event configuration still needs checking against the release requirements: retain the old `30min` event live but unlisted and include the two required questions, “What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?” The event description should match the hour page.
 - The hour page, both hero signatures and the Power BI AI chapter use branch draft copy. Alan will supply final wording and confirm the positional attribution names.
 - The essay is visibly dummy content. Replace its MDX with Alan's essay and add publication dates and confirmed talk venues/year. No talk venues or dates have been invented.
 - The About revert awaits Alan's final sign-off.
@@ -14,13 +14,13 @@ This pass implements `ownership-redesign-review.md` on `feat/ownership-redesign`
 
 Home follows the detailed page order in the review: hero, evidence, situations, the pricing sentence, stance, photo and About teaser. The footer closes the page. The `/hour/` and writing route foundations are introduced early so subsequent page milestones have valid links throughout.
 
-Booking attribution was renamed on 8 September 2026. Read historical analytics against the earlier names. Buttons link directly to the proposed booking event; explanatory links go to `/hour/`. Email remains a separate contact action.
+Booking attribution was renamed on 8 September 2026. Read historical analytics against the earlier names. On 9 September, Alan confirmed the booking URL and requested a `placement` query parameter alongside `utm_content`; both carry the same encoded button location. Buttons link directly to the confirmed booking event; explanatory links go to `/hour/`. Email remains a separate contact action.
 
 The footer stays in document flow. In normal motion with JavaScript available, `main` uncovers a sticky footer; both top and bottom insets let a footer taller than the viewport scroll fully into view. Keyboard focus returns it to its natural position and scrolls the focused action into view immediately. No footer-height measurement or reserved-space script is used. Reduced motion, no JavaScript and print use a static footer.
 
 `CasefilePanel` still had one real consumer, contrary to the review's initial assumption. Its testimonial markup was folded into `Casefile` before removal, retaining the existing `namedTier()` guard. `PrinciplesChapter` had no consumers and was removed. Anonymous study facts and permissions remain unchanged.
 
-## Validation
+## Validation — 8 September 2026
 
 Each milestone below passed `npm run gate` and the complete functional suite before its commit. The gate includes Astro checking, the production build, byte budgets, local links and SEO/JSON-LD assertions. Raw local evidence is kept in the ignored `.review-pass/` directory.
 
@@ -48,4 +48,10 @@ Desktop Lighthouse passes all seven routes at 1.00 for performance, accessibilit
 
 Lighthouse SEO remains 0.92 because its static-server run reports that it could not download `robots.txt`; the built file exists and returns HTTP 200 from the verified local server. The separate SEO/identity gate passes for every page and redirect. The built Home SHA-256 remains `c41e81664f95f53e4ca9bc7ce6233cb9bc5882aaf244f0ee13b4d033f8ff2f42` after all checks.
 
-Local evidence: `.review-pass/final-gate.log`, `final-functional.log`, `visual-update.log`, `visual-confirm.log`, both visual-review Markdown files, `footer-final/review.md`, and the full `lighthouse-desktop/` and `lighthouse-mobile/` reports. The author-supplied inputs at the top of this document remain intentionally deferred; no live Cal.com booking handoff is claimed for the stub URL.
+Local evidence: `.review-pass/final-gate.log`, `final-functional.log`, `visual-update.log`, `visual-confirm.log`, both visual-review Markdown files, `footer-final/review.md`, and the full `lighthouse-desktop/` and `lighthouse-mobile/` reports. The remaining author-supplied inputs are listed at the top of this document. These checks do not verify Cal.com event settings or complete a live booking.
+
+## Booking parameter update — 9 September 2026
+
+`bookingHref()` now sends the same URL-encoded button location in `utm_content` and `placement`. The gate passes, and all seven booking-link and click-attribution checks pass. The full functional run reports 119 passed and 18 navigation failures involving scrolling and focus. An isolated build of the unchanged branch at `171191f` reproduces the same 18 failing tests, so these are not introduced by the booking parameter update; they remain outstanding for release. Navigation code and assertions have not been changed by this update.
+
+Local evidence: `.review-pass/booking-placement-gate.log`, `booking-placement-functional.log`, `booking-baseline-build.log` and `booking-baseline-functional.log`.
