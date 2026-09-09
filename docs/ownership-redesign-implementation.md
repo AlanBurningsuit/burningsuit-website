@@ -80,4 +80,14 @@ The loops use text at reading size, and the charts scale within the prose column
 
 Validation passes: the full gate, 137 Chromium functional checks and four essay visual tests. All 16 new figure snapshots were inspected across Chromium, Firefox and both mobile sizes before adoption. Desktop and 390px checks show four figures, no horizontal overflow and visible print text. Full paginated print review remains a release check. Local evidence is under `.review-pass/essay-figures/`.
 
+## Draw.io pilot — first essay figure
+
+The agent-system figure now uses two SVG exports from draw.io: a wide layout and a narrow layout selected at the existing 48rem breakpoint. Context is a container for the system prompt, conversation and tool results. The model, harness and tools have distinct boundaries, with a solid return connector for tool results and a dashed branch for a direct reply. Both exports embed Albert Sans and retain the site palette. The image has a complete text alternative and explicit responsive dimensions.
+
+The editable two-page source and font configuration are local at `resources/diagrams/agent-system.drawio` and `resources/diagrams/burningsuit.drawio-config.json`, following the existing raw-source convention. Only the exported SVG assets ship. This is a pilot for Alan's review; the other three figure designs are unchanged.
+
+The final gate passes, and all four essay visual tests pass with one worker. The broader functional run passed 136 tests and reported one small Power BI layout shift; the unchanged Power BI check subsequently passed three isolated repeats without changes to the assertion. An initial Firefox screenshot timeout also cleared in the isolated run. Source-text fidelity, responsive image selection and horizontal-overflow checks pass at desktop and 390px. Evidence is in `.review-pass/essay-figures/drawio-*.log`.
+
+Four agent-figure baselines were replaced after visual review. Three downstream figure baselines also needed refreshing because the changed first-figure height shifted their raster alignment; their content and styling are unchanged, and the actual/expected image pairs were inspected before adoption.
+
 Local evidence: `.review-pass/nav-fix-gate.log`, `nav-fix-functional.log`, `nav-fix-cross-browser.log`, `nav-fix-smoke.json`, `nav-firefox-evidence.json` and their focused-state screenshots.

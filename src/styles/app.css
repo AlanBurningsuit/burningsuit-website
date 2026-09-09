@@ -1217,6 +1217,12 @@
     border-left: var(--bw-spine) solid var(--amber);
     padding-left: var(--space-xs);
   }
+  .essay-diagram,
+  .essay-diagram img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
   .essay-flow {
     list-style: none;
     margin: 0;

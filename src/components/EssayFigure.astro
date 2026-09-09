@@ -1,5 +1,7 @@
 ---
 /** Static, accessible adaptations of the diagrams in Alan's supplied talk. */
+import agentWide from "../assets/diagrams/agent-system-wide.svg?url";
+import agentNarrow from "../assets/diagrams/agent-system-narrow.svg?url";
 interface Props {
   kind: "agent" | "validation" | "delegation" | "experience";
 }
@@ -25,15 +27,17 @@ const validationSteps = [
   <div class="essay-figure-heading" aria-hidden="true"><span>Figure {figure.number}</span><strong>{figure.title}</strong></div>
 
   {kind === "agent" && (
-    <div class="essay-loop">
-      <ol class="essay-flow">
-        <li><strong>Context</strong><span>System prompt, conversation and previous tool results</span></li>
-        <li><strong>Model</strong><span>Generates a response or requests a tool</span></li>
-        <li><strong>Harness</strong><span>Runs the tool the model requested</span></li>
-        <li><strong>Tool result</strong><span>For example, the contents of a file</span></li>
-      </ol>
-      <div class="essay-loop-return"><span aria-hidden="true">↺</span> Back into context</div>
-    </div>
+    <picture class="essay-diagram">
+      <source media="(min-width: 48rem)" srcset={agentWide} width="932" height="669" />
+      <img
+        src={agentNarrow}
+        width="585"
+        height="1013"
+        loading="lazy"
+        decoding="async"
+        alt="Context contains the system prompt, conversation and tool results. The model reads that context and either replies to you or requests a tool. The harness runs the tool, and its result returns into context for the next response."
+      />
+    </picture>
   )}
 
   {kind === "validation" && (
