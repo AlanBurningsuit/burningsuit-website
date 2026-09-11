@@ -8,7 +8,7 @@ heading:
 lead: "Agentic development in Power BI, and what it costs"
 kicker: "Essay"
 contactSubject: "We're all middle management now"
-footerInvitation: "If you're being asked what to do about AI in your team, that's a fine thing to bring to the hour"
+footerInvitation: "If you're working out what to delegate to an agent, we can talk it through"
 ---
 
 <section class="chapter" aria-label="Introduction">
@@ -31,7 +31,7 @@ Daniel starts to like this. Why not have the contractors do the modernisation to
 
 The contractors fix it (their original developer has moved on; someone new gets up to speed) and redeliver. The numbers are _still_ wrong. Why? The team can't say — they don't understand the new system well enough. Daniel is now in a spiral. His team knows exactly what the numbers should be; the contractors know exactly how the new system works; there is no bridge between them. **The how has become separated from the why.**
 
-Now replace "contractors" with "AI", and Daniel's whole operation with yourself. That's where we are with agents and Power BI, because working with an agent is delegation at infinite scale, with infinite availability. Daniel's contractors had lead times, invoices, and a finite headcount; an agent takes any job, any hour, instantly, for pennies. Agents rapidly increase our capacity to implement the hows. Handled carelessly, they erode our ability to manage the whys.
+Now replace "contractors" with "AI", and Daniel's whole operation with yourself. That's where we are with agents and Power BI. Daniel's contractors had lead times, invoices, and a finite headcount; with an agent, delegating another job can be as easy as typing another prompt. Agents rapidly increase our capacity to implement the hows. Handled carelessly, they erode our ability to manage the whys.
 
 </Chapter>
 
@@ -49,7 +49,7 @@ This matters for Power BI because of the `.pbip` format, which unwraps the old `
 
 I saved a blank report as `.pbip` and opened Claude Code in the folder — out of the box, no CLAUDE.md, no extra tools — with a few paragraphs asking it to invent a model, generate data, and add some charts. It wrote the files. Nobody told it what a `.pbip` is or how TMDL is structured; that knowledge came straight from training. When I opened Power BI it failed — but pasting each error back produced a fix, and after two rounds I had a working report built from nothing but prose. Eye-opening, if not useful: with no real scope, it invented everything.
 
-Then, in VS Code, I asked it to "add a measure for adjusted net position that accounts for all the data in the model". I had no idea what that meant. Neither did the agent — but an agent will never say "that doesn't make sense". It wrote a measure that did... some stuff. Think of an agent as a very eager junior who believes you are a monster who reacts badly to clarifying questions. The fault was mine: an _adjusted_ net position needs adjustments, and none existed in the model. Once I loaded an adjustments table and asked again, it wrote a measure that worked — and, unprompted, deleted its earlier nonsense.
+Then, in VS Code, I asked it to "add a measure for adjusted net position that accounts for all the data in the model". I had no idea what that meant. Neither did the agent, apparently, but it went ahead anyway. It wrote a measure that did... some stuff. Think of an agent as a very eager junior who believes you are a monster who reacts badly to clarifying questions. The fault was mine: an _adjusted_ net position needs adjustments, and none existed in the model. Once I loaded an adjustments table and asked again, it wrote a measure that worked — and, unprompted, deleted its earlier nonsense.
 
 </Chapter>
 
@@ -69,7 +69,7 @@ The point is that both loops _can_ be closed. But honestly: today it takes real 
 
 <Chapter id="validation-isnt-enough" kicker="Validation isn't enough">
 
-Even a closed loop only answers part of the question. If my car makes a funny noise at 32 miles an hour, the mechanic fixes it, I drive, no noise — done. Validation suffices, because the mechanic also carries responsibility: when I delegated the job, the accountability transferred with the implementation.
+Even a closed loop only answers part of the question. If my car makes a funny noise at 32 miles an hour, the mechanic fixes it, I drive, no noise — done. If the repair fails, there's a mechanic I can go back to and hold responsible for the work.
 
 With an agent, only the implementation transfers. If it gets something horribly wrong — but plausible-looking — and my CEO loses £50 million on the back of it, nobody is sending Anthropic the bill. The buck stops with whoever managed the agent.
 
@@ -87,7 +87,7 @@ There's a third axis: domain experience. Ask an agent to work in a technology yo
 
 <EssayFigure kind="experience" />
 
-The trouble is that most work lives in the vibe zone, and the more time we spend letting agents make great stacks of decisions, the less capable we become of judging them. A spell checker erodes our spelling; this may erode not just our ability to do the work, but our ability to know whether it was done right. I don't have a solution to that yet — I don't think anyone has done enough agentic Power BI work to have truly felt the erosion. But the shape of it is visible.
+Even when delegation makes sense for the job in front of us, there's a longer-term problem. The more time we spend letting agents make great stacks of decisions, the less capable we become of judging them. A spell checker erodes our spelling; this may erode not just our ability to do the work, but our ability to know whether it was done right. I don't have a solution to that yet — I don't think anyone has done enough agentic Power BI work to have truly felt the erosion. But the shape of it is visible.
 
 </Chapter>
 
@@ -95,7 +95,7 @@ The trouble is that most work lives in the vibe zone, and the more time we spend
 
 Daniel wanted implementation done fast by people who knew the new technology, with his team still responsible for the result. The decisions became separated from their consequences, and the spiral followed. The only way out — the work we're now doing together — is for his team to take the new solution apart piece by piece until they understand every why. Ownership first; then someone, or something, else can do the implementation.
 
-The moment we delegate, we become managers — that part isn't optional. We're all middle management now. The only choice is what kind: the kind who understands the work well enough to own it, or the slopey-shouldered kind who waves everything through because Claude can do it. Claude _can_ do it. But a manager who doesn't understand the risks, the consequences, or the decisions inside the solutions being produced for them isn't a developer any more — just a relay. Just an agent driver.
+The moment we delegate, we become managers — that part isn't optional. We're all middle management now. The only choice is what kind: the kind who understands the work well enough to own it, or the slopey-shouldered kind who waves everything through because Claude can do it. Claude _can_ do it. But a manager who doesn't understand the risks, the consequences, or the decisions inside the solutions being produced for them isn't a developer any more — just a relay.
 
 And the agent doesn't hold the responsibility. You do.
 
