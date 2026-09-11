@@ -20,7 +20,7 @@ test("Home's three situations open their matching practical detail", async ({ pa
     await page.getByRole("link", { name: `${heading} ▸`, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`/power-bi/#${id}$`));
     await expect(page.locator(`#${id}`).getByRole("heading", { name: heading })).toBeInViewport();
-    await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: "free introductory hour" }).click();
+    await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: "Tell me what your reporting can't do (yet) ▸" }).click();
     await expect(page).toHaveURL(/\/hour\/$/);
   }
 });
@@ -34,7 +34,7 @@ test("the pricing destination contains the ongoing price guide", async ({ page }
 
 test("Home's situation section gives a direct route to the introductory hour", async ({ page }) => {
   await page.goto("/");
-  await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: "Find out about the free hour ▸" }).click();
+  await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: "Tell me what your reporting can't do (yet) ▸" }).click();
   await expect(page).toHaveURL(/\/hour\/$/);
 });
 

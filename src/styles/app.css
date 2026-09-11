@@ -1289,6 +1289,11 @@
   .about-door:focus-visible {
     border-top-color: var(--amber); /* same door grammar as the service rows */
   }
+  .about-door:focus-visible {
+    /* Native focus scrolling fits the link's box; omit the extra ring gap
+       so its outline stays visible when the teaser just fits a small screen. */
+    outline-offset: 0;
+  }
   .about-grid {
     display: grid;
     gap: var(--space-md);
