@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
 
-for (const route of ["/", "/power-bi/"]) {
+for (const [route, label] of [["/", "a free hour"], ["/power-bi/", "What happens in the free hour? ▸"]]) {
   test(`${route} offers the hour explanation in its hero`, async ({ page }) => {
     await page.goto(route);
     const hero = page.locator(".hero, .pbi-hero");
-    await hero.getByRole("link", { name: "What happens in the free hour? ▸" }).click();
+    await hero.getByRole("link", { name: label, exact: true }).click();
     await expect(page).toHaveURL(/\/hour\/$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tell me what your reporting can't do (yet).");
   });

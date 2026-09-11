@@ -580,15 +580,18 @@
     font-size: var(--fs-6);
     max-width: 15ch;
   }
-  .hero .lede {
-    margin-top: 1.5rem;
-    max-width: 40rem;
+  .hero-introduction {
+    display: grid;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    max-width: var(--measure-prose);
     font-size: var(--fs-lead);
-    color: var(--fg-dim);
   }
-  .hero .lede strong {
-    color: var(--fg);
-    font-weight: 600;
+  .hero-invitation {
+    font-size: var(--fs-base);
+  }
+  .hero-introduction a {
+    text-decoration: underline;
   }
   /* the light signature anchor under the lede: names Alan + one credential, quiet */
   .hero-sig {
@@ -1283,6 +1286,8 @@
     text-decoration: none;
     border-top: var(--bw-hair) solid var(--line);
     padding-top: var(--space-md);
+    padding-inline: var(--px);
+    padding-bottom: var(--px);
     transition: border-top-color var(--t-flip);
   }
   .about-door:hover,
@@ -1290,9 +1295,9 @@
     border-top-color: var(--amber); /* same door grammar as the service rows */
   }
   .about-door:focus-visible {
-    /* Native focus scrolling fits the link's box; omit the extra ring gap
-       so its outline stays visible when the teaser just fits a small screen. */
-    outline-offset: 0;
+    /* Keep the ring inside the box native focus scrolling exposes. The
+       padding above reserves space so the ring cannot overlap the text. */
+    outline-offset: calc(-1 * var(--px));
   }
   .about-grid {
     display: grid;
