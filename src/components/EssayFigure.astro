@@ -2,6 +2,12 @@
 /** Static, accessible adaptations of the diagrams in Alan's supplied talk. */
 import agentWide from "../assets/diagrams/agent-system-wide.svg?url";
 import agentNarrow from "../assets/diagrams/agent-system-narrow.svg?url";
+import validationWide from "../assets/diagrams/visual-validation-wide.svg?url";
+import validationNarrow from "../assets/diagrams/visual-validation-narrow.svg?url";
+import delegationWide from "../assets/diagrams/delegation-wide.svg?url";
+import delegationNarrow from "../assets/diagrams/delegation-narrow.svg?url";
+import experienceWide from "../assets/diagrams/domain-experience-wide.svg?url";
+import experienceNarrow from "../assets/diagrams/domain-experience-narrow.svg?url";
 interface Props {
   kind: "agent" | "validation" | "delegation" | "experience";
 }
@@ -14,76 +20,22 @@ const figures = {
 };
 const figure = figures[kind];
 const id = `essay-figure-${kind}`;
-const validationSteps = [
-  ["Update the report", "The agent changes the report files."],
-  ["Publish to Fabric", "Commit and push to the repository; sync the workspace."],
-  ["Render the pages", "Request the report pages through the Fabric API."],
-  ["Take a screenshot", "Open the pages with Playwright and save a PNG."],
-  ["Return it to the agent", "The image becomes part of the context for the next response."],
-];
+const diagrams = {
+  agent: { wide: agentWide, narrow: agentNarrow, wideWidth: 936, wideHeight: 892, width: 584, height: 1233, alt: "Context is shown as a chat transcript: system prompt, user message, agent message, then tool result. The model reads this context and either replies to you or requests a tool. The harness runs the tool, and its result returns into context for the next response." },
+  validation: { wide: validationWide, narrow: validationNarrow, wideWidth: 943, wideHeight: 538, width: 588, height: 1163, alt: "A loop: the agent updates the report files, commits and pushes them, and syncs the Fabric workspace. The report pages are requested through the API. Playwright saves a screenshot, which returns to the agent's context. The agent checks the image and can revise the report, starting the loop again." },
+  delegation: { wide: delegationWide, narrow: delegationNarrow, wideWidth: 910, wideHeight: 625, width: 570, height: 625, alt: "A conceptual chart with consequence of failure increasing to the right and decisions delegated increasing upwards. A descending line separates the safer region below from the region of risk above. Higher consequences call for fewer delegated decisions. These are qualitative relationships, not measured thresholds." },
+  experience: { wide: experienceWide, narrow: experienceNarrow, wideWidth: 910, wideHeight: 665, width: 570, height: 665, alt: "A conceptual comparison of two descending lines on the same axes. The dashed cream line represents more domain experience. The solid amber line for less experience falls more steeply, reducing the space for delegation as consequences increase. These are qualitative relationships, not measured thresholds." },
+};
+const diagram = diagrams[kind];
 ---
 
 <figure class="essay-figure" aria-labelledby={`${id}-caption`}>
   <div class="essay-figure-heading" aria-hidden="true"><span>Figure {figure.number}</span><strong>{figure.title}</strong></div>
 
-  {kind === "agent" && (
-    <picture class="essay-diagram">
-      <source media="(min-width: 48rem)" srcset={agentWide} width="932" height="669" />
-      <img
-        src={agentNarrow}
-        width="585"
-        height="1013"
-        loading="lazy"
-        decoding="async"
-        alt="Context contains the system prompt, conversation and tool results. The model reads that context and either replies to you or requests a tool. The harness runs the tool, and its result returns into context for the next response."
-      />
-    </picture>
-  )}
-
-  {kind === "validation" && (
-    <div class="essay-loop">
-      <ol class="essay-flow">
-        {validationSteps.map(([label, detail]) => <li><strong>{label}</strong><span>{detail}</span></li>)}
-      </ol>
-      <div class="essay-loop-return"><span aria-hidden="true">↺</span> Check, then revise if needed</div>
-    </div>
-  )}
-
-  {(kind === "delegation" || kind === "experience") && (
-    <div class="essay-chart">
-      <div class="essay-chart-axis">Decisions to delegate <span aria-hidden="true">↑</span></div>
-      {kind === "experience" && (
-        <ul class="essay-chart-legend" aria-label="Line key">
-          <li><span class="essay-key experienced" aria-hidden="true"></span>More domain experience</li>
-          <li><span class="essay-key" aria-hidden="true"></span>Less domain experience</li>
-        </ul>
-      )}
-      <svg viewBox="0 0 600 350" role="img" aria-labelledby={`${id}-title ${id}-description`}>
-        <title id={`${id}-title`}>{figure.title}</title>
-        <desc id={`${id}-description`}>
-          {kind === "delegation"
-            ? "A conceptual chart, with consequence of failure increasing to the right and decisions delegated increasing upwards. A descending line separates the safer region below from the region of risk above. Higher consequences call for fewer delegated decisions."
-            : "A conceptual comparison of two descending lines on the same axes. The dashed line represents more domain experience. The solid line for less experience falls more steeply, reducing the space for delegation as consequences increase. These are qualitative relationships, not measured thresholds."}
-        </desc>
-        <path class="essay-chart-axis-line" d="M 28 18 V 316 H 580 M 20 30 L 28 18 L 36 30 M 568 308 L 580 316 L 568 324" />
-        {kind === "delegation" ? (
-          <>
-            <path class="essay-chart-region" d="M 54 50 L 554 272 L 54 272 Z" />
-            <path class="essay-chart-boundary" d="M 54 50 L 554 272" />
-            <text x="318" y="86">Region of risk</text>
-            <text x="76" y="230">Safer region</text>
-          </>
-        ) : (
-          <>
-            <path class="essay-chart-reference" d="M 54 50 L 554 272" />
-            <path class="essay-chart-boundary" d="M 54 50 L 318 272" />
-          </>
-        )}
-      </svg>
-      <div class="essay-chart-axis essay-chart-axis-x">Consequence of failure <span aria-hidden="true">→</span></div>
-      <div class="essay-chart-note">Conceptual diagram</div>
-    </div>
-  )}
+  <picture class="essay-diagram">
+    <source media="(min-width: 48rem)" srcset={diagram.wide} width={diagram.wideWidth} height={diagram.wideHeight} />
+    <img src={diagram.narrow} width={diagram.width} height={diagram.height} loading="lazy" decoding="async" alt={diagram.alt} />
+  </picture>
 
   <figcaption id={`${id}-caption`}><span class="sr-only">Figure {figure.number}: {figure.title}. </span>{figure.caption}</figcaption>
 </figure>

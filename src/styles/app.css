@@ -1207,15 +1207,10 @@
     gap: var(--space-3xs) var(--space-xs);
     margin-bottom: var(--space-sm);
   }
-  .essay-figure-heading > span,
-  .essay-chart-note {
+  .essay-figure-heading > span {
     font-family: var(--ff-mono);
     font-size: var(--mono-label);
     color: var(--fg-dim);
-  }
-  .essay-loop {
-    border-left: var(--bw-spine) solid var(--amber);
-    padding-left: var(--space-xs);
   }
   .essay-diagram,
   .essay-diagram img {
@@ -1223,95 +1218,11 @@
     width: 100%;
     height: auto;
   }
-  .essay-flow {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .essay-flow li {
-    display: grid;
-    gap: var(--space-3xs);
-  }
-  .essay-flow li + li::before {
-    content: "↓";
-    color: var(--amber);
-    margin-block: var(--space-3xs);
-  }
-  .essay-flow li > span,
   .essay-figure figcaption {
+    margin-top: var(--space-sm);
     color: var(--fg-dim);
     font-size: var(--fs-sm);
     line-height: var(--lh-body);
-  }
-  .essay-loop-return {
-    margin-top: var(--space-xs);
-    color: var(--amber);
-  }
-  .essay-loop-return > span {
-    margin-right: var(--space-3xs);
-  }
-  .essay-figure figcaption {
-    margin-top: var(--space-sm);
-  }
-  .essay-chart svg {
-    display: block;
-    width: 100%;
-    height: auto;
-    overflow: visible;
-  }
-  .essay-chart svg text {
-    fill: var(--fg);
-    font-family: var(--ff-body);
-    font-size: var(--fs-diagram-label);
-  }
-  .essay-chart-axis {
-    font-size: var(--fs-sm);
-  }
-  .essay-chart-axis-x {
-    text-align: right;
-  }
-  .essay-chart-axis-line {
-    fill: none;
-    stroke: var(--fg-dim);
-    stroke-width: var(--bw-spine);
-    vector-effect: non-scaling-stroke;
-  }
-  .essay-chart-boundary,
-  .essay-chart-reference {
-    fill: none;
-    stroke: var(--amber);
-    stroke-width: var(--px);
-    vector-effect: non-scaling-stroke;
-  }
-  .essay-chart-reference {
-    stroke: var(--fg);
-    stroke-dasharray: var(--space-2xs) var(--space-3xs);
-  }
-  .essay-chart-region {
-    fill: var(--bg-3);
-  }
-  .essay-chart-legend {
-    list-style: none;
-    padding: 0;
-    margin: var(--space-xs) 0 0;
-    font-size: var(--fs-sm);
-  }
-  .essay-chart-legend li {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2xs);
-  }
-  .essay-key {
-    width: var(--space-lg);
-    flex-shrink: 0;
-    border-top: var(--px) solid var(--amber);
-  }
-  .essay-key.experienced {
-    border-top-color: var(--fg);
-    border-top-style: dashed;
-  }
-  .essay-chart-note {
-    margin-top: var(--space-xs);
   }
 
   /* ============ statement chapter (a single centred conviction) ============ */
