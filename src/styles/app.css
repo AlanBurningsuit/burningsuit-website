@@ -302,6 +302,19 @@
     gap: var(--space-xs);
     margin-top: var(--space-md);
   }
+  .hour-link {
+    margin-top: var(--space-sm);
+  }
+  .situation-links {
+    display: grid;
+    gap: var(--space-sm);
+    margin-block: var(--space-md);
+  }
+  .section-links a,
+  .situation-links a,
+  .hour-link a {
+    text-decoration: underline;
+  }
   .discovery-examples {
     display: grid;
     gap: var(--space-xs);

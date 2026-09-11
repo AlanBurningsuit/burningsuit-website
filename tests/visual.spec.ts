@@ -79,8 +79,8 @@ test("power-bi — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".chapter:has(#how-the-work-runs)")).toHaveScreenshot(`pbi-working-${tag}.png`);
   await expect(page.locator(".chapter:has(#second-opinion)")).toHaveScreenshot(`pbi-lead-${tag}.png`);
   await expect(page.locator(".chapter:has(#discovery)")).toHaveScreenshot(`pbi-discovery-${tag}.png`);
+  await expect(page.locator(".chapter:has(#start)")).toHaveScreenshot(`pbi-start-${tag}.png`);
   await expect(page.locator(".chapter:has(#pricing)")).toHaveScreenshot(`pbi-pricing-${tag}.png`);
-  await expect(page.locator(".chapter:has(#ongoing)")).toHaveScreenshot(`pbi-ongoing-${tag}.png`);
   await expect(page.locator(".chapter:has(#ai)")).toHaveScreenshot(`pbi-ai-${tag}.png`);
 });
 

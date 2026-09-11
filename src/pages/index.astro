@@ -36,8 +36,9 @@ const statementLines: Line[] = [
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="Power BI your team can own." lines={heroLines} />
         <p class="lede enter appear-300">I work alongside your team so they can understand their reporting, make changes and <strong>check the numbers</strong> that come out.</p>
-        <p class="hero-sig enter appear-450">Power BI and Fabric consultancy with Alan Harman-Box.</p>
+        <p class="hero-sig enter appear-450">I've spent five years with teams adopting Power BI, and a decade building software before that. I'm Alan Harman-Box, and burningsuit is my advisory business.</p>
         <BookCta src="home-hero" mailtoHref={contactMailto} variant="hero" />
+        <p class="hour-link"><a class="u" href="/hour/">What happens in the free hour? ▸</a></p>
       </div>
       <figure class="hero-photo enter appear-300"><Picture src={heroPhoto} alt="Alan, who runs burningsuit, sitting outdoors and smiling" formats={["avif"]} fallbackFormat="webp" widths={[400, 600, 800]} sizes="(min-width: 62rem) 40vw, 100vw" quality={66} loading="eager" fetchpriority="high" /></figure>
     </div>
@@ -49,15 +50,19 @@ const statementLines: Line[] = [
     <div class="wrap">
       <h2 class="section-head" id="in-practice" data-reveal>What that looks like in practice</h2>
       <ServiceRows rows={evidenceRows} />
-      <div class="section-links"><a class="cta ghost" href="/work/">All four case studies ▸</a></div>
+      <div class="section-links"><a class="u" href="/work/">All four case studies ▸</a></div>
     </div>
   </section>
 
   <Chapter id="situations" kicker="Help with the work in front of you">
-    <p>You might have reporting to deliver, a system to take over, or a team ready to go further with Power BI. I work alongside your people, helping them understand how the reporting works and make the changes they need. The aim is for them to be able to carry that work forward themselves.</p>
-    <p>We can work through a difficult problem together, teach an idea the team needs, or take a closer look at a model someone else built. Training is part of that when it helps. What we work on comes from the job your team is trying to do.</p>
-    <p>If you're the person responsible for reporting, I can also help you think through the decisions that land on you. You need enough understanding to judge a proposal or plan the next step, even when Power BI isn't your specialism.</p>
-    <div class="section-links"><a class="cta ghost" href="/power-bi/">How I work with teams ▸</a></div>
+    <p>The aim is for your team to carry the work forward themselves. I help them understand the reasoning behind a change, with time to practise and somewhere to bring the questions that follow.</p>
+    <ul class="situation-links">
+      <li><a class="u" href="/power-bi/#deliver">Build and change your reporting ▸</a></li>
+      <li><a class="u" href="/power-bi/#skills">Learn what the work needs ▸</a></li>
+      <li><a class="u" href="/power-bi/#handover">Understand a system you inherited ▸</a></li>
+    </ul>
+    <p>If you're responsible for reporting, I can also help you think through the decisions that land on you. You need enough understanding to judge a proposal, even when Power BI isn't your specialism.</p>
+    <p>We can start with the question you're working on. <a class="u" href="/hour/">Find out about the free hour ▸</a></p>
   </Chapter>
 
   <StatementChapter label="AI will build whatever you ask. Someone still has to know what to ask for." lines={statementLines} linkHref="/writing/we-are-all-middle-management-now/" linkLabel="Read the essay ▸" />
