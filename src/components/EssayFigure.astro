@@ -15,16 +15,16 @@ const { kind } = Astro.props;
 const figures = {
   agent: { number: 1, title: "The agentic system", caption: "The harness runs the requested tool and returns its result to the model's context." },
   validation: { number: 2, title: "The visual validation loop", caption: "The screenshot returns to the agent, which checks the result and can revise the report." },
-  delegation: { number: 3, title: "The vibe zone", caption: "As the consequences of failure grow, make more of the decisions yourself." },
-  experience: { number: 4, title: "Domain experience", caption: "Less experience makes it harder to judge the agent's decisions. The slope steepens." },
+  delegation: { number: 3, title: "The vibe zone", caption: "The shaded area is the vibe zone. As consequences grow, specify more of the decisions yourself." },
+  experience: { number: 4, title: "Domain experience", caption: "With less domain experience, the vibe zone shrinks. Delegate fewer decisions at the same level of consequence." },
 };
 const figure = figures[kind];
 const id = `essay-figure-${kind}`;
 const diagrams = {
   agent: { wide: agentWide, narrow: agentNarrow, wideWidth: 936, wideHeight: 892, width: 584, height: 1233, alt: "Context is shown as a chat transcript: system prompt, user message, agent message, then tool result. The model reads this context and either replies to you or requests a tool. The harness runs the tool, and its result returns into context for the next response." },
   validation: { wide: validationWide, narrow: validationNarrow, wideWidth: 943, wideHeight: 538, width: 588, height: 1163, alt: "A loop: the agent updates the report files, commits and pushes them, and syncs the Fabric workspace. The report pages are requested through the API. Playwright saves a screenshot, which returns to the agent's context. The agent checks the image and can revise the report, starting the loop again." },
-  delegation: { wide: delegationWide, narrow: delegationNarrow, wideWidth: 910, wideHeight: 625, width: 570, height: 625, alt: "A conceptual chart with consequence of failure increasing to the right and decisions delegated increasing upwards. A descending line separates the safer region below from the region of risk above. Higher consequences call for fewer delegated decisions. These are qualitative relationships, not measured thresholds." },
-  experience: { wide: experienceWide, narrow: experienceNarrow, wideWidth: 910, wideHeight: 665, width: 570, height: 665, alt: "A conceptual comparison of two descending lines on the same axes. The dashed cream line represents more domain experience. The solid amber line for less experience falls more steeply, reducing the space for delegation as consequences increase. These are qualitative relationships, not measured thresholds." },
+  delegation: { wide: delegationWide, narrow: delegationNarrow, wideWidth: 960, wideHeight: 923, width: 600, height: 923, alt: "A conceptual chart with consequence of failure increasing to the right and decisions delegated increasing upwards. The entire area beneath a descending line is shaded and labelled Vibe zone. Above it is the region of risk, where too much has been delegated for the consequences. The left is more vibey: let the agent choose more. The right is less vibey: specify more decisions up front. The line is illustrative, not a measured threshold." },
+  experience: { wide: experienceWide, narrow: experienceNarrow, wideWidth: 960, wideHeight: 881, width: 600, height: 881, alt: "The same conceptual chart compares two vibe zones. A dashed cream line bounds the larger zone for more domain experience. A solid amber line falls more steeply and bounds a smaller shaded zone for less experience. A downward arrow at a fixed level of consequence shows the reduction in decisions to delegate. The slopes are illustrative, not measured thresholds." },
 };
 const diagram = diagrams[kind];
 ---
