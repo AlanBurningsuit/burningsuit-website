@@ -296,6 +296,20 @@
     transform-origin: 0 50%;
   }
 
+  .section-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+  }
+  .discovery-examples {
+    display: grid;
+    gap: var(--space-xs);
+    margin-block: var(--space-sm);
+    padding-inline-start: var(--space-sm);
+    list-style: disc;
+  }
+
   /* ---- chunky instrument buttons (press-in mechanic) ---- */
   .cta {
     font-family: var(--ff-display);

@@ -45,7 +45,7 @@ test("home — regions", async ({ page }, testInfo) => {
   await prepare(page, "/");
   const tag = testInfo.project.name;
   await expect(page.locator(".hero")).toHaveScreenshot(`home-hero-${tag}.png`);
-  // The Home router: paired evidence, linked situations and the stance.
+  // Paired evidence, an inline explanation of the work, and the stance.
   await expect(page.locator(".chapter:has(#in-practice)")).toHaveScreenshot(`home-trust-${tag}.png`);
   await expect(page.locator(".chapter:has(#situations)")).toHaveScreenshot(`home-services-${tag}.png`);
   await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
@@ -73,8 +73,11 @@ test("power-bi — regions", async ({ page }, testInfo) => {
   await prepare(page, "/power-bi/");
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`pbi-hero-${tag}.png`);
-  // Five starting situations reuse the established ruled rows.
+  // Practical detail uses the established ruled rows; the following chapters
+  // explain the working process and support for the lead.
   await expect(page.locator(".offer-table")).toHaveScreenshot(`pbi-offers-${tag}.png`);
+  await expect(page.locator(".chapter:has(#how-the-work-runs)")).toHaveScreenshot(`pbi-working-${tag}.png`);
+  await expect(page.locator(".chapter:has(#second-opinion)")).toHaveScreenshot(`pbi-lead-${tag}.png`);
   await expect(page.locator(".chapter:has(#discovery)")).toHaveScreenshot(`pbi-discovery-${tag}.png`);
   await expect(page.locator(".chapter:has(#pricing)")).toHaveScreenshot(`pbi-pricing-${tag}.png`);
   await expect(page.locator(".chapter:has(#ongoing)")).toHaveScreenshot(`pbi-ongoing-${tag}.png`);

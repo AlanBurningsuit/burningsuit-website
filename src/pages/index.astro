@@ -20,13 +20,6 @@ const evidenceRows: RowData[] = [
   { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "A team lead had tried Power BI courses, then stalled on her own data. With me alongside, she built a dashboard she now looks after herself.", cta: "Read the contact-centre story" },
   { href: "/work/law-firm/", tab: "An international law firm", title: { before: "They ", em: "owned", after: " a build they didn't do." }, body: "A consultancy built their Fabric system. I worked with the team while it was happening. By handover, they were tracing wrong numbers through the new stack and finding the likely cause themselves.", cta: "Read the law-firm story" },
 ];
-const situations = [
-  { id: "skills", title: "01 · We need to develop our skills", body: "Learn the parts of Power BI your reporting needs, with time to practise and somewhere to bring the questions that follow." },
-  { id: "deliver", title: "02 · We've got reporting to deliver", body: "Your team builds it, with me teaching the next step and helping when the data or the model won't behave." },
-  { id: "handover", title: "03 · Someone else built our system", body: "Get beyond the handover documents, so the team understands how the reporting works and can start making changes themselves." },
-  { id: "second-opinion", title: "04 · I'd like a second opinion", body: "If the decisions land on you, I can help you think through what you're being asked to sign off." },
-  { id: "backup", title: "05 · We're underway and need backup", body: "Bring the change you'd like someone experienced to look over, or the number you can't explain." },
-];
 const statementLines: Line[] = [
   "AI will build",
   "whatever you ask.",
@@ -43,7 +36,7 @@ const statementLines: Line[] = [
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="Power BI your team can own." lines={heroLines} />
         <p class="lede enter appear-300">I work alongside your team so they can understand their reporting, make changes and <strong>check the numbers</strong> that come out.</p>
-        <p class="hero-sig enter appear-450">Hey - I'm Alan. I've spent five years with teams adopting Power BI, and a decade building software before that. Lately, I've been figuring out where teams should use AI - and where they shouldn't.</p>
+        <p class="hero-sig enter appear-450">Power BI and Fabric consultancy with Alan Harman-Box.</p>
         <BookCta src="home-hero" mailtoHref={contactMailto} variant="hero" />
       </div>
       <figure class="hero-photo enter appear-300"><Picture src={heroPhoto} alt="Alan, who runs burningsuit, sitting outdoors and smiling" formats={["avif"]} fallbackFormat="webp" widths={[400, 600, 800]} sizes="(min-width: 62rem) 40vw, 100vw" quality={66} loading="eager" fetchpriority="high" /></figure>
@@ -56,21 +49,16 @@ const statementLines: Line[] = [
     <div class="wrap">
       <h2 class="section-head" id="in-practice" data-reveal>What that looks like in practice</h2>
       <ServiceRows rows={evidenceRows} />
-      <p class="prose" data-reveal><a class="u" href="/work/">All four case studies ▸</a></p>
+      <div class="section-links"><a class="cta ghost" href="/work/">All four case studies ▸</a></div>
     </div>
   </section>
 
-  <Chapter id="situations" kicker="Where is your team now?">
-    <div class="offer-table">
-      {situations.map((situation) => <div class="offer"><h3><a class="u" href={`/power-bi/#${situation.id}`}>{situation.title}</a></h3><p>{situation.body}</p></div>)}
-    </div>
-    <p>Arranging training for a team? We'll agree an outcome people can demonstrate with their reporting, so you can check what the learning has achieved.</p>
-    <p><a class="u" href="/hour/">Not sure which? Tell me what your reporting can't do (yet) ▸</a></p>
+  <Chapter id="situations" kicker="Help with the work in front of you">
+    <p>You might have reporting to deliver, a system to take over, or a team ready to go further with Power BI. I work alongside your people, helping them understand how the reporting works and make the changes they need. The aim is for them to be able to carry that work forward themselves.</p>
+    <p>We can work through a difficult problem together, teach an idea the team needs, or take a closer look at a model someone else built. Training is part of that when it helps. What we work on comes from the job your team is trying to do.</p>
+    <p>If you're the person responsible for reporting, I can also help you think through the decisions that land on you. You need enough understanding to judge a proposal or plan the next step, even when Power BI isn't your specialism.</p>
+    <div class="section-links"><a class="cta ghost" href="/power-bi/">How I work with teams ▸</a></div>
   </Chapter>
-
-  <div class="wrap">
-    <p class="prose" data-reveal>Discovery is £1,950. Ongoing work with a team is usually £3,000 to £6,000 a month, and lighter arrangements are quoted separately. All prices exclude VAT. <a class="u" href="/power-bi/#pricing">How the arrangements work ▸</a></p>
-  </div>
 
   <StatementChapter label="AI will build whatever you ask. Someone still has to know what to ask for." lines={statementLines} linkHref="/writing/we-are-all-middle-management-now/" linkLabel="Read the essay ▸" />
   <PhotoChapter />

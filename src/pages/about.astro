@@ -1,21 +1,5 @@
 ---
-/**
- * /about — the person behind burningsuit.
- *
- * Copy is the SIGNED deck at design/copy/about.md (v5, signed 2026-06-17, with
- * Alan's inline edits; +the LinkedIn line, Alan's own words, signed 2026-08-19).
- * Voice: warm outward, light about himself, "for everyone else" as the spine,
- * spoken cadence. Structure: prose chapters on the dark ground — page-hero →
- * thread → chapters → thread-end. The visible LinkedIn link mirrors
- * FOUNDER.sameAs in site.ts (schema and page agree on the same URL).
- *
- * PHOTOS (2026-07 review: three text chapters passed before the first image):
- * the "we're all middle management now" talk shot sits in "the part that isn't
- * really technical" — beside the very sentence that names the talk (the café
- * shot stays homepage-only; Alan: no doubling). Stuart & Alison's studio shot
- * sits in "where burningsuit comes from" (clearances in the ops claims
- * ledger), and Zelda closes "and the dog". Sequence: talk → origin → dog.
- */
+/** About Alan, with the talk, family origin and dog photographs. */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Signoff from "../components/Signoff.astro";
 import { Picture } from "astro:assets";
@@ -51,7 +35,7 @@ const contactSubject = "Hello";
     <div class="wrap">
       <h2 class="section-head" id="capable" data-reveal>I start from what people can do</h2>
       <div class="prose">
-        <p data-reveal>I came to Power BI after about a decade building software - large systems, some of it for government. I still like getting into the detail, particularly when it helps someone understand a model they've been wary of touching.</p>
+        <p data-reveal>I came to Power BI after about a decade building software. I still like getting into the detail, particularly when it helps someone understand a model they've been wary of touching.</p>
         <p data-reveal>
           I've got a fairly stubborn belief that, with the right instruction and
           a bit of encouragement, almost anyone can learn almost anything - so I
@@ -61,7 +45,7 @@ const contactSubject = "Hello";
           the latest thing, and short on someone to think it through with.
         </p>
         <p data-reveal>
-          In practice, we work on what the team needs to be able to do next. There is time between sessions to try it, and somewhere to bring the questions that only come up when you do. The <a class="u" href="/power-bi/">Power BI page explains how we can work together</a>. If you'd sooner see the results, there are <a class="u" href="/work/">a few case studies</a>. And I'm on
+          In practice, we work on what the team needs to be able to do next. There is time between sessions to try it, and somewhere to bring the questions that only come up when you do. There is more about <a class="u" href="/power-bi/">how I work with teams on their reporting</a>. If you'd sooner see the results, there are <a class="u" href="/work/">a few case studies</a>. And I'm on
           <a class="u" href="https://www.linkedin.com/in/alan-harman-box"
           target="_blank" rel="noopener noreferrer">LinkedIn</a>, if that's
           where you check people out.
@@ -72,13 +56,13 @@ const contactSubject = "Hello";
 
   <section class="chapter" aria-labelledby="human">
     <div class="wrap">
-      <h2 class="section-head" id="human" data-reveal>The part that isn't really technical</h2>
+      <h2 class="section-head" id="human" data-reveal>The people doing the work</h2>
       <div class="prose">
         <p data-reveal>
           The nuts and bolts of Power BI I can do, and I've done it a long time. But that's honestly not usually the thing that makes the difference. It's much more about whether people who are busy, and a bit sceptical, actually feel like having a go - and whether, by the end, your team reckons I get how they work, rather than someone turning up to tell them they've been doing it wrong. That's really the part I care about getting right.
         </p>
         <p data-reveal>
-          I've spent about five years working with organisations getting to grips with Power BI and Fabric, and before that a decade or so in software delivery - large systems, some of it for government. I also give a talk at a few user groups, called <a class="u" href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>, about being responsible for work you've handed off to something that can't be held responsible for it. The thing that's stuck with me through all of it is that these projects mostly succeed or fail on the people side, well before the technology really comes into it.
+          I've spent about five years working with organisations getting to grips with Power BI and Fabric. I also give a talk at a few user groups, called <a class="u" href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>, about being responsible for work you've handed off to something that can't be held responsible for it. The thing that's stuck with me through all of it is that these projects mostly succeed or fail on the people side, well before the technology really comes into it.
         </p>
         {/* The talk the paragraph above names, as it actually happens —
             evidence beside its claim. Clearance row in the ops ledger. */}

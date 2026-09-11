@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Chapter from "../components/Chapter.astro";
-import Aside from "../components/Aside.astro";
 import Offer from "../components/Offer.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import type { Line } from "../components/RiseHeading.astro";
@@ -10,34 +9,28 @@ import pbiHero from "../assets/photos/DSC08846-Edit_cropped.jpg";
 import BookCta from "../components/BookCta.astro";
 import { mailtoFor } from "../config/site";
 
-const contactSubject = "Power BI & Fabric - where it's stuck";
+const contactSubject = "Power BI & Fabric - working together";
 const contactMailto = mailtoFor(contactSubject);
-const heroLines: Line[] = ["Power BI your", { before: "team can ", em: "own", after: "." }];
-const movements = [
-  { title: "Workshops teach the next step", body: "Each workshop focuses on a topic the team needs now. I prepare the examples and materials around your reporting context, then teach the technique and how to check it." },
-  { title: "The team tries it between sessions", body: "Your people need time to practise and apply what they've learned. They bring the results back, including the part that still doesn't make sense." },
-  { title: "Office hours work through the problems", body: "The team brings whatever is stuck, and we work through it together. Email support runs throughout each month, so questions can come up between calls." },
-  { title: "You can have a slot of your own", body: "Optional leader sessions make room for the decisions that land on you. They can be part of the team's arrangement or quoted separately." },
-];
+const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: "team", after: "." }];
 ---
 
 <BaseLayout
-  title="Power BI your team can own - training and support - burningsuit"
-  description="Work alongside Alan Harman-Box on Power BI and Fabric, so your team can own its reporting. Find the arrangement that fits, from a free hour to ongoing support."
+  title="How I work with Power BI teams - burningsuit"
+  description="Practical Power BI work, advice to the person leading it, and help taking over existing systems. How Alan works alongside your team, from the first call onwards."
   ogImage="/social/linkedin-power-bi.png"
   ogImageAlt="Power BI and Fabric, done with you, beside a field-notebook model diagram"
   ogImageWidth={1200}
   ogImageHeight={627}
   contactSubject={contactSubject}
 >
-  <Fragment slot="footer-invitation">Tell me what your reporting can't do yet, and what's been tried. I'll help you work out the next step</Fragment>
+  <Fragment slot="footer-invitation">Tell me about the reporting you're responsible for and the work ahead. We can think through where some help would be useful</Fragment>
 
   <section class="page-hero pbi-hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <RiseHeading as="h1" kind="hero" label="Power BI your team can own." lines={heroLines} />
-        <p class="lead enter appear-300">I work alongside your team so they can change their own reporting and <strong>check the effect for themselves</strong>.</p>
-        <p class="hero-sig enter appear-450">Hey - I'm Alan. I've spent five years with teams adopting Power BI, and a decade building software before that. Lately, I've been figuring out where teams should use AI - and where they shouldn't.</p>
+        <RiseHeading as="h1" kind="hero" label="Working alongside your Power BI team." lines={heroLines} />
+        <p class="lead enter appear-300">We use the work your team needs to do to build its understanding of Power BI. I help people work through changes, understand why the model behaves as it does, and <strong>check the result</strong>.</p>
+        <p class="hero-sig enter appear-450">If you lead the team, I can also be someone to think the decisions through with. You don't have to work in Power BI every day to be responsible for what comes out of it.</p>
         <BookCta src="power-bi-hero" mailtoHref={contactMailto} variant="hero" />
       </div>
       <figure class="hero-photo enter appear-300">
@@ -48,99 +41,73 @@ const movements = [
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  <section class="chapter band-2" aria-labelledby="situations">
-    <div class="wrap what">
-      <h2 class="section-head" id="situations" data-reveal>What do you need to be able to do?</h2>
-      <div class="label"><Aside data-reveal>No one person has to understand the full stack to every level of detail.</Aside></div>
-      <div>
-        <p class="prose" data-reveal>You might recognise one of these, or a mixture. They're starting points for the same working relationship. If the reporting requirements are still unclear, <a class="u" href="#discovery">Discovery gives us a place to begin</a>.</p>
-        <div class="offer-table">
-          <Offer id="skills" title="01 · We need to develop our skills">
-            <p>We agree an observable result the team can demonstrate, then teach the Power BI skills that get them there. For example, the team might apply row-level security to its own reports and check that each audience sees the right data. That gives you something to judge the training by when people are back at their desks.</p>
-            <p>Usually Discovery, then a workshop series with practice between sessions.</p>
-            <p><a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a></p>
-          </Offer>
-          <Offer id="deliver" title="02 · We've got reporting to deliver">
-            <p>There's a report or model you need, and the team wants to build it. I teach the next thing the project needs; your people apply it between sessions. We work through the difficult bits together, with the team's hands on the keyboard.</p>
-            <p>Usually a monthly arrangement for the length of the project.</p>
-            <p><a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a></p>
-          </Offer>
-          <Offer id="handover" title="03 · Someone else built our system">
-            <p>The platform is running, but handover documents only go so far. We follow a number through the model so the team can see why it was built that way. Then they practise changing it and checking the result. This can run alongside an external build or after handover.</p>
-            <p>Usually Discovery to map what was built, then a monthly arrangement alongside the handover.</p>
-            <p><a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a></p>
-          </Offer>
-          <Offer id="second-opinion" title="04 · I'd like a second opinion">
-            <p>If you're responsible for reporting and Power BI isn't your specialism, I can help you judge what you're being asked to sign off. That might mean thinking through an architecture proposal or a hire. If an external build is ahead, we can work out what a good handover needs to include.</p>
-            <p>A regular slot of your own, quoted separately.</p>
-            <p><a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a></p>
-          </Offer>
-          <Offer id="backup" title="05 · We're underway and need backup">
-            <p>Your team is building already, and the questions are getting more specific. Bring the DAX that won't behave, and we'll work through why. Or we can look over a change before you put it in front of everyone.</p>
-            <p>Office hours and email support, quoted on their own.</p>
-            <p><a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a></p>
-          </Offer>
-        </div>
-      </div>
+  <Chapter id="situations" kicker="Start with the work that matters">
+    <p>We begin with what the reporting is for and what your team can already do. A new report, a change to an existing model and a handover can need quite different help. Understanding that gives us a useful place to start.</p>
+    <div class="offer-table">
+      <Offer id="deliver" title="Build and change your reporting">
+        <p>Your team has something to deliver. We work through the decisions behind it, from what a number needs to mean to how the model should calculate it. Your people do the work with my help, so they understand the choices and can change them later.</p>
+        <p>When a result looks wrong, we follow it back through the model. Finding the cause is useful in its own right; understanding how we found it helps the team deal with the next one.</p>
+      </Offer>
+      <Offer id="skills" title="Learn what the work needs">
+        <p>If an idea is missing or misunderstood, I teach it through a practical example. That might need a focused explanation while we're working, or a workshop with time to practise afterwards.</p>
+        <p>If you're arranging training, we agree what people need to be able to do with it. For example, a team learning row-level security could apply it to a report and check that each audience sees the right data. That gives the learning a purpose and you a way to judge the result.</p>
+      </Offer>
+      <Offer id="handover" title="Understand a system you inherited">
+        <p>A working system and a set of handover documents don't always give a team enough understanding to look after it. We trace how the reporting gets from source data to the numbers people use, then practise making and checking changes.</p>
+        <p>This can happen alongside an external build or after handover. The <a class="u" href="/work/law-firm/">law-firm case study follows a team learning to investigate its new Fabric system</a>.</p>
+      </Offer>
     </div>
-  </section>
-
-  <Chapter id="how-the-work-runs" kicker="How the learning becomes part of the job">
-    <p>We can practise on example data shaped like your reporting or work directly on your live systems, moving between the two as it helps. We choose how close to the real data to work together, taking account of what the team is ready for and your data rules.</p>
-    <ol class="movements">
-      {movements.map((movement, i) => <li class="movement"><span class="n" aria-hidden="true">{i + 1}</span><div><h3>{movement.title}</h3><p>{movement.body}</p></div></li>)}
-    </ol>
-    <p>We agree the number and mix of sessions in your quote, then review what helps as the team gets further.</p>
-    <p><a class="u" href="/work/contact-centre/">See a lead build her own reporting ▸</a></p>
-    <p><a class="u" href="/work/law-firm/">See a team take over an external build ▸</a></p>
-    <p><a class="u" href="/work/">All four case studies ▸</a></p>
   </Chapter>
 
-  <Chapter id="pricing" kicker="Starting and pricing">
-    <Offer title="An hour, free" meta="The place to start">
-      <p>We work out whether the problem is the scope, the skills, or something else, and what the next step is. <a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a></p>
+  <Chapter id="how-the-work-runs" kicker="Working through it together">
+    <p>A session starts with a question or a piece of work. We might sketch how a model fits together, investigate a calculation, or work through an example of something the team needs to understand. I explain the reasoning as we go, so people can use it when I'm no longer on the call.</p>
+    <p>We can use representative examples or your own systems. We choose that together, according to the work, what the team is ready for and your data rules. Access to live data isn't a prerequisite.</p>
+    <p>The team needs time to try things between sessions. That is often when the useful questions appear: the example made sense, but the real data has a complication we haven't dealt with yet.</p>
+    <Offer id="backup" title="Somewhere to bring the next question">
+      <p>Office hours give the team a place to bring a stubborn calculation, talk through a proposed change or check its understanding. Email support can cover questions between calls. We agree the amount of support around the work and review it as the team needs less help.</p>
     </Offer>
+    <p>The <a class="u" href="/work/contact-centre/">contact-centre case study shows how this helped a lead build and maintain her own reporting</a>.</p>
   </Chapter>
 
-  <Chapter id="discovery" kicker="Discovery">
-    <p class="lead"><strong>£1,950 excluding VAT.</strong> We start with two conversations: one with the person leading the work, and one with the team. I work out what you need your reporting to show, for whom, and what you want to do differently once you can see the numbers.</p>
-    <Offer title="What you take away">
-      <ul>
-        <li><strong>Initial reporting requirements:</strong> a first cut of the questions the reporting needs to answer.</li>
-        <li><strong>A project roadmap:</strong> the work needed to get from where you are to where you want to be.</li>
-        <li><strong>A skills roadmap:</strong> what the team will need to learn to deliver and maintain the reporting.</li>
-        <li><strong>An assessment of the ambition:</strong> whether it fits the team and the time you have available.</li>
-      </ul>
-    </Offer>
-    <p>The requirements and roadmaps are yours to keep. If that gives you enough to carry the work forward internally, we can stop there.</p>
+  <Chapter id="second-opinion" kicker="Support for the person leading it">
+    <p>You might need to decide whether an architecture proposal makes sense, what a new hire needs to know, or whether the team is ready to take over a system. Those are decisions about the work and the people doing it, as well as the technology.</p>
+    <p>I can help you work out what you need to understand personally, what knowledge the team should hold, and where too much depends on one person. We can look at a proposal together and identify the questions that need answering before you sign it off.</p>
+    <p>A regular conversation of your own can sit alongside the team's sessions or be arranged separately. It gives you room to think about the direction of the work as well as the next thing to deliver.</p>
   </Chapter>
 
-  <Chapter id="ongoing" kicker="Ongoing arrangements">
-    <p>I'll give you a fixed quote for the sessions we agree. It also covers the preparation and materials, with support between calls.</p>
-    <Offer title="Substantial team engagements" meta="£3,000–£6,000 a month excluding VAT">
-      <p>This is a guide for substantial ongoing work with a team. The quote sets out the mix of workshops and office hours, with email support between sessions.</p>
-    </Offer>
-    <Offer title="Lighter support" meta="Quoted separately">
-      <p>If you need fewer sessions or a regular second opinion, we can arrange that. The monthly guide is not a minimum spend; lighter support is available below that range.</p>
-    </Offer>
-    <Offer title="Rolling monthly or booked up front">
-      <p>You can book a month at a time and stop when it stops being useful, or book at least three months up front as a single fixed quote. Discovery is credited only against an upfront booking of at least three months.</p>
-    </Offer>
-    <Offer title="Less time as you need less help">
-      <p>Either arrangement can taper in time and cost as the team becomes more capable. We agree that change together.</p>
-    </Offer>
+  <Chapter id="ai" kicker="AI in the work">
+    <p>If your team is trying Copilot or coding agents, we can work through a task together and look at what the tool produces. The useful question is what your people need to understand to judge and maintain that work.</p>
+    <p>That includes deciding which tasks to delegate, what information the tool can access, and how the team will check its output. A generated measure still needs someone who understands what the number is meant to represent.</p>
+    <p>I explore what this means for the people responsible in <a class="u" href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>, an essay about delegation, judgement and Power BI.</p>
+  </Chapter>
+
+  <Chapter id="pricing" kicker="Start with a conversation">
+    <p>The first step is a free 60-minute call. Tell me about the reporting, the team and what you're trying to do. We can work out where help would be useful and whether it makes sense to work together.</p>
+    <p>That conversation also tells us whether we need to spend more time understanding the work before agreeing an engagement. If we do, we can scope Discovery around what we need to find out.</p>
+    <div class="section-links"><a class="cta ghost" href="/hour/">About the free hour ▸</a></div>
+  </Chapter>
+
+  <Chapter id="discovery" kicker="Discovery, shaped around the question">
+    <p>Discovery is <strong>£1,950 excluding VAT</strong>. Before booking it, we agree what we need to understand and what would be useful for you to take away.</p>
+    <p>Depending on the work, that could include:</p>
+    <ul class="discovery-examples">
+      <li>An initial set of reporting requirements, based on the questions people need the reporting to answer.</li>
+      <li>A roadmap for the reporting work, or for the skills the team will need to deliver and maintain it.</li>
+      <li>An assessment of whether the ambition fits the team and the time available.</li>
+    </ul>
+    <p>These are examples, rather than a fixed bundle. You keep what we produce. If that gives you enough to carry on internally, we can stop there.</p>
+  </Chapter>
+
+  <Chapter id="ongoing" kicker="Support as the work develops">
+    <p>I'll give you a fixed quote for the work and sessions we agree, including preparation, materials and support between calls. We choose the mix of work with the team and conversations with you according to what will help.</p>
+    <p>For substantial ongoing work with a team, <strong>£3,000 to £6,000 a month excluding VAT</strong> is a guide. Lighter support is available below that range and quoted separately, including fewer sessions or a regular second opinion.</p>
+    <p>You can book a month at a time, or agree a single fixed quote for at least three months up front. Discovery is credited only against an upfront booking of at least three months.</p>
+    <p>As the team becomes more capable, we can reduce the time and cost together. A monthly arrangement can stop when it stops being useful.</p>
   </Chapter>
 
   <section class="cta-band" aria-label="Book an hour">
-    <div class="wrap"><BookCta src="power-bi-pricing" mailtoHref={contactMailto}>Tell me what your reporting can't do yet. We'll spend an hour working out a useful starting point; the call is free.</BookCta></div>
+    <div class="wrap"><BookCta src="power-bi-pricing" mailtoHref={contactMailto}>Bring the reporting question you're working on. We'll spend an hour thinking through a useful starting point; the call is free.</BookCta></div>
   </section>
-
-  <Chapter id="ai" kicker="Using AI in your Power BI work">
-    <p>We can use the same working relationship to help your team use Copilot in their Power BI work. Workshops focus on tasks worth trying and how to check the output; office hours and email cover what happens as the team puts it to use.</p>
-    <p>We start by checking which Copilot tools your team can use. Copilot in Power BI has its own capacity, admin and regional requirements, so having a Copilot licence elsewhere doesn't settle that question.</p>
-    <p>AI will build whatever you ask. Someone still has to know what to ask for. That's the question behind <a class="u" href="/writing/we-are-all-middle-management-now/">We're all middle management now ▸</a>.</p>
-    <p>If you're being asked what to do about AI in the team, that's a fine thing to bring to the hour. <a class="u" href="/hour/">Tell me what your reporting can't do (yet) ▸</a></p>
-  </Chapter>
 
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
   <div class="talk-spacer"></div>
