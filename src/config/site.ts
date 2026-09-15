@@ -47,11 +47,20 @@ export function mailtoFor(subject?: string): string {
  * data-website-id attribute. Custom events go through `umami.track()` in
  * enhance.ts. Visitors can exclude themselves via the `umami.disabled`
  * localStorage flag (the /privacy opt-out toggle).
+ *
+ * `domains` rides in the tag's data-domains attribute: the tracker compares
+ * it with window.location.hostname and stays silent anywhere else, so the
+ * dev server, Playwright runs and Netlify previews stop reporting into the
+ * live dashboard (a 2026-09 export was 92% localhost). `performance` sets
+ * data-performance, which adds Core Web Vitals (LCP/INP/CLS/FCP/TTFB) to the
+ * pageview beacon; those columns were empty without it.
  */
 export const ANALYTICS = {
   enabled: true,
   scriptSrc: "https://cloud.umami.is/script.js",
   websiteId: "7a27ff45-e9ce-4aec-8940-260c61c35dff",
+  domains: "burningsuit.co.uk,www.burningsuit.co.uk",
+  performance: true,
 } as const;
 
 /* ------------------------------------------------------------------ *

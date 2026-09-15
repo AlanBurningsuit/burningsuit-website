@@ -48,3 +48,9 @@ Burningsuit Brand Guidelines V1.pdf
 # Local Netlify folder
 .netlify
 ds-bundle/
+
+# Analytics / SEO-tool exports dropped in for review (Umami CSVs, crawler
+# reports). They carry legacy URLs that can name clients — never tracked here;
+# the private ops repo is the home for anything worth keeping.
+sitedata/
+/*.csv
