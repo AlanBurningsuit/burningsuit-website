@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Chapter from "../components/Chapter.astro";
+import Exhibit from "../components/Exhibit.astro";
 import Offer from "../components/Offer.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import type { Line } from "../components/RiseHeading.astro";
@@ -23,16 +24,17 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
   ogImageHeight={627}
   contactSubject={contactSubject}
 >
-  <Fragment slot="footer-invitation">Tell me about the reporting you're responsible for and the work ahead. We can think through where some help would be useful</Fragment>
+  <Fragment slot="footer-invitation">Tell me about the reporting you're responsible for and the work ahead. I'll give you a straight answer about whether I can help</Fragment>
 
   <section class="page-hero pbi-hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="Working alongside your Power BI team." lines={heroLines} />
-        <p class="lead enter appear-300">We work together on the reporting your team needs to build or change, so people understand how the model works and can <strong>check the result</strong>.</p>
+        <p class="lead enter appear-300">We can work through a report the team needs to deliver, or a model that needs changing. I help them sort out what the numbers should mean, how to model them and how to <strong>check the result</strong>.</p>
         <p class="hero-sig enter appear-450">If you're leading the team, you've got me to talk things through with too. We can take a look at a proposal together, or work out what to tackle next.</p>
         <BookCta src="power-bi-hero" mailtoHref={contactMailto} variant="hero" />
         <p class="hour-link"><a href="/hour/">What happens in the free hour? ▸</a></p>
+        <div class="section-links"><a href="#start">How we start</a><a href="#pricing">Ongoing prices</a></div>
       </div>
       <figure class="hero-photo enter appear-300">
         <Picture src={pbiHero} alt="Alan in a red checked overshirt, smiling, in a narrow brick alley" formats={["avif"]} fallbackFormat="webp" widths={[400, 600, 800]} sizes="(min-width: 62rem) 36vw, 100vw" quality={70} loading="eager" fetchpriority="high" />
@@ -43,7 +45,7 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
   <Chapter id="situations" kicker="What we can work on together">
-    <p>You might have a report to deliver, or a system you've inherited and need to get to grips with. I can work alongside your team on that, explaining the parts they need to understand as we go. Here are some examples of what that can involve.</p>
+    <p>You might have a report to deliver, or a system you've inherited and need to get to grips with. We start with that work and make room for the learning it needs.</p>
     <div class="offer-table">
       <Offer id="deliver" title="Build and change your reporting">
         <p>Your team has something to deliver. We work through the decisions behind it, from what a number needs to mean to how the model should calculate it. Your people do the work with my help, so they understand the choices and can change them later.</p>
@@ -55,31 +57,35 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
       </Offer>
       <Offer id="handover" title="Understand a system you inherited">
         <p>A working system and a set of handover documents don't always give a team enough understanding to look after it. We trace how the reporting gets from source data to the numbers people use, then practise making and checking changes.</p>
-        <p>This can happen alongside an external build or after handover. The <a class="u" href="/work/law-firm/">law-firm case study follows a team learning to investigate its new Fabric system</a>.</p>
+        <p>This can happen alongside an external build or after handover.</p>
       </Offer>
     </div>
+    <Exhibit tab="Following a wrong number" caption="From the law-firm case study · a large international law firm's data team">
+      <p>During handover at an international law firm, a year-to-date number looked wrong. With me alongside, the team followed it through the new Fabric system to a stored procedure that was dropping the right rows. They went back to the consultancy with the likely cause already in hand.</p>
+      <div class="section-links"><a href="/work/law-firm/">Read the law-firm story ▸</a></div>
+    </Exhibit>
     <div class="section-links"><a href="/hour/">Tell me what your reporting can't do (yet) ▸</a></div>
   </Chapter>
 
   <Chapter id="how-the-work-runs" kicker="Working through it together">
-    <p>I'll meet with your team regularly and provide a space where together we can work through the toughest things they're facing. We can take the time to understand what's going on and try things out. I'll explain my thinking as we go, so people can use what we've worked through when they're tackling something similar themselves.</p>
+    <p>We meet regularly around the team's own work. You bring the part you're stuck on, and we take time to try things, check what happens and talk through the reasoning.</p>
     <p>We can work in your own systems where your data rules allow it, or use examples that let us explore the same problem. Access to live data isn't a prerequisite.</p>
     <p>We leave time between calls for people to apply what we've worked through. An example can make sense while we're looking at it together, then the real data turns out to have a complication. We can pick that up when we next meet.</p>
     <Offer id="backup" title="Somewhere to bring the next question">
-      <p>We can also set aside regular time for people to bring questions as they come up in their work. Someone might want to talk through a change before making it, for example. Email support is available between calls too. We agree how much time to set aside and review that as the team needs less help.</p>
+      <p>Regular time for questions can sit alongside that work, with email support between calls. We agree how much time to set aside and review it as the team needs less help.</p>
     </Offer>
     <p>The <a class="u" href="/work/contact-centre/">contact-centre case study shows how this helped a lead build and maintain her own reporting</a>.</p>
   </Chapter>
 
-  <Chapter id="second-opinion" kicker="Support for the person leading it">
-    <p>You might need to decide whether an architecture proposal makes sense, what a new hire needs to know, or whether the team is ready to take over a system. Those are decisions about the work and the people doing it, as well as the technology.</p>
-    <p>I can help you work out what you need to understand personally, what knowledge the team should hold, and where too much depends on one person. We can look at a proposal together and identify the questions that need answering before you sign it off.</p>
+  <Chapter id="second-opinion" kicker="Support for the person leading it" aside="No one person has to understand the full stack to every level of detail.">
+    <p>If you're being asked to sign off an architecture proposal, I'll help you work out what it would mean for the people who have to run it. And I'll say so if I think a new model won't fix the problem, or a clever addition will leave the team with more to maintain than it's worth.</p>
+    <p>We can also look at what a new hire needs to know, or whether the team is ready to take over a system. I can help you work out what you need to understand personally, what knowledge the team should hold, and where too much depends on one person.</p>
     <p>A regular conversation of your own can sit alongside the team's sessions or be arranged separately. It gives you room to think about the direction of the work as well as the next thing to deliver.</p>
   </Chapter>
 
   <Chapter id="ai" kicker="AI in the work">
-    <p>If your team is trying Copilot or coding agents, we can work through a task together and look at what the tool produces. The useful question is what your people need to understand to judge and maintain that work.</p>
-    <p>That includes deciding which tasks to delegate, what information the tool can access, and how the team will check its output. A generated measure still needs someone who understands what the number is meant to represent.</p>
+    <p>If your team is trying Copilot or coding agents, we can open up a piece of the work and go through it together. A measure can run without an error and still answer the wrong question. That's the bit I want the team to be able to spot.</p>
+    <p>We work out which decisions to hand over, what information the tool can access, and how people will check what comes back. That means reading the calculation, understanding what the number is meant to represent, and knowing what to try when the two don't agree.</p>
     <p>I explore what this means for the people responsible in <a class="u" href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>, an essay about delegation, judgement and Power BI.</p>
   </Chapter>
 
@@ -100,7 +106,7 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
     <p>We agree the outputs before you book, so you can put the scope and price to whoever needs to approve the work. You keep what we produce. If that gives you enough to carry on internally, we can stop there.</p>
   </Chapter>
 
-  <Chapter id="pricing" kicker="Support as the work develops">
+  <Chapter id="pricing" kicker="Ongoing support and prices">
     <p id="ongoing">I'll give you a fixed quote for the work and sessions we agree, including preparation, materials and support between calls. We choose the mix of work with the team and conversations with you according to what will help.</p>
     <p>For substantial ongoing work with a team, <strong>£3,000 to £6,000 a month excluding VAT</strong> is a guide. Lighter support is available below that range and quoted separately, including fewer sessions or a regular second opinion.</p>
     <p>You can book a month at a time, or agree a single fixed quote for at least three months up front. Discovery is credited only against an upfront booking of at least three months.</p>

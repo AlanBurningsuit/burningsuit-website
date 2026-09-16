@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import Chapter from "../components/Chapter.astro";
 import ServiceRows from "../components/ServiceRows.astro";
+import Exhibit from "../components/Exhibit.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import StatementChapter from "../components/StatementChapter.astro";
 import PhotoChapter from "../components/PhotoChapter.astro";
@@ -17,8 +18,8 @@ const contactSubject = "Power BI & Fabric";
 const contactMailto = mailtoFor(contactSubject);
 const heroLines: Line[] = ["Power BI your", { before: "team can ", em: "own", after: "." }];
 const evidenceRows: RowData[] = [
-  { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "A team lead had tried Power BI courses, then stalled on her own data. With me alongside, she built a dashboard she now looks after herself.", cta: "Read the contact-centre story" },
-  { href: "/work/law-firm/", tab: "An international law firm", title: { before: "They ", em: "owned", after: " a build they didn't do." }, body: "A consultancy built their Fabric system. I worked with the team while it was happening. By handover, they were tracing wrong numbers through the new stack and finding the likely cause themselves.", cta: "Read the law-firm story" },
+  { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "A team lead had stalled when she tried Power BI on her own data. In one of our sessions, she reached for the right function before I got there - she recognised it from Excel.", cta: "Read the contact-centre story" },
+  { href: "/work/law-firm/", tab: "An international law firm", title: { before: "They ", em: "own", after: " a system someone else built." }, body: "A consultancy built their Fabric system. I worked with the team while it was happening. By handover, they were tracing wrong numbers through the new stack and finding the likely cause themselves.", cta: "Read the law-firm story" },
 ];
 const statementLines: Line[] = [
   "AI will build",
@@ -36,7 +37,7 @@ const statementLines: Line[] = [
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="Power BI your team can own." lines={heroLines} />
         <div class="hero-introduction enter appear-300">
-          <p>I'm Alan. I work alongside your team so they can understand their reporting, make changes and check the numbers that come out.</p>
+          <p>I'm Alan. I work alongside teams on Power BI and Fabric. A report that works is a useful start; I want your people to understand why it works, so they can question a number or change it when the job changes.</p>
           <p class="hero-invitation">We can start with <a href="/hour/">a free hour</a> to talk through what you're working on.</p>
         </div>
         <BookCta src="home-hero" mailtoHref={contactMailto} variant="hero" />
@@ -51,18 +52,26 @@ const statementLines: Line[] = [
     <div class="wrap">
       <h2 class="section-head" id="in-practice" data-reveal>What that looks like in practice</h2>
       <ServiceRows rows={evidenceRows} />
-      <div class="section-links"><a href="/work/">All four case studies ▸</a></div>
+      <Exhibit tab="Three systems, one model" caption="A museum's counters, tills and ticketing feed one shared model the team runs themselves.">
+        <div class="exhibit-flow">
+          <p>what the counters count</p>
+          <p>what the tills take</p>
+          <p>what the shop &amp; ticketing sell</p>
+          <p class="model">one shared model</p>
+        </div>
+      </Exhibit>
+      <div class="section-links"><a href="/work/museum/">Read the museum story ▸</a><a href="/work/">All four case studies ▸</a></div>
     </div>
   </section>
 
   <Chapter id="situations" kicker="Help with the work in front of you">
-    <p>The aim is for your team to carry the work forward themselves. I help them understand the reasoning behind a change, with time to practise and somewhere to bring the questions that follow.</p>
+    <p>The starting point depends on what your people need to be able to do next.</p>
     <ul class="situation-links">
       <li><a href="/power-bi/#deliver">Build and change your reporting ▸</a></li>
       <li><a href="/power-bi/#skills">Learn what the work needs ▸</a></li>
       <li><a href="/power-bi/#handover">Understand a system you inherited ▸</a></li>
     </ul>
-    <p>If you're responsible for reporting, I can also help you think through the decisions that land on you. We can look at a proposal together and work out what it would mean for your team.</p>
+    <p>And if you're the one being asked to sign off a proposal, you can bring that too. I'll help you work out whether it makes sense for your team.</p>
     <div class="section-links"><a href="/hour/">Tell me what your reporting can't do (yet) ▸</a></div>
   </Chapter>
 

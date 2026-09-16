@@ -73,9 +73,9 @@ test("power-bi — regions", async ({ page }, testInfo) => {
   await prepare(page, "/power-bi/");
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`pbi-hero-${tag}.png`);
-  // Practical detail uses the established ruled rows; the following chapters
-  // explain the working process and support for the lead.
-  await expect(page.locator(".offer-table")).toHaveScreenshot(`pbi-offers-${tag}.png`);
+  // Capture the full practical chapter so its ruled rows and evidence exhibit
+  // stay together; the following chapters explain the working process and lead support.
+  await expect(page.locator('.chapter[aria-labelledby="situations"]')).toHaveScreenshot(`pbi-offers-${tag}.png`);
   await expect(page.locator(".chapter:has(#how-the-work-runs)")).toHaveScreenshot(`pbi-working-${tag}.png`);
   await expect(page.locator(".chapter:has(#second-opinion)")).toHaveScreenshot(`pbi-lead-${tag}.png`);
   await expect(page.locator(".chapter:has(#discovery)")).toHaveScreenshot(`pbi-discovery-${tag}.png`);

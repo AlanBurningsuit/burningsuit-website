@@ -975,6 +975,9 @@
        it would stretch the figure to the grid-definite prose height. */
     height: auto;
   }
+  .offers + .exhibit {
+    max-width: var(--measure-wide);
+  }
   .exhibit .body p {
     font-family: var(--ff-display);
     font-weight: 600;
@@ -1740,6 +1743,11 @@
 html:has(:focus-visible) {
   scroll-behavior: auto;
 }
+/* The linked About teaser can just fit a landscape viewport. Reserve the
+   header height while it has focus, without the decorative anchor gap. */
+html:has(.about-door:focus-visible) {
+  scroll-padding-block-start: var(--header-h);
+}
 :focus-visible [data-reveal],
 [data-reveal]:focus-within,
 .enter:focus-within {
@@ -1847,9 +1855,16 @@ html:not(.js) .figure-inset .ph {
   .movement,
   .door,
   .cta-invite,
+  .section-links,
+  .about-grid,
+  .statement-ch,
+  footer,
   .about-grid > div,
   figure {
     break-inside: avoid;
+  }
+  .exhibit:has(+ .section-links) {
+    break-after: avoid;
   }
   header,
   header.hh,
