@@ -131,6 +131,7 @@
   --px: 3px; /* carved-edge weight — also the focus-ring width */
   --bw-hair: 1px; /* hairline dividers + list separators */
   --bw-spine: 2px; /* accent spines — aside, offer-lead */
+  --ul-offset: 3px; /* underline clearance — the prose link and the focus ring share it */
   --r: 9px; /* carved-frame radius */
   --r-sm: 6px; /* small radius — buttons, tab, framed thumb */
   --r-xs: 2px; /* focus-ring inner radius */

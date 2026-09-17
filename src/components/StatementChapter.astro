@@ -23,6 +23,6 @@ const { kicker, label, lines, linkHref, linkLabel } = Astro.props;
   <div class="wrap">
     {kicker && <p class="kicker meta" data-reveal>{kicker}</p>}
     <RiseHeading as="p" kind="statement" label={label} lines={lines} />
-    {linkHref && linkLabel && <p class="statement-link"><a class="u" href={linkHref}>{linkLabel}</a></p>}
+    {linkHref && linkLabel && <p class="routes"><a class="route" href={linkHref}>{linkLabel}</a></p>}
   </div>
 </section>

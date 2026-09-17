@@ -97,9 +97,25 @@
     color: var(--fg);
     font-weight: 600;
   }
+  /* PROSE link — the default for any un-classed <a>: amber, a hairline
+     underline that thickens to the spine on hover/focus. A standalone
+     "go here next" line is a .route (components layer). Cream overrides
+     below (.panel .body a). */
   a {
     color: var(--amber);
-    text-underline-offset: 3px;
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: var(--bw-hair);
+    text-underline-offset: var(--ul-offset);
+    transition: text-decoration-thickness var(--t-flip);
+  }
+  @media (hover: hover) {
+    a:hover {
+      text-decoration-thickness: var(--bw-spine);
+    }
+  }
+  a:focus-visible {
+    text-decoration-thickness: var(--bw-spine);
   }
   ::selection {
     background: var(--amber);
@@ -107,7 +123,7 @@
   }
   :focus-visible {
     outline: var(--px) solid var(--amber);
-    outline-offset: 3px;
+    outline-offset: var(--ul-offset);
     border-radius: var(--r-xs);
   }
   a,
@@ -187,10 +203,13 @@
     padding-block: 0.85rem;
     gap: 1.2rem;
   }
+  .bar > a {
+    text-decoration: none; /* image-only anchor — never the prose underline */
+  }
   .bar > a img {
     width: clamp(140px, 15vw, 180px);
   }
-  nav {
+  header nav {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -201,7 +220,7 @@
      links are position:relative via .u) so the drawn underline and the
      current-page underline span exactly the label — a middot inside the
      anchor made every underline start under the divider. */
-  nav a + a::before {
+  header nav a + a::before {
     content: "·";
     position: absolute;
     left: calc(-1 * clamp(0.7rem, 2vw, 1.1rem));
@@ -211,7 +230,7 @@
   }
   /* nav is chrome, not code: body face, sentence case (the 2026-07-11 case
      relaxation — the middots stay; they're editorial, not terminal) */
-  nav a {
+  header nav a {
     color: var(--fg);
     text-decoration: none;
     font-family: var(--ff-body);
@@ -219,18 +238,18 @@
     font-size: var(--fs-ui-sm);
     white-space: nowrap; /* a label wraps as a whole unit, never mid-word */
   }
-  nav a:hover,
-  nav a:focus-visible {
+  header nav a:hover,
+  header nav a:focus-visible {
     color: var(--amber);
   }
   /* current-page wayfinding: amber + the drawn underline held on. Covers both
      the exact page (aria-current="page") and an ancestor section
      (aria-current="true", e.g. /work over /work/law-firm/). Amber on the bg is
      5.98:1 — clears the 3:1 non-text floor for the held underline too. */
-  nav a[aria-current] {
+  header nav a[aria-current] {
     color: var(--amber);
   }
-  nav a[aria-current]::after {
+  header nav a[aria-current]::after {
     transform: scaleX(1);
     transform-origin: 0 50%;
   }
@@ -258,20 +277,22 @@
     }
     /* gap spacing instead of the ::before middot, so the row never strands a
        divider at a break */
-    nav {
+    header nav {
       order: 3;
       flex-basis: 100%;
       margin-left: 0;
       justify-content: space-between;
       gap: 0.3rem 1rem;
     }
-    nav a + a::before {
+    header nav a + a::before {
       content: none;
     }
   }
-  /* drawn underline: in from the left, out to the right — never rewinds */
+  /* drawn underline: in from the left, out to the right — never rewinds.
+     CHROME ONLY (header nav, .cta-email): body copy uses the base prose link. */
   .u {
     position: relative;
+    text-decoration: none;
   }
   .u::after {
     content: "";
@@ -296,24 +317,52 @@
     transform-origin: 0 50%;
   }
 
-  .section-links {
+  /* ============ text links: the ROUTE ============ */
+  /* A standalone "go here next" line — the door/card .go grammar on its own:
+     body ink in the display face, no underline, an amber arrow supplied HERE
+     (never typed in copy; the alt "" keeps it out of the accessible name).
+     Hover/focus: the text warms, the arrow nudges. Prose links (inside a
+     sentence) are the un-classed base rule instead. */
+  .route {
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: var(--fs-ui);
+    color: var(--fg);
+    text-decoration: none;
+    transition: color var(--t-flip);
+  }
+  .route::after {
+    content: "▸" / "";
+    display: inline-block; /* transform needs a box */
+    margin-inline-start: 0.4ch;
+    color: var(--amber);
+    transition: transform var(--t-nudge);
+  }
+  .route:hover,
+  .route:focus-visible {
+    color: var(--amber);
+  }
+  .route:hover::after,
+  .route:focus-visible::after {
+    transform: translateX(3px);
+  }
+  /* the route container: a wrapping row by default, a column when stacked */
+  .routes {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-xs);
+    gap: var(--space-xs) var(--space-sm);
     margin-top: var(--space-md);
   }
-  .hour-link {
-    margin-top: var(--space-sm);
-  }
-  .situation-links {
-    display: grid;
+  .routes-stack {
+    flex-direction: column;
     gap: var(--space-sm);
     margin-block: var(--space-md);
   }
-  .section-links a,
-  .situation-links a,
-  .hour-link a {
-    text-decoration: underline;
+  .hour-link {
+    margin-top: var(--space-sm); /* the hero/footer placement under the CTA row */
+  }
+  .statement-ch .routes {
+    justify-content: center;
   }
   .discovery-examples {
     display: grid;
@@ -589,9 +638,6 @@
   }
   .hero-invitation {
     font-size: var(--fs-base);
-  }
-  .hero-introduction a {
-    text-decoration: underline;
   }
   /* the light signature anchor under the lede: names Alan + one credential, quiet */
   .hero-sig {
@@ -930,6 +976,19 @@
     text-decoration: underline;
     text-decoration-color: var(--amber);
     text-decoration-thickness: var(--bw-spine);
+  }
+  /* a route on paper keeps the .go grammar: amber on cream is 1.95:1, so the
+     arrow takes the text colour and the hover presses to spark-press (4.63:1) */
+  .panel .body .route {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .panel .body .route::after {
+    color: inherit;
+  }
+  .panel .body .route:hover,
+  .panel .body .route:focus-visible {
+    color: var(--spark-press);
   }
   .casefile {
     max-width: var(--measure-wide);
@@ -1423,9 +1482,6 @@
     max-width: 70ch;
     line-height: var(--lh-loose);
   }
-  .legal a {
-    color: inherit;
-  }
   /* the recorded hand's one survivor (D9): Alan's real signature, static ink.
      Two homes only - here in the footer and the close of /about. Never
      animated, never a font; regenerate from the ops raw via the capture
@@ -1616,19 +1672,9 @@
   .prose .takeaway {
     color: var(--fg);
   }
-  /* the /404 way-back links */
-  .notfound-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem 1.8rem;
-    margin-top: var(--space-md);
-  }
-  .notfound-links a {
-    font-family: var(--ff-display);
-    font-weight: 600;
+  /* the /404 way-back links: routes, one size up */
+  .notfound-links .route {
     font-size: var(--fs-rich);
-    color: var(--amber);
-    text-decoration: none;
   }
 
   /* numbered movements (the SEQUENTIAL "how it works" — amber index, Mona 600) */
@@ -1865,7 +1911,7 @@ html:not(.js) .figure-inset .ph {
   .movement,
   .door,
   .cta-invite,
-  .section-links,
+  .routes,
   .about-grid,
   .statement-ch,
   footer,
@@ -1873,7 +1919,7 @@ html:not(.js) .figure-inset .ph {
   figure {
     break-inside: avoid;
   }
-  .exhibit:has(+ .section-links) {
+  .exhibit:has(+ .routes) {
     break-after: avoid;
   }
   header,

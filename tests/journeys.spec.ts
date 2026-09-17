@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
 
-for (const [route, label] of [["/", "a free hour"], ["/power-bi/", "What happens in the free hour? ▸"]]) {
+for (const [route, label] of [["/", /^a free hour$/], ["/power-bi/", /^What happens in the free hour\?/]] as [string, RegExp][]) {
   test(`${route} offers the hour explanation in its hero`, async ({ page }) => {
     await page.goto(route);
     const hero = page.locator(".hero, .pbi-hero");
-    await hero.getByRole("link", { name: label, exact: true }).click();
+    await hero.getByRole("link", { name: label }).click();
     await expect(page).toHaveURL(/\/hour\/$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tell me what your reporting can't do (yet).");
   });
@@ -17,10 +17,10 @@ test("Home's three situations open their matching practical detail", async ({ pa
     ["handover", "Understand a system you inherited"],
   ]) {
     await page.goto("/");
-    await page.getByRole("link", { name: `${heading} ▸`, exact: true }).click();
+    await page.getByRole("link", { name: new RegExp(`^${heading}`) }).click();
     await expect(page).toHaveURL(new RegExp(`/power-bi/#${id}$`));
     await expect(page.locator(`#${id}`).getByRole("heading", { name: heading })).toBeInViewport();
-    await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: "Tell me what your reporting can't do (yet) ▸" }).click();
+    await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: /^Tell me what your reporting can't do \(yet\)/ }).click();
     await expect(page).toHaveURL(/\/hour\/$/);
   }
 });
@@ -43,13 +43,22 @@ test("Power BI's hero routes only to the free hour, never to in-page anchors", a
 
 test("Home's situation section gives a direct route to the introductory hour", async ({ page }) => {
   await page.goto("/");
-  await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: "Tell me what your reporting can't do (yet) ▸" }).click();
+  await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: /^Tell me what your reporting can't do \(yet\)/ }).click();
   await expect(page).toHaveURL(/\/hour\/$/);
+});
+
+test("no link copy carries a typed arrow: the route glyph is CSS furniture", async ({ page }) => {
+  for (const route of ["/", "/power-bi/", "/work/museum/", "/writing/we-are-all-middle-management-now/", "/404"]) {
+    await page.goto(route);
+    const typed = await page.locator("a").evaluateAll((links) => links.filter((a) => /▸\s*$/.test(a.textContent ?? "")).map((a) => a.textContent?.trim()));
+    expect(typed, `${route} has a typed arrow in link copy`).toEqual([]);
+    await expect(page.locator("a.route").first()).toBeVisible();
+  }
 });
 
 test("Home's case-study action opens the complete collection", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: "All four case studies ▸" }).click();
+  await page.getByRole("link", { name: /^All four case studies/ }).click();
   await expect(page).toHaveURL(/\/work\/$/);
   await expect(page.locator(".offers a.panel")).toHaveCount(4);
 });

@@ -2,6 +2,8 @@
 
 Review of `feat/ownership-redesign` against `main`, focused on reader flow and copy. Alan reviewed the findings and made the decisions recorded below. This document is the brief for the next pass on the branch. It supersedes the action items in `ownership-preview-review.md`; the validation record there still stands.
 
+> **Superseded in part, 2026-09-17:** the ▸ is now CSS furniture on `.route` links; copy strings no longer carry it. Link labels below are read without the glyph.
+
 ## Verdict
 
 The direction is right and should continue. The old site asked the reader to decode a stance. The new pages answer a buyer's questions in the order they ask them: what does this look like, which of these is me, how does it run, what does it cost. Pricing on the page is the single biggest change and the correct one for a solo advisory. The five situations are written in the customer's voice and repeat across Home and Power BI, so the reader recognises where they are. The evidence now describes what the person can do, not what was built, so the proof and the promise finally agree.
