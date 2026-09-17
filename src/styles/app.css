@@ -1369,6 +1369,63 @@
     margin-top: var(--space-md);
     max-width: 18ch;
   }
+
+  /* ============ Hour page — lifted verbatim from feat/ownership-redesign ============ */
+  /* Interim slice (2026-09-17): the /hour/ landing (.hour-hero, .hour-layout,
+     .hour-copy, .hour-details) and the footer's "What happens in the free hour?"
+     link (.hour-link). Rule text is the branch's, only re-indented. .beats
+     and .beats-body already exist below and match the branch's. The branch's
+     `.hour-link a { text-decoration: underline }` is NOT carried: the footer
+     link uses .u (the drawn underline) instead. --space-cta came over with it
+     (tokens.css). */
+  .hour-link {
+    margin-top: var(--space-sm);
+  }
+  .hour-hero {
+    /* One screen of content, so fill the viewport below the header: the footer
+       then starts at the fold and reveals on scroll instead of sitting exposed
+       beneath a short page. Print resets this. */
+    min-block-size: calc(100svh - var(--header-h));
+    display: grid;
+    align-content: center;
+    padding-block: var(--space-cta);
+  }
+  .hour-hero .hour-layout {
+    display: grid;
+    gap: var(--space-lg);
+  }
+  .hour-hero h1 {
+    margin-top: 0;
+    font-size: var(--fs-4);
+    max-width: var(--measure-statement);
+  }
+  .hour-hero .lead {
+    margin-top: var(--space-xs);
+  }
+  .hour-hero .beats {
+    margin-top: 0;
+  }
+  .hour-hero .cta-row {
+    margin-top: var(--space-cta);
+  }
+  @media (min-width: 62rem) {
+    .hour-hero .hour-layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+    .hour-hero .hour-details {
+      padding-top: var(--space-3xs);
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .hour-hero .cta-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .hour-hero .cta {
+      justify-content: center;
+    }
+  }
   /* /power-bi hero reuses the home hero-grid (copy + portrait at hero level).
      The headline is the display grotesque, sized to the narrower column — NOT
      the big mono kicker the page used before. Photo top-aligns beside the
@@ -1793,6 +1850,10 @@
    translated out of their clip masks. Force the revealed end-state of every
    mechanism (mirrors the reduced-motion end-states). Unlayered + last → wins. */
 @media print {
+  .hour-hero {
+    min-block-size: auto;
+    display: block;
+  }
   .js [data-reveal],
   .enter {
     opacity: 1;

@@ -1,12 +1,14 @@
 ---
 /**
  * Sticky header. Hides on scroll-down, returns on scroll-up (enhance.ts adds
- * `.hh`). Nav links the pages that ship — power-bi (the front door) first, the
- * ai-fit bridge, then /work (the proof) and /about. /contact is not emitted; the
- * two contact paths (book a call + email) live in the footer close. The drawn
- * underline (.u) and instant-flip CTA live in app.css. The header's one action is
- * the book-a-call CTA; `mailtoHref` is accepted so BaseLayout can pass header and
- * footer the same props, but the header itself renders no mailto.
+ * `.hh`). Nav links the pages that ship — power-bi (the front door) first, then
+ * /work (the proof) and /about. The AI-fit nav item was retired 2026-09-17 (the
+ * page stays reachable by URL); /hour/ is linked from the footer close, not the
+ * nav. /contact is not emitted; the two contact paths (book an hour + email)
+ * live in the footer close. The drawn underline (.u) and instant-flip CTA live
+ * in app.css. The header's one action is the "Book an hour" CTA; `mailtoHref`
+ * is accepted so BaseLayout can pass header and footer the same props, but the
+ * header itself renders no mailto.
  */
 import { bookingHref } from "../config/site";
 interface Props {
@@ -16,7 +18,6 @@ interface Props {
 // batch). The long lowercase forms live on in each page's own H1.
 const nav = [
   { href: "/power-bi/", label: "Power BI" },
-  { href: "/ai-fit-for-teams/", label: "AI fit" },
   { href: "/work/", label: "Work" },
   { href: "/about/", label: "About" },
 ];
@@ -47,6 +48,6 @@ const currentFor = (href: string): "page" | "true" | undefined => {
         <a class="u" href={n.href} aria-current={currentFor(n.href)}>{n.label}</a>
       ))}
     </nav>
-    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">Book a call</a>
+    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">Book an hour</a>
   </div>
 </header>
