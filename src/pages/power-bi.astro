@@ -30,11 +30,10 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="Working alongside your Power BI team." lines={heroLines} />
-        <p class="lead enter appear-300">We can work through a report the team needs to deliver, or a model that needs changing. I help them sort out what the numbers should mean, how to model them and how to <strong>check the result</strong>.</p>
-        <p class="hero-sig enter appear-450">If you're leading the team, you've got me to talk things through with too. We can take a look at a proposal together, or work out what to tackle next.</p>
+        <p class="lead enter appear-300">Whether your team needs support to deliver something, or just need to understand how Power BI thinks, I help them sort out what the numbers should mean, how to model them and how to <strong>check the result</strong>.</p>
+        <p class="hero-sig enter appear-450">If you're responsible, but not the one building it, you've got me to talk things through with too.</p>
         <BookCta src="power-bi-hero" mailtoHref={contactMailto} variant="hero" />
         <p class="hour-link"><a href="/hour/">What happens in the free hour? ▸</a></p>
-        <div class="section-links"><a href="#start">How we start</a><a href="#discovery">Discovery, £1,950</a><a href="#pricing">Ongoing prices</a></div>
       </div>
       <figure class="hero-photo enter appear-300">
         <Picture src={pbiHero} alt="Alan in a red checked overshirt, smiling, in a narrow brick alley" formats={["avif"]} fallbackFormat="webp" widths={[400, 600, 800]} sizes="(min-width: 62rem) 36vw, 100vw" quality={70} loading="eager" fetchpriority="high" />
@@ -44,14 +43,14 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  <Chapter id="situations" kicker="What we can work on together">
-    <p>You might have a report to deliver, or a system you've inherited and need to get to grips with. We start with that work and make room for the learning it needs.</p>
+  <Chapter id="situations" kicker="What we can work on">
+    <p>Whether you have a report to deliver, or a system you've inherited and need to get to grips with, We'll start with that work and make room for the learning it needs.</p>
     <div class="offer-table">
       <Offer id="deliver" title="Build and change your reporting">
         <p>Your team has something to deliver. We work through the decisions behind it, from what a number needs to mean to how the model should calculate it. Your people do the work with my help, so they understand the choices and can change them later.</p>
         <p>When a result looks wrong, we follow it back through the model. Finding the cause is useful in its own right; understanding how we found it helps the team deal with the next one.</p>
       </Offer>
-      <Offer id="skills" title="Learn what the work needs">
+      <Offer id="skills" title="Learn the why behind the how">
         <p>If an idea is missing or misunderstood, I teach it through a practical example. That might need a focused explanation while we're working, or a workshop with time to practise afterwards.</p>
         <p>If you're arranging training, we agree what people need to be able to do with it. For example, a team learning row-level security could apply it to a report and check that each audience sees the right data. That gives the learning a purpose and you a way to judge the result.</p>
       </Offer>
@@ -68,9 +67,9 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
   </Chapter>
 
   <Chapter id="how-the-work-runs" kicker="Working through it together">
-    <p>We meet regularly around the team's own work. You bring the part you're stuck on, and we take time to try things, check what happens and talk through the reasoning.</p>
-    <p>We can work in your own systems where your data rules allow it, or use examples that let us explore the same problem. Access to live data isn't a prerequisite.</p>
-    <p>We leave time between calls for people to apply what we've worked through. An example can make sense while we're looking at it together, then the real data turns out to have a complication. We can pick that up when we next meet.</p>
+    <p>It doesn't matter if it's skills or reports that we're building, we'll always be focussed on what's actually in front of the team through regular sessions direct with me. You bring the part you're stuck on, and together we take time to try things, check what happens and talk through the reasoning.</p>
+    <p>We can work in your own systems, or use examples that let us explore the same problem. Access to live data isn't a prerequisite.</p>
+    <p>We leave time between sessions for people to apply what we've worked through. An example can make sense while we're looking at it together, then the real data turns out to have a complication. We can pick that up when we next meet.</p>
     <Offer id="backup" title="Somewhere to bring the next question">
       <p>Regular time for questions can sit alongside that work, with email support between calls. We agree how much time to set aside and review it as the team needs less help.</p>
     </Offer>
@@ -85,7 +84,7 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
 
   <Chapter id="ai" kicker="AI in the work">
     <p>If your team is trying Copilot or coding agents, we can open up a piece of the work and go through it together. A measure can run without an error and still answer the wrong question. That's the bit I want the team to be able to spot.</p>
-    <p>We work out which decisions to hand over, what information the tool can access, and how people will check what comes back. That means reading the calculation, understanding what the number is meant to represent, and knowing what to try when the two don't agree.</p>
+    <p>We work out which bits to hand over, what information the tool can access, and how people will check what comes back. That means reading the calculation, understanding what the number is meant to represent, and knowing what to try when the two don't agree.</p>
     <p>Every piece of work is a stack of decisions. Hand a problem to AI without naming those decisions, and it makes them for you - and a tool can't take responsibility for a decision.</p>
     <p>I explore what this means for the people responsible in <a class="u" href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>, an essay about delegation, judgement and Power BI.</p>
   </Chapter>
@@ -110,7 +109,7 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
   <Chapter id="pricing" kicker="Ongoing support and prices">
     <p id="ongoing">I'll give you a fixed quote for the work and sessions we agree, including preparation, materials and support between calls. We choose the mix of work with the team and conversations with you according to what will help.</p>
     <p>For substantial ongoing work with a team, <strong>£3,000 to £6,000 a month excluding VAT</strong> is a guide. Lighter support is available below that range and quoted separately, including fewer sessions or a regular second opinion.</p>
-    <p>You can book a month at a time, or agree a single fixed quote for at least three months up front. Discovery is credited only against an upfront booking of at least three months.</p>
+    <p>You can book a month at a time, or agree a single fixed quote for at least three months up front. Discovery is credited against any upfront booking of at least three months.</p>
     <p>As the team becomes more capable, we can reduce the time and cost together. A monthly arrangement can stop when it stops being useful.</p>
   </Chapter>
 
