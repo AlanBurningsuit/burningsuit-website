@@ -65,6 +65,10 @@ for (const path of pages) {
     const tracker = page.locator(`script[src="${ANALYTICS.scriptSrc}"]`);
     await expect(tracker).toHaveCount(1);
     await expect(tracker).toHaveAttribute("data-website-id", ANALYTICS.websiteId);
+    // data-domains keeps dev/preview/test hosts out of the live dashboard —
+    // pin it so it can't be dropped without this test noticing.
+    await expect(tracker).toHaveAttribute("data-domains", ANALYTICS.domains);
+    await expect(tracker).toHaveAttribute("data-performance", "true");
 
     // Half 2: exercise the page — walk it so below-the-fold lazy resources
     // are actually requested and can surface violations inside the window.

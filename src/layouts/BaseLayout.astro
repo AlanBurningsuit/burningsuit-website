@@ -121,9 +121,19 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
         host to connect-src. is:inline keeps the external src untouched; it is
         governed by the script-src host, not a hash. The tracker auto-tracks
         on load — no init, no inline snippet; custom events call umami.track()
-        from enhance.ts (guarded, so adblock/outage costs nothing). */}
+        from enhance.ts (guarded, so adblock/outage costs nothing).
+        data-domains limits reporting to the live hostnames (localhost,
+        Playwright and Netlify previews stay silent); data-performance adds
+        Core Web Vitals to the pageview beacon. */}
     {ANALYTICS.enabled && (
-      <script is:inline defer src={ANALYTICS.scriptSrc} data-website-id={ANALYTICS.websiteId} />
+      <script
+        is:inline
+        defer
+        src={ANALYTICS.scriptSrc}
+        data-website-id={ANALYTICS.websiteId}
+        data-domains={ANALYTICS.domains}
+        data-performance={ANALYTICS.performance ? "true" : undefined}
+      />
     )}
   </head>
   <body>

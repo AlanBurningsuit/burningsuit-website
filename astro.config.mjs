@@ -103,6 +103,13 @@ export default defineConfig({
     "/charticulator-in-power-bi-1": "/power-bi/",
     "/our-book-introducing-charticulator-for-power-bi": "/power-bi/",
     "/power-bi-training/power-bi-fundamentals": "/power-bi/",
+    // Sixth sweep (Search Console impressions 2026-07-16 → 2026-09-13, plus
+    // one external forward): the only legacy course URL Google still shows,
+    // and the old trainers page that a sister domain's web-forward still
+    // points at. The Umami 404 log's other legacy slugs were crawler traffic
+    // with no search impressions, so they stay 404.
+    "/power-bi-training/power-bi-advanced": "/power-bi/",
+    "/about-us/our-trainers": "/about/",
   },
   build: {
     // Keep CSS external so `style-src 'self'` covers it without inline hashes.
