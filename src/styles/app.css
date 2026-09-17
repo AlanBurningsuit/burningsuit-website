@@ -1372,9 +1372,8 @@
 
   /* ============ Hour page — lifted verbatim from feat/ownership-redesign ============ */
   /* Interim slice (2026-09-17): the /hour/ landing (.hour-hero, .hour-layout,
-     .hour-copy, .hour-details), the footer's "What happens in the free hour?"
-     link (.hour-link) and the Discovery takeaway list on /power-bi
-     (.discovery-examples). Rule text is the branch's, only re-indented. .beats
+     .hour-copy, .hour-details) and the footer's "What happens in the free hour?"
+     link (.hour-link). Rule text is the branch's, only re-indented. .beats
      and .beats-body already exist below and match the branch's. The branch's
      `.hour-link a { text-decoration: underline }` is NOT carried: the footer
      link uses .u (the drawn underline) instead. --space-cta came over with it
@@ -1382,16 +1381,13 @@
   .hour-link {
     margin-top: var(--space-sm);
   }
-  .discovery-examples {
-    display: grid;
-    gap: var(--space-xs);
-    margin-block: var(--space-sm);
-    padding-inline-start: var(--space-sm);
-    list-style: disc;
-  }
-
-  /* The short hour page: natural flow and a compact desktop layout. */
   .hour-hero {
+    /* One screen of content, so fill the viewport below the header: the footer
+       then starts at the fold and reveals on scroll instead of sitting exposed
+       beneath a short page. Print resets this. */
+    min-block-size: calc(100svh - var(--header-h));
+    display: grid;
+    align-content: center;
     padding-block: var(--space-cta);
   }
   .hour-hero .hour-layout {
@@ -1854,6 +1850,10 @@
    translated out of their clip masks. Force the revealed end-state of every
    mechanism (mirrors the reduced-motion end-states). Unlayered + last → wins. */
 @media print {
+  .hour-hero {
+    min-block-size: auto;
+    display: block;
+  }
   .js [data-reveal],
   .enter {
     opacity: 1;
