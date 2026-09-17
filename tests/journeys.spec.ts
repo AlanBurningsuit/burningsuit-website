@@ -81,11 +81,15 @@ test("each case study offers engagement details and a route to the price guide",
   }
 });
 
-test("the essay leads to practical AI help", async ({ page }) => {
+test("the essay leads on to About, never to the law-firm study", async ({ page }) => {
   await page.goto("/writing/we-are-all-middle-management-now/");
-  await page.locator('main a[href="/power-bi/#ai"]').click();
-  await expect(page).toHaveURL(/\/power-bi\/#ai$/);
-  await expect(page.locator("#ai")).toBeInViewport();
+  // The essay and the law-firm study must stay apart (a permanent claims rule),
+  // so the essay's only in-body exit is About, not the Power BI page that
+  // carries the law-firm exhibit.
+  await expect(page.locator('main a[href="/work/law-firm/"]')).toHaveCount(0);
+  await expect(page.locator('main a[href="/power-bi/#ai"]')).toHaveCount(0);
+  await page.locator('main a[href="/about/"]').click();
+  await expect(page).toHaveURL(/\/about\/$/);
 });
 
 test("the hour's full offer and contact actions fit the desktop first screen", async ({ page }) => {
