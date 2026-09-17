@@ -4,11 +4,13 @@ This pass implements `ownership-redesign-review.md` on `feat/ownership-redesign`
 
 ## Inputs still to replace before release
 
-- Alan confirmed `BOOKING_URL` as `https://cal.com/alan-burningsuit/hour` on 9 September 2026. The event configuration still needs checking against the release requirements: retain the old `30min` event live but unlisted and include the two required questions, “What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?” The event description should match the hour page.
-- The hour page, both hero signatures and the Power BI AI chapter use branch draft copy. Alan will supply final wording and confirm the positional attribution names.
-- Alan supplied the essay text and reference slide deck on 9 September 2026. The dummy MDX and four figure placeholders have been replaced. Publication dates and confirmed talk venues/year remain unset; none have been invented.
-- The About revert awaits Alan's final sign-off.
-- The Power BI share image remains the existing image, with alt text accurately describing its “done with you” wording, pending Alan's replacement.
+- `BOOKING_URL` is `https://cal.com/alan-burningsuit/hour` (confirmed 9 September 2026). The live event was checked on 16 September 2026: 60 minutes, both required questions (“What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?”) rendered on the booking form, and a description matching the hour page. The old `30min` event remains live and carries neither question.
+- The hour page, both hero signatures, the Power BI AI chapter and the About revert were signed off by Alan as they stand on 17 September 2026, and the positional attribution names (header, footer, home-hero, home-situations, power-bi-hero, power-bi-pricing, hour-page, work) were confirmed the same day. The AI chapter also regained main's signed sentence about decisions and responsibility on that date.
+- Alan supplied the essay text and reference slide deck on 9 September 2026. The dummy MDX and four figure placeholders have been replaced. Publication dates and confirmed talk venues/year remain unset; none have been invented. On 17 September 2026 the Daniel story was blunted so it no longer shares an identifying detail with the law-firm study (see the 17 September note below); Alan's review of that edit is outstanding.
+- The Power BI share image was re-rendered from the current H1 on 17 September 2026 (`scripts/render-linkedin-featured.mjs`, which now reads the built `@font-face` rules to find the font file); its alt text and the default card's alt text describe the images as they are.
+- Essay figures 3 and 4 keep the playful treatment Alan asked for on 11 September (warm shading, tilted labels, decorative strokes). Alan reaffirmed this on 17 September 2026 as a deliberate exception to the design language's flat-surface and ornament rules; it is not an open finding.
+- On 17 September 2026 Alan approved the blunted Daniel story as drafted, and supplied the talk's three deliveries for the essay's `givenAt`: Bristol Power BI User Group (19 February 2026), Manchester Power BI User Group (26 March 2026) and DataSwindon (2 April 2026). The years for Bristol and DataSwindon are taken to match Manchester; confirm if different. `datePublished` is still to be set on the day the essay goes live.
+- Alan decided on 17 September 2026 that the About clause "large systems, some of it for government" stays withdrawn, and that the Home hero regains a tenure sentence within the ledger ceilings (about five years with Power BI and Fabric teams, a decade in software before that).
 
 ## Implementation decisions
 
@@ -147,3 +149,11 @@ The software-tenure sentence is removed from the Home teaser. About's repeated o
 The shorter teaser also exposed a 320px keyboard-focus edge case: native scrolling fitted the link box but clipped its offset outline when returning from the footer. The teaser now has no extra outline gap, so its ring remains fully visible without changing layout. The original geometry and contrast assertions are retained. All twelve affected visual tests pass with reviewed baselines, including three downstream one-pixel alignment changes.
 
 The final gate and all 142 functional checks pass, including the previously failing footer-to-teaser keyboard checks in normal motion, reduced motion and without JavaScript. This revision is committed locally for review, without a remote push.
+
+## Reconciliation with main and review follow-up — 17 September 2026
+
+Main's 15 September commit (Umami `data-domains` and `data-performance` attributes with their `csp.spec` assertions, the sixth legacy-redirect sweep, and the gitignore guard for analytics exports) was merged into the branch. Only `AGENTS.md` conflicted and was resolved toward the branch's description of the rewritten pipeline. The gate then checked 12 pages and 51 redirect stubs and all 148 Chromium functional checks passed against the merged build.
+
+Following the 16 September branch-versus-main review, the essay's Daniel story no longer names the specific kind of figure or the side system that produced it; the passage now describes figures the team kept outside the source system in general terms, the company description loses one adjective, and the closing paragraph no longer places Alan inside the engagement. The essay's closing link now leads to About rather than the Power BI AI chapter. No new details were invented; the argument is unchanged. These edits await Alan's read.
+
+Also in this pass: the footer on every page gains a text link explaining the free hour beneath the booking controls; the Power BI title and description name Fabric again; the Power BI hero's section links include Discovery with its price; the law-firm exhibit links to all four case studies; and Home's sentence about signing off a proposal links to the Power BI chapter for the person leading the work. Visual baselines have not yet been refreshed for these changes.
