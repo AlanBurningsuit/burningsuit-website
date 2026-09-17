@@ -13,7 +13,7 @@ for (const [route, label] of [["/", "a free hour"], ["/power-bi/", "What happens
 test("Home's three situations open their matching practical detail", async ({ page }) => {
   for (const [id, heading] of [
     ["deliver", "Build and change your reporting"],
-    ["skills", "Learn what the work needs"],
+    ["skills", "Learn the why behind the how"],
     ["handover", "Understand a system you inherited"],
   ]) {
     await page.goto("/");
@@ -29,17 +29,17 @@ test("the pricing destination contains the ongoing price guide", async ({ page }
   await page.goto("/power-bi/#pricing");
   const chapter = page.locator('.chapter[aria-labelledby="pricing"]');
   await expect(chapter).toContainText("£3,000 to £6,000 a month excluding VAT");
-  await expect(chapter.getByRole("heading", { name: "Ongoing support and prices" })).toBeInViewport();
+  await expect(chapter.getByRole("heading", { name: "What it costs" })).toBeInViewport();
 });
 
-for (const [label, id] of [["How we start", "start"], ["Ongoing prices", "pricing"]]) {
-  test(`Power BI's hero offers a direct route to ${label.toLowerCase()}`, async ({ page }) => {
-    await page.goto("/power-bi/");
-    await page.locator(".pbi-hero").getByRole("link", { name: label, exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`/power-bi/#${id}$`));
-    await expect(page.locator(`#${id}`)).toBeInViewport();
-  });
-}
+test("Power BI's hero routes only to the free hour, never to in-page anchors", async ({ page }) => {
+  await page.goto("/power-bi/");
+  const heroLinks = page.locator(".pbi-hero a[href^='#']");
+  await expect(heroLinks).toHaveCount(0);
+  for (const id of ["start", "discovery", "pricing"]) {
+    await expect(page.locator(`#${id}`)).toBeAttached();
+  }
+});
 
 test("Home's situation section gives a direct route to the introductory hour", async ({ page }) => {
   await page.goto("/");
@@ -75,9 +75,9 @@ test("each case study offers engagement details and a route to the price guide",
     await expect(details).toHaveAttribute("href", "/power-bi/");
     await details.click();
     await expect(page).toHaveURL(/\/power-bi\/$/);
-    await page.locator(".pbi-hero").getByRole("link", { name: "Ongoing prices", exact: true }).click();
-    await expect(page).toHaveURL(/\/power-bi\/#pricing$/);
-    await expect(page.locator('.chapter[aria-labelledby="pricing"]')).toContainText("£3,000 to £6,000 a month excluding VAT");
+    const pricing = page.locator('.chapter[aria-labelledby="pricing"]');
+    await pricing.scrollIntoViewIfNeeded();
+    await expect(pricing).toContainText("£3,000 to £6,000 a month excluding VAT");
   }
 });
 
