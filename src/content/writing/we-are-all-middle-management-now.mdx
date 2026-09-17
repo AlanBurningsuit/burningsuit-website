@@ -9,6 +9,13 @@ lead: "Agentic development in Power BI, and what it costs"
 kicker: "Essay"
 contactSubject: "We're all middle management now"
 footerInvitation: "If you're working out what to delegate to an agent, we can talk it through"
+givenAt:
+  - event: "Bristol Power BI User Group"
+    date: 2026-02-19
+  - event: "Manchester Power BI User Group"
+    date: 2026-03-26
+  - event: "DataSwindon"
+    date: 2026-04-02
 ---
 
 <section class="chapter" aria-label="Introduction">
@@ -23,11 +30,11 @@ I want to talk about agentic development — how it works inside Power BI, and w
 
 <Chapter id="daniels-story" kicker="Daniel's story">
 
-Daniel is head of BI for a mid-size international services company. His team of six includes some old hands and some _very_ old hands — people with twenty-plus years in the organisation who know the data estate backwards, know where the bodies are buried, know why the financial director likes his reports a certain way. The reporting estate is almost as old as they are: SSRS and SSAS, with one Power BI semantic model to show for their modernisation efforts. They're not _not_ trying; they're just permanently at capacity with business as usual.
+Daniel is head of BI for a mid-size services company. His team of six includes some old hands and some _very_ old hands — people with twenty-plus years in the organisation who know the data estate backwards, know where the bodies are buried, know why the financial director likes his reports a certain way. The reporting estate is almost as old as they are: SSRS and SSAS, with one Power BI semantic model to show for their modernisation efforts. They're not _not_ trying; they're just permanently at capacity with business as usual.
 
 When the financial director asks for an Excel reporting pack to be automated into Power BI, the team can't take it — it's year end. So Daniel hands it to a contracting firm who know the financial system well. They deliver a lovely report pack; the financial director is delighted. A fortnight later he wants one metric changed — annualised rather than monthly. A small change, except Daniel's team have no idea how the report was built, and learning it would take a week or more alongside their day jobs. The director wants it this month. Back to the contractors: half a day, done.
 
-Daniel starts to like this. Why not have the contractors do the modernisation too? Take one of the big SSRS beasts and rebuild it in Fabric while his team keeps the lights on. The contractors deliver a couple of months later — and it never reaches user acceptance testing. The team take one look: the opening balances are completely wrong. Years ago they'd built a small app alongside the reporting system for stakeholders to enter opening balances, because the source system never handled them properly. Those numbers exist nowhere else, and the contractors — briefed to build from the source system — never saw them. "Why didn't you tell me?" asks Daniel. "You didn't ask," says the team. "You said: here's the model, migrate it."
+Daniel starts to like this. Why not have the contractors do the modernisation too? Take one of the big SSRS beasts and rebuild it in Fabric while his team keeps the lights on. The contractors deliver a couple of months later — and it never reaches user acceptance testing. The team take one look: a whole set of the numbers is wrong. For years, part of what the old reports showed had come from figures the team looked after themselves, outside the source system, because the source system had never handled that part properly. Those numbers existed nowhere the contractors had been pointed at, and the contractors — briefed to build from the source system — never saw them. "Why didn't you tell me?" asks Daniel. "You didn't ask," says the team. "You said: here's the model, migrate it."
 
 The contractors fix it (their original developer has moved on; someone new gets up to speed) and redeliver. The numbers are _still_ wrong. Why? The team can't say — they don't understand the new system well enough. Daniel is now in a spiral. His team knows exactly what the numbers should be; the contractors know exactly how the new system works; there is no bridge between them. **The how has become separated from the why.**
 
@@ -93,7 +100,7 @@ Even when delegation makes sense for the job in front of us, there's a longer-te
 
 <Chapter id="back-to-daniel" kicker="Back to Daniel">
 
-Daniel wanted implementation done fast by people who knew the new technology, with his team still responsible for the result. The decisions became separated from their consequences, and the spiral followed. The only way out — the work we're now doing together — is for his team to take the new solution apart piece by piece until they understand every why. Ownership first; then someone, or something, else can do the implementation.
+Daniel wanted implementation done fast by people who knew the new technology, with his team still responsible for the result. The decisions became separated from their consequences, and the spiral followed. The only way out — and it is slow work — is for his team to take the new solution apart piece by piece until they understand every why. Ownership first; then someone, or something, else can do the implementation.
 
 The moment we delegate, we become managers — that part isn't optional. We're all middle management now. The only choice is what kind: the kind who understands the work well enough to own it, or the slopey-shouldered kind who waves everything through because Claude can do it. Claude _can_ do it. But a manager who doesn't understand the risks, the consequences, or the decisions inside the solutions being produced for them isn't a developer any more — just a relay.
 
@@ -103,6 +110,6 @@ And the agent doesn't hold the responsibility. You do.
 
 <section class="chapter" aria-label="Related work">
   <div class="wrap">
-    <p class="section-links" data-reveal><a href="/power-bi/#ai">How I work with teams using AI in Power BI ▸</a></p>
+    <p class="section-links" data-reveal><a href="/about/">More about me, and the work I do ▸</a></p>
   </div>
 </section>
