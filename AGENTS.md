@@ -5,11 +5,20 @@ Orientation for anyone — human or AI — working in this repo.
 ## What this is
 
 `burningsuit.co.uk` — the marketing site for Alan Harman-Box's solo **Power BI
-& Fabric + AI advisory** (what it's FOR lives in the north-star skill; this doc
-is the how). A static site: **Astro 6 + Tailwind v4**, no JS framework,
+& Fabric + AI advisory**. A static site: **Astro 6 + Tailwind v4**, no JS framework,
 `output: "static"`, deployed to GitHub Pages via Actions. Current design is
 "the field notebook" (flat Everforest green, 2026-07-11 warmth delta). All
 styles live in `src/styles/` (`tokens.css` + `app.css`).
+
+Header navigation is Power BI, Case studies and About, followed by **Book an hour**. Home introduces the work and case studies, with three unnumbered links to the reporting, learning and handover sections on Power BI. All former situation anchors remain valid. `/hour/` explains the free call and is linked from both heroes and Home's situation section; booking buttons go directly to Cal.com. Explanatory links use text styling, while ghost buttons remain the email alternative. Power BI's `#start` explains the first conversation and `#pricing` contains the ongoing price guide; `#ongoing` remains a valid alias within that chapter. The four `/work/<slug>/` studies and `/writing/<slug>/` essays are MDX collections. There is one essay, so `/writing/` redirects to it until a second essay warrants an index. The retired AI Fit route redirects to `/power-bi/#ai`; legacy blog redirects retain their Power BI destination. Privacy and 404 complete the reading routes.
+
+The branch carries main's 15 September 2026 analytics and redirect fixes (merged 17 September). The Cal.com hour event was verified on 16 September: 60 minutes, both required questions, and a description matching the hour page. Alan signed off the hour page, both hero signatures, the AI chapter, the About revert and the attribution names on 17 September; the essay carries its three talk venues. Still outstanding before release: the essay's `datePublished` (set on the day it goes live) and a refresh of the visual baselines. See `docs/ownership-redesign-implementation.md` for the release record.
+
+## Writing guidance
+
+For writing as Alan, use `../burningsuit-ops/skills/writing-like-alan/SKILL.md` with its relevant playbook. The private sibling repository's `site/current-brief.md` owns the website writing scope; `brand/business-context.md` and `brand/claims-ledger.md` own business context and evidence. Keep private source material out of this public repository.
+
+Alan resumed the homepage, Power BI and About revisions after the guidance workshop, using his page review as the current brief for this branch. This work does not authorise a push or deployment. Earlier approved copy and page sequences are not permanent writing requirements. The technical and release requirements below remain in force.
 
 ## Branches (only two)
 
@@ -38,10 +47,8 @@ URL if you enable Deploy Previews — handy for testing a feature before it touc
 Since 2026-07-02 the Pages source is **"GitHub Actions"** and `deploy.yml` is
 **live production infrastructure**:
 
-- **Live site:** GitHub Pages, built and published by `deploy.yml`
-  (`withastro/action`) on every push to `main`. The action runs the full
-  `npm run build` — prep:images, astro build, AND the byte-budget gate — so a
-  budget failure blocks a production deploy.
+- **Live site:** GitHub Pages, validated and published by `deploy.yml` on every push to `main`. Explicit steps check out the source, set up Node 22 with npm caching, run `npm ci` and `npm run gate`, install Playwright Chromium with OS dependencies, then run `npm run test:functional` against the built `dist/`. Pages uploads that same tested artifact without rebuilding it. Only the deployment job can publish, and its guard permits `main` only.
+- **Pull requests and integration:** `validate.yml` runs the same installation, gate and functional checks for PRs targeting `dev` or `main`, and pushes to `dev`. It has read-only repository permissions and does not publish. Windows screenshot baselines remain a local check because Linux rendering differs.
 - **What main holds:** the full Astro site, live on the apex since go-live
   2026-07-16 (Pages run 29486479876). The pre-Astro legacy site is preserved
   as the `legacy-site-backup` git tag, not on any branch.
@@ -50,10 +57,9 @@ Since 2026-07-02 the Pages source is **"GitHub Actions"** and `deploy.yml` is
 
 ## Go-live checklist (promoting the full site to production)
 
-Go-live is **one move**: merge **`dev` → `main`** — the Action builds and
-publishes it. Before that merge:
+Go-live is **one move**: merge **`dev` → `main`** — the Action validates and publishes the tested artifact. Before that merge:
 
-1. `npm run gate` green on `dev`, and the Netlify preview eyeballed.
+1. `npm run gate` and `npm run test:functional` green on `dev`, release visual/performance checks completed, and the Netlify preview eyeballed.
 2. Merge, watch the Action, then **verify the live apex** renders the site.
 
 Roll back by reverting the offending merge commit on `main` — the Action
@@ -66,13 +72,15 @@ anything that lands on `main` ships.
 |---|---|
 | `npm run dev` | local dev server |
 | `npm run build` | prep:images + `astro build` + byte-budget gate (must pass) |
-| `npm run gate` | **the de-facto CI**: astro check → build (+budget) → link check → SEO/JSON-LD assertions |
+| `npm run gate` | astro check → build (+budget) → link check → SEO/JSON-LD assertions |
+| `npm run test:functional` | type-check tests/, then Chromium behaviour checks against the existing `dist/`; does not rebuild |
 | `npm run preview` | serve the built `dist/` |
 | `npm run test:visual` | type-check tests/, then Playwright snapshots (chromium + firefox + 390px mobile) |
 | `npm run test:visual:update` | refresh snapshot baselines after an intentional visual change, then re-run `test:visual` to confirm green |
 | `npm run test:lh` / `npm run test:links` | Lighthouse + link check |
+| `npm run test:lh:mobile` | Three mobile audits each for Home and Power BI, including analytics |
 
-Node 22 (`.nvmrc`).
+Node 22.20+ (`.nvmrc`). Lighthouse audits the existing build; rebuild after source changes.
 
 ## Conventions & gotchas
 

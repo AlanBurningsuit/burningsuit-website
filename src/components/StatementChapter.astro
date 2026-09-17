@@ -2,7 +2,8 @@
 /**
  * The statement chapter. NOT a pull-quote and NOT a self-quote (Alan killed
  * that): a plain statement, so it is a <p> with no quote marks. Masked
- * line-rise on scroll, one serif-italic accent word.
+ * line-rise on scroll, with one amber accent word. An optional link follows
+ * the statement when there is an essay behind it.
  */
 import RiseHeading from "./RiseHeading.astro";
 import type { Line } from "./RiseHeading.astro";
@@ -13,12 +14,15 @@ interface Props {
   kicker?: string;
   label: string;
   lines: Line[];
+  linkHref?: string;
+  linkLabel?: string;
 }
-const { kicker, label, lines } = Astro.props;
+const { kicker, label, lines, linkHref, linkLabel } = Astro.props;
 ---
 <section class="chapter statement-ch" aria-label={kicker || undefined}>
   <div class="wrap">
     {kicker && <p class="kicker meta" data-reveal>{kicker}</p>}
     <RiseHeading as="p" kind="statement" label={label} lines={lines} />
+    {linkHref && linkLabel && <p class="statement-link"><a class="u" href={linkHref}>{linkLabel}</a></p>}
   </div>
 </section>

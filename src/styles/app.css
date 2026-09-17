@@ -9,13 +9,13 @@
    mascot; nothing idles or loops.
 
    The chassis is preserved from earlier skins: the @layer cascade, the
-   JS-gated reveal system, the masked line-rise, the fixed-footer "basement",
-   the cross-document view-transitions, and the reduced-motion system.
+   JS-gated reveal system, the masked line-rise, and the reduced-motion system.
+   The footer follows the document so contact actions stay reachable.
 
    Cascade order (Tailwind v4): theme vars → base (incl. Preflight, then the
    reset which is imported AFTER so it wins) → components → utilities. The
-   view-transition + reduced-motion layers are intentionally UNLAYERED at the
-   end so they win over everything (reduced-motion must always override).
+   readability fallbacks are intentionally UNLAYERED at the end so they win
+   over everything (reduced motion and print must always expose content).
    =========================================================================== */
 
 @import "tailwindcss";
@@ -56,6 +56,7 @@
   html {
     background: var(--bg);
     scroll-behavior: smooth;
+    scroll-padding-block-start: calc(var(--header-h) + var(--space-xs));
   }
   body {
     color: var(--fg);
@@ -134,12 +135,11 @@
 
 /* ========================= components ========================= */
 @layer components {
-  /* main slides over the fixed footer basement */
+  /* Opaque content slides over the sticky footer; both remain in flow. */
   main {
     position: relative;
     z-index: 1;
     background: var(--bg);
-    margin-bottom: var(--footer-h);
   }
 
   /* skip link — the first tab stop on every page. Visually hidden until it
@@ -169,8 +169,6 @@
     background: var(--bg);
     border-bottom: var(--bw-hair) solid var(--line);
     transition: transform var(--t-ui) var(--ease-out);
-    /* hold the chrome steady across cross-document navigations */
-    view-transition-name: site-header;
   }
   header.hh {
     transform: translateY(-100%);
@@ -178,8 +176,9 @@
   /* Keyboard escape hatch: tabbing fires no scroll event, so without this a
      Shift+Tab into the hidden header lands focus on links translated
      off-screen (invisible focus, WCAG 2.4.7). Focus inside → header returns. */
-  header.hh:focus-within {
+  header:focus-within {
     transform: none;
+    transition: none;
   }
   .bar {
     display: flex;
@@ -235,7 +234,7 @@
     transform: scaleX(1);
     transform-origin: 0 50%;
   }
-  /* Below 56rem the logo + four nav items + CTA can't share one row (the
+  /* Below 56rem the logo + nav items + CTA can't share one row (the
      inline bar runs ~800px, so even a 768px tablet wrapped it) — the nav drops
      to its own full-width row below; logo + CTA hold row 1. Every page stays
      reachable without a JS menu. Compressed paddings keep the two-row header
@@ -250,6 +249,12 @@
     }
     .bar .cta {
       padding: 0.45em 0.85em;
+    }
+    .bar > a:first-child {
+      max-width: calc(100% - var(--header-booking-room));
+    }
+    .bar > a img {
+      max-width: 100%;
     }
     /* gap spacing instead of the ::before middot, so the row never strands a
        divider at a break */
@@ -289,6 +294,33 @@
   .u:focus-visible::after {
     transform: scaleX(1);
     transform-origin: 0 50%;
+  }
+
+  .section-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+  }
+  .hour-link {
+    margin-top: var(--space-sm);
+  }
+  .situation-links {
+    display: grid;
+    gap: var(--space-sm);
+    margin-block: var(--space-md);
+  }
+  .section-links a,
+  .situation-links a,
+  .hour-link a {
+    text-decoration: underline;
+  }
+  .discovery-examples {
+    display: grid;
+    gap: var(--space-xs);
+    margin-block: var(--space-sm);
+    padding-inline-start: var(--space-sm);
+    list-style: disc;
   }
 
   /* ---- chunky instrument buttons (press-in mechanic) ---- */
@@ -375,7 +407,7 @@
     color: var(--fg);
     font-size: var(--fs-ui);
   }
-  /* footer booking button — sits above the big mailto in the basement */
+  /* Footer booking and email actions share one row. */
   .cta-footer {
     margin-top: 1.1rem;
   }
@@ -437,22 +469,19 @@
     opacity: 1;
     transform: none;
   }
+  /* Hash navigation must align against a stable target, including before its
+     reveal observer runs. A rising target otherwise settles under the header. */
+  .js [data-reveal]:target {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
   .js .lines .l > .i {
     transform: translateY(110%);
     transition: transform var(--t-move) var(--ease-out);
     transition-delay: calc(var(--i, 0) * var(--stagger-fast));
   }
   .js .lines.show .l > .i {
-    transform: none;
-  }
-  /* No-JS fallback: the .lines rise relies on the IntersectionObserver adding
-     .show. With JS off those masked lines keep their 110% translate and stay
-     clipped out of view — most visibly the statement chapter. The floor is
-     "readable if everything clever fails": reveal them flat so the page is
-     complete without JS. The .js class itself is armed by the enhance module
-     (not an inline script), so a module that never loads/executes degrades
-     through this same fallback. */
-  html:not(.js) .lines .l > .i {
     transform: none;
   }
   /* the stitched thread — appears exactly twice per page. The OPENER (hero →
@@ -551,15 +580,18 @@
     font-size: var(--fs-6);
     max-width: 15ch;
   }
-  .hero .lede {
-    margin-top: 1.5rem;
-    max-width: 40rem;
+  .hero-introduction {
+    display: grid;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+    max-width: var(--measure-prose);
     font-size: var(--fs-lead);
-    color: var(--fg-dim);
   }
-  .hero .lede strong {
-    color: var(--fg);
-    font-weight: 600;
+  .hero-invitation {
+    font-size: var(--fs-base);
+  }
+  .hero-introduction a {
+    text-decoration: underline;
   }
   /* the light signature anchor under the lede: names Alan + one credential, quiet */
   .hero-sig {
@@ -568,8 +600,9 @@
     font-size: var(--fs-sm);
     color: var(--fg-dim);
   }
-  .hero .cta-row {
-    margin-top: 2rem; /* flex/gap/wrap come from the base .cta-row */
+  .hero .cta-row,
+  .pbi-hero .cta-row {
+    margin-top: var(--space-cta); /* flex/gap/wrap come from the base .cta-row */
   }
   .hero-photo {
     margin: 0;
@@ -602,11 +635,13 @@
     .hero-photo img {
       aspect-ratio: 3 / 2;
     }
-    .hero .cta-row {
+    .hero .cta-row,
+    .pbi-hero .cta-row {
       flex-direction: column;
       align-items: stretch;
     }
-    .hero .cta-row .cta {
+    .hero .cta-row .cta,
+    .pbi-hero .cta-row .cta {
       justify-content: center;
     }
   }
@@ -801,7 +836,13 @@
       var(--shadow-off-panel) var(--shadow-off-panel) 0 0 rgb(var(--shadow-ink) / 0.55);
     text-decoration: none;
   }
+  /* An inset link's outline sits on cream; use ink there. Whole-panel links
+     keep the amber outline because theirs sits outside on the dark page. */
+  .panel :focus-visible {
+    outline-color: var(--ink);
+  }
   a.panel {
+    scroll-margin-block: var(--space-xs);
     transition:
       transform var(--t-tap) var(--ease-step3),
       box-shadow var(--t-tap) var(--ease-step3);
@@ -934,6 +975,9 @@
        it would stretch the figure to the grid-definite prose height. */
     height: auto;
   }
+  .offers + .exhibit {
+    max-width: var(--measure-wide);
+  }
   .exhibit .body p {
     font-family: var(--ff-display);
     font-weight: 600;
@@ -967,7 +1011,7 @@
   }
   /* list-shaped exhibits (a set of rules left behind): the rule line is the
      artifact — display ink over an ink-soft explanation. The dark-ground list
-     classes (.qlist/.beats) and --line hairline fail contrast on paper, so
+     class (.beats) and --line hairline fail contrast on paper, so
      the separator uses the paper-edge tone. */
   .exhibit .body ul {
     list-style: none;
@@ -1182,6 +1226,38 @@
     object-position: 50% 50%;
   }
 
+  /* Essay diagrams: text stays at reading size; the plots are qualitative. */
+  .prose .essay-figure {
+    margin: var(--space-lg) 0;
+    padding-block: var(--space-sm);
+    border-block: var(--bw-hair) solid var(--line);
+    color: var(--fg);
+  }
+  .essay-figure-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3xs) var(--space-xs);
+    margin-bottom: var(--space-sm);
+  }
+  .essay-figure-heading > span {
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    color: var(--fg-dim);
+  }
+  .essay-diagram,
+  .essay-diagram img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .essay-figure figcaption {
+    margin-top: var(--space-sm);
+    color: var(--fg-dim);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-body);
+  }
+
   /* ============ statement chapter (a single centred conviction) ============ */
   .statement-ch {
     text-align: center;
@@ -1213,11 +1289,18 @@
     text-decoration: none;
     border-top: var(--bw-hair) solid var(--line);
     padding-top: var(--space-md);
+    padding-inline: var(--px);
+    padding-bottom: var(--px);
     transition: border-top-color var(--t-flip);
   }
   .about-door:hover,
   .about-door:focus-visible {
     border-top-color: var(--amber); /* same door grammar as the service rows */
+  }
+  .about-door:focus-visible {
+    /* Keep the ring inside the box native focus scrolling exposes. The
+       padding above reserves space so the ring cannot overlap the text. */
+    outline-offset: calc(-1 * var(--px));
   }
   .about-grid {
     display: grid;
@@ -1276,17 +1359,29 @@
     transform: translateX(3px);
   }
 
-  /* ============ footer basement: the destination ============ */
+  /* ============ footer: the destination, in document flow ============ */
   footer {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    height: auto;
     background: var(--bg-dim);
     color: var(--fg);
     border-top: var(--px) solid var(--deep);
+  }
+  /* The top inset protects the start of a footer taller than the viewport.
+     The browser adjusts the opposite sticky inset; no height measurement is
+     needed. A focused footer returns to its normal position before its
+     focusin handler scrolls the actual action into view. */
+  @media (prefers-reduced-motion: no-preference) {
+    .js footer {
+      position: sticky;
+      top: 0;
+      bottom: 0;
+      z-index: 0;
+    }
+    .js footer:focus-within {
+      position: relative;
+    }
+  }
+  footer a {
+    scroll-margin-block: var(--space-xs);
   }
   .outro {
     padding-block: var(--space-super) 1.5rem;
@@ -1357,7 +1452,6 @@
   .lockup img {
     width: 100%;
     height: auto;
-    view-transition-name: site-lockup; /* the signature holds across navigations */
   }
 
   /* ============ service pages (recoloured to the green instrument) ============ */
@@ -1405,25 +1499,6 @@
       object-position: 50% 25%;
     }
   }
-  /* /ai-fit hero (2026-07-28): the fit map document is the hero visual — the
-     deliverable beside the lede that promises it. The doc takes the wider
-     column and tightens its row rhythm one step; the copy centres against it
-     so the height difference reads composed, not lop-sided. */
-  .aifit-hero .hero-grid {
-    align-items: center;
-  }
-  .aifit-hero .fitmap-doc {
-    margin-top: 0;
-  }
-  @media (min-width: 62rem) {
-    .aifit-hero .hero-grid {
-      grid-template-columns: 1fr 1.15fr;
-    }
-    .aifit-hero .fitmap li + li {
-      margin-top: var(--space-2xs);
-      padding-top: var(--space-2xs);
-    }
-  }
   .pbi-hero h1 {
     margin-top: 0;
     font-size: var(--fs-6);
@@ -1435,7 +1510,7 @@
     font-size: var(--fs-base);
   }
   /* the bottleneck beats — body-weight, dim, amber dash; deliberately lighter
-     than the .qlist worry list so they don't out-shout the lead copy. */
+     than the lead copy. */
   .beats {
     list-style: none;
     margin-top: var(--space-xs);
@@ -1462,31 +1537,59 @@
     font-size: var(--fs-base);
   }
 
-  /* /ai-fit hero: the buyer's own question as bare display type, tight under
-     the claim — the hook, not a stranded pull-quote (the old two-column grid
-     left it in empty space on desktop and after a long intro on mobile;
-     2026-07 review). "checking" takes the one amber word. Reuses RiseHeading's
-     masked rise, so it needs no new motion or JS. */
-  .hero-ask {
-    margin: var(--space-sm) 0 0;
-    font-family: var(--ff-display);
-    font-weight: 800;
-    font-size: var(--fs-3);
-    line-height: var(--lh-display);
-    letter-spacing: var(--ls-display);
-    color: var(--fg);
-    max-width: 24ch; /* one line at full size; the H1's 16ch cap would break it after "the" */
-  }
-  .hero-ask em {
-    color: var(--amber);
-    font-style: normal;
-  }
   .lead {
     margin-top: var(--space-md);
     max-width: var(--measure-prose);
     font-size: var(--fs-lead);
     color: var(--fg-dim);
   }
+/* The short hour page: natural flow and a compact desktop layout. */
+.hour-hero {
+  /* One screen of content, so fill the viewport below the header: the footer
+     then starts at the fold and reveals on scroll instead of sitting exposed
+     beneath a short page. Print resets this. */
+  min-block-size: calc(100svh - var(--header-h));
+  display: grid;
+  align-content: center;
+  padding-block: var(--space-cta);
+}
+.hour-hero .hour-layout {
+  display: grid;
+  gap: var(--space-lg);
+}
+.hour-hero h1 {
+  margin-top: 0;
+  font-size: var(--fs-4);
+  max-width: var(--measure-statement);
+}
+.hour-hero .lead {
+  margin-top: var(--space-xs);
+}
+.hour-hero .beats {
+  margin-top: 0;
+}
+.hour-hero .cta-row {
+  margin-top: var(--space-cta);
+}
+@media (min-width: 62rem) {
+  .hour-hero .hour-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+  .hour-hero .hour-details {
+    padding-top: var(--space-3xs);
+  }
+}
+@media (max-width: 47.99rem) {
+  .hour-hero .cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hour-hero .cta {
+    justify-content: center;
+  }
+}
+
   .lead em {
     color: var(--amber);
     font-style: normal;
@@ -1528,26 +1631,6 @@
     text-decoration: none;
   }
 
-  /* the worry block — questions only, never assertions */
-  .qlist {
-    list-style: none;
-    margin-top: var(--space-md);
-    max-width: var(--measure-wide);
-  }
-  .qlist li {
-    font-family: var(--ff-display);
-    font-weight: 600;
-    font-size: var(--fs-2);
-    line-height: var(--lh-snug);
-    letter-spacing: var(--ls-display-tight);
-    color: var(--fg);
-    padding-block: var(--space-2xs);
-    border-top: var(--bw-hair) solid var(--line);
-  }
-  .qlist li:last-child {
-    border-bottom: var(--bw-hair) solid var(--line);
-  }
-
   /* numbered movements (the SEQUENTIAL "how it works" — amber index, Mona 600) */
   .movements {
     list-style: none;
@@ -1577,59 +1660,6 @@
     margin-top: 0.4rem;
     max-width: var(--measure-prose);
     color: var(--fg-dim);
-  }
-
-  /* the fit-map field document: the page's named deliverable as its own
-     carved instrument — the same plate/carve grammar as the proof panels, but
-     on the raised dark ground (a template is not evidence, so it never earns
-     cream — D10). Numbered ruled rows like an instrument's index; mono section
-     labels stay amber like the movement numerals. 2026-07 review: as a plain
-     separated list it had less presence than the work cards. */
-  .fitmap-doc {
-    margin: var(--space-md) 0 0;
-    max-width: var(--measure-prose);
-    background: var(--bg-3);
-    border: var(--px) solid var(--deep);
-    border-radius: var(--r);
-    box-shadow: var(--shadow-off-panel) var(--shadow-off-panel) 0 0 rgb(var(--shadow-ink) / 0.55);
-  }
-  .fitmap {
-    list-style: none;
-    counter-reset: fm;
-    padding: var(--space-xs) var(--space-sm) var(--space-sm);
-  }
-  .fitmap li {
-    counter-increment: fm;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: var(--space-xs);
-  }
-  .fitmap li::before {
-    content: counter(fm, decimal-leading-zero);
-    grid-row: 1 / span 2;
-    font-family: var(--ff-mono);
-    font-size: var(--mono-label);
-    letter-spacing: var(--ls-mono-wide);
-    line-height: var(--lh-relaxed); /* sit the numeral on the label's baseline */
-    color: var(--fg); /* fg-dim on the raised --bg-3 ground is 4.44:1 — just under AA */
-  }
-  .fitmap li + li {
-    margin-top: var(--space-sm);
-    padding-top: var(--space-sm);
-    border-top: var(--bw-hair) solid var(--line);
-  }
-  .fitmap .fm-label {
-    display: block;
-    font-family: var(--ff-mono);
-    font-size: var(--mono-label);
-    letter-spacing: var(--ls-mono-wide);
-    line-height: var(--lh-relaxed);
-    color: var(--amber);
-  }
-  .fitmap li p {
-    grid-column: 2;
-    margin-top: var(--space-3xs);
-    color: var(--fg); /* document content, not muted commentary — and fg-dim fails AA on --bg-3 */
   }
 
   /* embedded sub-offers (power-bi "what i do") */
@@ -1714,104 +1744,153 @@
   }
 }
 
-/* ============ cross-document view transitions (unlayered: progressive) ============ */
-/* Native MPA view transitions: the named chrome (header + lockup) holds while
-   the page content cross-fades. No JS, no CSP allowance needed. Browsers
-   without support fall back to a hard cut — the prior behaviour, untouched. */
-@view-transition {
-  navigation: auto;
+/* Keyboard focus scrolls immediately and exposes the link, its content and
+   any revealing ancestors. Pointer navigation keeps its smooth scrolling. */
+html:has(:focus-visible) {
+  scroll-behavior: auto;
 }
-/* keep the morph quick and on-brand (this is a ui move) */
-::view-transition-group(site-header),
-::view-transition-group(site-lockup) {
-  animation-duration: var(--t-ui);
-  animation-timing-function: var(--ease-out);
+/* The linked About teaser can just fit a landscape viewport. Reserve the
+   header height while it has focus, without the decorative anchor gap. */
+html:has(.about-door:focus-visible) {
+  scroll-padding-block-start: var(--header-h);
+}
+:focus-visible [data-reveal],
+[data-reveal]:focus-within,
+.enter:focus-within {
+  opacity: 1;
+  transform: none;
+  animation: none;
+  transition: none;
+}
+.lines:focus-within .l > .i {
+  transform: none;
+  animation: none;
+  transition: none;
 }
 
-/* ============ reduced motion: a designed system, not a kill switch ============ */
-/* Unlayered + last → wins over the component layer. */
+/* ============ immediate readability without JavaScript ============ */
+/* The heading wrapper keeps its static mask; its inner text is at rest.
+   This also covers a failed enhancement module or a browser without IO. */
+html:not(.js) [data-reveal],
+html:not(.js) .enter,
+html:not(.js) .l > .i,
+html:not(.js) .thread {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  animation: none;
+  transition: none;
+}
+html:not(.js) .thread::after {
+  scale: 1;
+}
+html:not(.js) .photo-ch .ph,
+html:not(.js) .figure-inset .ph {
+  clip-path: none;
+}
+
+/* ============ reduced motion: immediate visible end states ============ */
+/* Unlayered rules win over every entrance and reveal mechanism. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  :root {
-    --t-move: 0.3s;
-    --rise: 0px;
-  }
-  .hero .l > .i,
-  .page-hero .l > .i,
-  .js .lines .l > .i {
-    transform: none;
+  *,
+  *::before,
+  *::after {
     animation: none;
-  }
-  .hero .l > .i,
-  .page-hero .l > .i {
-    opacity: 0;
-    animation: fadein var(--t-ui) ease-out both;
-    animation-delay: calc(var(--i) * var(--stagger-fast));
-  } /* order still narrates */
-  .enter {
-    transform: none;
-  }
-  .js [data-reveal] {
-    transform: none;
-    transition-duration: var(--t-ui);
-    transition-delay: 0s; /* no staggered cascade under reduced motion — a plain fade */
-  }
-  .js .thread {
-    transform: none;
     transition: none;
   }
-  .js .thread::after {
+  [data-reveal],
+  .enter,
+  .l > .i,
+  .thread {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  .thread::after {
     scale: 1;
-    transition: none;
   }
-  .js .photo-ch .ph,
-  .js .figure-inset .ph {
+  .photo-ch .ph,
+  .figure-inset .ph {
     clip-path: none;
-    transition: none;
   }
-  a.panel {
-    transition: none;
-  }
-  /* view transitions off entirely under reduced motion — a hard cut, with no
-     transition created at all. The pseudo animation:none is a belt-and-braces
-     guard for engines that don't honour @view-transition nested in @media. */
-  @view-transition {
-    navigation: none;
-  }
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
+  header,
+  header.hh {
+    transform: none;
   }
 }
 
-/* ============ print: every end-state forced, nothing waits for scroll ============ */
-/* The scroll choreography reveals content as it enters the viewport, so printing
-   an unscrolled page would otherwise emit the unrevealed sections at opacity 0 /
-   translated out of their clip masks. Force the revealed end-state of every
-   mechanism (mirrors the reduced-motion end-states). Unlayered + last → wins. */
+/* ============ print: readable before any scrolling ============ */
 @media print {
-  .js [data-reveal],
-  .enter {
-    opacity: 1;
-    transform: none;
+  .hour-hero {
+    min-block-size: auto;
+    display: block;
+  }
+  html {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  *,
+  *::before,
+  *::after {
     animation: none;
     transition: none;
   }
-  .l > .i {
-    transform: none;
-    animation: none;
+  header,
+  footer {
+    position: static;
   }
-  .js .thread {
+  /* A fixed offscreen control can repeat inside printed page margins. */
+  .skip {
+    display: none;
+  }
+  .what {
+    display: block;
+  }
+  .what .label {
+    position: static;
+    margin-block-end: var(--space-lg);
+  }
+  h1,
+  h2,
+  h3,
+  .kicker {
+    break-inside: avoid;
+    break-after: avoid;
+  }
+  .panel,
+  .offer,
+  .movement,
+  .door,
+  .cta-invite,
+  .section-links,
+  .about-grid,
+  .statement-ch,
+  footer,
+  .about-grid > div,
+  figure {
+    break-inside: avoid;
+  }
+  .exhibit:has(+ .section-links) {
+    break-after: avoid;
+  }
+  header,
+  header.hh,
+  [data-reveal],
+  .enter,
+  .l > .i,
+  .thread {
+    opacity: 1;
+    visibility: visible;
     transform: none;
   }
-  .js .thread::after {
+  .thread::after {
     scale: 1;
   }
-  .js .photo-ch .ph,
-  .js .figure-inset .ph {
+  .photo-ch .ph,
+  .figure-inset .ph {
     clip-path: none;
   }
 }

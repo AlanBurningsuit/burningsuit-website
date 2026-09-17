@@ -1,0 +1,160 @@
+# Ownership redesign implementation — 8 September 2026
+
+This pass implements `ownership-redesign-review.md` on `feat/ownership-redesign`. Alan authorised branch drafts and placeholders while he finishes the remaining inputs, and authorised pushing this branch. Integration into `dev` and production promotion remain separate decisions.
+
+## Inputs still to replace before release
+
+- `BOOKING_URL` is `https://cal.com/alan-burningsuit/hour` (confirmed 9 September 2026). The live event was checked on 16 September 2026: 60 minutes, both required questions (“What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?”) rendered on the booking form, and a description matching the hour page. The old `30min` event remains live and carries neither question.
+- Both hero signatures, the Power BI AI chapter and the About revert were signed off by Alan as they stand on 17 September 2026, and the positional attribution names (header, footer, home-hero, home-situations, power-bi-hero, power-bi-pricing, hour-page, work) were confirmed the same day. The AI chapter also regained main's signed sentence about decisions and responsibility on that date. Later the same day Alan asked for the hour page in a warmer, more conversational register; the lead, the three beats, the footer invitation and the meta description were rewritten from his steer and are on the preview for his read. The Cal.com event description still carries the earlier wording and should be brought into line with the new lead (Alan, in Cal.com).
+- An interim slice (`fix/hour-slice`, PR #10) carries the hour page, the 60-minute booking change and the AI Fit retirement onto `main` ahead of this branch. Discovery and the price guide are deliberately not in it; they arrive with this branch.
+- Alan supplied the essay text and reference slide deck on 9 September 2026. The dummy MDX and four figure placeholders have been replaced. Publication dates and confirmed talk venues/year remain unset; none have been invented. On 17 September 2026 the Daniel story was blunted so it no longer shares an identifying detail with the law-firm study (see the 17 September note below); Alan's review of that edit is outstanding.
+- The Power BI share image was re-rendered from the current H1 on 17 September 2026 (`scripts/render-linkedin-featured.mjs`, which now reads the built `@font-face` rules to find the font file); its alt text and the default card's alt text describe the images as they are.
+- Essay figures 3 and 4 keep the playful treatment Alan asked for on 11 September (warm shading, tilted labels, decorative strokes). Alan reaffirmed this on 17 September 2026 as a deliberate exception to the design language's flat-surface and ornament rules; it is not an open finding.
+- On 17 September 2026 Alan approved the blunted Daniel story as drafted, and supplied the talk's three deliveries for the essay's `givenAt`: Bristol Power BI User Group (19 February 2026), Manchester Power BI User Group (26 March 2026) and DataSwindon (2 April 2026). The years for Bristol and DataSwindon are taken to match Manchester; confirm if different. `datePublished` is still to be set on the day the essay goes live.
+- Alan decided on 17 September 2026 that the About clause "large systems, some of it for government" stays withdrawn, and that the Home hero regains a tenure sentence within the ledger ceilings (about five years with Power BI and Fabric teams, a decade in software before that).
+
+## Implementation decisions
+
+Home follows the detailed page order in the review: hero, evidence, situations, the pricing sentence, stance, photo and About teaser. The footer closes the page. The `/hour/` and writing route foundations are introduced early so subsequent page milestones have valid links throughout.
+
+Booking attribution was renamed on 8 September 2026. Read historical analytics against the earlier names. On 9 September, Alan confirmed the booking URL and requested a `placement` query parameter alongside `utm_content`; both carry the same encoded button location. Buttons link directly to the confirmed booking event; explanatory links go to `/hour/`. Email remains a separate contact action.
+
+The footer stays in document flow. In normal motion with JavaScript available, `main` uncovers a sticky footer; both top and bottom insets let a footer taller than the viewport scroll fully into view. Keyboard focus returns it to its natural position and scrolls the focused action into view immediately. No footer-height measurement or reserved-space script is used. Reduced motion, no JavaScript and print use a static footer.
+
+`CasefilePanel` still had one real consumer, contrary to the review's initial assumption. Its testimonial markup was folded into `Casefile` before removal, retaining the existing `namedTier()` guard. `PrinciplesChapter` had no consumers and was removed. Anonymous study facts and permissions remain unchanged.
+
+## Validation — 8 September 2026
+
+Each milestone below passed `npm run gate` and the complete functional suite before its commit. The gate includes Astro checking, the production build, byte budgets, local links and SEO/JSON-LD assertions. Raw local evidence is kept in the ignored `.review-pass/` directory.
+
+| Milestone | Commit | Functional checks |
+| --- | --- | --- |
+| Booking labels, event stub and positional attribution | `5d1a0e6` | 103 passed |
+| Hour page and writing foundations | `b99ffa2` | 114 passed |
+| Power BI situations, pricing ladder and AI chapter | `37b30f4` | 114 passed |
+| Home router and restored stance | `fedbc76` | 114 passed |
+| AI fold, redirects and route coverage | `012e3a0` | 109 passed |
+| About revert and voice pass | `b17a504` | 109 passed |
+| Footer reveal and accessible focus | `80900d5` | 128 passed |
+| Study sentence case and component cleanup | `4141682` | 130 passed |
+| Stable hash targets and print invitation grouping | `d9eaf30` | 137 passed |
+
+The hour's full content occupies 393px below the header at the 1280×720 desktop viewport; its contact actions are visible without scrolling. Narrow screens retain natural vertical flow. The writing SEO checker was also exercised against ten isolated fixtures: two valid variants and eight deliberately invalid author, breadcrumb, redirect and date cases were handled as expected.
+
+The final gate checks 12 pages and 49 redirect stubs. The functional suite covers all eight Power BI anchors in both normal and reduced motion at six viewport sizes; the five Home situations lead through Power BI to the hour. The four Work tile plates each occupy one line at 390px. Mobile Lighthouse now enforces zero median CLS, and the final review also checks each individual run.
+
+The visual baseline update ran once after the authorised draft copy settled, producing 132 fresh candidate images. All 132 were individually reviewed across Chromium, Firefox and both mobile projects before adoption. The confirmation run on the final build passed 61 visual tests with three intentional skips of the desktop-only geometry assertion. The subsequent fixes affect hash-target animation and print pagination; ordinary reduced-motion region captures are unchanged.
+
+Final code revision: `d9eaf30`. A five-viewport normal-motion sweep checked 60 route/view combinations and 960 header/footer focus states on `4141682`; the affected targets and print output were repeated after the final CSS fixes. All 80 anchor checks passed. Genuine Chrome page zoom at 200% passed on all 12 routes, including 192 natural keyboard states, all 16 anchor checks and immediate header focus return. The isolated browser setting was restored and the audit browsers closed. All 17 A4 pages were reviewed: Home 5, Power BI 8, hour 2 and the dummy essay 2. The Power BI invitation, booking button and email link now stay together on page 7. The final essay will need a fresh reading and print review when supplied.
+
+Desktop Lighthouse passes all seven routes at 1.00 for performance, accessibility and best practices, with zero CLS. It retains the established desktop configuration that excludes the analytics tracker. Mobile audits include analytics with no blocked URL patterns: Home scores 0.99/0.99/0.99 and Power BI 0.98/0.98/0.98, with zero CLS in every run. The Umami script and beacons return HTTP 200, and there are no console errors. Both mobile median assertions pass without an exception.
+
+Lighthouse SEO remains 0.92 because its static-server run reports that it could not download `robots.txt`; the built file exists and returns HTTP 200 from the verified local server. The separate SEO/identity gate passes for every page and redirect. The built Home SHA-256 remains `c41e81664f95f53e4ca9bc7ce6233cb9bc5882aaf244f0ee13b4d033f8ff2f42` after all checks.
+
+Local evidence: `.review-pass/final-gate.log`, `final-functional.log`, `visual-update.log`, `visual-confirm.log`, both visual-review Markdown files, `footer-final/review.md`, and the full `lighthouse-desktop/` and `lighthouse-mobile/` reports. The remaining author-supplied inputs are listed at the top of this document. These checks do not verify Cal.com event settings or complete a live booking.
+
+## Booking parameter update — 9 September 2026
+
+`bookingHref()` now sends the same URL-encoded button location in `utm_content` and `placement`. The gate passes, and all seven booking-link and click-attribution checks pass. The full functional run reported 119 passed and 18 navigation failures involving scrolling and focus. An isolated build of the unchanged branch at `171191f` reproduced the same 18 failing tests, so these were not introduced by the booking parameter update. The navigation follow-up below resolves them.
+
+Local evidence: `.review-pass/booking-placement-gate.log`, `booking-placement-functional.log`, `booking-baseline-build.log` and `booking-baseline-functional.log`.
+
+## Navigation follow-up — 9 September 2026
+
+The root smooth-scroll rule animated keyboard focus movement, briefly leaving focused links outside the viewport. Scrolling is now immediate while keyboard focus is visible; pointer navigation retains smooth scrolling. A focused card also exposes its descendant reveal content immediately, including the About teaser's text and portrait. Firefox could leave the next Work card only partly visible, so linked panels now scroll into view on keyboard focus with token-based space for their outline.
+
+The six anchor failures also exposed test timing: same-document hash navigation could still be scrolling when geometry was checked. Anchor tests now wait for visible, stable scroll and header positions before checking full visibility and header clearance in one geometry read. All keyboard-focus checks remain immediate, and now check descendant readability and full Work-card containment. Font readiness is polled as synchronous browser state so Firefox tests with JavaScript disabled do not stall on a page promise.
+
+Final validation passes: `npm run gate`, all 137 Chromium functional tests, and all 62 navigation checks across Firefox and the 390px mobile project. The focused About teaser and Firefox Work cards were also inspected visually. No navigation failures remain from these runs.
+
+## Essay integration — 9 September 2026
+
+Alan's supplied essay replaces the dummy content at the existing writing URL. The seven source headings and all prose are preserved, with the source subtitle used for the hero lead and metadata description. The introductory paragraph uses the existing reading layout; the remaining sections use `Chapter`. Four authored figure markers remain visible until artwork is supplied. No publication dates or talk appearances have been added.
+
+Validation: `npm run gate` and all 137 Chromium functional tests pass. The rendered essay matches all 34 source text blocks at 1280px and 390px after accounting for the site's automatic smart punctuation. Neither viewport overflows horizontally, and the print stylesheet leaves the essay text visible. Eight updated hero/body screenshots were visually reviewed across Chromium, Firefox and both mobile sizes; all four essay visual tests pass against the adopted baselines. Full paginated print review remains part of final release review once the figures are supplied.
+
+Local evidence: `.review-pass/essay-gate.log`, `essay-functional.log`, `essay-check.json` and `essay-visual-confirm.log`.
+
+## Essay figures — 9 September 2026
+
+The four placeholders now use static HTML and SVG diagrams adapted from Alan's supplied talk deck: the context/tool interaction on slides 12–13, the visual validation loop on slide 23, and the delegation slopes on slides 27–28. Animated builds and overlapping slide labels are not reproduced. The domain-experience figure compares the two slopes on shared axes; the charts are explicitly conceptual, with no invented measurements.
+
+The loops use text at reading size, and the charts scale within the prose column. Figure captions and SVG descriptions provide text equivalents; the experience comparison uses dashed and solid lines as well as colour. The original deck and manuscript are unchanged. All 30 non-placeholder source text blocks still match the rendered essay at desktop and phone widths.
+
+Validation passes: the full gate, 137 Chromium functional checks and four essay visual tests. All 16 new figure snapshots were inspected across Chromium, Firefox and both mobile sizes before adoption. Desktop and 390px checks show four figures, no horizontal overflow and visible print text. Full paginated print review remains a release check. Local evidence is under `.review-pass/essay-figures/`.
+
+## Draw.io pilot — first essay figure
+
+The agent-system figure now uses two SVG exports from draw.io: a wide layout and a narrow layout selected at the existing 48rem breakpoint. Context is a container for the system prompt, conversation and tool results. The model, harness and tools have distinct boundaries, with a solid return connector for tool results and a dashed branch for a direct reply. Both exports embed Albert Sans and retain the site palette. The image has a complete text alternative and explicit responsive dimensions.
+
+The editable two-page source and font configuration are local at `resources/diagrams/agent-system.drawio` and `resources/diagrams/burningsuit.drawio-config.json`, following the existing raw-source convention. Only the exported SVG assets ship. This is a pilot for Alan's review; the other three figure designs are unchanged.
+
+The final gate passes, and all four essay visual tests pass with one worker. The broader functional run passed 136 tests and reported one small Power BI layout shift; the unchanged Power BI check subsequently passed three isolated repeats without changes to the assertion. An initial Firefox screenshot timeout also cleared in the isolated run. Source-text fidelity, responsive image selection and horizontal-overflow checks pass at desktop and 390px. Evidence is in `.review-pass/essay-figures/drawio-*.log`.
+
+Four agent-figure baselines were replaced after visual review. Three downstream figure baselines also needed refreshing because the changed first-figure height shifted their raster alignment; their content and styling are unchanged, and the actual/expected image pairs were inspected before adoption.
+
+Local evidence: `.review-pass/nav-fix-gate.log`, `nav-fix-functional.log`, `nav-fix-cross-browser.log`, `nav-fix-smoke.json`, `nav-firefox-evidence.json` and their focused-state screenshots.
+
+## Draw.io figure set — 11 September 2026
+
+Alan approved the pilot direction and requested a chat-like context stack plus draw.io versions of the remaining three figures. All four figures now use wide and narrow SVG exports at the existing 48rem breakpoint, with embedded Albert Sans, the site palette, explicit image dimensions and full text alternatives. The first figure separates system, user, agent and tool messages. The validation loop shows the report passing through Fabric and Playwright before the screenshot returns to the agent. The two conceptual charts retain their original relationships, with distinct solid and dashed lines for the experience comparison. Essay prose and figure captions are unchanged; the superseded HTML diagram styles have been removed.
+
+The editable sources are local at `resources/diagrams/{agent-system,visual-validation,delegation,domain-experience}.drawio`, with Wide and Narrow pages in each file. `resources/diagrams/README.md` documents editing and export. Its companion `export-diagrams.mjs` reads the existing uncompressed sources and uses the official draw.io embed export API without regenerating or overwriting their shapes. Eight self-contained SVG exports ship in `src/assets/diagrams/`; the website needs no draw.io runtime.
+
+Validation: the full gate and test type-check pass, along with five essay-specific Chromium checks covering CSP, print, disabled JavaScript and reduced motion. All 30 manuscript text blocks still match at 1280px and 390px, all figures choose the correct responsive export, and neither viewport overflows horizontally. The figures were visually inspected and sixteen intentional figure baselines adopted; the four essay visual tests pass across Chromium, Firefox and both phone sizes. Full paginated print review remains a release check. Local evidence: `.review-pass/drawio-set-*.log` and `.review-pass/essay-figures/`.
+
+### Clarifying the vibe zone
+
+Following Alan's review, Figure 3 now shades the entire area under the line and names it the vibe zone. The lower-consequence end is labelled “More vibey” with more choices delegated to the agent; the higher-consequence end is “Less vibey” with more decisions specified up front. The former “Safer region” label has been removed. Figure 4 reuses the same axes and full zone as a faint reference, overlays the smaller zone for less domain experience, and uses a downward arrow at a fixed consequence level to show the reduction in decisions delegated. Both remain conceptual, without numerical thresholds. Captions and text alternatives explain the shaded regions. Figures 1–2 and the manuscript prose are unchanged.
+
+The four revised SVGs and their editable draw.io pages have been updated. The full gate, test type-check, five essay functional checks, source-text and responsive checks pass. Eight Figure 3–4 screenshot baselines were refreshed after visual review, and the four essay visual tests pass against them. Evidence: `.review-pass/vibe-zones-*.log`.
+
+Alan subsequently requested a more playful treatment for these two charts. Their vibe zones now use tilted peach labels, warm shading that fades across the zone, and a few decorative starbursts and curved strokes. The decoration stays inside the shaded regions, with more activity at the lower-consequence end. Axes, boundaries, captions and meaning remain unchanged. The editable sources and four exports were updated; the gate, final build, five essay functional checks, responsive/source checks and four essay visual tests pass. Evidence: `.review-pass/vibe-fun-*.log`.
+
+### Targeted voice edits
+
+Alan approved changes addressing all five findings from a clean voice review. The mechanic analogy now describes someone accountable for the repair, rather than a transfer of all responsibility. The claims about infinite availability and what an agent will never say are grounded in the comparison and observed experiment. The erosion paragraph distinguishes useful delegation today from the longer-term loss of judgement. The ending loses the additional “Just an agent driver” sentence. A single delegation-specific footer invitation replaces the two competing invitations; the extra reporting-capability chapter is removed.
+
+The reviewer checked the revised passages in context and confirmed that all five findings were addressed without new editorial problems. The website copy now intentionally differs from the supplied manuscript in those five body paragraphs; the vault manuscript remains unchanged. A reading check compares all 30 blocks against the manuscript with only the approved edits applied. The full gate, test type-check, five essay functional checks and four essay visual checks pass, with desktop and phone overflow, print visibility and footer wording checked. Four body snapshots reflect the intentional copy change. Two phone figure snapshots were also reviewed and refreshed for a one-pixel alignment shift caused by the changed text height; the figure assets and styles are unchanged. Evidence: `.review-pass/voice-edits-*.log` and `voice-edits-reading-check.json`.
+
+## Homepage, Power BI and About review — 11 September 2026
+
+Alan resumed this work after the guidance workshop. The homepage keeps "Power BI your team can own" and moves from the work to the case studies, then explains the help inline. The numbered situation menu, separate training fragment and unexplained pricing paragraph are removed. The case-study index and practical-detail links use the existing button treatment. Greetings and the balanced AI should/shouldn't wording are removed.
+
+Power BI now explains how Alan works: building and changing reporting, learning an idea when the work calls for it, understanding an inherited system, trying changes between sessions and bringing questions back. Separate detail covers support for the person leading the work and judging AI output. Contextual case-study links replace repeated invitations to the same destination. The free introductory call precedes Discovery; its possible outputs are examples whose usefulness and scope are agreed before booking. Prices and credit conditions appear with the relevant engagement detail. About loses the government fragment and repeated career history, and its subheading becomes "The people doing the work".
+
+The field-notebook design, photographs and motion remain. `/power-bi/` and all existing situation and pricing anchors are retained, including the AI redirect destination. Functional journeys now check the homepage's practical-detail route through to the hour and its link to all four case studies. Two new visual regions cover the working process and support for the lead.
+
+The final gate and all 138 Chromium functional checks pass. Reading and overflow checks cover Home, Power BI and About at 320, 390, 768, 1024 and 1280px. All twelve affected visual tests pass across Chromium, Firefox and both phone sizes, with the final mobile Home check confirmed separately after its footer baseline was refreshed. Intentional screenshot changes cover the revised sections; six unchanged downstream regions were also reviewed for one-pixel raster shifts caused by the changed text height. Desktop Lighthouse against the built site scores 1.00 for performance, accessibility and best practices on all three revised pages, with zero CLS. Local evidence is in `.review-pass/site-story-*.log` and `site-story-check.json`. This is a local branch revision for Alan's review; it has not been pushed or deployed.
+
+Mobile Lighthouse includes analytics and passes both configured assertions: Home scores 0.99 in all three runs, Power BI scores 0.98 in all three, and every run has zero CLS. The existing performance thresholds and geometry checks are unchanged.
+
+### Restoring the routes into the work and the hour
+
+Alan's follow-up keeps the practical Power BI sequence and restores three unnumbered Home links to `#deliver`, `#skills` and `#handover`. Both heroes now explain the free hour through a direct `/hour/` link beside the booking controls, and Home's situation section has its own direct route to the hour. A shared hour link immediately after the three practical sections also serves visitors arriving directly at a Power BI situation anchor. Explanatory section links are underlined text; the ghost-button treatment remains the email alternative.
+
+The first-call chapter is now `#start`. `#pricing` points to the chapter containing the ongoing price guide, with `#ongoing` retained inside it for existing links. Visual coverage follows those meanings rather than retaining the former pricing selector. Home restores Alan's five years with Power BI teams and prior decade in software, using advisory terminology. The Power BI lead uses Alan's proposed "Your team's own work is the material". Home's prose and the Power BI description lose the repeated three-item openings. About's personal heading is now "What I care about getting right".
+
+Discovery retains concrete example takeaways and the £1,950 price, with an explicit statement that outputs are agreed before booking so the scope and price can go for approval. It does not turn engagement-specific examples into a universal deliverable bundle. This follows Alan's earlier request to scope Discovery after the first call.
+
+The gate and all 142 functional checks pass, including direct hour journeys, all three Home routes and ten Power BI anchor destinations across the existing viewport and motion matrix. Five-width reading checks show no overflow on the three revised pages. Evidence is under `.review-pass/entry-routes-*`.
+
+After the final shared hour link was added, the gate and all 38 navigation/journey checks were repeated successfully. All twelve affected visual tests pass; the four Power BI tests were repeated against the final page. Reviewed snapshots include the intentional copy changes and downstream one-pixel alignment shifts. Desktop Lighthouse passes the existing thresholds on all three pages with 1.00 performance, accessibility and best practices. Mobile Home and Power BI audits pass with analytics included and zero CLS; the final Power BI runs each score 0.98. The initial desktop audit hit a Windows temporary-browser cleanup error; rerunning with a separately managed Chrome session completed under the same audit settings and assertions. This follow-up remains a local revision pending Alan's review and push authorisation.
+
+### Consistent invitation labels and less repetition
+
+Both situation sections now use "Tell me what your reporting can't do (yet)" as the invitation. Links explaining the hour consistently use "What happens in the free hour?". Permanently underlined section, situation and hour links no longer carry the animated `.u` class, removing the extra hover underline while retaining keyboard focus styling. Eighteen live hover/focus checks confirm one underline.
+
+The software-tenure sentence is removed from the Home teaser. About's repeated opening paragraph about experience and helping someone understand an unfamiliar model is also removed; the personal introduction stays on Home. At Alan's request, the About heading is restored to "The part that isn't really technical", leaving the paragraph's closing line to make its point at the end. Evidence is under `.review-pass/link-copy-*`.
+
+The shorter teaser also exposed a 320px keyboard-focus edge case: native scrolling fitted the link box but clipped its offset outline when returning from the footer. The teaser now has no extra outline gap, so its ring remains fully visible without changing layout. The original geometry and contrast assertions are retained. All twelve affected visual tests pass with reviewed baselines, including three downstream one-pixel alignment changes.
+
+The final gate and all 142 functional checks pass, including the previously failing footer-to-teaser keyboard checks in normal motion, reduced motion and without JavaScript. This revision is committed locally for review, without a remote push.
+
+## Reconciliation with main and review follow-up — 17 September 2026
+
+Main's 15 September commit (Umami `data-domains` and `data-performance` attributes with their `csp.spec` assertions, the sixth legacy-redirect sweep, and the gitignore guard for analytics exports) was merged into the branch. Only `AGENTS.md` conflicted and was resolved toward the branch's description of the rewritten pipeline. The gate then checked 12 pages and 51 redirect stubs and all 148 Chromium functional checks passed against the merged build.
+
+Following the 16 September branch-versus-main review, the essay's Daniel story no longer names the specific kind of figure or the side system that produced it; the passage now describes figures the team kept outside the source system in general terms, the company description loses one adjective, and the closing paragraph no longer places Alan inside the engagement. The essay's closing link now leads to About rather than the Power BI AI chapter. No new details were invented; the argument is unchanged. These edits await Alan's read.
+
+Also in this pass: the footer on every page gains a text link explaining the free hour beneath the booking controls; the Power BI title and description name Fabric again; the Power BI hero's section links include Discovery with its price; the law-firm exhibit links to all four case studies; and Home's sentence about signing off a proposal links to the Power BI chapter for the person leading the work. Visual baselines have not yet been refreshed for these changes.

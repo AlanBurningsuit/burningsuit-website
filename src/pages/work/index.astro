@@ -2,8 +2,7 @@
 /**
  * /work — the case-study index.
  *
- * A text-led page-hero pitched on recognition — a cold reader should see their
- * own situation in the pain triad. The copy is deliberately agnostic about study
+ * A text-led page-hero pitched on recognition. The copy is agnostic about study
  * count and about whether clients are named, so flipping a study's namePublished
  * (or adding a study) needs no edit here. Studies render as carved "case file"
  * tiles built from the
@@ -29,13 +28,13 @@ const rows: RowData[] = studies.map((s) => ({
   tab: s.data.kicker,
   title: s.data.heading,
   body: s.data.tileOutcome,
-  cta: "read the full story",
+  cta: "Read the full story",
 }));
 ---
 
 <BaseLayout
   title="Power BI & Fabric case studies - burningsuit"
-  description="Power BI and Fabric case studies: a law firm's data team, a contact-centre lead, a university carbon model, and a museum that ran on a whiteboard."
+  description="Power BI and Fabric case studies from Alan Harman-Box. See how people learned to take care of reporting they built themselves or took over from someone else."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
@@ -45,11 +44,9 @@ const rows: RowData[] = studies.map((s) => ({
 
   <section class="page-hero">
     <div class="wrap">
-      <h1 class="enter appear-300">you'll recognise one of these.</h1>
+      <h1 class="enter appear-300">You'll recognise one of these.</h1>
       <p class="lead enter appear-450">
-        Real Power BI and Fabric engagements I've worked on: a bottleneck, a model
-        nobody quite trusts, every report still done by hand. Read the one that
-        sounds like yours.
+        These are teams and people I've worked with on Power BI and Fabric. Some built the reporting themselves; others took over something built for them. Read the story that sounds closest to yours.
       </p>
     </div>
   </section>
@@ -58,18 +55,17 @@ const rows: RowData[] = studies.map((s) => ({
 
   <section class="chapter" aria-labelledby="cases">
     <div class="wrap">
-      <h2 class="section-head" id="cases" data-reveal>case files</h2>
+      <h2 class="section-head" id="cases" data-reveal>Case studies</h2>
       <ServiceRows rows={rows} />
     </div>
   </section>
 
   {/* The page's action beat — /work used to dump from the tiles straight into
       the footer basement; the band closes the scroll deliberately. */}
-  <section class="cta-band" aria-label="book a call">
+  <section class="cta-band" aria-label="Book an hour">
     <div class="wrap">
-      <BookCta src="work" mailtoHref={contactMailto} reveal>
-        If one of these is close to home, I'm happy to talk it through - nothing
-        to&nbsp;prepare.
+      <BookCta src="work" mailtoHref={contactMailto}>
+        If one of these is close to home, we can spend an hour talking it through. The call is free.
       </BookCta>
     </div>
   </section>

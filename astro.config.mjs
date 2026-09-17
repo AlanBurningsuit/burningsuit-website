@@ -2,10 +2,9 @@
 import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
-// Tailwind v4 is wired through PostCSS (postcss.config.mjs), not the Vite
-// plugin: @tailwindcss/vite is currently incompatible with Astro 6's default
-// rolldown-vite (withastro/astro#16542). PostCSS is the same engine, same
-// @theme/@utility/@source directives — just a different integration point.
+// Tailwind v4 uses the established PostCSS integration (postcss.config.mjs).
+// Astro 6.4.8 resolves Vite; the earlier rolldown-vite compatibility workaround
+// no longer describes its bundler. The PostCSS integration stays unchanged.
 
 // Cookieless analytics (Umami Cloud). MUST match `ANALYTICS.enabled` in
 // src/config/site.ts. The CSP permits only the two provider hosts: the script
@@ -31,6 +30,10 @@ export default defineConfig({
   // non-slash form only (both variants as keys is unsupported; Pages 301s
   // /foo → /foo/ itself).
   redirects: {
+    // The retired AI page now leads to the practical AI chapter.
+    "/ai-fit-for-teams": "/power-bi/#ai",
+    // One essay does not need a separate writing index yet.
+    "/writing": "/writing/we-are-all-middle-management-now/",
     // Power BI technique posts → the Power BI hub (topical successor; no blog)
     "/blog/2019/04/7-secrets-of-the-matrix-visual": "/power-bi/",
     "/blog/7-secrets-matrix-visual": "/power-bi/",
@@ -114,12 +117,12 @@ export default defineConfig({
   },
 
   integrations: [
-    // MDX powers the `work` case-study collection (and the future blog). The
+    // MDX powers the `work` case studies and `writing` essays. The
     // .mdx bodies render through the case-study component kit (Chapter/Snapshot/
     // Offer); no client JS is shipped — it's a build-time transform only.
     mdx(),
-    // Auto-discovers built pages. /, /about, /ai-fit-for-teams, /power-bi,
-    // /colophon and /work (+ /work/<slug>) are indexable; 404 is excluded.
+    // Auto-discovers built pages, including /hour/, /work/<slug> and
+    // /writing/<slug>. Redirect stubs and the 404 page are excluded.
     sitemap(),
   ],
 
