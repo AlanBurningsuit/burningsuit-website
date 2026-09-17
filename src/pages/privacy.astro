@@ -79,7 +79,9 @@ const contactSubject = "Privacy question";
           your browser, operating system and device type (worked out from the
           user-agent your browser sends, which isn't itself kept), plus a coarse
           location - country, region and city - derived from your IP address,
-          which also isn't kept. Umami stores nothing in your browser and holds
+          which also isn't kept. It also records page-load timing measurements
+          (Core Web Vitals) with each page view; those carry no identifier.
+          Umami stores nothing in your browser and holds
           no persistent identifier. To count unique visitors without one, it
           hashes the site id with your IP and user-agent, salted with a value it
           rotates monthly; the raw IP and user-agent are processed transiently
@@ -154,11 +156,11 @@ const contactSubject = "Privacy question";
       <h2 class="section-head" id="booking" data-reveal>booking a call</h2>
       <div class="prose">
         <p data-reveal>
-          The "book a call" links take you to Cal.com to pick a time. That
+          The "Book an hour" links take you to Cal.com to pick a time. That
           booking happens on <a class="u" href="https://cal.com/privacy"
           target="_blank" rel="noopener noreferrer">Cal.com's own site</a>, run by
           Cal.com, Inc. (a US company), under their privacy policy. When you book,
-          I receive the details you give - your name, email and the time you chose
+          I receive the details you give - your name, email, chosen time and answers to the booking questions
           - and from that point I'm the controller of them.
         </p>
       </div>
@@ -221,7 +223,7 @@ const contactSubject = "Privacy question";
           different analytics tool say, or a new way of taking bookings, I'll
           update this page to match it.
         </p>
-        <p data-reveal>Last updated: 19 August 2026.</p>
+        <p data-reveal>Last updated: 17 September 2026.</p>
       </div>
     </div>
   </section>

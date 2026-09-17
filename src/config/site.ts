@@ -1,7 +1,7 @@
 /**
  * Site-wide constants + helpers — the single source of truth for the contact
  * email and the external booking link, so the conversion path stays consistent
- * and placement attribution (?src=) is built exactly one way.
+ * and placement attribution (utm_content and placement) is built exactly one way.
  *
  * Why a booking LINK (not an embed): a top-level navigation is not governed by
  * the page CSP (`default-src 'none'` covers fetches, not link clicks), so an
@@ -10,24 +10,27 @@
 export const CONTACT_EMAIL = "alan@burningsuit.co.uk";
 
 /**
- * The hosted Cal.com scheduling page — Alan's 30-minute event, direct (skips the
- * profile menu) so the click matches the booking labels. The full label is
- * "book a 30-minute call" (footer, BookCta); the header deliberately abbreviates
- * to "book a call" because the long form wraps at mid widths (owner call,
- * 2026-07-02) — the Cal page itself states the duration either way.
+ * Alan confirmed this 60-minute event URL on 2026-09-09.
+ * Keep the old 30min event live but unlisted.
+ * All booking buttons use the same "Book an hour" label.
  */
-export const BOOKING_URL = "https://cal.com/alan-burningsuit/30min";
+export const BOOKING_URL = "https://cal.com/alan-burningsuit/hour";
 
 /**
- * Booking link tagged with the placement for attribution. Cal.com stores UTM
- * params with each booking, so `utm_content` shows the placement split in the
- * booking record/export — no analytics script or CSP change needed. Merges
- * cleanly if BOOKING_URL ever grows its own query string.
+ * Booking link tagged with the button location in both `utm_content` and
+ * `placement`. Existing UTM attribution and analytics events keep the same
+ * location value. Merges cleanly if BOOKING_URL grows its own query string.
+ *
+ * Placements renamed on 2026-09-08: header, footer, home-hero,
+ * home-situations (when present), power-bi-hero, power-bi-pricing, hour-page,
+ * work. Historical hero, home-proof and power-bi-engagement names apply only
+ * before this date. Study-read events retain their per-study URL identity.
  */
 export function bookingHref(src?: string): string {
   if (!src) return BOOKING_URL;
   const sep = BOOKING_URL.includes("?") ? "&" : "?";
-  return `${BOOKING_URL}${sep}utm_source=burningsuit&utm_content=${encodeURIComponent(src)}`;
+  const placement = encodeURIComponent(src);
+  return `${BOOKING_URL}${sep}utm_source=burningsuit&utm_content=${placement}&placement=${placement}`;
 }
 
 /** Build a mailto with an optional prefilled subject (mirrors BaseLayout). */

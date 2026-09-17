@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BookCta from "../components/BookCta.astro";
+import { mailtoFor } from "../config/site";
+
+const contactSubject = "What our reporting can't do yet";
+const contactMailto = mailtoFor(contactSubject);
+---
+
+<BaseLayout title="Tell me what your reporting can't do (yet) - burningsuit" description="A free hour with Alan Harman-Box to work out where your reporting is stuck and what the next step is. You don't need to know what's wrong or show a report." contactSubject={contactSubject}>
+  <Fragment slot="footer-invitation">Tell me where the reporting is stuck, or what the team keeps not managing to do. Replies come from me</Fragment>
+  <section class="page-hero hour-hero">
+    <div class="wrap hour-layout">
+      <div class="hour-copy">
+      <h1 class="enter appear-300">Tell me what your reporting can't do (<em>yet</em>).</h1>
+      <p class="lead enter appear-450">An hour, free, on a call. You describe where the reporting is stuck, or what the team keeps not managing to do. I'll help you work out whether the problem is the scope, the skills, or something else, and what the next step is. You don't need to know what's wrong, and you don't need to show me anything.</p>
+      </div>
+      <div class="hour-details">
+      <div class="prose">
+        <ol class="beats beats-body">
+          <li><strong>Before:</strong> spend five minutes on the booking form's two questions: “What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?”</li>
+          <li><strong>During:</strong> we have an hour. You talk, I ask, and we work out which kind of problem it is.</li>
+          <li><strong>After:</strong> you leave with the next step, whether or not it involves burningsuit.</li>
+        </ol>
+      </div>
+      <BookCta src="hour-page" mailtoHref={contactMailto} variant="hero" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
