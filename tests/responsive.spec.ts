@@ -17,9 +17,12 @@ const VIEWPORTS = [
   { width: 768, height: 1024 },
   { width: 895, height: 800 },
   { width: 896, height: 800 },
+  { width: 896, height: 414 },
+  { width: 1280, height: 720 },
 ];
 
-const ROUTES = ["/", "/power-bi/", "/ai-fit-for-teams/", "/work/", "/about/", "/work/law-firm/"];
+const ROUTES = ["/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/hour/", "/work/", "/about/", "/work/law-firm/"];
+const READING_ROUTES = [...ROUTES, "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/404.html"];
 
 async function headerHeights(page: Page) {
   return page.evaluate(() => {
@@ -34,6 +37,16 @@ async function headerHeights(page: Page) {
 }
 
 for (const vp of VIEWPORTS) {
+  test(`all public reading routes fit at ${vp.width}×${vp.height}`, async ({ page }) => {
+    await page.setViewportSize(vp);
+    for (const path of READING_ROUTES) {
+      await page.goto(path);
+      await page.evaluate(() => document.fonts.ready);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      expect(overflow, `${path} is wider than ${vp.width}px`).toBeLessThanOrEqual(0);
+    }
+  });
+
   test(`layout holds at ${vp.width}×${vp.height}`, async ({ page }) => {
     await page.setViewportSize(vp);
     await page.goto("/");
@@ -111,7 +124,7 @@ test("skip link is the first tab stop and lands on #main", async ({ page }) => {
   await expect(page.locator("main#main")).toBeVisible();
 });
 
-for (const route of ROUTES.filter((r) => r !== "/")) {
+for (const route of ["/power-bi/", "/work/", "/about/", "/work/law-firm/"]) {
   test(`current page is marked in the nav on ${route}`, async ({ page }) => {
     await page.goto(route);
     const current = page.locator("header nav a[aria-current]");

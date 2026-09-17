@@ -1,5 +1,6 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+import { z } from "astro/zod";
 
 /**
  * Content collections.
@@ -12,7 +13,7 @@ import { glob } from "astro/loaders";
  * block is never emitted to the build while the boolean is false, so view-source
  * can't leak a PERMISSION-PENDING quote. See design/copy/case-studies/.
  *
- * A future `blog` collection slots in beside this with the same loader + MDX kit.
+ * `writing` — essays using the same loader and chapter components.
  */
 const work = defineCollection({
   loader: glob({ pattern: "*.mdx", base: "./src/content/work" }),
@@ -24,8 +25,8 @@ const work = defineCollection({
     /** Meta description (anonymised). */
     description: z.string(),
     /** Page-hero eyebrow + index tile plate. */
-    kicker: z.string().default("case file"),
-    /** H1, lowercase, with at most one amber <em>. */
+    kicker: z.string().default("Case study"),
+    /** H1, sentence case with product capitals, with at most one amber <em>. */
     heading: z.object({
       before: z.string().optional(),
       em: z.string().optional(),
@@ -90,4 +91,38 @@ const work = defineCollection({
     }),
 });
 
-export const collections = { work };
+/** Essays use the existing chaptered MDX kit without a writing index yet. */
+const writing = defineCollection({
+  loader: glob({ pattern: "*.mdx", base: "./src/content/writing" }),
+  schema: z.object({
+    title: z.string().trim().min(1),
+    description: z.string().trim().min(1),
+    heading: z.object({
+      before: z.string().optional(),
+      em: z.string().trim().min(1),
+      after: z.string().optional(),
+    }),
+    lead: z.string().trim().min(1),
+    kicker: z.string().trim().min(1).default("Essay"),
+    // Omit until the editorial dates are known; a temporary draft must not
+    // acquire an invented publication date merely because a build ran.
+    datePublished: z.coerce.date().optional(),
+    dateModified: z.coerce.date().optional(),
+    contactSubject: z.string().trim().min(1),
+    footerInvitation: z.string().trim().min(1),
+    // Confirmed appearances only. Absence produces no venue claim.
+    givenAt: z.array(z.object({
+      event: z.string().trim().min(1),
+      date: z.coerce.date(),
+    })).optional(),
+  }).superRefine((essay, ctx) => {
+    if (essay.dateModified && !essay.datePublished) {
+      ctx.addIssue({ code: "custom", path: ["dateModified"], message: "dateModified requires the original datePublished" });
+    }
+    if (essay.datePublished && essay.dateModified && essay.dateModified < essay.datePublished) {
+      ctx.addIssue({ code: "custom", path: ["dateModified"], message: "dateModified must not precede datePublished" });
+    }
+  }),
+});
+
+export const collections = { work, writing };

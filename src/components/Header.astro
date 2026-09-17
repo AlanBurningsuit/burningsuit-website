@@ -1,24 +1,22 @@
 ---
 /**
- * Sticky header. Hides on scroll-down, returns on scroll-up (enhance.ts adds
- * `.hh`). Nav links the pages that ship — power-bi (the front door) first, then
- * /work (the proof) and /about. The AI-fit nav item was retired 2026-09-17 (the
- * page stays reachable by URL); /hour/ is linked from the footer close, not the
- * nav. /contact is not emitted; the two contact paths (book an hour + email)
- * live in the footer close. The drawn underline (.u) and instant-flip CTA live
- * in app.css. The header's one action is the "Book an hour" CTA; `mailtoHref`
- * is accepted so BaseLayout can pass header and footer the same props, but the
- * header itself renders no mailto.
+ * Sticky header, hiding down and returning up, with a keyboard focus escape.
+ * It stays visible under reduced motion. Nav links the
+ * main pages — /power-bi first, then /work and /about. The hour and essay
+ * have contextual text links. The two contact paths (booking + email) also
+ * live in the footer close. The drawn
+ * underline (.u) and instant-flip CTA live in app.css. The header's one action is
+ * "Book an hour" CTA; `mailtoHref` is accepted so BaseLayout can pass header and
+ * footer the same props, but the header itself renders no mailto.
  */
 import { bookingHref } from "../config/site";
 interface Props {
   mailtoHref?: string;
 }
-// Short sentence-case labels (the 2026-07-11 chrome relaxation, Phase-2 copy
-// batch). The long lowercase forms live on in each page's own H1.
+// Short sentence-case labels; URLs stay stable for links and attribution.
 const nav = [
   { href: "/power-bi/", label: "Power BI" },
-  { href: "/work/", label: "Work" },
+  { href: "/work/", label: "Case studies" },
   { href: "/about/", label: "About" },
 ];
 // aria-current wayfinding — server-rendered per page, zero runtime cost.

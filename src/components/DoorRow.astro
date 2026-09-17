@@ -6,8 +6,7 @@
  * spark on the dark ground is 2.65:1 and never carries a state.
  *
  * variant="lead" is the Power BI door: visibly fuller (display h3 a tier up,
- * two-column at ≥62rem). variant="second" is the subordinate door (the AI
- * bridge on the homepage; the cross-door on each single-door page). The
+ * two-column at ≥62rem). variant="second" is a subordinate door. The
  * asymmetry is deliberate front-door hierarchy, not a card stagger.
  *
  * Reuses RowData so page frontmatter moves verbatim from ServiceRow.
@@ -19,7 +18,7 @@ interface Props extends RowData {
   /** Reveal-stagger index within the section. */
   index?: number;
 }
-const { href, title, body, cta = "see how it works", variant = "second", index = 0 } = Astro.props;
+const { href, title, body, cta = "See how it works", variant = "second", index = 0 } = Astro.props;
 ---
 <a
   class:list={["door", variant === "lead" && "door-lead", `stagger-${index}`]}

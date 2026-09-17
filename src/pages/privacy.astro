@@ -21,7 +21,7 @@ const contactSubject = "Privacy question";
 
 <BaseLayout
   title="Privacy - burningsuit"
-  description="How burningsuit handles your data: cookieless analytics that never store your IP, no profiling, and a one-click way to opt this device out."
+  description="How burningsuit handles site analytics and enquiries, and how to exclude this device from measurement."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
@@ -31,7 +31,7 @@ const contactSubject = "Privacy question";
 
   <section class="page-hero">
     <div class="wrap">
-      <h1 class="enter appear-300">what this site does with your <em>data</em>.</h1>
+      <h1 class="enter appear-300">What this site does with your <em>data</em>.</h1>
       <p class="lead enter appear-450">
         burningsuit is a one-person business. This site sets no cookies and
         builds no profile of you. It measures which pages get read using
@@ -46,7 +46,7 @@ const contactSubject = "Privacy question";
 
   <section class="chapter" aria-labelledby="who">
     <div class="wrap">
-      <h2 class="section-head" id="who" data-reveal>who runs this site</h2>
+      <h2 class="section-head" id="who" data-reveal>Who runs this site</h2>
       <div class="prose">
         <p data-reveal>
           burningsuit is the trading name of Burningsuit Limited, a company
@@ -54,9 +54,9 @@ const contactSubject = "Privacy question";
           office is The Courtyard, Shoreham Road, Upper Beeding, West Sussex,
           BN44 3TN.
         </p>
-        <p data-reveal>
+        <p>
           I'm Alan Harman-Box, and burningsuit is me, so any question about your
-          data comes straight to me at <a class="u" href="mailto:alan@burningsuit.co.uk"
+          data comes straight to me at <a href="mailto:alan@burningsuit.co.uk"
           >alan@burningsuit.co.uk</a>. Burningsuit Limited is the data controller
           for the parts this site runs itself: the analytics below, and any
           enquiry or booking details once they reach me.
@@ -67,10 +67,10 @@ const contactSubject = "Privacy question";
 
   <section class="chapter" aria-labelledby="analytics">
     <div class="wrap">
-      <h2 class="section-head" id="analytics" data-reveal>the analytics</h2>
+      <h2 class="section-head" id="analytics" data-reveal>The analytics</h2>
       <div class="prose">
         <p data-reveal>
-          I use <a class="u" href="https://umami.is/privacy" target="_blank"
+          I use <a href="https://umami.is/privacy" target="_blank"
           rel="noopener noreferrer">Umami</a> for the analytics. It runs
           without cookies.
         </p>
@@ -79,14 +79,18 @@ const contactSubject = "Privacy question";
           your browser, operating system and device type (worked out from the
           user-agent your browser sends, which isn't itself kept), plus a coarse
           location - country, region and city - derived from your IP address,
-          which also isn't kept. It also records page-load timing measurements
-          (Core Web Vitals) with each page view; those carry no identifier.
-          Umami stores nothing in your browser and holds
+          which also isn't kept. Umami stores nothing in your browser and holds
           no persistent identifier. To count unique visitors without one, it
           hashes the site id with your IP and user-agent, salted with a value it
           rotates monthly; the raw IP and user-agent are processed transiently
           to compute that hash, never written to storage. So the data is
           isolated to a single month, site and device.
+        </p>
+        <p data-reveal>
+          It also records how quickly each page loaded for you - the timing
+          measurements browsers call Core Web Vitals - alongside the page view.
+          Those are numbers about the page, not about you, and carry no
+          identifier.
         </p>
         <p data-reveal>
           Why I do this: I want an aggregate, anonymous picture of which pages
@@ -108,7 +112,7 @@ const contactSubject = "Privacy question";
 
   <section class="chapter" aria-labelledby="optout">
     <div class="wrap">
-      <h2 class="section-head" id="optout" data-reveal>opting this device out</h2>
+      <h2 class="section-head" id="optout" data-reveal>Opting this device out</h2>
       <div class="prose">
         <p data-reveal>
           If you'd rather not be counted, you can exclude this device right here.
@@ -137,10 +141,10 @@ const contactSubject = "Privacy question";
 
   <section class="chapter" aria-labelledby="hosting">
     <div class="wrap">
-      <h2 class="section-head" id="hosting" data-reveal>where the site is hosted</h2>
+      <h2 class="section-head" id="hosting" data-reveal>Where the site is hosted</h2>
       <div class="prose">
         <p data-reveal>
-          The site is hosted on <a class="u" href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages"
+          The site is hosted on <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages"
           target="_blank" rel="noopener noreferrer">GitHub Pages</a>, run by
           GitHub, Inc. GitHub logs visitors' IP addresses for security purposes;
           that's covered by GitHub's own privacy statement. GitHub is a US
@@ -153,11 +157,11 @@ const contactSubject = "Privacy question";
 
   <section class="chapter" aria-labelledby="booking">
     <div class="wrap">
-      <h2 class="section-head" id="booking" data-reveal>booking a call</h2>
+      <h2 class="section-head" id="booking" data-reveal>Booking a call</h2>
       <div class="prose">
-        <p data-reveal>
+        <p>
           The "Book an hour" links take you to Cal.com to pick a time. That
-          booking happens on <a class="u" href="https://cal.com/privacy"
+          booking happens on <a href="https://cal.com/privacy"
           target="_blank" rel="noopener noreferrer">Cal.com's own site</a>, run by
           Cal.com, Inc. (a US company), under their privacy policy. When you book,
           I receive the details you give - your name, email, chosen time and answers to the booking questions
@@ -169,7 +173,7 @@ const contactSubject = "Privacy question";
 
   <section class="chapter" aria-labelledby="email">
     <div class="wrap">
-      <h2 class="section-head" id="email" data-reveal>emailing me</h2>
+      <h2 class="section-head" id="email" data-reveal>Emailing me</h2>
       <div class="prose">
         <p data-reveal>
           The "email me" links just open your own email program with my address
@@ -188,7 +192,7 @@ const contactSubject = "Privacy question";
 
   <section class="chapter" aria-labelledby="rights">
     <div class="wrap">
-      <h2 class="section-head" id="rights" data-reveal>your rights</h2>
+      <h2 class="section-head" id="rights" data-reveal>Your rights</h2>
       <div class="prose">
         <p data-reveal>
           Under UK data protection law you have rights over your personal data.
@@ -202,10 +206,10 @@ const contactSubject = "Privacy question";
           <li>objection - to my using it at all, including the analytics above;</li>
           <li>portability - where it applies, your data in a portable form.</li>
         </ul>
-        <p data-reveal>
-          To exercise any of these, email me at <a class="u" href="mailto:alan@burningsuit.co.uk"
+        <p>
+          To exercise any of these, email me at <a href="mailto:alan@burningsuit.co.uk"
           >alan@burningsuit.co.uk</a>. If you think I've handled your data badly
-          you can complain to the <a class="u" href="https://ico.org.uk/"
+          you can complain to the <a href="https://ico.org.uk/"
           target="_blank" rel="noopener noreferrer">Information Commissioner's
           Office</a>, the UK's data protection regulator; you're welcome to raise
           it with me first.
@@ -216,7 +220,7 @@ const contactSubject = "Privacy question";
 
   <section class="chapter" aria-labelledby="changes">
     <div class="wrap">
-      <h2 class="section-head" id="changes" data-reveal>changes to this notice</h2>
+      <h2 class="section-head" id="changes" data-reveal>Changes to this notice</h2>
       <div class="prose">
         <p data-reveal>
           This notice reflects how the site works today. If I change the setup, a

@@ -3,9 +3,9 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "description": "burningsuit.co.uk — Phase 2 site (Astro 6 + Tailwind v4, static, GitHub Pages)",
+  "description": "burningsuit.co.uk — Power BI, Fabric and AI advisory (Astro 6 + Tailwind v4, static, GitHub Pages)",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.20.0"
   },
   "scripts": {
     "dev": "astro dev",
@@ -19,27 +19,29 @@
     "check:seo": "node scripts/check-seo.mjs",
     "check:tests": "tsc --noEmit -p tsconfig.tests.json",
     "serve": "http-server dist -p 4321 -s -c-1",
-    "test:visual": "npm run check:tests && playwright test",
-    "test:visual:update": "playwright test --update-snapshots",
+    "test:visual": "npm run check:tests && playwright test --grep @visual",
+    "test:visual:update": "npm run check:tests && playwright test --grep @visual --update-snapshots",
+    "test:functional": "npm run check:tests && playwright test --project=chromium --grep-invert @visual",
     "test:links": "linkinator dist --recurse --silent --skip \"^mailto:|^https?://(?!localhost)\"",
     "test:lh": "lhci autorun",
+    "test:lh:mobile": "lhci autorun --config=./lighthouserc.mobile.cjs",
     "gate": "npm run check && npm run build && npm run test:links && npm run check:seo"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.3",
-    "@astrojs/sitemap": "^3.7.3",
-    "astro": "^6.4.7",
-    "sharp": "^0.35.1"
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^6.4.8",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
     "@lhci/cli": "^0.15.1",
-    "@playwright/test": "^1.61.0",
-    "@tailwindcss/postcss": "^4.3.1",
-    "@types/node": "^26.1.0",
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.5.0",
     "http-server": "^14.1.1",
     "linkinator": "^7.6.1",
-    "tailwindcss": "^4.3.1",
-    "typescript": "^5.9.0"
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
   }
 }

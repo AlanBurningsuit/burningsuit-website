@@ -20,13 +20,20 @@ const palette = {
   spark: "#d90148",
 };
 
-async function embeddedFont(prefix) {
-  const fontsDir = path.join(root, ".astro", "fonts");
-  const filename = (await readdir(fontsDir)).find((entry) => entry.startsWith(prefix));
-  if (!filename) {
-    throw new Error(`Missing ${prefix} in .astro/fonts. Run npm run build once, then retry.`);
+async function embeddedFont(family, weight) {
+  // Astro 6.4 writes the subset fonts under hashed names; the only reliable
+  // map from family + weight to file is the @font-face rule the build emits.
+  const html = await readFile(path.join(root, "dist", "index.html"), "utf8").catch(() => {
+    throw new Error("dist/index.html not found. Run npm run build once, then retry.");
+  });
+  const rule = [...html.matchAll(/@font-face\{([^}]*)\}/g)]
+    .map((m) => m[1])
+    .find((r) => r.includes(`font-family:"${family}`) && r.includes(`font-weight:${weight}`) && r.includes("url("));
+  const file = rule && rule.match(/url\("?([^")]+\.woff2)"?\)/)?.[1];
+  if (!file) {
+    throw new Error(`No built @font-face for ${family} ${weight}. Run npm run build once, then retry.`);
   }
-  return (await readFile(path.join(fontsDir, filename))).toString("base64");
+  return (await readFile(path.join(root, "dist", file))).toString("base64");
 }
 
 function paperPanel({ x, y, w, h, rows = 4, large = false }) {
@@ -96,38 +103,10 @@ function powerBiCard(defs, logo) {
     <path d="M897 391l7 7 13-16" fill="none" stroke="${palette.spark}" stroke-width="5" stroke-linecap="square"/>
   </g>`;
 
-  const body = `<text x="82" y="332" class="display" fill="${palette.fg}" xml:space="preserve">done <tspan fill="${palette.amber}">with</tspan> you.</text>
+  // The card carries the /power-bi H1 verbatim (two lines; the amber em on
+  // "team" mirrors RiseHeading). Re-render whenever that H1 changes.
+  const body = `<text x="82" y="296" class="display" style="font-size:56px" fill="${palette.fg}" xml:space="preserve">Working alongside<tspan x="82" dy="66">your Power BI <tspan fill="${palette.amber}">team</tspan>.</tspan></text>
     ${model}`;
-
-  return shell(defs, logo, body);
-}
-
-function aiFitCard(defs, logo) {
-  const decisionMap = `<g>
-    <rect x="70" y="112" width="430" height="370" fill="url(#dot-grid)"/>
-    <g fill="none" stroke="${palette.fg}" stroke-width="2.5" opacity="0.82">
-      <path d="M210 307H290V172H340M290 307H340M290 307V442H340"/>
-      <circle cx="290" cy="307" r="7" fill="${palette.bg}"/>
-      <circle cx="328" cy="172" r="5" fill="${palette.bg}"/>
-      <circle cx="328" cy="307" r="5" fill="${palette.bg}"/>
-      <circle cx="328" cy="442" r="5" fill="${palette.bg}"/>
-    </g>
-    <g filter="url(#paper-shadow)">
-      <rect x="90" y="265" width="120" height="85" rx="2" fill="${palette.paper}" stroke="${palette.paperEdge}" stroke-width="2"/>
-      <path d="M122 307h52m-14-14 14 14-14 14" fill="none" stroke="${palette.ink}" stroke-width="4"/>
-      <rect x="340" y="130" width="120" height="85" rx="2" fill="${palette.paper}" stroke="${palette.paperEdge}" stroke-width="2"/>
-      <path d="M374 190v-35h34m-12-11 12 11-12 11" fill="none" stroke="${palette.ink}" stroke-width="4"/>
-      <rect x="340" y="265" width="120" height="85" rx="2" fill="${palette.paper}" stroke="${palette.paperEdge}" stroke-width="2"/>
-      <path d="m373 307 16 16 34-40" fill="none" stroke="${palette.amber}" stroke-width="7"/>
-      <rect x="340" y="400" width="120" height="85" rx="2" fill="${palette.paper}" stroke="${palette.paperEdge}" stroke-width="2"/>
-      <circle cx="393" cy="436" r="20" fill="none" stroke="${palette.ink}" stroke-width="4"/>
-      <path d="m408 451 17 17" stroke="${palette.ink}" stroke-width="4"/>
-    </g>
-    <path d="M342 420v44" stroke="${palette.spark}" stroke-width="4" stroke-dasharray="6 5"/>
-  </g>`;
-
-  const body = `${decisionMap}
-    <text x="620" y="332" class="display" fill="${palette.fg}" xml:space="preserve">who <tspan fill="${palette.amber}">checks</tspan> it?</text>`;
 
   return shell(defs, logo, body);
 }
@@ -149,7 +128,7 @@ async function render(filename, svg, expectedWidth = width, expectedHeight = hei
 await mkdir(outputDir, { recursive: true });
 
 const [mona, logoSvg, markSvg] = await Promise.all([
-  embeddedFont("font-mona-800-normal-latin"),
+  embeddedFont("Mona Sans", 800),
   readFile(path.join(root, "public", "logos", "burningsuit-on-green.svg"), "utf8"),
   readFile(path.join(root, "public", "favicon.svg"), "utf8"),
 ]);
@@ -159,7 +138,6 @@ const defs = commonDefs(mona);
 
 const outputs = await Promise.all([
   render("linkedin-power-bi.png", powerBiCard(defs, logo)),
-  render("linkedin-ai-fit.png", aiFitCard(defs, logo)),
   render("burningsuit-mark-on-green.png", markAsset(mark), 400, 400),
 ]);
 

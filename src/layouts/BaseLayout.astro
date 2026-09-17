@@ -2,13 +2,12 @@
 /**
  * The document shell. Renders <head> (meta/OG, self-hosted <Font> tags, the
  * bundled enhancement module and analytics tracker), the sticky Header, the
- * page's <main>, and the fixed basement Footer.
+ * page's <main>, and the Footer, which remains in document flow while sticky.
  *
  * The CSP <meta http-equiv> is injected automatically by Astro's `security.csp`
  * feature — do NOT add one here by hand. The page ships NO hand-written inline
- * scripts: the `.js` reveal gate is armed inside the bundled enhance.ts module
- * (which the build inlines as a module script and auto-hashes into script-src —
- * hashes exist, and they're byte-sensitive, hence the LF-only rule), and the
+ * scripts: the bundled enhance.ts module
+ * (kept external by the build and allowed through script-src 'self'), and the
  * cookieless Umami tracker is governed by its explicit CSP hosts.
  */
 import { Font } from "astro:assets";
@@ -35,12 +34,12 @@ interface Props {
    *  stay out of the index. */
   noindex?: boolean;
   /** Prefilled mailto subject for the page's email path (the footer "email me"
-   *  and any page-level mailto). Part of the two-path funnel — book a call +
+   *  and any page-level mailto). Part of the two contact paths — Book an hour +
    *  email — giving the reader a contextual starting line. Omit for a bare
    *  mailto. */
   contactSubject?: string;
   /** og:type — "website" (default) for landing pages, "article" for editorial
-   *  pages (case studies / blog). Drives the article:* time tags below. */
+   *  pages (case studies / essays). Drives the article:* time tags below. */
   ogType?: "website" | "article";
   /** ISO timestamps for og:article — emitted only when ogType is "article". */
   publishedTime?: string;
@@ -55,7 +54,7 @@ const {
   title,
   description,
   ogImage = "/og-image.png",
-  ogImageAlt = "burningsuit - Power BI & Fabric advisory, done with you",
+  ogImageAlt = "The burningsuit flame mark and wordmark",
   ogImageWidth = 1200,
   ogImageHeight = 630,
   noindex = false,
@@ -153,10 +152,8 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
       }
     </Footer>
 
-    <!-- Progressive enhancement, bundled to a first-party external module. It
-         arms the html.js reveal gate first thing, so if it ever fails to load or
-         execute, no hidden state is armed and the page stays fully visible. It
-         also carries the console greeting for anyone reading the source. -->
+    <!-- Contact-intent tracking, study-read measurement and analytics opt-out.
+         Content, navigation and contact links work without this module. -->
     <script>
       import "../scripts/enhance.ts";
     </script>

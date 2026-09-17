@@ -12,7 +12,7 @@ async function prepare(page: Page, path: string) {
   await page.clock.setFixedTime(new Date("2026-07-02T10:30:00+01:00"));
   await page.goto(path);
   await page.evaluate(() => document.fonts.ready);
-  // fire every reveal, then settle at the top
+  // Load below-the-fold images, then return to the top.
   await page.evaluate(async () => {
     const step = Math.round(window.innerHeight * 0.6);
     for (let y = 0; y <= document.body.scrollHeight; y += step) {
@@ -31,46 +31,57 @@ async function prepare(page: Page, path: string) {
     for (const el of document.querySelectorAll<HTMLElement>("header#hd, a.skip")) {
       el.style.visibility = "hidden";
     }
+    // The hidden header needs no anchor clearance in region captures. Leaving
+    // its scroll padding active can place a nearly viewport-height region's
+    // bottom outside mobile Chromium's painted viewport, truncating the PNG.
+    // This changes scroll alignment only; real anchor clearance is tested in
+    // navigation.spec, and the readability matrix uses no such overrides.
+    document.documentElement.style.scrollPaddingBlockStart = "0px";
   });
 }
 
+test.describe("visual regions @visual", () => {
 test("home — regions", async ({ page }, testInfo) => {
   await prepare(page, "/");
   const tag = testInfo.project.name;
   await expect(page.locator(".hero")).toHaveScreenshot(`home-hero-${tag}.png`);
-  // the trust moment (cream proof beat + credibility line), then the doors
+  // Paired evidence, an inline explanation of the work, and the stance.
   await expect(page.locator(".chapter:has(#in-practice)")).toHaveScreenshot(`home-trust-${tag}.png`);
-  await expect(page.locator(".chapter:has(#what)")).toHaveScreenshot(`home-services-${tag}.png`);
+  await expect(page.locator(".chapter:has(#situations)")).toHaveScreenshot(`home-services-${tag}.png`);
   await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
   await expect(page.locator(".about")).toHaveScreenshot(`home-about-${tag}.png`);
-  // The footer is the FIXED basement (main slides over it), so scrollIntoView
-  // is a no-op and the capture shows whatever main content overlays its box.
-  // Pin absolute-bottom scroll so the basement is actually exposed — without
-  // this the shot depends on the incidental scroll the .about capture leaves,
-  // which shifts whenever page height changes (bit us 2026-07-15).
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-  await page.waitForTimeout(250);
+  // The footer is a normal-flow region; the locator scrolls it into view.
   await expect(page.locator("footer")).toHaveScreenshot(`home-footer-${tag}.png`);
 });
 
-test("ai-fit-for-teams — regions", async ({ page }, testInfo) => {
-  await prepare(page, "/ai-fit-for-teams/");
+test("hour — page", async ({ page }, testInfo) => {
+  await prepare(page, "/hour/");
+  await expect(page.locator(".hour-hero")).toHaveScreenshot(`hour-${testInfo.project.name}.png`);
+});
+
+test("writing essay — regions", async ({ page }, testInfo) => {
+  await prepare(page, "/writing/we-are-all-middle-management-now/");
   const tag = testInfo.project.name;
-  await expect(page.locator(".page-hero")).toHaveScreenshot(`aifit-hero-${tag}.png`);
-  await expect(page.locator(".movements")).toHaveScreenshot(`aifit-movements-${tag}.png`);
-  // the carved field document (the page's signature object since 2026-07)
-  await expect(page.locator(".fitmap-doc")).toHaveScreenshot(`aifit-fitmap-${tag}.png`);
-  // the offer band: tonal --bg-2 grouping + the talk photo inset (rhythm trial)
-  await expect(page.locator(".chapter:has(#how-it-works)")).toHaveScreenshot(`aifit-offer-band-${tag}.png`);
+  await expect(page.locator(".page-hero")).toHaveScreenshot(`essay-hero-${tag}.png`);
+  await expect(page.locator(".chapter:has(#daniels-story)")).toHaveScreenshot(`essay-body-${tag}.png`);
+  for (const kind of ["agent", "validation", "delegation", "experience"]) {
+    await expect(page.locator(`.essay-figure:has(#essay-figure-${kind}-caption)`)).toHaveScreenshot(`essay-figure-${kind}-${tag}.png`);
+  }
 });
 
 test("power-bi — regions", async ({ page }, testInfo) => {
   await prepare(page, "/power-bi/");
   const tag = testInfo.project.name;
   await expect(page.locator(".page-hero")).toHaveScreenshot(`pbi-hero-${tag}.png`);
-  await expect(page.locator(".proof")).toHaveScreenshot(`pbi-proof-${tag}.png`);
-  // the four offers as a ruled instrument (2026-07 review) — meta rows + rules
-  await expect(page.locator(".offer-table")).toHaveScreenshot(`pbi-offers-${tag}.png`);
+  // Capture the full practical chapter so its ruled rows and evidence exhibit
+  // stay together; the following chapters explain the working process and lead support.
+  await expect(page.locator('.chapter[aria-labelledby="situations"]')).toHaveScreenshot(`pbi-offers-${tag}.png`);
+  await expect(page.locator(".chapter:has(#how-the-work-runs)")).toHaveScreenshot(`pbi-working-${tag}.png`);
+  await expect(page.locator(".chapter:has(#second-opinion)")).toHaveScreenshot(`pbi-lead-${tag}.png`);
+  await expect(page.locator(".chapter:has(#discovery)")).toHaveScreenshot(`pbi-discovery-${tag}.png`);
+  await expect(page.locator(".chapter:has(#start)")).toHaveScreenshot(`pbi-start-${tag}.png`);
+  await expect(page.locator(".chapter:has(#pricing)")).toHaveScreenshot(`pbi-pricing-${tag}.png`);
+  await expect(page.locator(".chapter:has(#ai)")).toHaveScreenshot(`pbi-ai-${tag}.png`);
 });
 
 test("about — regions", async ({ page }, testInfo) => {
@@ -80,8 +91,7 @@ test("about — regions", async ({ page }, testInfo) => {
   // chapters scoped by their heading id so each `.chapter` locator is unambiguous.
   await expect(page.locator(".chapter:has(#capable)")).toHaveScreenshot(`about-capable-${tag}.png`);
   await expect(page.locator(".chapter:has(#human)")).toHaveScreenshot(`about-human-${tag}.png`);
-  // origin carries the Stuart & Alison studio inset since 2026-07; capable
-  // carries the café working shot — both covered by their chapter regions.
+  // The human chapter carries the talk; origin carries the studio inset.
   await expect(page.locator(".chapter:has(#origin)")).toHaveScreenshot(`about-origin-${tag}.png`);
   await expect(page.locator(".chapter:has(#dog)")).toHaveScreenshot(`about-dog-${tag}.png`);
 });
@@ -185,4 +195,5 @@ test("work — cta band region", async ({ page }, testInfo) => {
   await prepare(page, "/work/");
   const tag = testInfo.project.name;
   await expect(page.locator(".cta-band")).toHaveScreenshot(`work-cta-band-${tag}.png`);
+});
 });
