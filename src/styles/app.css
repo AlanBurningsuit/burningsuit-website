@@ -1545,6 +1545,12 @@
   }
 /* The short hour page: natural flow and a compact desktop layout. */
 .hour-hero {
+  /* One screen of content, so fill the viewport below the header: the footer
+     then starts at the fold and reveals on scroll instead of sitting exposed
+     beneath a short page. Print resets this. */
+  min-block-size: calc(100svh - var(--header-h));
+  display: grid;
+  align-content: center;
   padding-block: var(--space-cta);
 }
 .hour-hero .hour-layout {
@@ -1818,6 +1824,10 @@ html:not(.js) .figure-inset .ph {
 
 /* ============ print: readable before any scrolling ============ */
 @media print {
+  .hour-hero {
+    min-block-size: auto;
+    display: block;
+  }
   html {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
