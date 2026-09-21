@@ -20,6 +20,19 @@ interface Props {
 }
 const { study } = Astro.props;
 const { kicker, heading, lead, title, description, contactSubject, footerInvitation } = study;
+const headline = [heading.before, heading.em, heading.after].filter(Boolean).join("").trim();
+
+// The study's own LinkedIn / Open Graph card (1200×627, rendered from this
+// frontmatter by scripts/render-linkedin-featured.mjs). Without one, BaseLayout
+// falls back to the site-wide /og-image.png.
+const social = study.ogImage
+  ? {
+      ogImage: study.ogImage,
+      ogImageAlt: `${headline} Beside it, a stack of field-notebook pages, the front one ticked.`,
+      ogImageWidth: 1200,
+      ogImageHeight: 627,
+    }
+  : {};
 
 // Per-case-study structured data: an Article (authored by Alan, published by
 // the org — both linked by @id to the site graph) plus a Home → Work → page
@@ -31,7 +44,7 @@ const modifiedTime = study.dateModified?.toISOString();
 const article = articleNode({
   siteUrl,
   pageUrl,
-  headline: [heading.before, heading.em, heading.after].filter(Boolean).join("").trim(),
+  headline,
   description,
   datePublished: publishedTime,
   dateModified: modifiedTime,
@@ -48,6 +61,7 @@ const crumbs = breadcrumbList([
   description={description}
   contactSubject={contactSubject}
   ogType="article"
+  {...social}
   publishedTime={publishedTime}
   modifiedTime={modifiedTime}
   jsonLd={[article, crumbs]}
