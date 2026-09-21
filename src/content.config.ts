@@ -47,6 +47,17 @@ const work = defineCollection({
      */
     datePublished: z.coerce.date().optional(),
     dateModified: z.coerce.date().optional(),
+    /**
+     * The LinkedIn / Open Graph card for this study: `/social/linkedin-work-<slug>.png`,
+     * drawn from this frontmatter by `npm run render:social` (the kicker + H1
+     * verbatim, so the preview can't drift from the page). Omitted, the page
+     * falls back to the site-wide `/og-image.png`. check-seo fails the build if
+     * the declared asset is missing from dist/.
+     */
+    ogImage: z
+      .string()
+      .regex(/^\/social\/linkedin-work-[a-z0-9-]+\.png$/, "ogImage must be /social/linkedin-work-<slug>.png")
+      .optional(),
     /** Prefilled mailto subject for this page's CTAs. */
     contactSubject: z.string(),
     /** The page's footer "let's talk" invitation (carries the draft's "the ask"). */

@@ -14,6 +14,10 @@
  *     noindex) emit NONE — the schema gate and the index gate must agree
  *   - the Organization has its existing logo, resolved to an absolute URL and
  *     a built asset; Alan's LinkedIn belongs to the Person only
+ *   - exactly one og:image, absolute on the production origin, whose PNG is in
+ *     dist/ and whose real pixel size matches the declared og:image:width/height
+ *     (LinkedIn lays the preview out from those, and a missing asset falls back
+ *     to a random in-page image or none)
  *
  * Run after `npm run build` (needs dist/). FAILS the gate (exit 1) on any
  * violation. Mirrors scripts/check-budget.mjs in style.
@@ -41,6 +45,12 @@ const linkTags = (html) => [...html.matchAll(/<link\b[^>]*>/gi)].map((m) => m[0]
 const attr = (tag, name) => {
   const m = tag.match(new RegExp(`\\b${name}\\s*=\\s*"([^"]*)"`, "i"));
   return m ? m[1] : null;
+};
+// Width and height from a PNG's IHDR chunk (bytes 16–23), no decoder needed.
+const pngSize = (file) => {
+  const bytes = readFileSync(file);
+  if (bytes.length < 24 || bytes.toString("latin1", 1, 4) !== "PNG") return [NaN, NaN];
+  return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
 };
 
 let failed = false;
@@ -145,6 +155,41 @@ for (const rel of pages) {
     }
   }
 
+  // og:image — the social preview every page advertises. Presence isn't
+  // enough: the asset must be a built PNG whose real size matches the
+  // declared width/height, or LinkedIn's scraper (which trusts the numbers,
+  // then verifies the bytes) drops the card silently.
+  const og = (name) =>
+    metaTags(head)
+      .filter((t) => attr(t, "property") === name)
+      .map((t) => attr(t, "content") ?? "");
+  const images = og("og:image");
+  if (images.length !== 1) fail(route, `expected 1 og:image, found ${images.length}`);
+  else {
+    let imageUrl;
+    try {
+      imageUrl = new URL(images[0]);
+    } catch {
+      fail(route, `og:image is not an absolute URL: ${images[0]}`);
+    }
+    if (imageUrl) {
+      const asset = imageUrl.pathname.replace(/^\//, "");
+      if (imageUrl.origin !== SITE) fail(route, `og:image must live on ${SITE}: ${images[0]}`);
+      else if (!asset.endsWith(".png")) fail(route, `og:image must be a PNG: ${images[0]}`);
+      else if (!all.includes(asset)) fail(route, `og:image asset is missing from dist/: /${asset}`);
+      else {
+        const [w, h] = pngSize(join(DIST, asset));
+        const declared = [og("og:image:width"), og("og:image:height")].map((v) => (v.length === 1 ? Number(v[0]) : NaN));
+        if (declared.some((n) => !Number.isInteger(n) || n <= 0)) fail(route, "og:image needs one numeric og:image:width and og:image:height");
+        else if (declared[0] !== w || declared[1] !== h) {
+          fail(route, `og:image declares ${declared[0]}×${declared[1]} but /${asset} is ${w}×${h}`);
+        }
+      }
+      const alts = og("og:image:alt");
+      if (alts.length !== 1 || !alts[0].trim()) fail(route, "og:image needs one non-empty og:image:alt");
+    }
+  }
+
   // JSON-LD blocks
   const blocks = [
     ...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi),
@@ -229,4 +274,4 @@ if (failed) {
   console.error(`\nSEO gate FAILED — ${problems.length} problem(s):\n${problems.join("\n")}\n`);
   process.exit(1);
 }
-console.log("SEO gate passed ✓ (title, description, canonical, JSON-LD and identity on every page)\n");
+console.log("SEO gate passed ✓ (title, description, canonical, og:image, JSON-LD and identity on every page)\n");
