@@ -82,6 +82,12 @@ export const SITE_NAME = "burningsuit";
 /** Existing 400×400 company PNG; the graph resolves this against Astro.site. */
 export const ORG_LOGO = "/social/burningsuit-mark-on-green.png";
 
+/** Public company profiles verified during the September 2026 profile cleanup. */
+export const ORG_PROFILES = [
+  "https://www.linkedin.com/company/burningsuit/",
+  "https://local.google.com/place?id=18439134739250695743&use=srp&hl=en-GB",
+] as const;
+
 /** The Organization's description. Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =

@@ -19,6 +19,7 @@ import {
   ORG_ADDRESS,
   ORG_LEGAL,
   ORG_LOGO,
+  ORG_PROFILES,
   SERVICE_AREAS,
   FOUNDER,
   CONTACT_EMAIL,
@@ -59,6 +60,7 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
     description: ORG_DESCRIPTION,
     url: siteUrl,
     logo: new URL(ORG_LOGO, siteUrl).href,
+    sameAs: [...ORG_PROFILES],
     email: CONTACT_EMAIL,
     identifier: {
       "@type": "PropertyValue",

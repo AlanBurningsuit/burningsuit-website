@@ -2,6 +2,14 @@
 
 This pass implements `ownership-redesign-review.md` on `feat/ownership-redesign`. Alan authorised branch drafts and placeholders while he finishes the remaining inputs, and authorised pushing this branch. Integration into `dev` and production promotion remain separate decisions.
 
+## Metadata follow-up — 22 September 2026
+
+The essay first reached production in commit `c9eb930`, through [Pages run 35265875389](https://github.com/AlanBurningsuit/burningsuit-website/actions/runs/35265875389), whose deployment completed on 17 September 2026 at 19:39:51 UTC. Neither the preceding 15 September deployment nor the morning 17 September interim slice contained the essay file or route. Its frontmatter now records `datePublished: 2026-09-17`; the February–April talk dates remain separate. No explicit modification date has been added because the essay has not changed since that first production version.
+
+The Organization schema now identifies the verified company LinkedIn page and managed Google Business Profile through `sameAs`; Alan's personal LinkedIn remains on the Person node. These changes clarify the existing identity and publication metadata. They do not change the page copy or appearance.
+
+Validation: `npm run gate` passed, all 148 Chromium functional tests passed, and the built homepage and essay JSON-LD were inspected for the separate company/person profile references and the 17 September publication date. Alan approved pushing through preview and publishing on 22 September 2026.
+
 ## Inputs still to replace before release
 
 - `BOOKING_URL` is `https://cal.com/alan-burningsuit/hour` (confirmed 9 September 2026). The live event was checked on 16 September 2026: 60 minutes, both required questions (“What does your team need to be able to do that it can't yet?” and “What's been tried so far, and by whom?”) rendered on the booking form, and a description matching the hour page. The old `30min` event remains live and carries neither question.
