@@ -33,6 +33,18 @@ export function bookingHref(src?: string): string {
   return `${BOOKING_URL}${sep}utm_source=burningsuit&utm_content=${placement}&placement=${placement}`;
 }
 
+/** The Kit signup page for "Notes from burningsuit". */
+export const NOTES_URL = "https://burningsuit.kit.com/";
+
+/**
+ * Notes signup link tagged with the link location in `utm_content`, so Kit's
+ * subscriber source and the "Notes click" event share one placement value.
+ * Placements: footer, essay.
+ */
+export function notesHref(src: string): string {
+  return `${NOTES_URL}?utm_source=burningsuit&utm_content=${encodeURIComponent(src)}`;
+}
+
 /** Build a mailto with an optional prefilled subject (mirrors BaseLayout). */
 export function mailtoFor(subject?: string): string {
   return subject

@@ -89,6 +89,12 @@ document.addEventListener("click", (e) => {
     const placement = new URL((book as HTMLAnchorElement).href).searchParams.get("utm_content");
     track("Booking click", placement ? { placement } : undefined);
   }
+  // Notes signup links (notesHref in site.ts) follow the same pattern.
+  const notes = el?.closest?.('a[href^="https://burningsuit.kit.com/"]');
+  if (notes) {
+    const placement = new URL((notes as HTMLAnchorElement).href).searchParams.get("utm_content");
+    track("Notes click", placement ? { placement } : undefined);
+  }
 });
 
 /* ---- study-read tracking: a case study counts as READ when its closing
