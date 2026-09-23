@@ -7,6 +7,7 @@
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import { articleNode, breadcrumbList } from "../lib/schema";
+import { notesHref } from "../config/site";
 
 interface Props {
   essay: CollectionEntry<"writing">["data"];
@@ -63,6 +64,22 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", {
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
   <slot />
+
+  {/* Every essay closes like a case study: a ruled line where the essay stops,
+      one lead-in, then the notes signup for readers who want more and the way
+      into Alan's work. */}
+  <section class="chapter" aria-label="Related work">
+    <div class="wrap">
+      <div class="prose" data-reveal>
+        <hr />
+        <p>I write notes from working alongside Power BI teams, and send them when there's something worth saying. Or, if you're wondering who's been doing the talking, there's more about me.</p>
+        <div class="routes routes-stack">
+          <a class="route" href={notesHref("essay")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>
+          <a class="route" href="/about/">More about me, and the work I do</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
   <div class="talk-spacer"></div>

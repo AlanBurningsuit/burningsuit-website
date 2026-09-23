@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { ANALYTICS, BOOKING_URL } from "../src/config/site";
+import { ANALYTICS, BOOKING_URL, NOTES_URL } from "../src/config/site";
 
 /**
- * The four custom events (404 tracking, email-intent, booking-intent,
- * study-read) reach umami.track() correctly. The tracker script is routed to a recording stub that defines
+ * The five custom events (404 tracking, email-intent, booking-intent,
+ * notes-intent, study-read) reach umami.track() correctly. The tracker script is routed to a recording stub that defines
  * window.umami before enhance.ts runs (the mocked tag is a defer script in
  * <head>, the module runs at end of body), so assertions read the recorded
  * calls — no beacon mocking or counting (csp.spec.ts owns the beacon
@@ -78,13 +78,42 @@ test(`booking click on ${placement} keeps its event URL and attribution`, async 
     );
   });
 
-  const booking = page.locator(`a[href*="utm_content=${placement}"]`);
+  const booking = page.locator(`a[href^="${BOOKING_URL}"][href*="utm_content=${placement}"]`);
   await expect(booking).toHaveText("Book an hour");
   await expect(booking).toHaveAttribute("href", `${BOOKING_URL}?utm_source=burningsuit&utm_content=${placement}&placement=${placement}`);
   await booking.click();
 
   const calls = await readCalls(page);
   expect(calls).toContainEqual(["Booking click", { placement }]);
+});
+}
+
+for (const [path, placement] of [
+  ["/", "footer"],
+  ["/writing/we-are-all-middle-management-now/", "essay"],
+]) {
+test(`notes click on ${placement} keeps its signup URL and attribution`, async ({ page }) => {
+  await page.goto(path, { waitUntil: "load" });
+
+  // Notes links open a new tab — cancel that, as for booking links.
+  await page.evaluate(() => {
+    document.addEventListener(
+      "click",
+      (e) => {
+        const el = e.target as Element | null;
+        if (el?.closest?.('a[href^="https://burningsuit.kit.com/"]')) e.preventDefault();
+      },
+      true,
+    );
+  });
+
+  const notes = page.locator(`a[href^="${NOTES_URL}"][href*="utm_content=${placement}"]`);
+  await expect(notes).toHaveText("Notes from burningsuit");
+  await expect(notes).toHaveAttribute("href", `${NOTES_URL}?utm_source=burningsuit&utm_content=${placement}`);
+  await notes.click();
+
+  const calls = await readCalls(page);
+  expect(calls).toContainEqual(["Notes click", { placement }]);
 });
 }
 
