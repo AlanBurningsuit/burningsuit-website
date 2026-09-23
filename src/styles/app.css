@@ -696,6 +696,14 @@
   .chapter {
     padding-block: var(--space-super);
   }
+  /* an essay's closing routes (EssayLayout) continue the last chapter rather
+     than opening a new band: one default block space, not two section steps */
+  .chapter:has(+ .essay-end) {
+    padding-bottom: 0;
+  }
+  .essay-end {
+    padding-top: 0;
+  }
   /* flat tonal grouping (2026-07 rhythm trial — /ai-fit only until Alan rules
      on roll-out): adjacent .band-2 chapters share the raised ground so related
      sections read as one movement on a long dark scroll. Flat tone, no edges. */
