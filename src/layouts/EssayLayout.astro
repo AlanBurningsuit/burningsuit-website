@@ -65,11 +65,13 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", {
 
   <slot />
 
-  {/* Every essay closes like a case study: one lead-in, then the notes signup
-      for readers who want more and the way into Alan's work. */}
+  {/* Every essay closes like a case study: a ruled line where the essay stops,
+      one lead-in, then the notes signup for readers who want more and the way
+      into Alan's work. */}
   <section class="chapter" aria-label="Related work">
     <div class="wrap">
       <div class="prose" data-reveal>
+        <hr />
         <p>I write notes from working alongside Power BI teams, and send them when there's something worth saying. Or, if you're wondering who's been doing the talking, there's more about me.</p>
         <div class="routes routes-stack">
           <a class="route" href={notesHref("essay")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>

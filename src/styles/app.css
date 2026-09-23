@@ -117,6 +117,12 @@
   a:focus-visible {
     text-decoration-thickness: var(--bw-spine);
   }
+  /* a thematic break is the notebook's ruled line: the same hairline as every
+     other divider, spanning whatever column it sits in */
+  hr {
+    border: 0;
+    border-top: var(--bw-hair) solid var(--line);
+  }
   ::selection {
     background: var(--amber);
     color: var(--deep);
