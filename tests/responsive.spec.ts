@@ -22,7 +22,7 @@ const VIEWPORTS = [
 ];
 
 const ROUTES = ["/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/hour/", "/work/", "/about/", "/work/law-firm/"];
-const READING_ROUTES = [...ROUTES, "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/404.html"];
+const READING_ROUTES = [...ROUTES, "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
 
 async function headerHeights(page: Page) {
   return page.evaluate(() => {

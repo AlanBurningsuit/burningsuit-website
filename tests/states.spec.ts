@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 
-const pages = ["/", "/writing/we-are-all-middle-management-now/", "/hour/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/404.html"];
+const pages = ["/", "/writing/we-are-all-middle-management-now/", "/hour/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
 
 /** Check the reading surface before any scroll or class manipulation. */
 async function expectReadableContent(page: Page) {
