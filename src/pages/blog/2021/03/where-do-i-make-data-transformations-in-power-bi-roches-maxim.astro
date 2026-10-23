@@ -7,7 +7,8 @@
  * the URL is fixed by the inbound link.
  *
  * Stuart's text is his, with typos fixed and the old company sign-off left
- * off (both stated on the page). Alan's note follows it. The Article names
+ * off. The hero is just his byline and title; Alan's note follows the
+ * text. The Article names
  * Stuart as author and credits Alan's note as contributor; check-seo holds
  * the route to that and fails if it ever becomes a redirect stub again.
  */
@@ -54,22 +55,14 @@ const dateline = new Intl.DateTimeFormat("en-GB", {
 
   <section class="page-hero">
     <div class="wrap">
-      <p class="kicker meta enter">From the archive</p>
+      <p class="kicker meta enter">
+        Stuart Box · <time datetime={publishedTime.slice(0, 10)}>{dateline}</time>
+      </p>
       {/* The soft hyphen lets "transformations" break below 360px, where at
           --fs-7 it is wider than the column; wider screens never show it. */}
       <h1 class="enter appear-300">
         Where do I make data trans&shy;formations in Power BI? <em>Roche's Maxim</em>
       </h1>
-      <p class="lead enter appear-450">
-        My dad, Stuart, wrote this in March 2021, when he and my mum ran
-        burningsuit. When Matthew Roche wrote up his maxim two months later, he
-        <a href="https://ssbipolar.com/2021/05/31/roches-maxim/">credited this post</a>
-        as the first on the topic.
-      </p>
-      <div class="prose">
-        <p class="meta">Stuart Box, <time datetime={publishedTime.slice(0, 10)}>{dateline}</time></p>
-        <p class="meta">Restored with a few typos fixed and without the old company sign-off. My note is at the end.</p>
-      </div>
     </div>
   </section>
 
