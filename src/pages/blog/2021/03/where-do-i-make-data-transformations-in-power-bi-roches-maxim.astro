@@ -21,6 +21,8 @@ const description =
   "Stuart Box's March 2021 post on where to transform data in Power BI, which Matthew Roche credited as the first blog post on his maxim.";
 const published = new Date("2021-03-21");
 const publishedTime = published.toISOString();
+// Republished here (typo fixes, no 2021 sign-off) on this date.
+const modifiedTime = new Date("2026-10-23").toISOString();
 
 const siteUrl = Astro.site?.href ?? "https://burningsuit.co.uk/";
 const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
@@ -30,6 +32,7 @@ const article = articleNode({
   headline,
   description,
   datePublished: publishedTime,
+  dateModified: modifiedTime,
   author: { "@type": "Person", name: "Stuart Box" },
 });
 const crumbs = breadcrumbList([
@@ -47,6 +50,7 @@ const dateline = new Intl.DateTimeFormat("en-GB", {
   contactSubject="Roche's Maxim"
   ogType="article"
   publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
   jsonLd={[article, crumbs]}
 >
   <section class="page-hero">
