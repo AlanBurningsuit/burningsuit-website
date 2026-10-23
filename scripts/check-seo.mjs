@@ -32,8 +32,8 @@ const ORG_LOGO_PATH = "social/burningsuit-mark-on-green.png";
 const FOUNDER_PROFILE = "https://www.linkedin.com/in/alan-harman-box";
 // Legacy posts restored at their original URLs because external citations
 // link to them, mapped to their writer. Each must build as a real page (a
-// redirect stub would strand the citation again), name its writer as the
-// Article author and credit Alan's added note as contributor.
+// redirect stub would strand the citation again) and name its writer as the
+// Article author.
 const ARCHIVE_AUTHORS = {
   "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/": "Stuart Box",
 };
@@ -256,7 +256,6 @@ for (const rel of pages) {
           if (article.author?.["@type"] !== "Person" || article.author?.name !== archiveAuthor || article.author?.["@id"]) {
             fail(route, `archive Article author must be ${archiveAuthor}, inline`);
           }
-          if (article.contributor?.["@id"] !== person?.["@id"]) fail(route, "archive Article must credit Alan's note as contributor");
         } else if (article.author?.["@id"] !== person?.["@id"]) fail(route, "essay author must reference Alan's Person node");
         if (article.publisher?.["@id"] !== organization?.["@id"]) fail(route, "essay publisher must reference the Organization node");
         if (article.url !== SITE + route || article.mainEntityOfPage !== SITE + route) fail(route, "essay Article must identify its own canonical page");

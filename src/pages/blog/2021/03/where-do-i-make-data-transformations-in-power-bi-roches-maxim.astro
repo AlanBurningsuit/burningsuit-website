@@ -7,19 +7,18 @@
  * the URL is fixed by the inbound link.
  *
  * Stuart's text is his, with typos fixed and the old company sign-off left
- * off. The hero is just his byline and title; Alan's note follows the
- * text. The Article names
- * Stuart as author and credits Alan's note as contributor; check-seo holds
- * the route to that and fails if it ever becomes a redirect stub again.
+ * off: byline and title, his text, then links to Notes and the About origin
+ * chapter. The Article names Stuart as author; check-seo holds the route to
+ * that and fails if it ever becomes a redirect stub again.
  */
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import Chapter from "../../../../components/Chapter.astro";
-import { articleNode, breadcrumbList, personId } from "../../../../lib/schema";
+import { articleNode, breadcrumbList } from "../../../../lib/schema";
 import { notesHref } from "../../../../config/site";
 
 const headline = "Where do I make data transformations in Power BI? Roche's Maxim";
 const description =
-  "Stuart Box's March 2021 post on where to transform data in Power BI, which Matthew Roche credited as the first blog post on his maxim. With a note from Alan Harman-Box.";
+  "Stuart Box's March 2021 post on where to transform data in Power BI, which Matthew Roche credited as the first blog post on his maxim.";
 const published = new Date("2021-03-21");
 const publishedTime = published.toISOString();
 
@@ -32,7 +31,6 @@ const article = articleNode({
   description,
   datePublished: publishedTime,
   author: { "@type": "Person", name: "Stuart Box" },
-  contributor: { "@id": personId(siteUrl) },
 });
 const crumbs = breadcrumbList([
   { name: "Home", url: siteUrl },
@@ -51,8 +49,6 @@ const dateline = new Intl.DateTimeFormat("en-GB", {
   publishedTime={publishedTime}
   jsonLd={[article, crumbs]}
 >
-  <Fragment slot="footer-invitation">If you're working out where your transformations should live, we can talk it through</Fragment>
-
   <section class="page-hero">
     <div class="wrap">
       <p class="kicker meta enter">
@@ -207,41 +203,10 @@ const dateline = new Intl.DateTimeFormat("en-GB", {
     </p>
   </Chapter>
 
-  <Chapter id="a-note-from-alan" kicker="A note from Alan">
-    <p>
-      Five years on, I teach Roche's Maxim myself, and Stuart's corollary with
-      it. I tend to put the corollary as: transformation is expensive,
-      analytics is cheap.
-    </p>
-    <p>
-      DAX is as far downstream as Power BI goes, which is why I tell people
-      that DAX is for aggregation: the numbers that depend on what someone
-      using the report has chosen to look at. If you find yourself building a table or fixing
-      data in DAX, stop and ask whether that work could happen further up.
-      Structure goes to the source if you control it, and to Power Query if
-      you don't.
-    </p>
-    <p>
-      The second half of the maxim matters as much as the first. Your report is
-      usually one of many things reading from a source, and you can't always
-      reshape that source to suit it. Ask the database owner for a view, by all
-      means. But when the answer is no, Power Query is where the work belongs,
-      and that's fine.
-    </p>
-    <p>
-      Downstream fixes can also hide upstream problems. Remove Duplicates in
-      Power Query gets rid of the duplicate row in front of you. It also
-      quietly removes every duplicate that arrives after it, and it never tells
-      you why the first one was there. If the problem is in the source, the fix
-      belongs there too.
-    </p>
-  </Chapter>
-
   <section class="chapter" aria-label="Related work">
     <div class="wrap">
       <div class="prose" data-reveal>
         <hr />
-        <p>I write notes from working alongside Power BI teams, and send them when there's something worth saying. Or, if you're wondering how burningsuit got from Stuart to me, there's more on the About page.</p>
         <div class="routes routes-stack">
           <a class="route" href={notesHref("archive")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>
           <a class="route" href="/about/#origin">Where burningsuit comes from</a>
