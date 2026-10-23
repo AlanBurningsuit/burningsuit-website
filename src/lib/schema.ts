@@ -102,6 +102,9 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
  * An Article node for editorial pages (case studies, essays).
  * `author`/`publisher` reference the site graph by @id; dates are emitted
  * only when present (the freshness signal answer engines weight heavily).
+ * `author` defaults to Alan; a restored archive post passes its own writer
+ * inline (the gate allows one top-level Person, and that is Alan) and credits
+ * Alan's added note as `contributor`.
  */
 export function articleNode(opts: {
   siteUrl: string;
@@ -110,6 +113,8 @@ export function articleNode(opts: {
   description: string;
   datePublished?: string;
   dateModified?: string;
+  author?: SchemaNode;
+  contributor?: SchemaNode;
 }): SchemaNode {
   return compact({
     "@type": "Article",
@@ -119,7 +124,8 @@ export function articleNode(opts: {
     url: opts.pageUrl,
     mainEntityOfPage: opts.pageUrl,
     isPartOf: { "@id": websiteId(opts.siteUrl) },
-    author: { "@id": personId(opts.siteUrl) },
+    author: opts.author ?? { "@id": personId(opts.siteUrl) },
+    contributor: opts.contributor,
     publisher: { "@id": orgId(opts.siteUrl) },
     datePublished: opts.datePublished,
     dateModified: opts.dateModified ?? opts.datePublished,

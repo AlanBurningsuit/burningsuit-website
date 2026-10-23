@@ -39,7 +39,7 @@ export const NOTES_URL = "https://burningsuit.kit.com/";
 /**
  * Notes signup link tagged with the link location in `utm_content`, so Kit's
  * subscriber source and the "Notes click" event share one placement value.
- * Placements: footer, essay.
+ * Placements: footer, essay, archive.
  */
 export function notesHref(src: string): string {
   return `${NOTES_URL}?utm_source=burningsuit&utm_content=${encodeURIComponent(src)}`;

@@ -42,7 +42,9 @@ export default defineConfig({
     "/blog/2018/02/power-bi-free-vs-pro": "/power-bi/",
     "/blog/2021/06/charticulator-in-power-bi-5": "/power-bi/",
     "/blog/charticulator-power-bi-6": "/power-bi/",
-    "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim": "/power-bi/",
+    // Not here by design: /blog/2021/03/where-do-i-make-data-transformations-
+    // in-power-bi-roches-maxim/ is a real page again (Stuart's post, restored
+    // for Matthew Roche's citation). check-seo fails if it becomes a stub.
     // Company-news post → the credibility page
     "/blog/burningsuit-featured-microsoft-business-applications-summit": "/about/",
     // "Power BI in practice" archive → the case-study index

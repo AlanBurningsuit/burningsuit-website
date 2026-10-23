@@ -18,6 +18,7 @@ const pages = [
   "/work/",
   "/work/law-firm/",
   "/privacy/",
+  "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/",
 ];
 
 for (const path of pages) {

@@ -1,0 +1,262 @@
+---
+/**
+ * Stuart Box's 2021 post that Matthew Roche's own write-up credits and links
+ * (ssbipolar.com, 31 May 2021), restored at its original WordPress URL so that
+ * citation lands on the article it promised instead of a redirect. A bespoke
+ * page rather than a collection: it is the one legacy post brought back, and
+ * the URL is fixed by the inbound link.
+ *
+ * Stuart's text is his, with typos fixed and the old company sign-off left
+ * off (both stated on the page). Alan's note follows it. The Article names
+ * Stuart as author and credits Alan's note as contributor; check-seo holds
+ * the route to that and fails if it ever becomes a redirect stub again.
+ */
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import Chapter from "../../../../components/Chapter.astro";
+import { articleNode, breadcrumbList, personId } from "../../../../lib/schema";
+import { notesHref } from "../../../../config/site";
+
+const headline = "Where do I make data transformations in Power BI? Roche's Maxim";
+const description =
+  "Stuart Box's March 2021 post on where to transform data in Power BI, which Matthew Roche credited as the first blog post on his maxim. With a note from Alan Harman-Box.";
+const published = new Date("2021-03-21");
+const publishedTime = published.toISOString();
+
+const siteUrl = Astro.site?.href ?? "https://burningsuit.co.uk/";
+const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
+const article = articleNode({
+  siteUrl,
+  pageUrl,
+  headline,
+  description,
+  datePublished: publishedTime,
+  author: { "@type": "Person", name: "Stuart Box" },
+  contributor: { "@id": personId(siteUrl) },
+});
+const crumbs = breadcrumbList([
+  { name: "Home", url: siteUrl },
+  { name: headline, url: pageUrl },
+]);
+const dateline = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
+}).format(published);
+---
+
+<BaseLayout
+  title={`${headline} - burningsuit`}
+  description={description}
+  contactSubject="Roche's Maxim"
+  ogType="article"
+  publishedTime={publishedTime}
+  jsonLd={[article, crumbs]}
+>
+  <Fragment slot="footer-invitation">If you're working out where your transformations should live, we can talk it through</Fragment>
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="kicker meta enter">From the archive</p>
+      {/* The soft hyphen lets "transformations" break below 360px, where at
+          --fs-7 it is wider than the column; wider screens never show it. */}
+      <h1 class="enter appear-300">
+        Where do I make data trans&shy;formations in Power BI? <em>Roche's Maxim</em>
+      </h1>
+      <p class="lead enter appear-450">
+        My dad, Stuart, wrote this in March 2021, when he and my mum ran
+        burningsuit. When Matthew Roche wrote up his maxim two months later, he
+        <a href="https://ssbipolar.com/2021/05/31/roches-maxim/">credited this post</a>
+        as the first on the topic.
+      </p>
+      <div class="prose">
+        <p class="meta">Stuart Box, <time datetime={publishedTime.slice(0, 10)}>{dateline}</time></p>
+        <p class="meta">Restored with a few typos fixed and without the old company sign-off. My note is at the end.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <section class="chapter" aria-label="Introduction">
+    <div class="wrap">
+      <div class="prose" data-reveal>
+        <p>
+          When we're Training on Power BI a frequent question we get is
+          <strong>"I need to make changes to my data for reporting, where is the best place to do that, in the Data Model with DAX, or in Power Query?"</strong>
+          The answer is, as ever "<strong>It depends</strong>". To answer the
+          question properly, we need to understand where we can make data
+          changes in Power BI, then I can introduce a maxim that explains the
+          best place to make those changes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Chapter id="data-transformations" kicker="Data Transformations">
+    <p>
+      There are a bewildering number of places we can make changes to our data
+      for use in Power BI, we need to look at what and where these places are.
+      Let's take a couple of scenarios, in one we have a SQL database and we
+      want to join two tables together and report on the total values, and
+      another where we have several CSV files we need to join together and
+      report on as one large list of data.
+    </p>
+  </Chapter>
+
+  <Chapter id="dax-transformations" kicker="DAX Transformations">
+    <p>
+      Once we've imported the data into Power BI, we can use DAX to make these
+      changes in our Data Model, here we can create relationships and use these
+      to join the data elements together. Then we can use DAX to aggregate the
+      values, add up the numbers and calculate the values we'll report on. In
+      the Data Model our scenarios are pretty much the same, the data is just
+      presented as tables in Power BI which DAX can manipulate with commands
+      like "<strong>USERELATIONSHIP</strong>" and "<strong>LOOKUPVALUE</strong>".
+    </p>
+  </Chapter>
+
+  <Chapter id="power-query-transformations" kicker="Power Query Transformations">
+    <p>
+      One alternative is to make these transforms in Power Query. In the SQL
+      scenario we can "join" two tables together in Power Query and create a
+      single table that may be easier to work with. In the CSV files scenario
+      we can connect to a folder of files with Power Query and concatenate them
+      to present the files as one table in the Data Model.
+    </p>
+  </Chapter>
+
+  <Chapter id="dataflow-transformations" kicker="Dataflow Transformations">
+    <p>
+      Another place we could make these transforms is in a Dataflow,
+      <strong>if you haven't looked at Dataflows yet, I'd encourage you to do so</strong>.
+      A Dataflow is essentially Power Query Online, a Cloud-based tool that
+      lets you transform your data, from SQL databases, Excel or CSV files
+      etc., and store that changed data in the Cloud, this can then be loaded
+      into a Data Model pre-cleaned and ready to go. We can take the queries
+      from Power Query for our SQL or CSV scenario above and create them as
+      Dataflows which can then be re-used for many other Data Models.
+    </p>
+  </Chapter>
+
+  <Chapter id="original-data-transformations" kicker="Original Data Transformations">
+    <p>
+      Of course, we don't have to make these transformations on Power BI, we
+      could create a <strong>View</strong> in SQL to join our two tables or
+      change the Database to hold them differently. In the CSV scenario we
+      could get the data owner to provide one big table rather than keep them
+      split as many smaller separate tables.
+    </p>
+  </Chapter>
+
+  <Chapter id="choices-choices" kicker="Choices, choices.">
+    <p>
+      With many different ways to shape data, <strong>where is the best place to do it?</strong>
+      Probably the finest answer to this question is given by Matthew Roche.
+      He's a Program Manager on the Power BI team at Microsoft, with his own
+      blog over at
+      <a href="https://ssbipolar.com/">BI Polar – Business Intelligence, Data Governance, Mental Health, Diversity, Martial Arts, and Heavy Metal. (ssbipolar.com)</a>.
+      Outside of Power BI Matthew is passionate about Historical European
+      Martial Arts and a considerable swordsman. Maybe this is why his
+      observations are so sharp and pointed. In a recent
+      "<a href="https://www.youtube.com/c/GuyinaCube/featured">Guy in a Cube</a>"
+      livestream session he made a brilliant comment, which I've started to
+      call "Roche's Maxim".
+    </p>
+    <blockquote>
+      <p class="takeaway">Data transformations should be made "As far upstream as possible, as far downstream as necessary".</p>
+    </blockquote>
+    <p>
+      What does this mean? Well, "<strong>Upstream</strong>" means near to the
+      original data, the database or data or files you're reporting on.
+      "<strong>Downstream</strong>" is away from this data, nearer to the
+      report or analysis you're creating from the data. What Roche's Maxim
+      succinctly says is that you should make data transformation as near to
+      the original data as you can. In our SQL example you could make the
+      transforms in the database or as a SQL View. In our CSV example you
+      could join the original files together at the start, before you load
+      them into Power BI. But it recognises that we can't always make the
+      transformation that far "<strong>upstream</strong>" near the original
+      Data. Maybe we don't have access to the Database, or can't use SQL,
+      because we don't know the language, or don't have access to create
+      Views. Perhaps the CSV files arrive monthly, not all at once, or they are
+      on a file system we can't write to. In these cases it's necessary to
+      make the transformations further "<strong>downstream</strong>" away from
+      the original Data. This could be in a Dataflow, or in Power Query in
+      Power BI desktop. Finally, if none of these options are available, we
+      can make the changes with DAX.
+      <strong>It's always going to be more efficient to make the transformations as near to the original data as possible</strong>.
+    </p>
+  </Chapter>
+
+  <Chapter id="why-is-this-important" kicker="Why is this important?">
+    <p>
+      Knowing where to make the transforms is important because
+      <strong>these changes all have a cost</strong>. It may be a cost in time,
+      or in computing power. Making lots of changes through DAX will take time
+      to execute and may slow your report, and that will happen whenever the
+      report is viewed. Making the changes in Power Query moves the time cost
+      to whenever data refresh happens, which may be less frequently than when
+      the report is viewed. Moving the Power Query changes to a Dataflow, both
+      allows the Query to be re-used multiple times, but also moves the time
+      cost to when the Dataflow is refreshed, which may be different from when
+      the Data Model is refreshed. Finally making changes in the Database
+      itself as a database modification or a View puts the time cost to the
+      Database server (which may be the best place for it) making Reports and
+      Data Model refresh more efficient and hence faster. But the thing is,
+      there's always a cost, so here's my corollary to Roche's Maxim.
+    </p>
+    <blockquote>
+      <p class="takeaway">You've got to pay the cost of data transformations; your only choice is when and where you pay that cost.</p>
+    </blockquote>
+    <p>
+      When you're designing your Power BI reports, or more often, when you're
+      trying to work out why your Report or data refresh is slow, remember
+      Roche's Maxim, and maybe think about moving your data transforms further
+      "upstream".
+    </p>
+  </Chapter>
+
+  <Chapter id="a-note-from-alan" kicker="A note from Alan">
+    <p>
+      Five years on, I teach Roche's Maxim myself, and Stuart's corollary with
+      it. I tend to put the corollary as: transformation is expensive,
+      analytics is cheap.
+    </p>
+    <p>
+      DAX is as far downstream as Power BI goes, which is why I tell people
+      that DAX is for aggregation: the numbers that depend on what someone
+      using the report has chosen to look at. If you find yourself building a table or fixing
+      data in DAX, stop and ask whether that work could happen further up.
+      Structure goes to the source if you control it, and to Power Query if
+      you don't.
+    </p>
+    <p>
+      The second half of the maxim matters as much as the first. Your report is
+      usually one of many things reading from a source, and you can't always
+      reshape that source to suit it. Ask the database owner for a view, by all
+      means. But when the answer is no, Power Query is where the work belongs,
+      and that's fine.
+    </p>
+    <p>
+      Downstream fixes can also hide upstream problems. Remove Duplicates in
+      Power Query gets rid of the duplicate row in front of you. It also
+      quietly removes every duplicate that arrives after it, and it never tells
+      you why the first one was there. If the problem is in the source, the fix
+      belongs there too.
+    </p>
+  </Chapter>
+
+  <section class="chapter" aria-label="Related work">
+    <div class="wrap">
+      <div class="prose" data-reveal>
+        <hr />
+        <p>I write notes from working alongside Power BI teams, and send them when there's something worth saying. Or, if you're wondering how burningsuit got from Stuart to me, there's more on the About page.</p>
+        <div class="routes routes-stack">
+          <a class="route" href={notesHref("archive")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>
+          <a class="route" href="/about/#origin">Where burningsuit comes from</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>

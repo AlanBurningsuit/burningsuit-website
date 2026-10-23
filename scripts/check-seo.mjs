@@ -30,6 +30,13 @@ const DIST = "dist";
 const SITE = "https://burningsuit.co.uk";
 const ORG_LOGO_PATH = "social/burningsuit-mark-on-green.png";
 const FOUNDER_PROFILE = "https://www.linkedin.com/in/alan-harman-box";
+// Legacy posts restored at their original URLs because external citations
+// link to them, mapped to their writer. Each must build as a real page (a
+// redirect stub would strand the citation again), name its writer as the
+// Article author and credit Alan's added note as contributor.
+const ARCHIVE_AUTHORS = {
+  "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/": "Stuart Box",
+};
 
 const all = readdirSync(DIST, { recursive: true }).map((f) => String(f).replaceAll("\\", "/"));
 const pages = all.filter((f) => f.endsWith(".html")).sort();
@@ -63,6 +70,9 @@ const fail = (route, msg) => {
 
 if (!pages.includes("writing/index.html")) fail("/writing/", "missing redirect to the first essay");
 if (!pages.includes("writing/we-are-all-middle-management-now/index.html")) fail("/writing/", "first essay is missing from the build");
+for (const route of Object.keys(ARCHIVE_AUTHORS)) {
+  if (!pages.includes(route.slice(1) + "index.html")) fail(route, "restored archive post is missing from the build");
+}
 
 for (const rel of pages) {
   const route = "/" + rel.replace(/index\.html$/, "").replace(/\.html$/, "");
@@ -77,6 +87,7 @@ for (const rel of pages) {
   const refresh = html.match(/<meta http-equiv="refresh" content="\d+;url=([^"]+)"/i);
   if (refresh) {
     redirectStubs++;
+    if (ARCHIVE_AUTHORS[route]) fail(route, "restored archive post must be the page itself, not a redirect stub");
     let targetUrl;
     try {
       targetUrl = new URL(refresh[1], SITE);
@@ -131,7 +142,9 @@ for (const rel of pages) {
     (t) => attr(t, "name") === "robots" && /noindex/i.test(attr(t, "content") ?? ""),
   );
 
-  if (route.startsWith("/writing/") && noindex) fail(route, "essay page is unexpectedly noindexed");
+  const archiveAuthor = ARCHIVE_AUTHORS[route];
+  const editorial = (route.startsWith("/writing/") && route !== "/writing/") || Boolean(archiveAuthor);
+  if (editorial && noindex) fail(route, "essay page is unexpectedly noindexed");
 
   // <link rel="canonical"> — mirrors the JSON-LD rule: noindex pages emit NO
   // canonical (a canonical on a noindexed page is a mixed signal); indexable
@@ -230,14 +243,21 @@ for (const rel of pages) {
     if (person && (!Array.isArray(person.sameAs) || !person.sameAs.includes(FOUNDER_PROFILE))) {
       fail(route, "Person sameAs is missing Alan's confirmed LinkedIn");
     }
-    if (route.startsWith("/writing/") && route !== "/writing/") {
+    if (editorial) {
       const articles = nodes.filter((node) => node?.["@type"] === "Article");
       const breadcrumbs = nodes.filter((node) => node?.["@type"] === "BreadcrumbList");
       if (articles.length !== 1) fail(route, `expected 1 essay Article, found ${articles.length}`);
       if (breadcrumbs.length !== 1) fail(route, `expected 1 essay BreadcrumbList, found ${breadcrumbs.length}`);
       const article = articles[0];
       if (article) {
-        if (article.author?.["@id"] !== person?.["@id"]) fail(route, "essay author must reference Alan's Person node");
+        if (archiveAuthor) {
+          // Inline, not a second top-level Person: the identity graph's one
+          // Person is Alan, and the post is not his.
+          if (article.author?.["@type"] !== "Person" || article.author?.name !== archiveAuthor || article.author?.["@id"]) {
+            fail(route, `archive Article author must be ${archiveAuthor}, inline`);
+          }
+          if (article.contributor?.["@id"] !== person?.["@id"]) fail(route, "archive Article must credit Alan's note as contributor");
+        } else if (article.author?.["@id"] !== person?.["@id"]) fail(route, "essay author must reference Alan's Person node");
         if (article.publisher?.["@id"] !== organization?.["@id"]) fail(route, "essay publisher must reference the Organization node");
         if (article.url !== SITE + route || article.mainEntityOfPage !== SITE + route) fail(route, "essay Article must identify its own canonical page");
         if (typeof article.headline !== "string" || !article.headline.trim()) fail(route, "essay Article headline is empty");
