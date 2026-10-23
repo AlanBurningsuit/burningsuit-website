@@ -1,5 +1,7 @@
 # Workflow review — 8 September 2026
 
+> Historical workflow verification and Dependabot reconciliation from 8 September 2026. Release checks, branch state, authorisations and outstanding hosted checks below describe that work at that time. This is not a fresh check of GitHub or the current remote state; see the [documentation index](../README.md) for current guidance.
+
 Production validates the artifact it will publish. The sequence is checkout → Node 22 with npm cache → `npm ci` → `npm run gate` → install Playwright Chromium with OS dependencies → `npm run test:functional` → configure Pages → upload `dist/` → deploy Pages. The gate builds once; functional tests include test type-checking and serve that existing build. No step rebuilds between testing and uploading. The artifact includes `.nojekyll`.
 
 The production build job has `contents: read` and `pages: read` for Pages configuration. Only the deploy job has `pages: write` and `id-token: write`; it requires the build and remains guarded to `refs/heads/main`. The `github-pages` environment and non-cancelling `pages` concurrency group are retained. A manual dispatch from another branch cannot deploy to the apex.

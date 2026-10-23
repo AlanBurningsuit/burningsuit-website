@@ -324,7 +324,7 @@
   }
 
   /* ============ text links: the ROUTE ============ */
-  /* A standalone "go here next" line — the door/card .go grammar on its own:
+  /* A standalone "go here next" line — the card .go grammar on its own:
      body ink in the display face, no underline, an amber arrow supplied HERE
      (never typed in copy; the alt "" keeps it out of the accessible name).
      Hover/focus: the text warms, the arrow nudges. Prose links (inside a
@@ -702,12 +702,6 @@
   .chapter {
     padding-block: var(--space-super);
   }
-  /* flat tonal grouping (2026-07 rhythm trial — /ai-fit only until Alan rules
-     on roll-out): adjacent .band-2 chapters share the raised ground so related
-     sections read as one movement on a long dark scroll. Flat tone, no edges. */
-  .band-2 {
-    background: var(--bg-2);
-  }
   /* the promoted section heading: the section's one signed string as display
      type (--fs-3 tier). No eyebrow above it — eyebrows are page-hero-only.
      The margin-bottom is the flow floor; a sibling's own margin-top (space-md
@@ -795,61 +789,9 @@
     }
   }
 
-  /* ============ the doors: dark editorial rows into the service pages ============ */
-  /* Cream is proof-only, so the routes into the two offers sit on the dark
-     ground as editorial rows — hairline-topped, whole-row links. The lead
-     door (Power BI) is deliberately fuller than the second (front-door
-     hierarchy, not a stagger). The hover tell is AMBER: spark on this ground
-     is 2.65:1 and never carries a state. */
-  .doors {
-    display: grid;
-    gap: var(--space-md);
-    margin-top: var(--space-md);
-  }
-  .door {
-    display: block;
-    text-decoration: none;
-    border-top: var(--bw-hair) solid var(--line);
-    padding-top: var(--space-md);
-    transition: border-top-color var(--t-flip);
-  }
-  .door h3 {
-    color: var(--fg);
-    font-size: var(--fs-2);
-    max-width: var(--measure-head);
-  }
-  .door-lead h3 {
-    font-size: var(--fs-3);
-  }
-  .door p {
-    margin-top: var(--space-block);
-    color: var(--fg-dim);
-    max-width: var(--measure-prose);
-  }
-  .door-lead p {
-    max-width: var(--measure-wide);
-  }
-  .door .go {
-    color: var(--fg-dim);
-    margin-top: var(--space-block);
-    padding-top: 0;
-  }
-  .door:hover,
-  .door:focus-visible {
-    border-top-color: var(--amber); /* the hairline warms with the tell */
-  }
-  .door:hover .go,
-  .door:focus-visible .go {
-    color: var(--amber);
-  }
-  .door:hover .go::after,
-  .door:focus-visible .go::after {
-    transform: translateX(3px);
-  }
   /* ============ carved cream proof panels ============ */
   /* Capped at the wide reading measure so cards never run wider than the prose
-     / case-file panel sharing the same `.what` column — the lone door card is
-     capped too, so it lines up with the other panels. */
+     / case-file panel sharing the same `.what` column. */
   .offers {
     display: grid;
     gap: var(--space-xs);
@@ -1176,38 +1118,6 @@
     }
   }
 
-  /* ============ how i work: the 3 parallel principles, UNNUMBERED ============ */
-  /* They are parallel, not sequential, so no 01/02/03 (that implies an order
-     that isn't there). A clean hairline-separated list, Mona 600 titles,
-     fg-dim bodies — a rhythm distinct from the offer cards + numbered movements. */
-  .principles {
-    display: grid;
-    gap: var(--space-md);
-    grid-template-columns: 1fr;
-  }
-  .principle {
-    padding-top: var(--space-xs);
-    border-top: var(--bw-hair) solid var(--line);
-  }
-  .principle:first-child {
-    border-top: 0;
-    padding-top: 0;
-  }
-  .principle h3 {
-    font-family: var(--ff-display);
-    font-weight: 600;
-    font-size: var(--fs-1);
-    line-height: var(--lh-snug);
-    letter-spacing: var(--ls-display-tight);
-    color: var(--fg);
-  }
-  .principle p {
-    color: var(--fg-dim);
-    margin-top: 0.4rem;
-    font-size: var(--fs-sm);
-    max-width: var(--measure-wide);
-  }
-
   /* ============ photo as material (framed like a log entry) ============ */
   .photo-ch {
     padding-block: var(--space-super);
@@ -1347,7 +1257,7 @@
     padding-block: var(--space-super);
   }
   /* the whole teaser is the door — a block anchor on the dark ground with a
-     hairline top, same grammar as the service doors; the one tell (.go)
+     hairline top; the one tell (.go)
      warms to amber. */
   .about-door {
     display: block;
@@ -1360,7 +1270,7 @@
   }
   .about-door:hover,
   .about-door:focus-visible {
-    border-top-color: var(--amber); /* same door grammar as the service rows */
+    border-top-color: var(--amber); /* the hairline warms with the tell */
   }
   .about-door:focus-visible {
     /* Keep the ring inside the box native focus scrolling exposes. The
@@ -1683,37 +1593,6 @@
     font-size: var(--fs-rich);
   }
 
-  /* numbered movements (the SEQUENTIAL "how it works" — amber index, Mona 600) */
-  .movements {
-    list-style: none;
-    margin-top: var(--space-md);
-    display: grid;
-    gap: var(--space-md);
-  }
-  .movement {
-    display: grid;
-    grid-template-columns: 2.6rem 1fr;
-    gap: var(--space-xs);
-    align-items: baseline;
-  }
-  .movement .n {
-    font-family: var(--ff-mono);
-    font-size: var(--mono-lead);
-    letter-spacing: var(--ls-mono-wide);
-    color: var(--amber);
-  }
-  .movement h3 {
-    font-family: var(--ff-display);
-    font-weight: 600;
-    font-size: var(--fs-2);
-    color: var(--fg);
-  }
-  .movement p {
-    margin-top: 0.4rem;
-    max-width: var(--measure-prose);
-    color: var(--fg-dim);
-  }
-
   /* embedded sub-offers (power-bi "what i do") */
   .offer {
     margin-top: var(--space-md);
@@ -1914,8 +1793,6 @@ html:not(.js) .figure-inset .ph {
   }
   .panel,
   .offer,
-  .movement,
-  .door,
   .cta-invite,
   .routes,
   .about-grid,

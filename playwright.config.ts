@@ -6,51 +6,34 @@ import { defineConfig, devices } from "@playwright/test";
  * script hosts dist/ on :4321. reducedMotion + a frozen clock (per spec) keep
  * the visual snapshots deterministic; the live clock can't diff.
  *
- * Snapshot baselines are generated and committed on THIS Windows machine
- * (…-win32.png suffixes): test:visual is pinned to win32 by Playwright's
- * default snapshot naming. On Linux/CI every baseline reports "missing"
- * rather than diffing — regenerate a platform set there before relying on it.
+ * Committed snapshot baselines are Windows-specific (…-win32.png suffixes).
+ * Playwright includes the running platform in snapshot names, so another
+ * platform needs its own reviewed baseline set. CI runs functional tests only.
  */
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
-  // The visual tests scroll the whole page then capture 2-5 stabilised region
-  // shots — 15-25s each even on Chromium. The 30s default left Firefox timing
-  // out mid-capture under any machine load (the historical "about-dog flake"
-  // mechanism). Generous is correct for a manual slow-lane tripwire.
+  // Scrolling and multiple region captures need more than the default 30s.
   timeout: 90_000,
-  // Capped: at the default (~cores/2) this machine launches 7-10 parallel
-  // browser instances and FIREFOX times out at page setup (verified 2026-07:
-  // whole-project failures at 7 workers, clean at 2). Reliability beats speed
-  // for a tripwire suite.
+  // Cap local browser concurrency to avoid resource-related setup timeouts.
   workers: process.env.CI ? 1 : 4,
   reporter: [["list"]],
   expect: {
     timeout: 15_000,
-    // The rebuild legitimately changes pixels (self-hosted fonts, Manrope 700,
-    // AVIF). The visual gate is a regression tripwire, not a pixel oracle:
-    // small per-pixel tolerance, but structural/layout shifts must show up.
+    // Allow small rendering differences while exposing structural shifts.
     toHaveScreenshot: { maxDiffPixelRatio: 0.02 },
   },
   use: {
     baseURL: "http://localhost:4321",
-    // NOTE: reducedMotion is a CONTEXT option, not a flattened test option.
-    // The old `reducedMotion: "reduce"` at this level type-checked nowhere and
-    // was silently ignored at runtime — every "reduced-motion" run before
-    // 2026-07-02 actually ran with normal motion. check:tests now guards this.
+    // reducedMotion belongs in contextOptions; check:tests guards this shape.
     contextOptions: { reducedMotion: "reduce" },
     deviceScaleFactor: 1,
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    // Firefox renders the heavy cream-panel pages (repeated dot-grid paint +
-    // 2-capture verify) at ~90s total — exactly the shared timeout, so verify
-    // runs died where update runs squeaked by (verified 2026-07-15 on
-    // /power-bi: update passed at 1.5m, verify timed out on .proof, four runs
-    // in a row). Same mechanism as the 30s→90s bump above; Firefox alone gets
-    // double headroom.
+    // Firefox needs extra headroom for repeated region captures.
     { name: "firefox", use: { ...devices["Desktop Firefox"] }, timeout: 180_000 },
     // Below-the-ladder coverage (the 48/56/62rem breakpoints all sit above a
     // phone): the mobile nav row, CTA wrap behaviour, single-column layouts.

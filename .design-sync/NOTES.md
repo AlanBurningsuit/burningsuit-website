@@ -1,21 +1,15 @@
-# design-sync notes — burningsuit
+# Styles-only design import
 
-- This repo is an Astro 6 static site with NO React component library, so the sync is a
-  deliberate off-script **styles-only** import (Alan's call, 2026-07-20): tokens + compiled
-  CSS + fonts, no `_ds_bundle.js`, no component cards, no `_ds_sync.json` anchor. A re-sync
-  simply rebuilds `ds-bundle/` and re-uploads everything (it's small).
-- Rebuild recipe (`ds-bundle/` is gitignored build output):
-  1. `npm run build` (or reuse a fresh `dist/`).
-  2. `_ds_bundle.css` = copy of `dist/_astro/BaseLayout.*.css` (hash changes per build).
-  3. `fonts/*.woff2` = copy of `dist/_astro/fonts/*.woff2`.
-  4. `fonts/fonts.css` = the `@font-face` rules AND the three `:root{--font-*}` blocks
-     grepped out of `dist/index.html` (Astro's Fonts API injects them into HTML, not CSS),
-     with `/_astro/fonts/` rewritten to `./`.
-  5. `tokens/tokens.css` = copy of `src/styles/tokens.css` (reference doc only — its
-     `@theme` blocks are Tailwind-v4 syntax; the compiled values live in `_ds_bundle.css`).
-  6. `styles.css` imports fonts.css then _ds_bundle.css; `README.md` = conventions.md +
-     provenance footer (update the commit stamp).
-- Verified locally by rendering `ds-bundle/_local-test.html` (never uploaded) in the
-  browser: fonts, panel, cta, tokens all correct on first try.
-- Traps encoded in conventions.md: `.js` on `<html>` hides reveal-gated content;
-  `.cta-footer` is a fixed basement.
+The 20 July 2026 import deliberately shipped compiled styles, tokens and fonts without a component bundle or runtime. Preserve that choice and the existing project identity in `config.json`. The [original import record](../docs/archive/design-sync-import-2026-07-20.md) retains its provenance, verification and historical recipe.
+
+The current site source is the authority for a fresh export: `src/styles/tokens.css`, `src/styles/app.css`, `src/layouts/BaseLayout.astro` and `src/scripts/enhance.ts`. The [design conventions](conventions.md) explain how the styles-only snapshot differs from the running site. The ignored `ds-bundle/` is generated output; an existing bundle may predate current source.
+
+When preparing another import:
+
+1. Run `npm run build` successfully and collect the emitted CSS referenced by the built page, rather than assuming a fixed hashed filename.
+2. Include the emitted font files and their generated `@font-face` and `--font-*` declarations; rewrite asset URLs to the bundle's local paths.
+3. Include `src/styles/tokens.css` as a reference. Its Tailwind `@theme` declarations require compilation; the emitted CSS supplies the browser-ready styles.
+4. Make `styles.css` load the fonts and compiled styles. Include `conventions.md` and the source commit in the bundle README.
+5. Render representative static markup with the bundle and verify fonts, panels, controls and readable content at desktop and phone widths. The bundle does not include the site's enhancement module, so leave `html.js` unset.
+
+A source tidy-up does not update or verify the remote imported design. Record the source commit and actual validation when another import is performed.

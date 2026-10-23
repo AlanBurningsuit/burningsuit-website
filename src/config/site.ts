@@ -46,38 +46,14 @@ export function notesHref(src: string): string {
   return `${NOTES_URL}?utm_source=burningsuit&utm_content=${encodeURIComponent(src)}`;
 }
 
-/** Build a mailto with an optional prefilled subject (mirrors BaseLayout). */
+/** Build a mailto with an optional prefilled subject. */
 export function mailtoFor(subject?: string): string {
   return subject
     ? `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`
     : `mailto:${CONTACT_EMAIL}`;
 }
 
-/**
- * Cookieless Umami Cloud analytics (replaced Plausible, 2026-08-19). The
- * matching `ANALYTICS_ENABLED` flag in astro.config.mjs must stay enabled so
- * both provider hosts remain in the CSP — the script host (cloud.umami.is) in
- * script-src and the beacon host (gateway.umami.is, where the tracker POSTs
- * /api/send) in connect-src. The tracker auto-tracks pageviews on load and
- * needs no init call or inline snippet; the site id rides in the tag's
- * data-website-id attribute. Custom events go through `umami.track()` in
- * enhance.ts. Visitors can exclude themselves via the `umami.disabled`
- * localStorage flag (the /privacy opt-out toggle).
- *
- * `domains` rides in the tag's data-domains attribute: the tracker compares
- * it with window.location.hostname and stays silent anywhere else, so the
- * dev server, Playwright runs and Netlify previews stop reporting into the
- * live dashboard (a 2026-09 export was 92% localhost). `performance` sets
- * data-performance, which adds Core Web Vitals (LCP/INP/CLS/FCP/TTFB) to the
- * pageview beacon; those columns were empty without it.
- */
-export const ANALYTICS = {
-  enabled: true,
-  scriptSrc: "https://cloud.umami.is/script.js",
-  websiteId: "7a27ff45-e9ce-4aec-8940-260c61c35dff",
-  domains: "burningsuit.co.uk,www.burningsuit.co.uk",
-  performance: true,
-} as const;
+export { ANALYTICS } from "./analytics.mjs";
 
 /* ------------------------------------------------------------------ *
  * SEO / structured-data identity — the single source of truth for the

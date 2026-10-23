@@ -1,5 +1,7 @@
 # Clarifying the offer within the current design
 
+> Historical record of the September 2026 design review and its local acceptance checks. Pending work and authorisations below belong to that review and may have been superseded. See the [documentation index](../README.md) for current guidance.
+
 Alan rejected both comparison treatments on 8 September 2026. Their copy and flow were broadly accepted. The existing field-notebook design is retained: typography, colours, photographs, frames, tabs and margin notes. There is no A/B selection pending.
 
 Work continues on `feat/ownership-redesign`, preserving the existing maintenance and preview commits. Local implementation and checked milestone commits are authorised. Every remote push still needs permission; preview publication and production promotion are separate decisions. A merge to `main` deploys the live apex.

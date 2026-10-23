@@ -1,5 +1,7 @@
 # Dependency review — 8 September 2026
 
+> Historical dependency and advisory assessment from 8 September 2026. Package versions, audit totals and exposure findings below have not been refreshed by the repository tidy-up. Use a new dependency review for current maintenance decisions; see the [documentation index](../README.md) for current guidance.
+
 This change raises Astro's declared floor to 6.4.8 and updates dependencies within their existing supported ranges. A clean `npm ci` was verified using Node 22.23.2 and npm 11.13.0, followed by the gate and functional checks. No forced audit fixes, unsupported overrides or tooling downgrades were applied. Weekly npm and GitHub Actions Dependabot updates target `dev` for review.
 
 The declared Node minimum is now 22.20.0 to match the updated dependency requirements: unifont's undici dependency requires at least 22.19.0, and Rollup's optional Linux LZMA package requires 22.20 on the Node 22 line. CI continues to select the current Node 22 release.

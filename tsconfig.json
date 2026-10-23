@@ -7,7 +7,6 @@
     "playwright-report",
     "test-results",
     "playwright.config.ts",
-    "playwright.previews.config.ts",
     "tests",
     "scripts"
   ],

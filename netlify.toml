@@ -1,8 +1,5 @@
-# Dev / preview deploy of the Astro v3 site (the burningsuit redesign).
-# This config lives on the dev branch and is used ONLY by the Netlify preview.
-# Production is GitHub Pages serving main's root — nothing here touches it. Set
-# Netlify's production branch to dev (main is the legacy site, has no Astro
-# project, and would fail to build).
+# Netlify previews the Astro site from dev. Set Netlify's production branch to
+# dev; the live apex is published from main by GitHub Pages Actions.
 [build]
   command = "npm run build"
   publish = "dist"

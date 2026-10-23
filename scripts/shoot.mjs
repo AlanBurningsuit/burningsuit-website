@@ -1,15 +1,15 @@
 /**
  * QA / fidelity capture (not a gate). Screenshots the built Astro pages (and
  * the archived B5 concept when the local-only design/ tree is present) for
- * side-by-side human sign-off. Requires two http-servers already running:
- *   - :4321  serving dist/                  (the Astro build)
- *   - :4322  serving the repo root          (so B5's ../resources resolves)
+ * side-by-side human sign-off. Requires :4321 serving dist/ (npm run serve).
+ * The optional B5 reference needs :4322 serving the repo root so its
+ * ../resources paths resolve; current-page captures do not need that server.
  *
  * Clock is frozen and motion reduced so reveals settle and the live clock can't
  * jitter the frame; the page is scrolled top-to-bottom first so every
  * IntersectionObserver reveal has fired before the full-page capture.
  */
-import { chromium } from "playwright";
+import { chromium } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 
 const OUT = "design/_astro-shots";

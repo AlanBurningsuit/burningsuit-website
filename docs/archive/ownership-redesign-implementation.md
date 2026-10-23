@@ -1,5 +1,7 @@
 # Ownership redesign implementation — 8 September 2026
 
+> Historical implementation record covering 8–22 September 2026. Entries preserve the state, checks and authorisations recorded during that work; later entries may supersede earlier pending items. They are not a current release checklist or new authorisation. See the [documentation index](../README.md) for current guidance.
+
 This pass implements `ownership-redesign-review.md` on `feat/ownership-redesign`. Alan authorised branch drafts and placeholders while he finishes the remaining inputs, and authorised pushing this branch. Integration into `dev` and production promotion remain separate decisions.
 
 ## Metadata follow-up — 22 September 2026

@@ -2,19 +2,13 @@
 import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
+import { ANALYTICS } from "./src/config/analytics.mjs";
 // Tailwind v4 uses the established PostCSS integration (postcss.config.mjs).
 // Astro 6.4.8 resolves Vite; the earlier rolldown-vite compatibility workaround
 // no longer describes its bundler. The PostCSS integration stays unchanged.
 
-// Cookieless analytics (Umami Cloud). MUST match `ANALYTICS.enabled` in
-// src/config/site.ts. The CSP permits only the two provider hosts: the script
-// is served from cloud.umami.is but its event beacon POSTs to
-// gateway.umami.is/api/send (the script's built-in default endpoint), so
-// script-src and connect-src name different hosts. Swap both for a
-// self-hosted/proxied first-party endpoint to avoid the third party entirely.
-const ANALYTICS_ENABLED = true;
-const ANALYTICS_SCRIPT_HOST = "https://cloud.umami.is";
-const ANALYTICS_BEACON_HOST = "https://gateway.umami.is";
+// The tracker tag and its CSP permissions share one analytics configuration.
+const analyticsScriptHost = new URL(ANALYTICS.scriptSrc).origin;
 
 // https://astro.build/config
 export default defineConfig({
@@ -188,12 +182,12 @@ export default defineConfig({
         "font-src 'self'",
         "base-uri 'self'",
         "form-action 'none'",
-        ...(ANALYTICS_ENABLED
-          ? [/** @type {`connect-src${string}`} */ (`connect-src ${ANALYTICS_BEACON_HOST}`)]
+        ...(ANALYTICS.enabled
+          ? [/** @type {`connect-src${string}`} */ (`connect-src ${ANALYTICS.beaconHost}`)]
           : []),
       ],
       scriptDirective: {
-        resources: ["'self'", ...(ANALYTICS_ENABLED ? [ANALYTICS_SCRIPT_HOST] : [])],
+        resources: ["'self'", ...(ANALYTICS.enabled ? [analyticsScriptHost] : [])],
       },
       styleDirective: { resources: ["'self'"] },
     },

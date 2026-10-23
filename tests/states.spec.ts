@@ -1,6 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-
-const pages = ["/", "/writing/we-are-all-middle-management-now/", "/hour/", "/training/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
+import { READING_ROUTES } from "./helpers/routes";
 
 /** Check the reading surface before any scroll or class manipulation. */
 async function expectReadableContent(page: Page) {
@@ -76,13 +75,13 @@ test("cream is reserved for evidence", async ({ page }) => {
 test("IntersectionObserver fallback exposes all reading content", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.addInitScript(() => { delete (window as unknown as { IntersectionObserver?: unknown }).IntersectionObserver; });
-  for (const path of pages) {
+  for (const path of READING_ROUTES) {
     await page.goto(path);
     await expectReadableContent(page);
   }
 });
 
-for (const path of pages) {
+for (const path of READING_ROUTES) {
   test(`print exposes all reading content and uses a static header: ${path}`, async ({ page }) => {
     await page.emulateMedia({ media: "print", reducedMotion: "no-preference" });
     await page.goto(path);
@@ -94,7 +93,7 @@ for (const path of pages) {
 
 test("contact controls have no entrance or reveal gates", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  for (const path of pages) {
+  for (const path of READING_ROUTES) {
     await page.goto(path);
     const gated = await page.locator('a[href^="mailto:"], a[href^="https://cal.com/"]').evaluateAll((links) => links.filter((link) => link.closest("[data-reveal], [data-reveal-lines], [data-reveal-raw], [data-reveal-fig], .enter, .lines")).map((link) => link.getAttribute("href")));
     expect(gated, `contact ancestors on ${path}`).toEqual([]);
@@ -108,7 +107,7 @@ for (const mode of [
 ]) {
   test.describe(mode.name, () => {
     test.use({ javaScriptEnabled: mode.javaScriptEnabled, contextOptions: { reducedMotion: mode.reducedMotion } });
-    for (const path of pages) {
+    for (const path of READING_ROUTES) {
       test(`content is readable immediately: ${path}`, async ({ page }) => {
         await page.goto(path);
         await expectReadableContent(page);

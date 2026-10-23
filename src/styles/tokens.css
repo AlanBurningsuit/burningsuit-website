@@ -98,13 +98,13 @@
   /* content headings — the clean ÷1.25 ramp */
   --fs-4: clamp(1.8rem, 1.4rem + 2vw, 3rem); /* about h2 + statement + mail */
   --fs-3: clamp(1.5rem, 1.2rem + 1.5vw, 2.4rem); /* belief */
-  --fs-2: clamp(1.3rem, 1.093rem + 1.03vw, 1.92rem); /* card / movement / offer headings */
-  --fs-1: clamp(1.2rem, 1.087rem + 0.57vw, 1.54rem); /* principle h3 — smallest heading */
+  --fs-2: clamp(1.3rem, 1.093rem + 1.03vw, 1.92rem); /* card / offer headings */
+  --fs-1: clamp(1.2rem, 1.087rem + 0.57vw, 1.54rem); /* exhibit subheadings */
   /* leads */
   --fs-lead: clamp(1.1rem, 1.017rem + 0.42vw, 1.35rem); /* .lead + hero lede */
   /* body + fixed UI / prose */
   --fs-base: clamp(1.02rem, 0.98rem + 0.3vw, 1.15rem); /* body — the anchor */
-  --fs-sm: 0.98rem; /* secondary body — card + principle paragraphs */
+  --fs-sm: 0.98rem; /* secondary body — card paragraphs */
   --fs-rich: 1.05rem; /* display-font prose — pull quote, 404 link */
   --fs-ui: 0.96rem; /* primary button */
   --fs-ui-sm: 0.92rem; /* small UI — card arrow link, header button */

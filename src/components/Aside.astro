@@ -23,7 +23,7 @@ interface Props {
   class?: string;
   [key: string]: unknown;
 }
-const { as = "p", class: extra, ...rest } = Astro.props;
+const { as = "p", class: extra, ...rest } = Astro.props as Props;
 const Tag = as;
 ---
 <Tag class:list={["aside", extra]} {...rest}>

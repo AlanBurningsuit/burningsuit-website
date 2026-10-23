@@ -6,7 +6,7 @@
  * training price has a recorded ruling yet, so the figures live in the private
  * ops repository (`design/copy/training-prices.json`, through the gitignored
  * `design/` junction). They render only when BOTH:
- *   - the build sets SHOW_TRAINING_PRICES=true (see `flags.showTrainingPrices`),
+ *   - the build sets SHOW_TRAINING_PRICES=true,
  *   - and that private file is present.
  * CI and Netlify have neither, so they always build the price-on-request
  * variant. Content is chosen at build time, never rendered then hidden.
@@ -17,7 +17,8 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { flags } from "./flags";
+
+const SHOW_TRAINING_PRICES = process.env.SHOW_TRAINING_PRICES === "true";
 
 export type CourseGroup = "agentic" | "power-bi" | "ai-at-work";
 
@@ -56,7 +57,7 @@ export const course = (id: string) => {
 };
 
 function loadPrices(): Record<string, string> {
-  if (!flags.showTrainingPrices) return {};
+  if (!SHOW_TRAINING_PRICES) return {};
   const file = resolve(process.cwd(), "design/copy/training-prices.json");
   if (!existsSync(file)) return {};
   return JSON.parse(readFileSync(file, "utf8")) as Record<string, string>;

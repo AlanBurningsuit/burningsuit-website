@@ -5,15 +5,16 @@
  * each candidate card on its own at desktop. Output: design/v2/specimen-shots/.
  *
  * Fonts load from their pinned providers (Google + Fontsource via jsDelivr), so
- * this needs network. Run: node scripts/shoot-fonts.mjs
+ * this needs network and the local design archive. This historical font-picker
+ * is retained for reference. Run: node scripts/archive/shoot-fonts.mjs
  */
-import { chromium } from "playwright";
+import { chromium } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const OUT = join(root, "design/v2/specimen-shots");
 await mkdir(OUT, { recursive: true });
 const url = pathToFileURL(join(root, "design/v2/font-specimen.html")).href;

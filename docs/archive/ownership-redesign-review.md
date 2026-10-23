@@ -1,5 +1,7 @@
 # Ownership redesign: review and next actions — 8 September 2026
 
+> Historical brief for the September 2026 redesign. Preserve the decisions and their context as evidence; this document does not set the current writing brief or grant new push or deployment authorisation. See the [documentation index](../README.md) for current guidance.
+
 Review of `feat/ownership-redesign` against `main`, focused on reader flow and copy. Alan reviewed the findings and made the decisions recorded below. This document is the brief for the next pass on the branch. It supersedes the action items in `ownership-preview-review.md`; the validation record there still stands.
 
 > **Superseded in part, 2026-09-17:** the ▸ is now CSS furniture on `.route` links; copy strings no longer carry it. Link labels below are read without the glyph.
