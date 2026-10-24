@@ -50,4 +50,4 @@ Install test browsers once with `npx playwright install chromium firefox`. Build
 
 Promote `dev` to `main` only after the checks and preview review in AGENTS.md, with push and release authorisation. Verify the live apex after deployment. Roll back by reverting the release merge on `main`, which triggers another validated deployment.
 
-The [documentation index](docs/README.md) links current configuration and dated review records. Historical pending items and approvals describe their original work; they are not the current task list.
+The [documentation index](docs/README.md) links current configuration. Historical reviews and design-export records live in the private `burningsuit-ops` repository. Their pending items and approvals describe the original work; they are not the current task list or new authorisation.

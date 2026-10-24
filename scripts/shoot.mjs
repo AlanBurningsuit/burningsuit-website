@@ -1,9 +1,6 @@
 /**
- * QA / fidelity capture (not a gate). Screenshots the built Astro pages (and
- * the archived B5 concept when the local-only design/ tree is present) for
- * side-by-side human sign-off. Requires :4321 serving dist/ (npm run serve).
- * The optional B5 reference needs :4322 serving the repo root so its
- * ../resources paths resolve; current-page captures do not need that server.
+ * QA capture (not a gate). Screenshots the built Astro pages for human review.
+ * Requires :4321 serving dist/ (npm run serve).
  *
  * Clock is frozen and motion reduced so reveals settle and the live clock can't
  * jitter the frame; the page is scrolled top-to-bottom first so every
@@ -26,8 +23,6 @@ const targets = [
   { url: "http://localhost:4321/work/museum/", name: "work-museum" },
   { url: "http://localhost:4321/work/carbon-footprint/", name: "work-carbon" },
   { url: "http://localhost:4321/work/contact-centre/", name: "work-contact-centre" },
-  // archived design reference — SKIPs when the local-only design/ tree is absent
-  { url: "http://localhost:4322/design/concept-b5-alive.html", name: "b5-home" },
 ];
 const viewports = [
   { width: 1440, height: 950, tag: "desktop" },
