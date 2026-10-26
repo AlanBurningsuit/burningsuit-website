@@ -1,53 +1,69 @@
 # burningsuit.co.uk
 
-The marketing site for Alan Harman-Box's solo Power BI, Fabric and AI advisory. Static Astro 6 and Tailwind v4, with MDX content collections, self-hosted fonts and optimised images. The field-notebook design uses tokens and semantic classes in `src/styles/`.
+The marketing site for Alan Harman-Box's Power BI, Fabric and AI advisory. Static Astro 6 and Tailwind v4, with MDX case studies and essays, self-hosted fonts and optimised images. Standing pages are in `src/pages/`, collection content in `src/content/`, and design tokens and styles in `src/styles/`.
 
-`main` is production on GitHub Pages. `dev` is integration, with a Netlify preview. A push to `main` triggers validation and deployment to the live apex. Ask before pushing any branch; preview publication and production promotion need separate authorisation.
+[AGENTS.md](AGENTS.md) contains contributor rules, release prerequisites and acceptance thresholds. Writing guidance, business evidence and historical website records live in the private `burningsuit-ops` repository.
 
-## Local development
+## Run locally
 
-Use Node 22.20+ (see [.nvmrc](.nvmrc)) and keep checkouts outside OneDrive.
+Use Node 22.20+ on the Node 22 line (`.nvmrc`) and run commands from the repository root. Keep the checkout outside OneDrive.
 
 ```bash
 npm ci
-npm run dev        # local development server
-npm run build      # image preparation, static build and byte-budget check
-npm run preview    # preview the built dist/
+npm run dev        # development server
 ```
 
-## Source layout
-
-| Path | Purpose |
-|---|---|
-| `src/pages/` | Standing pages and collection routes |
-| `src/content/work/` | Four case studies, one MDX file per slug |
-| `src/content/writing/` | Essays; `/writing/` redirects to the sole essay until a second is published |
-| `src/components/`, `src/layouts/` | Shared markup and page layouts |
-| `src/styles/` | Design tokens and site styles |
-| `src/assets/` | Committed optimised images and diagrams |
-| `public/` | Static files, domain configuration and social cards |
-| `scripts/`, `tests/` | Build checks, asset tooling and browser tests |
-
-Raw photos and diagram sources live in ignored `resources/`; design material lives in ignored `design/`. `npm run prep:images` regenerates photo derivatives when the originals are present and skips gracefully otherwise. Commit regenerated derivatives after changing a source photo.
-
-Case-study naming requires written permission and `namePublished: true`; the schema rejects a `named` block while that gate is closed. Keep private client information and source material out of this public repository, including its history. Writing scope and evidence belong in the private `burningsuit-ops` checkout.
-
-## Validation
+To preview the production build:
 
 ```bash
-npm run gate             # Astro check, build, byte budgets, links and SEO
-npm run test:functional  # Chromium behaviour checks against existing dist/
-npm run test:visual      # Windows browser snapshots against existing dist/
-npm run test:lh          # desktop Lighthouse against existing dist/
-npm run test:lh:mobile   # Home and Power BI, three mobile audits each
+npm run build      # prepare images, build dist/ and check byte budgets
+npm run preview
 ```
 
-Install test browsers once with `npx playwright install chromium firefox`. Build successfully before browser or Lighthouse checks, and rebuild after source changes. Snapshot baselines are platform-specific; review intentional visual changes before refreshing them. The release requirements and full command list are in [AGENTS.md](AGENTS.md).
+## Validate changes
 
-## Deployment
+Install browsers once per setup, then run the gate before the browser checks:
 
-[deploy.yml](.github/workflows/deploy.yml) validates and tests one static artifact, then uploads that same `dist/` to GitHub Pages. Only its deployment job can publish, and only from `main`. [validate.yml](.github/workflows/validate.yml) runs the gate and functional checks on `dev` pushes and PRs targeting `dev` or `main`, without publishing. The [Netlify preview configuration](netlify.toml) builds `dev` and hard-noindexes the preview.
+```bash
+npx playwright install chromium firefox
+npm run gate             # types/templates, build, byte budgets, links and SEO
+npm run test:functional  # Chromium behaviour checks
+npm run test:visual      # Chromium, Firefox and mobile snapshots
+```
 
-Promote `dev` to `main` only after the checks and preview review in AGENTS.md, with push and release authorisation. Verify the live apex after deployment. Roll back by reverting the release merge on `main`, which triggers another validated deployment.
+Browser checks serve the existing `dist/` automatically; they do not rebuild it. Rebuild after source changes. Committed snapshot baselines are Windows-specific; another platform needs its own reviewed set. For an intentional visual change, inspect the differences, run `npm run test:visual:update`, review the updated images and rerun `npm run test:visual` to confirm them.
 
-The [documentation index](docs/README.md) links current configuration. Historical reviews and design-export records live in the private `burningsuit-ops` repository. Their pending items and approvals describe the original work; they are not the current task list or new authorisation.
+Lighthouse also audits the existing `dist/` and serves it automatically. Build successfully first, then run the required audits:
+
+| Command | Coverage and reports |
+|---|---|
+| `npm run test:lh` | Desktop page templates, with Umami blocked by the configured lab settings; reports in `.lighthouseci/` |
+| `npm run test:lh:mobile` | Home and Power BI, three runs each with analytics included; exports in `.lighthouseci/mobile/` |
+
+Before starting another Lighthouse collection, copy the complete `.lighthouseci/` directory into a newly named folder under ignored `.review-pass/`. This preserves the raw `lhr-*` reports and exports, including failed runs; the next collection can clear raw reports. Rebuild after any source change before repeating an audit. Use the acceptance and investigation rules in AGENTS.md when assessing results.
+
+If mobile audits fail, inspect the retained reports for font, image and motion shifts. Preserve those results before repeating the same mobile configuration with analytics blocked to isolate its contribution. Retain both sets of reports and compare their audit rows and observed FCP/LCP; tracker exceptions follow the approval requirements in AGENTS.md.
+
+## Maintain generated assets
+
+Photo originals are local, ignored files in `resources/photos/`. `npm run prep:images` regenerates the committed derivatives in `src/assets/photos/`; it also runs during a build. A fresh checkout without the originals skips that step and uses the committed derivatives. After changing an original, regenerate and commit its derivative.
+
+Case-study social cards read their frontmatter and use fonts from the built site. The Power BI card heading and colour palette are literals in [scripts/render-linkedin-featured.mjs](scripts/render-linkedin-featured.mjs); update those when changing that heading or palette. After updating the relevant content, branding or renderer, run:
+
+```bash
+npm run build
+npm run render:social
+npm run build
+```
+
+The final build includes the new PNGs in `dist/`. Review and commit the generated assets in `public/og-image.png` and `public/social/` with the source change.
+
+For full-page screenshots of the current site, build first, then run `npm run serve` in a separate terminal. While that server is running, run `node scripts/shoot.mjs` from the repository root. Desktop and phone captures go to ignored `design/_astro-shots/` for human review.
+
+## Deploy and roll back
+
+`dev` is integration and the source of the [hard-noindexed Netlify preview](netlify.toml). [validate.yml](.github/workflows/validate.yml) runs the gate and functional checks on `dev` pushes and PRs targeting `dev` or `main`.
+
+`main` is production. After completing the release steps in AGENTS.md, promote `dev` to `main`: a push to `main` triggers [deploy.yml](.github/workflows/deploy.yml), which validates and tests one build, then publishes that same artifact to GitHub Pages. Watch the Action and verify the live apex after deployment.
+
+To roll back, revert the offending release merge on `main`; pushing that revert triggers another validated deployment. Push and release authorisation follow AGENTS.md.
