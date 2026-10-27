@@ -13,8 +13,14 @@
  * doctrine: the named client + verbatim quote are only rendered when the boolean
  * is true AND written permission has landed.
  *
- * This object is kept (empty) as the home for any future build-time copy flag.
+ * `showTrainingPrices` gates the training catalogue's prices. No training price
+ * has a recorded ruling yet, so the safe variant (price on request) is the
+ * default and the only one CI builds. Setting SHOW_TRAINING_PRICES=true at
+ * build time shows the figures from the private ops file; see
+ * src/config/training.ts for why the figures never enter this repository.
  */
-export const flags = {} as const;
+export const flags = {
+  showTrainingPrices: process.env.SHOW_TRAINING_PRICES === "true",
+} as const;
 
 export type Flags = typeof flags;

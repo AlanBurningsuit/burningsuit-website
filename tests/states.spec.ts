@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 
-const pages = ["/", "/writing/we-are-all-middle-management-now/", "/hour/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
+const pages = ["/", "/writing/we-are-all-middle-management-now/", "/hour/", "/training/", "/power-bi/", "/about/", "/work/", "/work/law-firm/", "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
 
 /** Check the reading surface before any scroll or class manipulation. */
 async function expectReadableContent(page: Page) {
@@ -117,7 +117,7 @@ for (const mode of [
 
     test("navigation and contact destinations remain usable", async ({ page }) => {
       await page.goto("/");
-      await page.getByRole("navigation", { name: "Main", exact: true }).getByRole("link", { name: "Power BI", exact: true }).click();
+      await page.getByRole("navigation", { name: "Main", exact: true }).getByRole("link", { name: /Consultancy$/ }).click();
       await expect(page).toHaveURL(/\/power-bi\/?$/);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       const booking = new URL((await page.locator('footer a[href^="https://cal.com/"]').getAttribute("href"))!);

@@ -57,7 +57,7 @@ test("mailto click tracks an Email click event; regular pages track no 404", asy
 });
 
 for (const [path, placement] of [
-  ["/", "header"], ["/", "footer"], ["/", "home-hero"],
+  ["/", "header"], ["/", "footer"],
   ["/power-bi/", "power-bi-hero"], ["/power-bi/", "power-bi-pricing"],
   ["/work/", "work"],
   ["/hour/", "hour-page"],

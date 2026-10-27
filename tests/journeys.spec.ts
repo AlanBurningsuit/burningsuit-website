@@ -1,28 +1,43 @@
 import { test, expect } from "@playwright/test";
 
-for (const [route, label] of [["/", /^a free hour$/], ["/power-bi/", /^What happens in the free hour\?/]] as [string, RegExp][]) {
-  test(`${route} offers the hour explanation in its hero`, async ({ page }) => {
-    await page.goto(route);
-    const hero = page.locator(".hero, .pbi-hero");
-    await hero.getByRole("link", { name: label }).click();
-    await expect(page).toHaveURL(/\/hour\/$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tell me what your reporting can't do (yet).");
-  });
-}
+test("Home's hero leads to the training catalogue", async ({ page }) => {
+  await page.goto("/");
+  await page.locator(".hero .cta-row").getByRole("link", { name: /^See the courses$/ }).click();
+  await expect(page).toHaveURL(/\/training\/$/);
+  await expect(page.locator("#agentic-101")).toBeAttached();
+});
 
-test("Home's three situations open their matching practical detail", async ({ page }) => {
-  for (const [id, heading] of [
-    ["deliver", "Build and change your reporting"],
-    ["skills", "Learn the why behind the how"],
-    ["handover", "Understand a system you inherited"],
-  ]) {
-    await page.goto("/");
-    await page.getByRole("link", { name: new RegExp(`^${heading}`) }).click();
-    await expect(page).toHaveURL(new RegExp(`/power-bi/#${id}$`));
-    await expect(page.locator(`#${id}`).getByRole("heading", { name: heading })).toBeInViewport();
-    await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: /^Tell me what your reporting can't do \(yet\)/ }).click();
-    await expect(page).toHaveURL(/\/hour\/$/);
+test("the training catalogue carries every course at a stable anchor", async ({ page }) => {
+  await page.goto("/training/");
+  for (const id of ["agentic-101", "agentic-hands-on", "modelling-for-agents", "power-bi-fundamentals", "dax-fundamentals", "dax-deep-dive", "data-modelling", "claude-day-job", "claude-consultants", "how-the-courses-run"]) {
+    await expect(page.locator(`#${id}`)).toBeAttached();
   }
+  await expect(page.locator('.cta-band a.cta[href^="mailto:"]')).toBeVisible();
+});
+
+// Training prices render only from the private ops file with
+// SHOW_TRAINING_PRICES set at build time. CI never sets it, so its build must
+// carry no training figure.
+test("the default build shows no training price", async ({ page }) => {
+  test.skip(process.env.SHOW_TRAINING_PRICES === "true", "priced build");
+  for (const route of ["/", "/training/"]) {
+    await page.goto(route);
+    await expect(page.locator("main")).not.toContainText("£");
+  }
+});
+
+test("Power BI offers the hour explanation in its hero", async ({ page }) => {
+  await page.goto("/power-bi/");
+  await page.locator(".pbi-hero").getByRole("link", { name: /^What happens in the free hour\?/ }).click();
+  await expect(page).toHaveURL(/\/hour\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tell me what your reporting can't do (yet).");
+});
+
+test("Home's consultancy door opens the consultancy page", async ({ page }) => {
+  await page.goto("/");
+  await page.locator('.chapter[aria-labelledby="consultancy"] a.door').click();
+  await expect(page).toHaveURL(/\/power-bi\/$/);
+  await expect(page.locator('header nav a[aria-current="page"]')).toHaveText("Consultancy");
 });
 
 test("the pricing destination contains the ongoing price guide", async ({ page }) => {
@@ -41,9 +56,9 @@ test("Power BI's hero routes only to the free hour, never to in-page anchors", a
   }
 });
 
-test("Home's situation section gives a direct route to the introductory hour", async ({ page }) => {
+test("Home's consultancy section gives a direct route to the introductory hour", async ({ page }) => {
   await page.goto("/");
-  await page.locator('.chapter[aria-labelledby="situations"]').getByRole("link", { name: /^Tell me what your reporting can't do \(yet\)/ }).click();
+  await page.locator('.chapter[aria-labelledby="consultancy"]').getByRole("link", { name: /^Tell me what your reporting can't do \(yet\)/i }).click();
   await expect(page).toHaveURL(/\/hour\/$/);
 });
 

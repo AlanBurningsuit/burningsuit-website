@@ -13,6 +13,7 @@ import { ANALYTICS } from "../src/config/site";
 const pages = [
   "/",
   "/writing/we-are-all-middle-management-now/", "/hour/",
+  "/training/",
   "/power-bi/",
   "/about/",
   "/work/",

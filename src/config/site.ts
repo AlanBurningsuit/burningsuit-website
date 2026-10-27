@@ -21,7 +21,8 @@ export const BOOKING_URL = "https://cal.com/alan-burningsuit/hour";
  * `placement`. Existing UTM attribution and analytics events keep the same
  * location value. Merges cleanly if BOOKING_URL grows its own query string.
  *
- * Placements renamed on 2026-09-08: header, footer, home-hero,
+ * Placements renamed on 2026-09-08: header, footer, home-hero (retired
+ * 2026-10-27, when Home's hero began leading to /training/),
  * home-situations (when present), power-bi-hero, power-bi-pricing, hour-page,
  * work. Historical hero, home-proof and power-bi-engagement names apply only
  * before this date. Study-read events retain their per-study URL identity.
@@ -103,7 +104,7 @@ export const ORG_PROFILES = [
 /** The Organization's description. Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =
-  "Alan Harman-Box works alongside Power BI and Fabric teams so they can take ownership of their reporting.";
+  "Alan Harman-Box teaches Power BI and AI to teams, and works alongside Power BI and Fabric teams as a consultant.";
 
 /** Postal identity (no street — area-served advisory, not a storefront). */
 export const ORG_ADDRESS = {
@@ -123,10 +124,14 @@ export const ORG_LEGAL = {
   companyNumber: "05738130",
 } as const;
 
-/** The advisory's areas of work — used as Organization `knowsAbout`. (We model
- *  the business as schema.org Organization, not the now-discouraged generic
- *  ProfessionalService type; see burningsuit-schema-templates.) */
+/** The business's areas of work — used as Organization `knowsAbout`. Training
+ *  leads since the 27 Oct 2026 revamp; "Power BI training" matches the Google
+ *  Business Profile's service name. (We model the business as schema.org
+ *  Organization, not the now-discouraged generic ProfessionalService type;
+ *  see burningsuit-schema-templates.) */
 export const SERVICE_AREAS = [
+  "Power BI training",
+  "AI training for teams",
   "Power BI advisory",
   "Microsoft Fabric advisory",
   "AI advisory for data teams",
@@ -153,6 +158,7 @@ export const FOUNDER = {
     "semantic models",
     "Power BI governance",
     "AI for data teams",
+    "agentic development for Power BI",
   ],
   /** Owner-supplied, confirmed. Empty = omit. */
   sameAs: ["https://www.linkedin.com/in/alan-harman-box"] as string[],

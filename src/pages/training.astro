@@ -1,0 +1,149 @@
+---
+/**
+ * /training: the course catalogue. Course names, lengths and audiences come
+ * from src/config/training.ts; the prose for each course is written here.
+ *
+ * Prices are build-time gated (see training.ts). Every course line reads
+ * correctly both ways: with no price it invites people to ask; with a price
+ * it shows the figure. The 101's pilot price is not settled, so it never
+ * shows a price whatever the price file holds.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Chapter from "../components/Chapter.astro";
+import Aside from "../components/Aside.astro";
+import Offer from "../components/Offer.astro";
+import { CONTACT_EMAIL, mailtoFor } from "../config/site";
+import { course, priceFor, showsPrices } from "../config/training";
+
+const contactSubject = "Power BI and AI training";
+
+const priceNote = (id: string) => {
+  const price = priceFor(id);
+  return price ? `${price} per group, on site, plus VAT` : "Ask me for a price";
+};
+const metaFor = (id: string) => `${course(id).length} · up to 8 people · ${priceNote(id)}`;
+
+const intro = course("agentic-101");
+const interestHref = mailtoFor(`${intro.title} - register interest`);
+
+const enquiryFields = ["Course:", "Roughly how many people:", "On site or remote, and where:", "Dates that suit:"];
+const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A course for my team")}&body=${encodeURIComponent(enquiryFields.join("\r\n"))}`;
+---
+
+<BaseLayout
+  title="Power BI and AI training for teams - burningsuit"
+  description="Courses from Alan Harman-Box: half a day on agentic development for Power BI, closed-group courses in Power BI, DAX and data modelling, and days on using Claude at work."
+  contactSubject={contactSubject}
+>
+  <Fragment slot="footer-invitation">Tell me which course you're looking at and roughly how many people. Replies come from me</Fragment>
+
+  <section class="page-hero">
+    <div class="wrap">
+      <h1 class="enter appear-300">Courses for people with <em>other</em> jobs to do.</h1>
+      <p class="lead enter appear-450">I teach Power BI, and how to put AI to work, to people who use them alongside everything else they do. Every course runs on examples and a training dataset I've built for teaching, so nobody needs to bring data and there's nothing to prepare beforehand.</p>
+      <p class="lead enter appear-450">You can start with half a day on handing Power BI building work to an AI agent. The longer courses run over one or two days, for a closed group of up to 8, on site or remote.</p>
+      <ul class="routes enter appear-450">
+        <li><a class="route" href="#agentic-101">The half-day 101</a></li>
+        <li><a class="route" href="#power-bi-courses">Power BI courses</a></li>
+        <li><a class="route" href="#ai-at-work">AI at work</a></li>
+        <li><a class="route" href="#how-the-courses-run">How the courses run</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  {/* Written out rather than a <Chapter>: its contact link must sit outside the
+      reveal-gated prose (contact controls never wait on an entrance). */}
+  <section class="chapter" aria-labelledby="agentic-101">
+    <div class="wrap what">
+      <h2 class="section-head" id="agentic-101" data-reveal>{intro.title}</h2>
+      <div class="label">
+        <Aside data-reveal>It's about handing off building decisions, not business decisions.</Aside>
+      </div>
+      <div>
+        <div class="prose" data-reveal>
+          <p class="offer-meta">{intro.length} · public seats</p>
+          <p>It's no longer the case that having an agent build something in Power BI is the wild west: full of bugs, and not doing what you wanted. This half-day is the place to start.</p>
+          {/* DRAFT for Alan: 101 outline to come. */}
+          <p>It's for {intro.audience.charAt(0).toLowerCase() + intro.audience.slice(1)}. Unlike the longer courses, it has public seats, so you can book a place for yourself rather than arranging a day for a group.</p>
+          {/* DRAFT for Alan: confirm the pilot wording; no price, date or seat numbers yet. */}
+          <p>The first one will be a pilot, at a reduced price. If you'd like a place, or just want to hear when it's on, register your interest and I'll let you know when there's a date.</p>
+        </div>
+        <div class="routes"><a class="route" href={interestHref}>Register your interest by email</a></div>
+      </div>
+    </div>
+  </section>
+
+  <Chapter id="agentic-to-follow" kicker="More agentic Power BI, to follow">
+    <p>Two more courses are being written to follow the 101. I'll add them here when they're ready.</p>
+    <div class="offer-table">
+      <Offer id="agentic-hands-on" title={course("agentic-hands-on").title} meta="In development" />
+      <Offer id="modelling-for-agents" title={course("modelling-for-agents").title} meta="In development" />
+    </div>
+  </Chapter>
+
+  <Chapter id="power-bi-courses" kicker="Power BI courses">
+    <p>Four courses, from opening Power BI for the first time to writing DAX you understand rather than copy. Each one is for a closed group of up to 8, and each day runs from 9:30 to 16:00.</p>
+    <p>The DAX and Data Modelling courses assume people have done Fundamentals. If someone already finds their way around Power BI, a free 30-minute practical skills check on a call, using the training dataset, can stand in for it.</p>
+    <div class="offer-table">
+      <Offer id="power-bi-fundamentals" title={course("power-bi-fundamentals").title} meta={metaFor("power-bi-fundamentals")}>
+        <p>For anyone new to Power BI; it assumes nobody has opened it before. It starts with what everything else in Power BI is there to serve, a report in front of the people who use it, and works back from there.</p>
+        <p>The first day goes from an Excel table to a shared report: building visuals, cleaning and shaping data in Power Query, and publishing to the Power BI Service so other people can use what you've made. The second day is about what sits underneath: bringing several sources together in a star schema, a first look at DAX, workspaces and refresh, and Copilot in Power BI, with some pointers for later.</p>
+      </Offer>
+      <Offer id="dax-fundamentals" title={course("dax-fundamentals").title} meta={metaFor("dax-fundamentals")}>
+        <p>The first day of the DAX Deep Dive, booked on its own, for people who already build reports and want a proper first day of DAX. It covers why DAX is easiest on a star schema, calculated columns and measures, row and filter context and how they combine, iterators such as SUMX, and CALCULATE with FILTER and ALL.</p>
+      </Offer>
+      <Offer id="dax-deep-dive" title={course("dax-deep-dive").title} meta={metaFor("dax-deep-dive")}>
+        <p>For people who build reports and want to write DAX they understand rather than copy. The first day is DAX Fundamentals. The second goes further: ALLSELECTED and ALLEXCEPT, blanks and zeros, variables, table functions and DAX query view, date tables and time intelligence, and getting more out of relationships, from activating an inactive one to changing the direction a filter travels.</p>
+      </Offer>
+      <Offer id="data-modelling" title={course("data-modelling").title} meta={metaFor("data-modelling")}>
+        <p>For people who build their own semantic models and want them right before the DAX starts. Much of the day is spent in Power Query.</p>
+        <p>The morning goes from report requirements to a star schema, working out the facts, dimensions and grain, then shapes the data to fit. The afternoon builds the model itself: relationships, cardinality and filter direction, a date table, and tidying up keys and names so it's pleasant to work with.</p>
+      </Offer>
+    </div>
+  </Chapter>
+
+  <Chapter id="ai-at-work" kicker="AI at work">
+    <p>Two days on using Claude well in everyday work. Neither is about Power BI, and neither needs any coding.</p>
+    <div class="offer-table">
+      <Offer id="claude-day-job" title={course("claude-day-job").title} meta={metaFor("claude-day-job")}>
+        <p>For any role, with no technical background needed. The day is about choosing AI work that's worth doing and carrying it through: what models, context and tools mean in practice, how to brief a task, hand it over and check what comes back, and the habits that waste time, like using the most capable model on its highest setting for a quick email.</p>
+        <p>People explore a prepared scenario on their own first, then work in small groups to build something a colleague can use and check against the sources. It finishes with each person trying a small variation and picking out where it could help in their own work.</p>
+      </Offer>
+      <Offer id="claude-consultants" title={course("claude-consultants").title} meta={metaFor("claude-consultants")}>
+        <p>For consultants and advanced users; no coding background assumed. The thread through the day is the agent skill: a way of writing down a method you know well, so Claude and your colleagues can apply it again.</p>
+        <p>Working from prepared material, people capture a method in a skill, deciding when it applies, what a good result looks like, and where it should stop and ask a question or bring in a person. Then they swap. Each person uses a colleague's skill on a fresh case, without its author there to explain it, and checks whether it holds up. The day ends with everyone improving their own skill from what came back.</p>
+      </Offer>
+    </div>
+  </Chapter>
+
+  <Chapter id="how-the-courses-run" kicker="How the courses run">
+    <p>Apart from the 101, every course is for a closed group of up to 8 from your organisation, over one or two days, on site or remote.</p>
+    <p>Everything runs on examples and a training dataset I've built for teaching, so nobody brings data and nothing needs preparing beforehand. That's deliberate. A course is for learning a skill, so it's built on material designed to teach that skill. Working on your own reporting is a different job, and building a course on it would be sneaking consultancy in through the back door.</p>
+    <p>For the Power BI courses run remotely, people use their own machines with Power BI Desktop installed.</p>
+    {/* DRAFT for Alan: should remote attendees also need a licence that can publish to a workspace? */}
+    {/* DRAFT for Alan: confirm bringing laptops as a general on-site commitment. */}
+    <p>For the Power BI courses on site, I bring laptops set up with Power BI and the training data, so nobody needs their own kit.</p>
+    {/* DRAFT for Alan: what Claude access do attendees need, and who provides it? */}
+    <p>The AI days use Claude, so before the day we'll check that people have access to the features it needs.</p>
+    <p>If you're putting this to someone else to approve, you don't need a call first. Tell me which course, roughly how many people and what they can already do, and I'll send you an outline with costs that you can pass on to whoever signs it off.</p>
+    {showsPrices && <p>The prices shown are for a group of up to 8 on site, plus VAT. For remote delivery, ask me for a price.</p>}
+  </Chapter>
+
+  <Chapter id="your-own-reporting" kicker="When it's your own reporting">
+    <p>If what your team needs is help with its own reporting, like a report that has to be delivered, a number that doesn't look right or a system you've taken over from someone else, that's consultancy rather than a course. <a href="/power-bi/">Here's how I work alongside teams on their own problems</a>, starting with a free hour on a call.</p>
+  </Chapter>
+
+  <section class="cta-band" aria-label="Ask about a course">
+    <div class="wrap">
+      <div class="cta-invite">
+        <p class="cta-note">The email comes with a few questions filled in: which course, how many people, on site or remote, and dates that suit.</p>
+        <a class="cta" href={enquiryHref}>Email me about a course</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>
