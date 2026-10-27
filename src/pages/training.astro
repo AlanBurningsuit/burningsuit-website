@@ -26,7 +26,7 @@ const metaFor = (id: string) => `${course(id).length} · up to 8 people · ${pri
 const intro = course("agentic-101");
 const interestHref = mailtoFor(`${intro.title} - register interest`);
 
-const enquiryFields = ["Course:", "Roughly how many people:", "On site or remote, and where:", "Dates that suit:"];
+const enquiryFields = ["Course:", "Roughly how many people:", "What they can already do:", "On site or remote, and where:", "Dates that suit:"];
 const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A course for my team")}&body=${encodeURIComponent(enquiryFields.join("\r\n"))}`;
 ---
 
@@ -40,7 +40,7 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
   <section class="page-hero">
     <div class="wrap">
       <h1 class="enter appear-300">Courses for people with <em>other</em> jobs to do.</h1>
-      <p class="lead enter appear-450">I teach Power BI, and how to put AI to work, to people who use them alongside everything else they do. Every course runs on examples and a training dataset I've built for teaching, so nobody needs to bring data and there's nothing to prepare beforehand.</p>
+      <p class="lead enter appear-450">I teach Power BI, and how to put AI to work, to people who use them alongside everything else they do. Every course runs on examples and material I've built for teaching, so nobody needs to bring data or do any homework first.</p>
       <p class="lead enter appear-450">You can start with half a day on handing Power BI building work to an AI agent. The longer courses run over one or two days, for a closed group of up to 8, on site or remote.</p>
       <ul class="routes enter appear-450">
         <li><a class="route" href="#agentic-101">The half-day 101</a></li>
@@ -64,9 +64,9 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
       <div>
         <div class="prose" data-reveal>
           <p class="offer-meta">{intro.length} · public seats</p>
-          <p>It's no longer the case that having an agent build something in Power BI is the wild west: full of bugs, and not doing what you wanted. This half-day is the place to start.</p>
+          <p>Having an agent build something in Power BI used to be the wild west: full of bugs, and not doing what you asked. I don't think that's true any more, as long as you know which decisions you're handing over and how to check what comes back. This half-day is the place to start.</p>
           {/* DRAFT for Alan: 101 outline to come. */}
-          <p>It's for {intro.audience.charAt(0).toLowerCase() + intro.audience.slice(1)}. Unlike the longer courses, it has public seats, so you can book a place for yourself rather than arranging a day for a group.</p>
+          <p>It's for {intro.audience.charAt(0).toLowerCase() + intro.audience.slice(1)}. Unlike the longer courses, it has public seats, so you'll book a place for yourself rather than arranging a day for a group.</p>
           {/* DRAFT for Alan: confirm the pilot wording; no price, date or seat numbers yet. */}
           <p>The first one will be a pilot, at a reduced price. If you'd like a place, or just want to hear when it's on, register your interest and I'll let you know when there's a date.</p>
         </div>
@@ -76,7 +76,7 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
   </section>
 
   <Chapter id="agentic-to-follow" kicker="More agentic Power BI, to follow">
-    <p>Two more courses are being written to follow the 101. I'll add them here when they're ready.</p>
+    <p>Two more courses are being written to come after the 101. Their details will follow when they're ready.</p>
     <div class="offer-table">
       <Offer id="agentic-hands-on" title={course("agentic-hands-on").title} meta="In development" />
       <Offer id="modelling-for-agents" title={course("modelling-for-agents").title} meta="In development" />
@@ -84,8 +84,8 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
   </Chapter>
 
   <Chapter id="power-bi-courses" kicker="Power BI courses">
-    <p>Four courses, from opening Power BI for the first time to writing DAX you understand rather than copy. Each one is for a closed group of up to 8, and each day runs from 9:30 to 16:00.</p>
-    <p>The DAX and Data Modelling courses assume people have done Fundamentals. If someone already finds their way around Power BI, a free 30-minute practical skills check on a call, using the training dataset, can stand in for it.</p>
+    <p>Four courses, from opening Power BI for the first time to writing DAX you understand rather than copy. Each day runs from 9:30 to 16:00.</p>
+    <p>The DAX and Data Modelling courses assume people have done Power BI Fundamentals. If someone already finds their way around Power BI, a free 30-minute practical skills check on a call, using the training dataset, can stand in for it.</p>
     <div class="offer-table">
       <Offer id="power-bi-fundamentals" title={course("power-bi-fundamentals").title} meta={metaFor("power-bi-fundamentals")}>
         <p>For anyone new to Power BI; it assumes nobody has opened it before. It starts with what everything else in Power BI is there to serve, a report in front of the people who use it, and works back from there.</p>
@@ -120,7 +120,7 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
 
   <Chapter id="how-the-courses-run" kicker="How the courses run">
     <p>Apart from the 101, every course is for a closed group of up to 8 from your organisation, over one or two days, on site or remote.</p>
-    <p>Everything runs on examples and a training dataset I've built for teaching, so nobody brings data and nothing needs preparing beforehand. That's deliberate. A course is for learning a skill, so it's built on material designed to teach that skill. Working on your own reporting is a different job, and building a course on it would be sneaking consultancy in through the back door.</p>
+    <p>Using my own teaching material is deliberate. A course is for learning a skill, so it's built on material designed to teach that skill. Working on your own reporting is a different job: that's consultancy, not a course.</p>
     <p>For the Power BI courses run remotely, people use their own machines with Power BI Desktop installed.</p>
     {/* DRAFT for Alan: should remote attendees also need a licence that can publish to a workspace? */}
     {/* DRAFT for Alan: confirm bringing laptops as a general on-site commitment. */}
@@ -132,13 +132,13 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
   </Chapter>
 
   <Chapter id="your-own-reporting" kicker="When it's your own reporting">
-    <p>If what your team needs is help with its own reporting, like a report that has to be delivered, a number that doesn't look right or a system you've taken over from someone else, that's consultancy rather than a course. <a href="/power-bi/">Here's how I work alongside teams on their own problems</a>, starting with a free hour on a call.</p>
+    <p>If what your team needs is help with its own reporting, such as a number that doesn't look right, that's consultancy rather than a course. <a href="/power-bi/">Here's how I work alongside teams on their own problems</a>, starting with a free hour on a call.</p>
   </Chapter>
 
   <section class="cta-band" aria-label="Ask about a course">
     <div class="wrap">
       <div class="cta-invite">
-        <p class="cta-note">The email comes with a few questions filled in: which course, how many people, on site or remote, and dates that suit.</p>
+        <p class="cta-note">The email comes with a few questions filled in: which course, how many people, what they can already do, on site or remote, and dates that suit.</p>
         <a class="cta" href={enquiryHref}>Email me about a course</a>
       </div>
     </div>

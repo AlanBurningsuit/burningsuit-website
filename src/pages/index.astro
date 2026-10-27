@@ -66,9 +66,9 @@ const statementLines: Line[] = [
     <div class="wrap">
       <h2 class="section-head" id="way-in" data-reveal>Start with half a day</h2>
       <div class="prose" data-reveal>
-        <p>The way in is <a href="/training/#agentic-101">{intro.title}</a> ({intro.length.toLowerCase()}), for anyone who builds in Power BI and wants to hand some of the building to an AI agent. The building decisions, that is, not the business ones.</p>
+        <p>The place to start is <a href="/training/#agentic-101">{intro.title}</a> ({intro.length.toLowerCase()}), for anyone who builds in Power BI and wants to hand some of the work to an AI agent. It's about handing over the building decisions, not the business ones.</p>
         {/* DRAFT for Alan: confirm the pilot wording; no price, date or seat numbers yet. */}
-        <p>You book a seat for yourself, and the first one will be a pilot. A hands-on day and a course on modelling for agents are being written to follow it.</p>
+        <p>It's booked by the seat, so you can come on your own. The first one will run as a pilot; register your interest and I'll tell you when there's a date. A hands-on day and a course on modelling for agents are being written to follow it.</p>
       </div>
       <div class="routes"><a class="route" href="/training/#agentic-101">More about the 101</a><a class="route" href={interestHref}>Register your interest</a></div>
     </div>
@@ -78,7 +78,7 @@ const statementLines: Line[] = [
     <div class="wrap">
       <h2 class="section-head" id="courses" data-reveal>The longer courses</h2>
       <div class="prose" data-reveal>
-        <p>Every course runs on examples and a training dataset I've built for teaching. Nobody brings data, and there's nothing to prepare.</p>
+        <p>Every course runs on examples and material I've built for teaching, so nobody needs to bring data or do any homework first.</p>
       </div>
       <div class="doors">
         {courseDoors.map((door, i) => <DoorRow {...door} variant={i === 0 ? "lead" : "second"} index={i} />)}

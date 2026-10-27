@@ -85,8 +85,8 @@ export default defineConfig({
     "/who-we-are/how-we-train/online-powerbi-training": "/training/",
     "/who-we-are/our-clients": "/work/",
     // Fourth sweep (Plausible 404 events, 2026-07-16 → 2026-08-10): every real
-    // content URL visitors actually hit. All technique/training-era pages, so
-    // /power-bi/ is the topical successor throughout; /blog was the old index.
+    // content URL visitors actually hit. Technique pages go to /power-bi/ and the
+    // one course URL to /training/; /blog was the old index.
     "/blog": "/power-bi/",
     "/blog/i-have-powerquery-using-power-query-call-rest-apis": "/power-bi/",
     "/blog/categorising-measures-numeric-ranges-or-bins": "/power-bi/",
