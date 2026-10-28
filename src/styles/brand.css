@@ -2,8 +2,9 @@
 
    The one source for every value shared across media: the website, social
    templates, documents and Claude's design system. Each line's comment is that
-   token's usage note. Use the name, never the value: `npm run check` fails on a
-   colour written anywhere else that isn't one of these. Web-only tokens
+   token's usage note. Use the name, never the value: the drift check (here
+   `npm run check`, in the website `npm run check:brand`) fails on any other
+   colour. The website keeps an identical copy in src/styles. Web-only tokens
    (motion, fluid type and spacing, measures, breakpoints) live in the
    website's src/styles/tokens.css. */
 
