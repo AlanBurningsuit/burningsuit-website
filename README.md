@@ -28,7 +28,7 @@ Browser and Lighthouse checks serve the existing `dist/`; they don't rebuild it,
 
 ## Generated assets
 
-Photo originals live in the private brand repo's local photo library, `../burningsuit-brand/photos/`. The build regenerates the committed derivatives in `src/assets/photos/` when the originals are present, and uses the committed ones otherwise. After changing an original, commit its derivative.
+Photo originals live in the private brand repo's photo library, `../burningsuit-brand/photos/`. The build regenerates the committed derivatives in `src/assets/photos/` when the originals are present, and uses the committed ones otherwise. After changing an original, commit its derivative.
 
 Social cards are rendered from case-study frontmatter by `scripts/render-linkedin-featured.mjs` (the Power BI card's heading and palette are literals there). After changing them: `npm run build`, `npm run render:social`, `npm run build`, then commit `public/og-image.png` and `public/social/`.
 

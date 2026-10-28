@@ -21,7 +21,7 @@ const library = join(root, "../burningsuit-brand/photos");
 const from = (p) => join(library, p);
 const to = (p) => join(root, "src/assets/photos", p);
 
-// The photo library is local-only (gitignored in the brand repo, not in CI). On
+// The photo library is in the private brand repo, which CI doesn't check out. On
 // a build where it's absent (Netlify, fresh clone), skip and let the build use
 // the committed derivatives already in src/assets/photos.
 if (!existsSync(library)) {
