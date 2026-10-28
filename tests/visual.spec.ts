@@ -4,8 +4,7 @@ import { test, expect, type Page } from "@playwright/test";
  * Visual regression tripwire. Region snapshots (not whole-page) so a local
  * layout regression can't hide under a loose full-page threshold. These
  * baselines are the Astro build itself: they protect Phase B refinements from
- * silently breaking structure. Fidelity vs the B5 source is a separate,
- * human-signed comparison (scripts/shoot.mjs), not asserted here.
+ * silently breaking structure.
  */
 async function prepare(page: Page, path: string) {
   // Freeze time BEFORE load so nothing date-derived can drift between runs.
