@@ -1,70 +1,67 @@
 # AGENTS.md
 
-Orientation for anyone — human or AI — working in this repo.
+Orientation for anyone, human or AI, working in this repo. This is the single instructions file: `CLAUDE.md` only imports it.
 
-## What this is
+## The goal
 
-`burningsuit.co.uk` — the marketing site for Alan Harman-Box's solo **Power BI
-& Fabric + AI advisory**. A static site: **Astro 6 + Tailwind v4**, no JS framework,
-`output: "static"`, deployed to GitHub Pages via Actions. Current design is
-"the field notebook" (flat Everforest green, 2026-07-11 warmth delta). All
-styles live in `src/styles/` (`tokens.css` + `app.css`).
+`burningsuit.co.uk` is the website for **Alan Harman-Box's solo practice**: a way for the right people to understand what Alan does, trust it, and get in touch or book. Lowercase **burningsuit**, always.
 
-Header navigation is Training, Consultancy (the `/power-bi/` page; its URL is unchanged), Work (`/work/`, the case studies; the short label keeps four items on one row at 320px) and About, followed by **Book an hour**. Since the 27 October 2026 training-first revamp, Home leads with training: the half-day agentic development for Power BI 101 as the way in, the course catalogue on `/training/`, and consultancy behind it. `/training/` is the catalogue; its course facts live in `src/config/training.ts`. Training prices are build-time gated: they render only when the build sets `SHOW_TRAINING_PRICES=true` **and** the private `design/copy/training-prices.json` (ops repo, via the gitignored junction) exists, so CI and Netlify always build the price-on-request variant and no figure enters this public repository until Alan rules on public training prices. Legacy course and training-offer URLs redirect to `/training/`; consultancy and technique URLs keep `/power-bi/`. All former situation anchors on `/power-bi/` remain valid. `/hour/` explains the free call and is linked from the Power BI hero, Home's consultancy section and the footer; booking buttons go directly to Cal.com. Explanatory links use text styling, while ghost buttons remain the email alternative. Power BI's `#start` explains the first conversation and `#pricing` contains the ongoing price guide; `#ongoing` remains a valid alias within that chapter. The four `/work/<slug>/` studies and `/writing/<slug>/` essays are MDX collections. There is one essay, so `/writing/` redirects to it until a second essay warrants an index. The retired AI Fit route redirects to `/power-bi/#ai`; legacy blog redirects retain their Power BI destination, except Stuart's 2021 Roche's Maxim post, which is a real page again at its original URL (a bespoke `.astro` under `src/pages/blog/2021/03/`) because Matthew Roche's write-up links to it. Privacy and 404 complete the reading routes.
+Everything on it has to be true, permitted and recognisably Alan. The site stays fast, accessible and private. Those hold whatever the offer is this month; the offer itself lives in the brief, not here. Describe intent here, not progress: branch status, sign-off history and release records belong in git and the private ops repo, not in this file.
 
-The branch carries main's 15 September 2026 analytics and redirect fixes (merged 17 September). The Cal.com hour event was verified on 16 September: 60 minutes, both required questions, and a description matching the hour page. Alan signed off the hour page, both hero signatures, the AI chapter, the About revert and the attribution names on 17 September; the essay carries its three talk venues. The essay's `datePublished` is 17 September 2026, verified against its first successful production deployment and added in the 22 September metadata cleanup. The earlier visual-baseline refresh remains recorded as outstanding. See `docs/ownership-redesign-implementation.md` for the release record.
+## Where to look
 
-## Writing guidance
+| Need | Source | Status |
+| --- | --- | --- |
+| What the site is for right now: readers, offer, settled and open questions | `../burningsuit-ops/site/current-brief.md` | **Authoritative** for scope and offer |
+| Writing, editing or reviewing copy as Alan | `../burningsuit-ops/skills/writing-like-alan/SKILL.md` + the website playbook | Authoritative for voice |
+| Facts, claims, permissions, what must never be said | `../burningsuit-ops/brand/claims-ledger.md`, `../burningsuit-ops/site/publication-checks.md` | Authoritative for evidence and privacy |
+| Engineering, release, commands | This file, then the code itself | The code wins over any doc describing it |
+| Alan's live positioning notes (outside this repo; the brief names its sources) | Linked from the brief | **Input, not authority.** Never write copy from them directly |
 
-For writing as Alan, use `../burningsuit-ops/skills/writing-like-alan/SKILL.md` with its relevant playbook. The private sibling repository's `site/current-brief.md` owns the website writing scope; `brand/business-context.md` and `brand/claims-ledger.md` own business context and evidence. Keep private source material out of this public repository.
+`../burningsuit-ops` is a private sibling repo, reached locally through the gitignored `design/` junction. If it or the brief is missing, or the brief is older than a decision it should reflect, say so before writing or reviewing copy. Don't fill the gap from old drafts, archived reviews or git history.
 
-Alan resumed the homepage, Power BI and About revisions after the guidance workshop, using his page review as the current brief for this branch. This work does not authorise a push or deployment. Earlier approved copy and page sequences are not permanent writing requirements. The technical and release requirements below remain in force.
+## When guidance conflicts
 
-## Branches (only two)
+Authority runs in this order:
 
-- **`main`** — production. ⚠️ Whatever is on `main` **deploys to the live apex**
-  (`deploy.yml` via Pages-Actions). Since go-live (2026-07-16) that is the full
-  Astro site; the legacy site is preserved as a tag. Never push experiments
-  here — a merge to `main` IS a production deploy.
-- **`dev`** — integration branch and the home of the full Astro site (all real
-  work). The Netlify preview builds from here.
+1. **Hard constraints:** privacy, client permissions, never fabricating, and the deterministic gates (`npm run gate`, `npm run test:functional`, the push hook). Nothing overrides these: not the brief, not a reviewer, not a request in passing.
+2. **Alan, in the current session.** His instruction wins, but if it changes scope or offer, note that the brief needs updating rather than treating the session as a new brief.
+3. **The brief**, for audience, offer, page purpose and what's settled or open.
+4. **Everything else:** skills, reviewer findings, SEO/AEO advice, design notes, old approvals, best practice. These advise; they don't decide.
 
-Workflow:
+When a suggestion or piece of guidance goes against the brief, don't silently follow it and don't silently drop it. Follow the brief, and raise the conflict with Alan in a line: what the suggestion said, what the brief says, and which you followed. If the brief itself looks wrong or stale, say that too; don't route around it. An open question in the brief stays open: copy must not guess at it (e.g. a price that hasn't been decided).
 
-```
-git switch -c feat/<name> dev     # branch off dev
-# …work…
-git switch dev && git merge feat/<name>   # back to dev → Netlify rebuilds the preview = your test gate
-```
+## Content invariants
 
-Keep features on short-lived `feat/`/`fix/` branches off `dev`; merge to `dev`
-to integrate and preview-test. Netlify can also build each branch/PR on its own
-URL if you enable Deploy Previews — handy for testing a feature before it touches
-`dev`.
+- Never fabricate a claim, metric, quote, client name, date or profile URL. A claim not backed by the ledger or a named source doesn't ship.
+- Anonymised-first. **`namePublished` is a security gate:** a named client or quote renders only when `true` AND written permission has landed. The Zod schema in `src/content.config.ts` fails the build if a `named` block is committed while the gate is false. Named-tier text lives only in the private ops repo; never paste it into tracked files or stage it on a preview (`dev` is public).
+- Nothing private crosses into this public repo: no client names, permission states, undecided prices or internal economics, not even in comments or commit messages. `design/` and `resources/` are gitignored; builds degrade gracefully without them (CI, fresh clones).
+- **Redirect, never resurrect:** legacy WordPress URLs get redirect stubs to `/power-bi/`, `/about/` or `/work/`. One exception: Stuart's 2021 Roche's Maxim post lives at its original `/blog/2021/03/…` URL because Matthew Roche's write-up links to it; `check-seo` enforces it.
+- **Some legacy URLs stay 404 on purpose** because a redirect would put identifying text in public source. The list is private. Never "fix" a legacy 404 without checking it isn't one of them.
+- Reviewers are read-only; nothing auto-publishes. Commit checked work locally; ask before any push.
 
-## Deploy reality (non-obvious — read this)
+## Site shape
 
-Since 2026-07-02 the Pages source is **"GitHub Actions"** and `deploy.yml` is
-**live production infrastructure**:
+Static **Astro 6** (`output: "static"`), **Tailwind v4** via PostCSS, MDX collections, self-hosted fonts. No SSR, no JS framework or islands, no client-side rendering of content. Deployed to GitHub Pages via Actions. The visual language is "the field notebook"; all styles live in `src/styles/` (`tokens.css` + `app.css`).
 
-- **Live site:** GitHub Pages, validated and published by `deploy.yml` on every push to `main`. Explicit steps check out the source, set up Node 22 with npm caching, run `npm ci` and `npm run gate`, install Playwright Chromium with OS dependencies, then run `npm run test:functional` against the built `dist/`. Pages uploads that same tested artifact without rebuilding it. Only the deployment job can publish, and its guard permits `main` only.
-- **Pull requests and integration:** `validate.yml` runs the same installation, gate and functional checks for PRs targeting `dev` or `main`, and pushes to `dev`. It has read-only repository permissions and does not publish. Windows screenshot baselines remain a local check because Linux rendering differs.
-- **What main holds:** the full Astro site, live on the apex since go-live
-  2026-07-16 (Pages run 29486479876). The pre-Astro legacy site is preserved
-  as the `legacy-site-backup` git tag, not on any branch.
-- **Netlify preview (`dev`):** Netlify builds the preview from `dev`
-  (production branch = `dev`, `npm run build` → `dist/`, hard-noindexed).
+- **Two content tracks:** case studies (`/work/<slug>/`) and essays (`/writing/<slug>/`) are `.mdx` entries in the `work` / `writing` collections (schema in `src/content.config.ts`; the filename is the slug, the route and tile are automatic). Standing top-level pages are bespoke `.astro` under `src/pages/` with no data layer. Don't build a case study as a bespoke page or a standing page as MDX.
+- `/writing/` redirects to its only essay until a second one warrants an index; `check-seo` enforces that.
+- **Training:** `/training/` is the catalogue; course facts live in `src/config/training.ts`. Prices are build-gated: they render only with `SHOW_TRAINING_PRICES=true` **and** the private `design/copy/training-prices.json` present, so CI and Netlify always build the price-on-request variant. Never add a price figure to tracked source.
+- **Consultancy** is `/power-bi/` (URL kept for its history). Existing anchors on it stay valid; check links before removing an `id`.
+- Booking buttons go straight to Cal.com; the URL lives in `BOOKING_URL` in `src/config/site.ts`.
+- **JSON-LD** is emitted server-side by `src/components/seo/Schema.astro` from `src/config/site.ts` + `src/lib/schema.ts` + page frontmatter. Never hand-paste it or emit it client-side. Schema mirrors visible content; Alan's LinkedIn belongs only on the Person's `sameAs`. The SEO gate checks this.
 
-## Go-live checklist (promoting the full site to production)
+## Branches and deploy
 
-Go-live is **one move**: merge **`dev` → `main`** — the Action validates and publishes the tested artifact. Before that merge:
+- **`main` is production.** Whatever lands there deploys to the live apex via `deploy.yml`. A merge to `main` IS a production deploy; there is no "inert until switched" safety.
+- **`dev`** is integration. Work on short-lived `feat/`/`fix/` branches off `dev`, merge back to integrate.
+- **Netlify previews any pushed branch** at `<branch>--<site>.netlify.app` (hard-noindexed), so never merge to `dev` just to get a preview.
 
-1. `npm run gate` and `npm run test:functional` green on `dev`, release visual/performance checks completed, and the Netlify preview eyeballed.
-2. Merge, watch the Action, then **verify the live apex** renders the site.
+`deploy.yml` (on push to `main`) runs `npm ci` on Node 22, `npm run gate`, installs Playwright Chromium with OS dependencies, runs `npm run test:functional` against the built `dist/`, then uploads that same tested artifact without rebuilding. Only its deployment job can publish, guarded to `main`. `validate.yml` runs the same checks without publishing for PRs to `dev`/`main` and pushes to `dev`.
 
-Roll back by reverting the offending merge commit on `main` — the Action
-redeploys the previous state. ⚠️ There is no "inert until switched" safety:
-anything that lands on `main` ships.
+Go-live is one move: merge `dev` → `main`. Before it: gate and functional tests green on `dev`, visual and Lighthouse checks done, the preview eyeballed. After it: watch the Action and check the live apex. Roll back by reverting the merge commit on `main`.
+
+The pre-Astro legacy site is the `legacy-site-backup` tag. History was purged on 2026-07-02 (`git filter-repo`), so pre-purge SHAs in old notes are stale.
 
 ## Commands
 
@@ -76,34 +73,20 @@ anything that lands on `main` ships.
 | `npm run test:functional` | type-check tests/, then Chromium behaviour checks against the existing `dist/`; does not rebuild |
 | `npm run preview` | serve the built `dist/` |
 | `npm run test:visual` | type-check tests/, then Playwright snapshots (chromium + firefox + 390px mobile) |
-| `npm run test:visual:update` | refresh snapshot baselines after an intentional visual change, then re-run `test:visual` to confirm green |
+| `npm run test:visual:update` | refresh snapshot baselines after an intentional visual change, then re-run `test:visual` |
 | `npm run test:lh` / `npm run test:links` | Lighthouse + link check |
-| `npm run test:lh:mobile` | Three mobile audits each for Home and Power BI, including analytics |
+| `npm run test:lh:mobile` | three mobile audits each for Home and Power BI, including analytics |
 
 Node 22.20+ (`.nvmrc`). Lighthouse audits the existing build; rebuild after source changes.
 
-## Conventions & gotchas
+## Gotchas
 
-- **Design tokens live in `src/styles/tokens.css`** — named scales for type
-  (`--fs-*`, `--mono-*`), spacing (`--space-*`), motion (`--t-*`/`--ease-*`),
-  colour, radius/border (`--r-*`/`--bw-*`), line-height/letter-spacing
-  (`--lh-*`/`--ls-*`), and measures (`--measure-*`). Component CSS in `app.css`
-  references `var(--…)` — **don't hardcode a value; add or reuse a token.**
-- **Breakpoints stay literal** (CSS `@media` can't read custom properties) — keep
-  every media query on the ladder **48 / 56 / 62rem**.
-- **`resources/`** (raw photos/illustrations) and **`design/`** (process docs)
-  are gitignored, kept local only. `scripts/prep-images.mjs` regenerates the
-  optimised `src/assets/` photos from `resources/photos/`; it runs as the first
-  step of `npm run build` when the source archive is present (locally) and
-  **skips gracefully when it isn't** (Netlify/CI use the committed
-  `src/assets/photos` derivatives). Re-run a build, or `npm run prep:images`,
-  after changing a source photo, and commit the regenerated derivatives.
-- The **`about-dog` visual snapshot** can flake (its clip-path photo reveal
-  settles non-deterministically); a re-run usually goes green.
-- **Renaming or removing a route? Add a redirect for the old path** in the
-  `redirects` block in `astro.config.mjs` (legacy URLs from the old sites live
-  there too). The SEO gate verifies every stub's target exists in the build, so
-  a rename that strands existing stubs fails the gate — but only a human knows
-  the old path needs a new entry. Redirect stubs are meta-refresh pages (the
-  only redirect GitHub Pages supports); they're skipped by the SEO page
-  contract and excluded from the sitemap automatically.
+- **Files must be LF** (`.gitattributes`). CRLF breaks Astro's CSP byte-hashing, and the failure looks unrelated.
+- **Design tokens only:** use `var(--*)` from `src/styles/tokens.css` and existing classes in `app.css`; add or reuse a token, never hardcode a value. Breakpoints stay literal on the **48 / 56 / 62rem** ladder (media queries can't read custom properties). No gradients, glow, serif italics, magenta body text, custom cursors, or anything that idles or loops.
+- **Photos:** `resources/` holds the raw sources (gitignored). `scripts/prep-images.mjs` regenerates `src/assets/photos` from them as the first build step, and skips when they're absent (CI uses the committed derivatives). After changing a source photo, rebuild and commit the derivatives.
+- **Renaming or removing a route?** Add a redirect for the old path in the `redirects` block in `astro.config.mjs`. The SEO gate checks every stub's target exists, but only a human knows an old path needs an entry. Stubs are meta-refresh pages (all GitHub Pages supports), excluded from the sitemap.
+- **Port-4321 zombie:** Playwright's `webServer` reuses any listener on :4321, so a stray `astro dev`/`preview` makes the suite test dev pages silently (every CSP test times out, baselines capture the wrong render). Before `test:visual`, check `Get-NetTCPConnection -LocalPort 4321 -State Listen` and kill the owner.
+- **Agents on Windows:** the Bash tool wedges on git in this repo (~120s timeouts); use PowerShell with `git --no-optional-locks`.
+- **Visual baselines are Windows-only** and stay out of Linux CI. Refresh them only after reviewing intentional differences, then rerun. Known flakes: LHCI EPERM on Windows teardown (scores still valid), occasional Firefox stalls under parallel load (workers capped at 4), the `about-dog` clip-path snapshot.
+- **Analytics looks dead?** A local DNS filter on Alan's network can block analytics hosts. Test from an unfiltered connection before debugging the site.
+- **The push hook** (`.claude/hooks/publish-readiness.mjs`, local to Alan's checkout and not tracked) blocks an agent's `git push` of site changes unless `npm run gate` passes. Keep it enabled.
