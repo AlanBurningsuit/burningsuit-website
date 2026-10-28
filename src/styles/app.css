@@ -789,6 +789,58 @@
     }
   }
 
+  /* ============ the doors: dark editorial rows into the offers ============ */
+  /* Cream is proof-only, so the routes into the offers sit on the dark ground
+     as editorial rows: hairline-topped, whole-row links. The lead door is
+     deliberately fuller than the others (front-door hierarchy, not a
+     stagger). The hover tell is AMBER: spark on this ground is 2.65:1 and
+     never carries a state. */
+  .doors {
+    display: grid;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+  }
+  .door {
+    display: block;
+    text-decoration: none;
+    border-top: var(--bw-hair) solid var(--line);
+    padding-top: var(--space-md);
+    transition: border-top-color var(--t-flip);
+  }
+  .door h3 {
+    color: var(--fg);
+    font-size: var(--fs-2);
+    max-width: var(--measure-head);
+  }
+  .door-lead h3 {
+    font-size: var(--fs-3);
+  }
+  .door p {
+    margin-top: var(--space-block);
+    color: var(--fg-dim);
+    max-width: var(--measure-prose);
+  }
+  .door-lead p {
+    max-width: var(--measure-wide);
+  }
+  .door .go {
+    color: var(--fg-dim);
+    margin-top: var(--space-block);
+    padding-top: 0;
+  }
+  .door:hover,
+  .door:focus-visible {
+    border-top-color: var(--amber); /* the hairline warms with the tell */
+  }
+  .door:hover .go,
+  .door:focus-visible .go {
+    color: var(--amber);
+  }
+  .door:hover .go::after,
+  .door:focus-visible .go::after {
+    transform: translateX(3px);
+  }
+
   /* ============ carved cream proof panels ============ */
   /* Capped at the wide reading measure so cards never run wider than the prose
      / case-file panel sharing the same `.what` column. */
@@ -1793,6 +1845,7 @@ html:not(.js) .figure-inset .ph {
   }
   .panel,
   .offer,
+  .door,
   .cta-invite,
   .routes,
   .about-grid,
