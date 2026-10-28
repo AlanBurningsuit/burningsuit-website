@@ -1,0 +1,73 @@
+/* burningsuit — brand tokens
+
+   The one source for every value shared across media: the website, social
+   templates, documents and Claude's design system. Each line's comment is that
+   token's usage note. Use the name, never the value: the drift check (here
+   `npm run check`, in the website `npm run check:brand`) fails on any other
+   colour. The website keeps an identical copy in src/styles. Web-only tokens
+   (motion, fluid type and spacing, measures, breakpoints) live in the
+   website's src/styles/tokens.css. */
+
+:root {
+  /* ---- dark grounds: the Everforest dark (hard) palette; depth is tonal layers ---- */
+  --bg: #272e33; /* the default ground of almost everything; keep it, the spark is tuned to it */
+  --bg-2: #2d353b; /* raised surface, a panel lifted off the ground */
+  --bg-3: #343f44; /* one step above bg-2: hover ground and the ghost button */
+  --bg-dim: #232a2e; /* recessed band, the footer */
+  --bg-band: #1f262b; /* full-bleed call-to-action band, darker than the ground, no edges */
+  --deep: #1c2226; /* carved borders and the hard, zero-blur offset shadow */
+  --line: rgb(211 198 170 / 0.12); /* hairline divider on dark grounds: fg at 12% */
+
+  /* ---- text on dark ---- */
+  --fg: #d3c6aa; /* body and headlines on every dark ground */
+  --fg-dim: #9da9a0; /* captions and secondary lines on dark grounds (AA-safe) */
+  --voice: #859289; /* the margin aside's decorative tie only; never text */
+
+  /* ---- cream: evidence only (a quote, an outcome, real proof), never decoration ---- */
+  --paper: #f1ecd9; /* the cream proof-panel surface */
+  --paper-edge: #cfc6a8; /* the thin ring around a cream panel */
+  --ink: #3a444a; /* headings on paper */
+  --ink-soft: #4d5a61; /* body on paper; darker than Everforest's own grey, for contrast */
+
+  /* ---- accents: warmth in small doses, one spark ---- */
+  --amber: #e69875; /* links, the one emphasised word on a dark ground, warm rules */
+  --moss: #a7c080; /* quiet positive, sparingly */
+  --spark: #d90148; /* the brand magenta: one moment per asset; emphasis on cream; never a fill behind text on dark */
+  --spark-press: #cf1149; /* spark pressed or hovered; keeps white text above 5:1 */
+  --on-spark: #ffffff; /* text on a spark ground (5.18:1) */
+  --logo-spark: #d90048; /* the magenta inside the supplied logo art only; use spark for everything else */
+
+  /* ---- light grounds (email, where the reader's client is white) ---- */
+  --email-ground: #ffffff; /* the white ground email clients impose */
+  --email-rule: #e3ddc9; /* the rule above the legal line */
+  --email-muted: #8b948f; /* the legal line on white */
+  --email-divider: #9aa5a0; /* the middot separators between links */
+
+  /* ---- type: three faces, three jobs; emphasis is a colour, never italic or serif ---- */
+  --ff-display: "Mona Sans", "Trebuchet MS", Arial, sans-serif; /* headlines and big lines: 800 for impact, 600 for buttons, labels and quotes */
+  --ff-body: "Albert Sans", Arial, sans-serif; /* paragraphs: 400, 600 for emphasis */
+  --ff-mono: "Commit Mono", ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace; /* the margin voice and true metadata: handles, URLs, captions, dates */
+
+  --lh-display: 1.02; /* display headings */
+  --lh-tight: 1.1; /* statements and big quotes */
+  --lh-snug: 1.2; /* compact headings */
+  --lh-label: 1.3; /* mono eyebrows */
+  --lh-relaxed: 1.55; /* multi-line mono */
+  --lh-body: 1.6; /* body copy */
+  --lh-loose: 1.7; /* fine print */
+
+  --ls-display-loose: -0.04em; /* the loudest headline */
+  --ls-display: -0.02em; /* display headings, statements */
+  --ls-display-tight: -0.01em; /* smaller headings */
+  --ls-mono: 0.02em; /* default mono tracking */
+  --ls-mono-wide: 0.04em; /* mono labels that lead a block */
+  --ls-mono-xwide: 0.08em; /* the meta line */
+
+  /* ---- shape: carved frames, hard edges ---- */
+  --px: 3px; /* carved-edge weight, also the focus-ring width */
+  --bw-hair: 1px; /* hairline dividers */
+  --bw-spine: 2px; /* accent spines */
+  --r: 9px; /* carved-frame radius: cream panels, photo frames */
+  --r-sm: 6px; /* small radius: buttons, tabs, thumbnails */
+  --r-xs: 2px; /* focus-ring inner radius */
+}
