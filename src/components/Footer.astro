@@ -55,7 +55,7 @@ const heading =
       >{action.label}</a>
       {email && <a class="cta ghost" href={email.href}>{email.label}</a>}
     </div>
-    {ask === "hour" && (
+    {ask === "hour" && !Astro.url.pathname.startsWith("/hour") && (
       <p class="routes hour-link">
         <a class="route" href="/hour/">What happens in the free hour?</a>
       </p>

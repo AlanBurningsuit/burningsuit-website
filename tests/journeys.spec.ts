@@ -35,7 +35,7 @@ test("Power BI offers the hour explanation in its hero", async ({ page }) => {
   await page.goto("/power-bi/");
   await page.locator(".pbi-hero").getByRole("link", { name: /^What happens in the free hour\?/ }).click();
   await expect(page).toHaveURL(/\/hour\/$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("A free hour on a call, for when your reporting is stuck.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("A free hour on a call, for when your Power BI reporting is stuck.");
 });
 
 test("Home's consultancy door opens the consultancy page", async ({ page }) => {
@@ -81,7 +81,7 @@ test("no link copy carries a typed arrow: the route glyph is CSS furniture", asy
 
 test("Home's case-study action opens the complete collection", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: /^All four case studies/ }).click();
+  await page.getByRole("link", { name: /^All the case studies/ }).click();
   await expect(page).toHaveURL(/\/work\/$/);
   await expect(page.locator(".offers a.panel")).toHaveCount(4);
 });

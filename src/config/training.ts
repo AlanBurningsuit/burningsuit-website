@@ -39,7 +39,7 @@ export interface Course {
 }
 
 export const COURSES: readonly Course[] = [
-  { id: "agentic-101", title: "Agentic development for Power BI 101", group: "agentic", length: "Half a day, 9:30 to 12:30", audience: "People who build in Power BI but don't write code" },
+  { id: "agentic-101", title: "Agentic development for Power BI 101", group: "agentic", length: "Half a day, 9:30am to 12:30pm", audience: "People who build in Power BI but don't write code" },
   { id: "agentic-hands-on", title: "Agentic Power BI: a hands-on day", group: "agentic", length: "1 day", audience: "People who've done the 101", inDevelopment: true },
   { id: "modelling-for-agents", title: "Modelling for agents", group: "agentic", length: "To be confirmed", audience: "People building models that agents will work on", inDevelopment: true },
   { id: "power-bi-fundamentals", title: "Power BI fundamentals", group: "power-bi", length: "2 days", audience: "Anyone new to Power BI", before: "Nothing" },
@@ -47,7 +47,7 @@ export const COURSES: readonly Course[] = [
   { id: "dax-deep-dive", title: "DAX deep dive", group: "power-bi", length: "2 days", audience: "People who build reports and want DAX they understand rather than copy", before: "Power BI fundamentals, or similar experience" },
   { id: "data-modelling", title: "Data modelling", group: "power-bi", length: "1 day", audience: "People who build their own models", before: "Power BI fundamentals, or similar experience" },
   { id: "claude-day-job", title: "Claude in your day job", group: "ai-at-work", length: "1 day", audience: "Any role, with no technical background needed" },
-  { id: "claude-consultants", title: "Claude for consultants", group: "ai-at-work", length: "1 day", audience: "Consultants and advanced users, with no coding background needed" },
+  { id: "claude-consultants", title: "Claude for consultants", group: "ai-at-work", length: "1 day", audience: "Consultants and advanced users of AI tools, with no coding background needed" },
 ] as const;
 
 export const coursesIn = (group: CourseGroup) => COURSES.filter((c) => c.group === group);
@@ -79,7 +79,7 @@ export interface Pilot {
 
 export const PILOT_101: Pilot = {
   week: "the week of 18 January 2027",
-  time: "9:30 to 12:30",
+  time: "9:30am to 12:30pm",
   minSeats: 4,
   maxSeats: 8,
   goNoGo: "8 January 2027",

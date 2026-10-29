@@ -33,22 +33,25 @@ const introPrice = priceFor("agentic-101");
 // than converts, so its ask is the 101's page (asks.ts, see-101).
 const way101 = askLink("see-101", "home-way-in");
 // Hand-split for the hero's 15ch measure. Check the hero height on preview.
-const heroLines: Line[] = ["Power BI and AI", "training for", { before: "everyone ", em: "else", after: "." }];
+// A non-breaking space keeps "Power BI" on one line at 320px.
+const heroLines: Line[] = ["Power\u00a0BI and AI", "training for", { before: "everyone ", em: "else", after: "." }];
 const courseDoors: RowData[] = [
   { href: "/training/#power-bi-courses", title: { before: "Power BI, from a first report to DAX you ", em: "understand", after: "." }, body: `${course("power-bi-fundamentals").title}, ${course("dax-fundamentals").title}, the ${course("dax-deep-dive").title} and ${course("data-modelling").title}. 1 or 2 days each, run privately for your team.`, cta: "See the Power BI courses" },
-  { href: "/training/#ai-at-work", title: { before: "Claude, at ", em: "work", after: "." }, body: `${course("claude-day-job").title}, a day for any role with no technical background needed, and ${course("claude-consultants").title}, a day on writing down a method so Claude and your colleagues can use it again.`, cta: "See the AI days" },
+  { href: "/training/#ai-at-work", title: { before: "Claude, at ", em: "work", after: "." }, body: `${course("claude-day-job").title}: a day for any role, with no technical background needed. ${course("claude-consultants").title}: a day on writing down a method so Claude and your colleagues can use it again.`, cta: "See the AI days" },
 ];
 const consultancyDoor: RowData = { href: "/power-bi/", title: { before: "When it's your own reporting ", em: "problem", after: "." }, body: "I work alongside your team on the real thing, a report to deliver or a system you've inherited, until they can carry on without me.", cta: "See how consultancy works" };
 // Each card's line is the study's own published outcome.
 const evidenceRows: RowData[] = [
-  { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "Her Power BI courses stalled the moment she swapped the sample data for her own. With me coaching, she built a dashboard on her real data, and she looks after it herself now.", cta: "Read the contact-centre story" },
+  { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "The Power BI courses she'd taken before stalled the moment she swapped the sample data for her own. With me coaching, she built a dashboard on her real data, and she looks after it herself now.", cta: "Read the contact-centre story" },
   { href: "/work/carbon-footprint/", tab: "A UK university", title: { before: "One person's spreadsheets, now a model he can ", em: "run", after: "." }, body: "A university's carbon reporting lived in one person's spreadsheets. I rebuilt his method in Power BI and handed it over; the annual refresh now takes him under half a day.", cta: "Read the carbon-footprint story" },
 ];
+// The point of view from the content strategy, in its own words.
 const statementLines: Line[] = [
-  "AI will build",
-  "whatever you ask.",
-  "Someone still has to",
-  { before: "know what to ask ", em: "for", after: "." },
+  "AI makes the",
+  "building cheap.",
+  "Agreeing what the",
+  "numbers mean is",
+  { before: "still the ", em: "job", after: "." },
 ];
 ---
 
@@ -60,8 +63,8 @@ const statementLines: Line[] = [
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="Power BI and AI training for everyone else." lines={heroLines} />
         <div class="hero-introduction enter appear-300">
-          <p>For people whose job isn't Power BI or AI, but who need them to get things done: the person the reports landed on, and the colleagues who want AI to take some of the load.</p>
-          <p class="hero-motivation">I'm Alan Harman-Box. I teach the parts worth knowing for what you want to do, in plain words, so your team can carry on without me.</p>
+          <p>For people whose job isn't Power BI or AI, but who need them to get things done: the person the reports landed on, and the colleagues who want to hand AI a task and check what comes back.</p>
+          <p class="hero-motivation">I'm Alan Harman-Box. I teach the parts worth knowing for what you want to do, so your team can carry on without me.</p>
         </div>
         <div class="cta-row">
           <a class="cta" href="/training/">See the courses</a>
@@ -77,10 +80,10 @@ const statementLines: Line[] = [
       reveal-gated prose (contact controls never wait on an entrance). */}
   <section class="chapter" aria-labelledby="way-in">
     <div class="wrap">
-      <h2 class="section-head" id="way-in" data-reveal>Start with half a day</h2>
+      <h2 class="section-head" id="way-in" data-reveal>Half a day for people who build in Power&nbsp;BI</h2>
       <div class="prose" data-reveal>
-        <p><a href="/training/agentic-101/">{intro.title}</a> is a half-day course for people who build in Power BI but don't write code. An agent is an AI tool that makes a change itself and then shows you what it did. You'll hand one a Power BI change, check what it did, and know which decisions you handed over.</p>
-        <p class="offer-meta">A morning in {pilot.week} · {pilot.time} · {pilot.minSeats} to {pilot.maxSeats} people · {introPrice ? `${introPrice} + VAT a seat, the founding rate` : "a founding rate for the first run"}</p>
+        <p><a href="/training/agentic-101/">{intro.title}</a> is a half-day course for people who build in Power BI but don't write code. An agent is an AI tool that makes a change itself and then shows you what it did. You'll ask one, in plain English, to change a report I've built for teaching, check what it did, and keep the decisions about what your numbers mean for yourself.</p>
+        <p class="offer-meta">A morning in {pilot.week} · {pilot.time} · runs with {pilot.minSeats} to {pilot.maxSeats} people · {introPrice ? `${introPrice} + VAT a seat, the founding rate` : "a founding rate for the first run"}</p>
       </div>
       <div class="routes"><a class="route" href={way101.href} data-track={way101.event} data-placement="home-way-in">More about the 101, and how to get a seat</a></div>
     </div>
@@ -111,17 +114,17 @@ const statementLines: Line[] = [
       <ServiceRows rows={evidenceRows} />
       <Exhibit tab="Three systems, one model" caption="A museum's counters, tills and ticketing feed one shared model the team runs themselves.">
         <div class="exhibit-flow">
-          <p>what the counters count</p>
-          <p>what the tills take</p>
-          <p>what the shop &amp; ticketing sell</p>
-          <p class="model">one shared model</p>
+          <p>What the counters count</p>
+          <p>What the tills take</p>
+          <p>What the shop &amp; ticketing sell</p>
+          <p class="model">One shared model</p>
         </div>
       </Exhibit>
-      <div class="routes"><a class="route" href="/work/museum/">Read the museum story</a><a class="route" href="/work/">All four case studies</a></div>
+      <div class="routes"><a class="route" href="/work/museum/">Read the museum story</a><a class="route" href="/work/">All the case studies</a></div>
     </div>
   </section>
 
-  <StatementChapter label="AI will build whatever you ask. Someone still has to know what to ask for." lines={statementLines} linkHref="/writing/we-are-all-middle-management-now/" linkLabel="Read the essay" />
+  <StatementChapter label="AI makes the building cheap. Agreeing what the numbers mean is still the job." lines={statementLines} linkHref="/writing/we-are-all-middle-management-now/" linkLabel="Read the essay" />
   <PhotoChapter />
   <AboutTeaser />
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>

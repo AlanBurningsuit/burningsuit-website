@@ -27,7 +27,8 @@ import { mailtoFor } from "../config/site";
 
 const contactSubject = "Help with our Power BI";
 const contactMailto = mailtoFor(contactSubject);
-const heroLines: Line[] = ["Help with Power BI", "only one person", { before: "can ", em: "touch", after: "." }];
+// A non-breaking space keeps "Power BI" on one line on a phone.
+const heroLines: Line[] = ["Help with Power\u00a0BI", "only one person", { before: "can ", em: "touch", after: "." }];
 ---
 
 <BaseLayout
@@ -46,7 +47,7 @@ const heroLines: Line[] = ["Help with Power BI", "only one person", { before: "c
       <div class="hero-copy">
         <RiseHeading as="h1" kind="hero" label="Help with Power BI only one person can touch." lines={heroLines} />
         <p class="lead enter appear-300">This is consultancy, for when the problem is your own reports and models: a report only one person can change, numbers two teams read differently, a system you've inherited without a proper handover. I work alongside your team on the real thing until they can <strong>carry on without me</strong>.</p>
-        <p class="hero-sig enter appear-450">It starts with a free hour on a call. The work after that is fixed price, quoted on request.</p>
+        <p class="hero-sig enter appear-450">It starts with a free hour on a call with me, Alan Harman-Box. The work after that is fixed price, quoted on request.</p>
         <BookCta src="power-bi-hero" mailtoHref={contactMailto} variant="hero" />
         <p class="routes hour-link"><a class="route" href="/hour/">What happens in the free hour?</a></p>
       </div>
@@ -59,43 +60,42 @@ const heroLines: Line[] = ["Help with Power BI", "only one person", { before: "c
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
   <Chapter id="situations" kicker="How it works">
-    <p>We start with the real work in front of your team and make room for the learning it needs. Your people do the work, with me alongside, so they understand the choices and can change them later.</p>
+    <p>We start with the real work in front of your team, and your people do it with me alongside, so they understand the choices and can change them later.</p>
     <div class="offer-table">
       <Offer id="deliver" title="Something to deliver">
         <p>Your team has a report or a model to build or change. We work through the decisions behind it, from what a number needs to mean to how the model should calculate it.</p>
         <p>When a result looks wrong, we follow it back through the model together. Finding the cause is useful in its own right; knowing how you found it helps with the next one.</p>
       </Offer>
       <Offer id="skills" title="One person, on their own work">
-        <p>Coaching someone on their own reports is consultancy too: the analyst who keeps bouncing off Power BI, or the lead who has inherited the reports. We work on their real work, with their hands on the keyboard, until they can manage without me.</p>
-        <p>If you want a course for a group instead, on my own teaching material, <a href="/training/">that's training</a>.</p>
+        <p>Coaching someone on their own reports is consultancy too: the analyst who keeps bouncing off Power BI, or the lead who has inherited the reports. We work on their real work, with their hands on the keyboard, until they can manage without me. In the <a href="/work/contact-centre/">contact-centre case study</a>, a team lead built her own dashboard this way, and she looks after it herself now.</p>
+        <p>If you'd rather have a private course for your team, on prepared examples, <a href="/training/">that's training</a>.</p>
       </Offer>
       <Offer id="handover" title="A system you've inherited">
-        <p>A working system and a pile of handover documents don't always leave a team able to look after it. We trace how the numbers get from the source data to the reports people use, then practise making and checking changes.</p>
+        <p>A working Power BI or Fabric system and a pile of handover documents don't always leave a team able to look after it. We trace how the numbers get from the source data to the reports people use, then practise making and checking changes.</p>
         <p>This can happen alongside an outside build, or after the handover.</p>
       </Offer>
     </div>
   </Chapter>
 
   <Chapter id="how-the-work-runs" kicker="How the sessions run">
-    <p>We meet regularly, and you bring the part you're stuck on. Together we try things, check what happens and talk through the reasoning. We can work in your own systems where your data rules allow it, or on examples that reproduce the same problem, so access to live data isn't essential.</p>
+    <p>How often we meet, and for how long, is agreed in the quote. Each time, you bring the part you're stuck on, and together we try things, check what happens and talk through the reasoning. We can work in your own systems where your data rules allow it, or on examples that reproduce the same problem, so access to live data isn't essential.</p>
     <p>Between sessions, people have time to apply what we've done. An example can make sense while we look at it together, and then the real data turns out to have a complication. We pick that up next time.</p>
     <p>From the first session, your people do the work. As they need me less, we agree less time, and we stop when it stops being useful.</p>
     <Offer id="backup" title="Somewhere to bring the next question">
       <p>Regular time for questions can sit alongside that work, with email between calls. We agree how much time to set aside, and review it as the team needs less help.</p>
     </Offer>
-    <p>The <a href="/work/contact-centre/">contact-centre case study</a> shows how this helped a team lead build her own reporting and keep it going.</p>
   </Chapter>
 
-  <Chapter id="second-opinion" kicker="Support for the person leading it" aside="No one person has to understand the full stack to every level of detail.">
-    <p>If you're responsible for the reporting but not the one building it, you get someone to think it through with. Asked to sign off an architecture proposal? I'll help you work out what it would mean for the people who have to run it. I'll also say so if a new model won't fix the problem, or a clever addition will leave the team more to maintain than it's worth.</p>
+  <Chapter id="second-opinion" kicker="Support if you're responsible for the reporting" aside="No one person has to understand every layer to every level of detail.">
+    <p>If you're responsible for the reporting but not the one building it, you get someone to think it through with. If you've been asked to sign off an architecture proposal, I'll help you work out what it would mean for the people who have to run it. I'll also say so if a new model won't fix the problem, or a clever addition will leave the team more to maintain than it's worth.</p>
     <p>We can look at what a new hire needs to know, whether the team is ready to take over a system, and where too much depends on one person.</p>
     <p>A regular conversation of your own can sit alongside the team's sessions, or be arranged on its own.</p>
   </Chapter>
 
   <Chapter id="ai" kicker="AI in the work">
-    <p>If your team is using Copilot in Power BI, or an AI agent, on its own reports, we can open up a piece of that work and go through it together. A measure can run without an error and still answer the wrong question. That's the part I want the team to be able to spot.</p>
-    <p>We work out which parts to hand over, what the tool can see, and how people will check what comes back: reading the calculation, knowing what the number is meant to represent, and what to try when the two don't agree.</p>
-    <p>Every piece of work is a stack of decisions. Hand a problem to AI without naming those decisions, and it makes them for you, and a tool can't take responsibility for a decision.</p>
+    <p>If your team is using Copilot in Power BI, or an AI agent, on its own reports, we can open up a piece of that work and go through it together. An agent is an AI tool that makes a change itself and then shows you what it did. A measure can run without an error and still answer the wrong question, and that's the part I want the team to be able to spot.</p>
+    <p>We decide which parts to hand over and what the tool can see. To check what comes back, people read the calculation and ask what the number is meant to represent. When the two don't agree, we work out what to try.</p>
+    <p>Ask an agent to change a measure without saying what the number should mean, and it picks a meaning for you.</p>
   </Chapter>
 
   <Chapter id="start" kicker="How it starts">
@@ -112,8 +112,8 @@ const heroLines: Line[] = ["Help with Power BI", "only one person", { before: "c
 
   <Chapter id="proof" kicker="In practice">
     <Exhibit tab="Following a wrong number" caption="From the law-firm case study · an international law firm's data team">
-      <p>During handover, a year-to-date number looked wrong. With me alongside, the team traced it down through the reporting and through the gold, silver and bronze layers of their data (from ready for reports back to raw) to a stored procedure. The source was year-opening values that a separate app wrote into specific rows. By handover, the team was tracing wrong numbers like this themselves.</p>
-      <div class="routes"><a class="route" href="/work/law-firm/">Read the law-firm story</a><a class="route" href="/work/">All four case studies</a></div>
+      <p>During handover, a year-to-date number looked wrong. With me alongside, the team traced it down through the reporting and through the gold, silver and bronze layers of their data (from ready for reports back to raw) to a stored procedure (a saved set of instructions in the database). The source was year-opening values that a separate app wrote into specific rows. By handover, the team was tracing wrong numbers like this themselves.</p>
+      <div class="routes"><a class="route" href="/work/law-firm/">Read the law-firm story</a><a class="route" href="/work/">All the case studies</a></div>
     </Exhibit>
     <p>The case studies are anonymised. I don't name a client without their written permission.</p>
   </Chapter>
@@ -121,11 +121,11 @@ const heroLines: Line[] = ["Help with Power BI", "only one person", { before: "c
   <Chapter id="forward" kicker="To send to your manager">
     {/* The paragraph to forward: it stands on its own when pasted into an
         email to whoever signs the work off. */}
-    <p>burningsuit works alongside a team on its own Power BI reports and models, for teams whose reporting depends on one person, or who have inherited a system they need to understand. The team ends up able to carry on without outside help. It starts with a free hour on a call; the work after that is fixed price, quoted on request. To book the free hour: https://burningsuit.co.uk/hour/</p>
+    <p>burningsuit, Alan Harman-Box's practice, works alongside a team on its own Power BI reports and models, for teams whose reporting depends on one person, or who have inherited a system they need to understand. The team ends up able to carry on without outside help. It starts with a free hour on a call; the work after that is fixed price, quoted on request. To book the free hour: https://burningsuit.co.uk/hour/</p>
   </Chapter>
 
   <section class="cta-band" aria-label="Book an hour">
-    <div class="wrap"><BookCta src="power-bi-pricing" mailtoHref={contactMailto}>Bring the reporting question you're working on. We'll spend an hour on a useful starting point, and the call is free.</BookCta></div>
+    <div class="wrap"><BookCta src="power-bi-pricing" mailtoHref={contactMailto}>Bring whatever is stuck. You don't need to have worked out what's wrong first. By the end of the free hour, you'll know what kind of problem it is and what to do next, whether or not that involves me.</BookCta></div>
   </section>
 
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
