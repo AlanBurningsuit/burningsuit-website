@@ -1,29 +1,32 @@
 ---
 /**
  * /training/agentic-101: the 101's own landing page (website brief, 29 Oct
- * 2026). Bigger than a catalogue entry, with demos, and booking is its only
- * ask: the header, hero, closing band and footer all carry the same 101 ask
- * (asks.ts). Until the booking route exists that ask is registering interest
- * by email; set BOOKING_101_URL in site.ts and every placement switches.
+ * 2026), written to the course-page playbook: what and who, the facts and the
+ * one ask on the first screen, "is this for you", the problem, what you'll do,
+ * how it runs, a paragraph to forward, then the terms and the ask again.
+ * Booking is its only ask: the header, hero, closing band and footer all carry
+ * the same 101 ask (asks.ts). Until the booking link exists that ask is an
+ * email about a seat; set BOOKING_101_URL in site.ts and every placement
+ * switches.
  *
- * STRUCTURE ONLY. Every visible "[Placeholder: …]" line marks a slot waiting
- * for copy from the voice book; none of it is final, and the page must not go
- * live while one remains (grep for data-placeholder).
+ * Open facts (the exact day, online or in person) come from PILOT_101 in
+ * training.ts and read as "I'll confirm" until they're set, never as a guess.
+ * The price comes only through the private price gate (priceFor, keyed
+ * "agentic-101"); without it every price line says how to get the price.
  *
- * The shopping questions (what, who for, how long, how much) each get their
- * own plainly labelled slot, so answer engines can quote them. Length and
- * audience come from training.ts; the price comes only through the private
- * price gate (priceFor), keyed "agentic-101".
+ * Demos: the brief wants them here before the 1 Dec invitations. None exists
+ * yet, so the section isn't rendered; add it above the paragraph to forward
+ * when the first demo is ready.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Chapter from "../../components/Chapter.astro";
 import Offer from "../../components/Offer.astro";
-import { askLink } from "../../config/asks";
-import { course, priceFor } from "../../config/training";
+import { askLink, has101Booking, invoice101Href } from "../../config/asks";
+import { CONTACT_EMAIL } from "../../config/site";
+import { PILOT_101 as pilot, course, priceFor } from "../../config/training";
 
 const intro = course("agentic-101");
 const price = priceFor("agentic-101");
-const contactSubject = `${intro.title} - register interest`;
 const heroAsk = askLink("book-101", "101-hero");
 const bandAsk = askLink("book-101", "101-band");
 const linkAttrs = (a: typeof heroAsk, placement: string) => ({
@@ -33,78 +36,138 @@ const linkAttrs = (a: typeof heroAsk, placement: string) => ({
   "data-track": a.event,
   "data-placement": placement,
 });
+
+// The facts, written out in "How it runs". An open fact says when it will be
+// confirmed.
+const when = pilot.day
+  ? `${pilot.day}, ${pilot.time}.`
+  : `A morning in ${pilot.week}, ${pilot.time}. I'll confirm the day when booking opens.`;
+const where = pilot.format
+  ? `${pilot.format.charAt(0).toUpperCase()}${pilot.format.slice(1)}.`
+  : "Online or in person, confirmed with the day.";
+const cost = price
+  ? `${price} + VAT a seat, the founding rate for this first run.`
+  : has101Booking
+    ? "A founding rate for this first run. You'll see the price before you pay."
+    : "A founding rate for this first run. Email me about a seat and I'll send you the price.";
+const forwardPrice = price
+  ? `A seat is ${price} + VAT, a founding rate for the first run.`
+  : `Seats are at a founding rate for the first run; for the price, email ${CONTACT_EMAIL}.`;
+const forwardWhen = pilot.day ? `on ${pilot.day}` : `on a morning in ${pilot.week}`;
+// The first screen's fact line: the instrument voice, compact enough that the
+// facts and the ask sit above the fold on a laptop.
+const heroFacts = [
+  `Half a day, ${pilot.time}`,
+  pilot.day ?? pilot.week.replace(/^the /, ""),
+  pilot.format ?? "online or in person, to be confirmed",
+  `${pilot.minSeats} to ${pilot.maxSeats} people`,
+  price ? `${price} + VAT a seat, founding rate` : "founding rate",
+].join(" · ");
 ---
 
 <BaseLayout
-  title={`${intro.title} - burningsuit`}
-  description="Agentic development for Power BI 101: a half-day course from Alan Harman-Box for people who build in Power BI and don't code. What it covers, who it's for, how long it runs and how to book."
-  contactSubject={contactSubject}
+  title={`${intro.title}: a half-day course - burningsuit`}
+  description="A half-day course for people who build in Power BI but don't write code: hand a change to an AI agent, check what it did, and know which decisions you handed over."
+  contactSubject={`The ${intro.title}`}
   ask="book-101"
 >
-  <Fragment slot="footer-invitation">[Placeholder: footer invitation for the 101.] Replies come from me</Fragment>
+  <Fragment slot="footer-invitation">Tell me what you'd want to hand to an agent first, and I'll tell you whether the 101 will get you there. Replies come from me</Fragment>
 
   <section class="page-hero">
     <div class="wrap">
-      <p class="kicker meta enter">Training · {intro.length}</p>
       <h1 class="enter appear-300">{intro.title}</h1>
-      <p class="lead enter appear-450" data-placeholder>[Placeholder: the promise of the half-day, in one or two sentences, for someone who builds in Power BI and thinks agents aren't for them.]</p>
-      <div class="cta-row">
+      <p class="lead enter appear-450">A half-day course for people who build in Power BI but don't write code. You'll hand a change to an AI agent (a tool that makes the change itself and shows you what it did), check its work, and know which decisions you handed over.</p>
+      <p class="offer-meta enter appear-450">{heroFacts}</p>
+      <div class="cta-row routes">
         <a class="cta" {...linkAttrs(heroAsk, "101-hero")}>{heroAsk.label}</a>
       </div>
+      {has101Booking ? (
+        <p class="hero-sig">You'll pay by card on a secure Stripe page. If your organisation pays by invoice or purchase order, <a href={invoice101Href}>email me</a> and I'll invoice it.</p>
+      ) : (
+        <p class="hero-sig">The email comes straight to me. I'll reply with the day, the place and the price, and send you the booking link when it's ready.</p>
+      )}
       <ul class="routes enter appear-450">
-        <li><a class="route" href="#what">What it covers</a></li>
-        <li><a class="route" href="#who">Who it's for</a></li>
-        <li><a class="route" href="#details">How long, and how much</a></li>
-        <li><a class="route" href="#demos">See it working</a></li>
+        <li><a class="route" href="#who">Is this for you?</a></li>
+        <li><a class="route" href="#what">What you'll do</a></li>
+        <li><a class="route" href="#details">How it runs</a></li>
+        <li><a class="route" href="#for-whoever-pays">To send to your manager</a></li>
       </ul>
     </div>
   </section>
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  <Chapter id="what" kicker="What it covers">
-    <p data-placeholder>[Placeholder: what the half-day covers, as an outline of what people do and leave able to do. Plain enough to quote.]</p>
+  <Chapter id="who" kicker="Is this for you?">
+    <p>You'll need to have built a report in Power BI, even a simple one. You won't need to write code, and you won't need to have used an agent before. You'll do every step yourself, and you'll check every change the agent makes.</p>
+    <p>Power BI developers who don't code are welcome. If you already work with coding agents every day, it will cover ground you know.</p>
   </Chapter>
 
-  <Chapter id="who" kicker="Who it's for">
-    <p data-placeholder>[Placeholder: who it's for, from the brief: builds in Power BI, doesn't code, thinks agents aren't for them. Power BI developers who don't code are welcome; not for people already at home with coding agents.]</p>
+  {/* ALAN: the problem paragraph is drafted from the brief, readers' own
+      words in meeting notes, and your 27 Oct "wild west" line; make the
+      first person yours. */}
+  <Chapter id="problem" kicker="Agents aren't only for developers">
+    <p>You build the reports because someone had to. You've probably asked ChatGPT or Copilot for a DAX measure and got one that looked right and didn't work on your model. And everything you read about AI agents building Power BI seems written for people who code. So it's easy to decide agents aren't for you, or to worry that one will break something in the background that you won't be able to find.</p>
+    <p>Not long ago, that was fair. Having an agent build something in Power BI was the wild west: full of bugs, and not quite what you'd asked for. I don't think that's true any more, as long as you know which decisions you're handing over and how to check what comes back. That's what this half-day teaches.</p>
   </Chapter>
 
-  <Chapter id="details" kicker="How long, how much, and how it runs">
+  {/* ALAN: three items from the brief's three capabilities; confirm them
+      against the session plan, and add or swap items (up to six). */}
+  <Chapter id="what" kicker="What you'll do">
+    <p>You'll work on a Power BI report I've prepared for teaching, and you'll do each step yourself.</p>
     <div class="offer-table">
-      <Offer id="how-long" title="How long" meta={intro.length}>
-        <p data-placeholder>[Placeholder: format: online or in person, public seats, group size.]</p>
+      <Offer title="Hand over a change">
+        <p>You'll ask an agent, in plain English, to make a change to the report, such as adding a measure, and watch it work. Back at your desk, you'll know what these tools can do now, rather than what they could do two years ago.</p>
       </Offer>
-      <Offer id="how-much" title="How much" meta={price ?? "Price to follow"}>
-        {/* DRAFT for Alan: the pilot price comes from the private price file
-            ("agentic-101"); confirm per-seat wording and VAT. */}
-        <p data-placeholder>[Placeholder: what the price covers, and the pilot's founding discount.]</p>
+      <Offer title="Check what it did">
+        <p>You'll read what the agent changed and compare the numbers before and after, so you can catch a change that runs without an error and still answers the wrong question. Back at your desk, you'll have a way to check any change, whoever made it.</p>
       </Offer>
-      <Offer id="when" title="When">
-        <p data-placeholder>[Placeholder: the pilot's date and seat numbers, once confirmed.]</p>
+      <Offer title="Know what you handed over">
+        <p>Some decisions are about building, such as how a measure is written. Others are about what your numbers mean, such as what counts as a sale. You'll practise telling them apart and keeping the second kind for yourself. Back at your desk, you'll know what's safe to hand to an agent and what isn't.</p>
       </Offer>
     </div>
   </Chapter>
 
-  <Chapter id="for-whoever-pays" kicker="For whoever signs it off">
-    {/* The forwardable paragraph: written to stand on its own when pasted
-        into an email to a manager or L&D, with no reference to this page. */}
-    <p data-placeholder>[Placeholder: one self-contained paragraph the reader can forward to whoever pays: what it is, who it's for, how long, the price, and what their person comes back able to do.]</p>
+  <Chapter id="details" kicker="How it runs">
+    <div class="offer-table">
+      <Offer id="when" title="When and where" meta={pilot.day ? `${pilot.day} · ${pilot.time}` : `${pilot.week.charAt(0).toUpperCase()}${pilot.week.slice(1)} · ${pilot.time}`}>
+        <p>{when} {where}</p>
+      </Offer>
+      <Offer id="how-long" title="How long, and how many" meta={`${intro.length} · ${pilot.minSeats} to ${pilot.maxSeats} people`}>
+        <p>It's a public course, so you book a seat for yourself and can come on your own. There are at least {pilot.minSeats} and at most {pilot.maxSeats} people in the room.</p>
+      </Offer>
+      <Offer id="how-much" title="How much" meta={price ? `${price} + VAT a seat` : "Founding rate"}>
+        <p>{cost} If your organisation pays by invoice or purchase order, I'll invoice it instead.</p>
+      </Offer>
+    </div>
+    <p>I teach it myself. It runs on a Power BI report and data I've built for teaching, so you won't bring your own model, and nothing you do touches your organisation's data.</p>
+    {/* ALAN: what delegates need installed, which agent, and any licence. */}
+    <p>Before the day, I'll send you what to install and a way to check it works.</p>
+    <p>Afterwards, I'll ask what worked for you and what didn't. This is the first run, and your answers shape the next one.</p>
   </Chapter>
 
-  <Chapter id="demos" kicker="See it working">
-    {/* Demo slots: each becomes a short recorded demo or an EssayFigure.
-        Ideas, arguments and demos are free (brief); the course is the
-        hands-on skill. The first demo must exist before the 1 Dec invitations. */}
-    <p data-placeholder>[Placeholder: demo 1, the first demo, needed before the 1 Dec invitations.]</p>
-    <p data-placeholder>[Placeholder: demo 2.]</p>
-    <p data-placeholder>[Placeholder: demo 3.]</p>
+  <Chapter id="for-whoever-pays" kicker="To send to your manager">
+    {/* The paragraph to forward: written to stand on its own when pasted into
+        an email to a manager or L&D, in the third person about who'd go. */}
+    {/* <wbr> lets the address wrap on a narrow phone without adding
+        characters to a copied paragraph. */}
+    <p>{intro.title} is a half-day course from burningsuit for people who build reports in Power BI but don't write code. They'll hand a Power BI change to an AI agent, check what it did, and learn which decisions they're handing over, working on prepared examples rather than our own data. It runs {forwardWhen}, {pilot.time}, for {pilot.minSeats} to {pilot.maxSeats} people. {forwardPrice} Details{has101Booking ? " and booking" : ""}: https://<wbr />burningsuit.co.uk/<wbr />training/<wbr />agentic-101/</p>
   </Chapter>
 
-  <section class="cta-band" aria-label="Book a seat">
+  {/* Terms: the pilot's conditions (29 Oct 2026). Refund and transfer terms
+      for someone who can't come are open; add them here before
+      BOOKING_101_URL is set. */}
+  <Chapter id="terms" kicker="If it moves">
+    <p>This is the first run, at a founding rate. It goes ahead with at least {pilot.minSeats} paid seats, and I'll decide on {pilot.goNoGo}. If there are fewer by then, it moves once, to a date in {pilot.movesTo}, and everyone who has booked chooses between that date and a full refund.</p>
+  </Chapter>
+
+  <section class="cta-band" aria-label={bandAsk.label}>
     <div class="wrap">
       <div class="cta-invite">
-        <p class="cta-note" data-placeholder>[Placeholder: the de-risk line beside booking.]</p>
+        {has101Booking ? (
+          <p class="cta-note">Booking takes you to a secure card payment. Paying by invoice or purchase order? <a href={invoice101Href}>Email me</a> instead.</p>
+        ) : (
+          <p class="cta-note">Nothing is booked or paid until you decide. I'll reply with the day and the price.</p>
+        )}
         <a class="cta" {...linkAttrs(bandAsk, "101-band")}>{bandAsk.label}</a>
       </div>
     </div>
