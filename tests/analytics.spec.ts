@@ -122,7 +122,7 @@ test(`notes click on ${placement} keeps its signup URL and attribution`, async (
 // not also an "Email click".
 const event101 = has101Booking ? "101 booking click" : "101 interest click";
 for (const [path, placement, event] of [
-  ["/", "header", event101], ["/", "footer", event101], ["/", "home-way-in", event101],
+  ["/", "header", "101 page click"], ["/", "footer", "101 page click"], ["/", "home-way-in", "101 page click"],
   ["/training/agentic-101/", "header", event101], ["/training/agentic-101/", "101-hero", event101],
   ["/training/agentic-101/", "101-band", event101], ["/training/agentic-101/", "footer", event101],
   ["/training/", "header", "Enquiry click"], ["/training/", "training-hero", "Enquiry click"],

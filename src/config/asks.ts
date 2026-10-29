@@ -5,8 +5,11 @@
  * essays only.
  *
  *   hour      — the free hour (consultancy, /hour/, case studies, About)
- *   book-101  — a seat on the 101 (its landing page, and Home, which leads
- *               with training and the 101 is the way in)
+ *   book-101  — a seat on the 101 (its landing page)
+ *   see-101   — Home's route to the 101's page: Home leads with training
+ *               and the 101 is the way in, but Home routes rather than
+ *               converts (website-page playbook), so its button goes to
+ *               the page that does the converting
  *   enquire   — an enquiry for a course outline with costs (/training/)
  *   subscribe — the inline Kit form at the end of an essay
  *
@@ -18,7 +21,7 @@
 import { BOOKING_101_URL, CONTACT_EMAIL, bookingHref, mailtoFor } from "./site";
 import { course } from "./training";
 
-export type PageAsk = "hour" | "book-101" | "enquire" | "subscribe";
+export type PageAsk = "hour" | "book-101" | "see-101" | "enquire" | "subscribe";
 
 export interface AskLink {
   href: string;
@@ -68,7 +71,9 @@ export function askLink(ask: PageAsk, placement: string): AskLink {
     case "book-101":
       return has101Booking
         ? { href: book101Href(placement), label: "Book a seat", event: "101 booking click", external: true }
-        : { href: book101Href(placement), label: "Email me about a seat", short: "Email me", event: "101 interest click", external: false };
+        : { href: book101Href(placement), label: "Ask for a seat", event: "101 interest click", external: false };
+    case "see-101":
+      return { href: "/training/agentic-101/", label: "See the 101", event: "101 page click", external: false };
     case "enquire":
       return { href: enquiryHref, label: "Ask for an outline with costs", short: "Enquire", event: "Enquiry click", external: false };
     case "subscribe":

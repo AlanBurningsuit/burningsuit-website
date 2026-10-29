@@ -29,10 +29,16 @@ const email =
   ask === "hour" ? { href: mailtoHref, label: "Email me" }
   : ask === "book-101" && action.external ? { href: invoice101Href, label: "Paying by invoice? Email me" }
   : undefined;
+// The heading names the ask when the button doesn't start a conversation:
+// card booking for the 101, or Home's route to the 101's page.
+const heading =
+  ask === "book-101" && action.external ? { before: "Book a ", em: "seat" }
+  : ask === "see-101" ? { before: "Start with the ", em: "101" }
+  : { before: "Let's ", em: "talk" };
 ---
 <footer aria-labelledby="talk-h">
   <div class="wrap outro">
-    <h2 id="talk-h">Let's <em>talk</em>.</h2>
+    <h2 id="talk-h">{heading.before}<em>{heading.em}</em>.</h2>
     <p class="sub">
       <slot name="invitation"
         >Tell me what your team is wrestling with. Replies come from me</slot

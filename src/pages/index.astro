@@ -29,13 +29,13 @@ import { PILOT_101 as pilot, course, priceFor } from "../config/training";
 const contactSubject = "Power BI and AI training";
 const intro = course("agentic-101");
 const introPrice = priceFor("agentic-101");
-// Home leads with training, and the 101 is the way in, so its ask is a 101
-// seat (asks.ts): an email about a seat until the booking link exists.
-const way101 = askLink("book-101", "home-way-in");
+// Home leads with training and the 101 is the way in, but Home routes rather
+// than converts, so its ask is the 101's page (asks.ts, see-101).
+const way101 = askLink("see-101", "home-way-in");
 // Hand-split for the hero's 15ch measure. Check the hero height on preview.
 const heroLines: Line[] = ["Power BI and AI", "training for", { before: "everyone ", em: "else", after: "." }];
 const courseDoors: RowData[] = [
-  { href: "/training/#power-bi-courses", title: { before: "Power BI, from a first report to DAX you ", em: "understand", after: "." }, body: `${course("power-bi-fundamentals").title}, ${course("dax-fundamentals").title}, the ${course("dax-deep-dive").title} and ${course("data-modelling").title}. One or two days each, run privately for your team.`, cta: "See the Power BI courses" },
+  { href: "/training/#power-bi-courses", title: { before: "Power BI, from a first report to DAX you ", em: "understand", after: "." }, body: `${course("power-bi-fundamentals").title}, ${course("dax-fundamentals").title}, the ${course("dax-deep-dive").title} and ${course("data-modelling").title}. 1 or 2 days each, run privately for your team.`, cta: "See the Power BI courses" },
   { href: "/training/#ai-at-work", title: { before: "Claude, at ", em: "work", after: "." }, body: `${course("claude-day-job").title}, a day for any role with no technical background needed, and ${course("claude-consultants").title}, a day on writing down a method so Claude and your colleagues can use it again.`, cta: "See the AI days" },
 ];
 const consultancyDoor: RowData = { href: "/power-bi/", title: { before: "When it's your own reporting ", em: "problem", after: "." }, body: "I work alongside your team on the real thing, a report to deliver or a system you've inherited, until they can carry on without me.", cta: "See how consultancy works" };
@@ -52,8 +52,8 @@ const statementLines: Line[] = [
 ];
 ---
 
-<BaseLayout title="Power BI and AI training for everyone else - burningsuit" description="Power BI and AI training for people whose job isn't Power BI or AI. Start with a half-day 101 on handing Power BI work to an AI agent, then private courses for your team." contactSubject={contactSubject} ask="book-101">
-  <Fragment slot="footer-invitation">Tell me what your team needs to learn, or what your reporting is wrestling with. Replies come from me</Fragment>
+<BaseLayout title="Power BI and AI training for everyone else - burningsuit" description="Power BI and AI training for people whose job isn't Power BI or AI. Start with a half-day 101 on handing Power BI work to an AI agent, then private courses for your team." contactSubject={contactSubject} ask="see-101">
+  <Fragment slot="footer-invitation">Half a day on handing Power BI work to an AI agent, taught by me</Fragment>
 
   <section class="hero">
     <div class="wrap hero-grid">
@@ -82,7 +82,7 @@ const statementLines: Line[] = [
         <p><a href="/training/agentic-101/">{intro.title}</a> is a half-day course for people who build in Power BI but don't write code. An agent is an AI tool that makes a change itself and then shows you what it did. You'll hand one a Power BI change, check what it did, and know which decisions you handed over.</p>
         <p class="offer-meta">A morning in {pilot.week} · {pilot.time} · {pilot.minSeats} to {pilot.maxSeats} people · {introPrice ? `${introPrice} + VAT a seat, the founding rate` : "a founding rate for the first run"}</p>
       </div>
-      <div class="routes"><a class="route" href="/training/agentic-101/">More about the 101</a><a class="route" href={way101.href} target={way101.external ? "_blank" : undefined} rel={way101.external ? "noopener noreferrer" : undefined} data-track={way101.event} data-placement="home-way-in">{way101.label}</a></div>
+      <div class="routes"><a class="route" href={way101.href} data-track={way101.event} data-placement="home-way-in">More about the 101, and how to get a seat</a></div>
     </div>
   </section>
 

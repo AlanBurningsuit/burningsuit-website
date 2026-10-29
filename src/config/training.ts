@@ -28,7 +28,7 @@ export interface Course {
   id: string;
   title: string;
   group: CourseGroup;
-  /** Length as shown, e.g. "Two days". */
+  /** Length as shown, e.g. "2 days". */
   length: string;
   /** Who it's for, in one short phrase, in the reader's words. */
   audience: string;
@@ -40,14 +40,14 @@ export interface Course {
 
 export const COURSES: readonly Course[] = [
   { id: "agentic-101", title: "Agentic development for Power BI 101", group: "agentic", length: "Half a day, 9:30 to 12:30", audience: "People who build in Power BI but don't write code" },
-  { id: "agentic-hands-on", title: "Agentic Power BI: a hands-on day", group: "agentic", length: "One day", audience: "People who've done the 101", inDevelopment: true },
+  { id: "agentic-hands-on", title: "Agentic Power BI: a hands-on day", group: "agentic", length: "1 day", audience: "People who've done the 101", inDevelopment: true },
   { id: "modelling-for-agents", title: "Modelling for agents", group: "agentic", length: "To be confirmed", audience: "People building models that agents will work on", inDevelopment: true },
-  { id: "power-bi-fundamentals", title: "Power BI fundamentals", group: "power-bi", length: "Two days", audience: "Anyone new to Power BI", before: "Nothing" },
-  { id: "dax-fundamentals", title: "DAX fundamentals", group: "power-bi", length: "One day", audience: "People who build reports and want a proper first day of DAX", before: "Power BI fundamentals, or the skills check" },
-  { id: "dax-deep-dive", title: "DAX deep dive", group: "power-bi", length: "Two days", audience: "People who build reports and want DAX they understand rather than copy", before: "Power BI fundamentals, or the skills check" },
-  { id: "data-modelling", title: "Data modelling", group: "power-bi", length: "One day", audience: "People who build their own models", before: "Power BI fundamentals, or the skills check" },
-  { id: "claude-day-job", title: "Claude in your day job", group: "ai-at-work", length: "One day", audience: "Any role, with no technical background needed" },
-  { id: "claude-consultants", title: "Claude for consultants", group: "ai-at-work", length: "One day", audience: "Consultants and advanced users, with no coding background needed" },
+  { id: "power-bi-fundamentals", title: "Power BI fundamentals", group: "power-bi", length: "2 days", audience: "Anyone new to Power BI", before: "Nothing" },
+  { id: "dax-fundamentals", title: "DAX fundamentals", group: "power-bi", length: "1 day", audience: "People who build reports and want a proper first day of DAX", before: "Power BI fundamentals, or similar experience" },
+  { id: "dax-deep-dive", title: "DAX deep dive", group: "power-bi", length: "2 days", audience: "People who build reports and want DAX they understand rather than copy", before: "Power BI fundamentals, or similar experience" },
+  { id: "data-modelling", title: "Data modelling", group: "power-bi", length: "1 day", audience: "People who build their own models", before: "Power BI fundamentals, or similar experience" },
+  { id: "claude-day-job", title: "Claude in your day job", group: "ai-at-work", length: "1 day", audience: "Any role, with no technical background needed" },
+  { id: "claude-consultants", title: "Claude for consultants", group: "ai-at-work", length: "1 day", audience: "Consultants and advanced users, with no coding background needed" },
 ] as const;
 
 export const coursesIn = (group: CourseGroup) => COURSES.filter((c) => c.group === group);

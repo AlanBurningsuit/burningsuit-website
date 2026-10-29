@@ -48,11 +48,13 @@ const where = pilot.format
 const cost = price
   ? `${price} + VAT a seat, the founding rate for this first run.`
   : has101Booking
-    ? "A founding rate for this first run. You'll see the price before you pay."
-    : "A founding rate for this first run. Email me about a seat and I'll send you the price.";
+    ? "A founding rate for this first run. The price, with VAT, is on the booking page."
+    : "A founding rate for this first run. Ask for a seat and I'll send you the price.";
 const forwardPrice = price
   ? `A seat is ${price} + VAT, a founding rate for the first run.`
-  : `Seats are at a founding rate for the first run; for the price, email ${CONTACT_EMAIL}.`;
+  : has101Booking
+    ? "Seats are at a founding rate for the first run, and the price is on the booking page."
+    : `Seats are at a founding rate for the first run; for the price, email ${CONTACT_EMAIL}.`;
 const forwardWhen = pilot.day ? `on ${pilot.day}` : `on a morning in ${pilot.week}`;
 // The first screen's fact line: the instrument voice, compact enough that the
 // facts and the ask sit above the fold on a laptop.
@@ -71,7 +73,7 @@ const heroFacts = [
   contactSubject={`The ${intro.title}`}
   ask="book-101"
 >
-  <Fragment slot="footer-invitation">Tell me what you'd want to hand to an agent first, and I'll tell you whether the 101 will get you there. Replies come from me</Fragment>
+  <Fragment slot="footer-invitation">{has101Booking ? "Book by card, or by invoice if your organisation needs one. Either way, it's me you'll hear from" : "Tell me what you'd want to hand to an agent first, and I'll tell you whether the 101 will get you there. Replies come from me"}</Fragment>
 
   <section class="page-hero">
     <div class="wrap">
@@ -82,9 +84,9 @@ const heroFacts = [
         <a class="cta" {...linkAttrs(heroAsk, "101-hero")}>{heroAsk.label}</a>
       </div>
       {has101Booking ? (
-        <p class="hero-sig">You'll pay by card on a secure Stripe page. If your organisation pays by invoice or purchase order, <a href={invoice101Href}>email me</a> and I'll invoice it.</p>
+        <p class="hero-sig">{price ? "You'll pay by card on a secure Stripe page." : "You'll see the price, with VAT, on a secure Stripe page before you pay."} If your organisation pays by invoice or purchase order, <a href={invoice101Href}>email me</a> and I'll invoice it.</p>
       ) : (
-        <p class="hero-sig">The email comes straight to me. I'll reply with the day, the place and the price, and send you the booking link when it's ready.</p>
+        <p class="hero-sig">The email comes straight to me. I'll reply with the price, and send you the day and the booking link as soon as they're set.</p>
       )}
       <ul class="routes enter appear-450">
         <li><a class="route" href="#who">Is this for you?</a></li>
@@ -116,13 +118,13 @@ const heroFacts = [
     <p>You'll work on a Power BI report I've prepared for teaching, and you'll do each step yourself.</p>
     <div class="offer-table">
       <Offer title="Hand over a change">
-        <p>You'll ask an agent, in plain English, to make a change to the report, such as adding a measure, and watch it work. Back at your desk, you'll know what these tools can do now, rather than what they could do two years ago.</p>
+        <p>You'll ask an agent, in plain English, to make a change to the report, such as adding a measure, and watch it work. Back at your desk, you'll know what these tools can do now, rather than what they could do 2 years ago.</p>
       </Offer>
       <Offer title="Check what it did">
-        <p>You'll read what the agent changed and compare the numbers before and after, so you can catch a change that runs without an error and still answers the wrong question. Back at your desk, you'll have a way to check any change, whoever made it.</p>
+        <p>You'll read what the agent changed and compare the numbers before and after, so you can catch a change that runs without an error and still answers the wrong question. Back at your desk, you can do the same before you trust a change, whoever made it.</p>
       </Offer>
       <Offer title="Know what you handed over">
-        <p>Some decisions are about building, such as how a measure is written. Others are about what your numbers mean, such as what counts as a sale. You'll practise telling them apart and keeping the second kind for yourself. Back at your desk, you'll know what's safe to hand to an agent and what isn't.</p>
+        <p>Some decisions are about building, such as how a measure is written. Others are about what your numbers mean, such as what counts as a sale. You'll practise telling them apart and keeping the second kind for yourself. Back at your desk, you'll find it easier to decide what to hand to an agent and what to keep.</p>
       </Offer>
     </div>
   </Chapter>
@@ -133,7 +135,7 @@ const heroFacts = [
         <p>{when} {where}</p>
       </Offer>
       <Offer id="how-long" title="How long, and how many" meta={`${intro.length} · ${pilot.minSeats} to ${pilot.maxSeats} people`}>
-        <p>It's a public course, so you book a seat for yourself and can come on your own. There are at least {pilot.minSeats} and at most {pilot.maxSeats} people in the room.</p>
+        <p>It's a public course, so you book a seat for yourself and can come on your own. It runs with {pilot.minSeats} to {pilot.maxSeats} people.</p>
       </Offer>
       <Offer id="how-much" title="How much" meta={price ? `${price} + VAT a seat` : "Founding rate"}>
         <p>{cost} If your organisation pays by invoice or purchase order, I'll invoice it instead.</p>
@@ -149,8 +151,9 @@ const heroFacts = [
     {/* The paragraph to forward: written to stand on its own when pasted into
         an email to a manager or L&D, in the third person about who'd go. */}
     {/* <wbr> lets the address wrap on a narrow phone without adding
-        characters to a copied paragraph. */}
-    <p>{intro.title} is a half-day course from burningsuit for people who build reports in Power BI but don't write code. They'll hand a Power BI change to an AI agent, check what it did, and learn which decisions they're handing over, working on prepared examples rather than our own data. It runs {forwardWhen}, {pilot.time}, for {pilot.minSeats} to {pilot.maxSeats} people. {forwardPrice} Details{has101Booking ? " and booking" : ""}: https://<wbr />burningsuit.co.uk/<wbr />training/<wbr />agentic-101/</p>
+        characters to a copied paragraph.
+        copy-lint-ignore agentic: part of the page's address, not prose */}
+    <p>{intro.title} is a half-day course from burningsuit for people who build reports in Power BI but don't write code. They'll hand a Power BI change to an AI agent, check what it did, and learn which decisions they're handing over, working on prepared examples rather than our own data. It runs {forwardWhen}, {pilot.time}, {pilot.format ?? "online or in person (to be confirmed)"}, for {pilot.minSeats} to {pilot.maxSeats} people. {forwardPrice} Details{has101Booking ? " and booking" : ""}: https://<wbr />burningsuit.co.uk/<wbr />training/<wbr />agentic-101/</p>
   </Chapter>
 
   {/* Terms: the pilot's conditions (29 Oct 2026). Refund and transfer terms
@@ -166,7 +169,7 @@ const heroFacts = [
         {has101Booking ? (
           <p class="cta-note">Booking takes you to a secure card payment. Paying by invoice or purchase order? <a href={invoice101Href}>Email me</a> instead.</p>
         ) : (
-          <p class="cta-note">Nothing is booked or paid until you decide. I'll reply with the day and the price.</p>
+          <p class="cta-note">Nothing is booked or paid until you decide. I'll reply with the price, and send the day and the booking link as soon as they're set.</p>
         )}
         <a class="cta" {...linkAttrs(bandAsk, "101-band")}>{bandAsk.label}</a>
       </div>
