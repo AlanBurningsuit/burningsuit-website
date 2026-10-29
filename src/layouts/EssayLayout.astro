@@ -7,7 +7,8 @@
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import { articleNode, breadcrumbList } from "../lib/schema";
-import { notesHref } from "../config/site";
+import { KIT_ESSAY_FORM_ACTION } from "../config/site";
+import { NOTES_FORM_ID } from "../config/asks";
 
 interface Props {
   essay: CollectionEntry<"writing">["data"];
@@ -66,19 +67,25 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", {
 
   <slot />
 
-  {/* Every essay closes like a case study: a ruled line where the essay stops,
-      one lead-in, then the notes signup for readers who want more and the way
-      into Alan's work. */}
-  <section class="chapter" aria-label="Related work">
+  {/* Every essay ends with its one ask: an inline Kit signup, a plain HTML
+      form (no Kit script, no popup) posting to the essays-only Kit form. The
+      form sits outside the reveal-gated prose, as contact controls never wait
+      on an entrance. data-track-form names the Umami event (enhance.ts). */}
+  <section class="chapter" aria-labelledby={NOTES_FORM_ID}>
     <div class="wrap">
       <div class="prose" data-reveal>
         <hr />
-        <p>I write notes from working alongside Power BI teams, and send them when there's something worth saying. Or, if you're wondering who's been doing the talking, there's more about me.</p>
-        <div class="routes routes-stack">
-          <a class="route" href={notesHref("essay")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>
-          <a class="route" href="/about/">More about me, and the work I do</a>
-        </div>
+        <h2 class="notes-head" id={NOTES_FORM_ID}>Notes from burningsuit</h2>
+        <p data-placeholder>[Placeholder: one line on what the notes are and how often they come.]</p>
       </div>
+      <form class="notes-form" action={KIT_ESSAY_FORM_ACTION} method="post" data-track-form="Notes signup" data-placement="essay">
+        <label for="notes-email">Email address</label>
+        <div class="notes-row">
+          <input id="notes-email" type="email" name="email_address" autocomplete="email" required />
+          <button class="cta" type="submit">Subscribe</button>
+        </div>
+      </form>
+      <div class="routes"><a class="route" href="/about/">More about me, and the work I do</a></div>
     </div>
   </section>
 

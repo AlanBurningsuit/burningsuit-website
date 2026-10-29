@@ -181,7 +181,9 @@ export default defineConfig({
         "img-src 'self' data:",
         "font-src 'self'",
         "base-uri 'self'",
-        "form-action 'none'",
+        // The essays' inline Kit form (KIT_ESSAY_FORM_ACTION) is the site's
+        // only form.
+        "form-action https://app.kit.com",
         ...(ANALYTICS.enabled
           ? [/** @type {`connect-src${string}`} */ (`connect-src ${ANALYTICS.beaconHost}`)]
           : []),

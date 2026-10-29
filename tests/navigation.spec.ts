@@ -250,7 +250,8 @@ test("header hides down, returns up, and returns through natural keyboard focus"
   await expect.poll(async () => (await header.boundingBox())!.y + (await header.boundingBox())!.height).toBeLessThanOrEqual(1);
   await page.keyboard.press("Shift+Tab");
   await expectImmediateHeaderFocus();
-  await expect(page.locator(":focus")).toHaveAttribute("href", /utm_content=header/);
+  // The header's one control is the page's ask (asks.ts); Home's is the 101.
+  await expect(page.locator(":focus")).toHaveAttribute("data-placement", "header");
 });
 
 test("reduced motion keeps the header visible while scrolling", async ({ page }) => {

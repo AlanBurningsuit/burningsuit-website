@@ -2,6 +2,7 @@
 export const LAYOUT_ROUTES = [
   "/",
   "/training/",
+  "/training/agentic-101/",
   "/power-bi/",
   "/writing/we-are-all-middle-management-now/",
   "/hour/",

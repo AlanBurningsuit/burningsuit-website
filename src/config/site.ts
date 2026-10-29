@@ -47,6 +47,14 @@ export const BOOKING_101_URL: string | undefined = undefined;
 export const NOTES_URL = "https://burningsuit.kit.com/";
 
 /**
+ * The inline signup form at the end of every essay posts here, as a plain
+ * HTML form: no Kit script, no popup. It is Kit's "Website essays (inline)"
+ * form, created 29 Oct 2026 for essays only, so Kit's per-form report is the
+ * count of sign-ups from essays. Allowed by the CSP's form-action.
+ */
+export const KIT_ESSAY_FORM_ACTION = "https://app.kit.com/forms/10117647/subscriptions";
+
+/**
  * Notes signup link tagged with the link location in `utm_content`, so Kit's
  * subscriber source and the "Notes click" event share one placement value.
  * Placements: footer, essay, archive.

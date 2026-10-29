@@ -476,6 +476,39 @@
     text-wrap: pretty;
   }
 
+  /* ---- the essay's inline Kit signup (EssayLayout) — a plain form: label
+     above, email field and the standard .cta button side by side, wrapping
+     to a stack on a narrow screen. ---- */
+  .notes-head {
+    font-size: var(--fs-2);
+  }
+  .notes-form {
+    max-width: var(--measure-prose);
+    margin-top: var(--space-block);
+  }
+  .notes-form label {
+    display: block;
+    margin-bottom: var(--space-3xs);
+    font-family: var(--ff-mono);
+    font-size: var(--mono-label);
+    color: var(--fg-dim);
+  }
+  .notes-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  .notes-row input {
+    flex: 1 1 16rem;
+    min-width: 0;
+    padding: 0.72em 0.9em;
+    font: inherit;
+    color: var(--fg);
+    background: var(--bg-2);
+    border: var(--px) solid var(--deep);
+    border-radius: var(--r-sm);
+  }
+
   /* ---- the mono labels (page-hero eyebrows + true metadata) ---- */
   .kicker {
     font-family: var(--ff-mono);

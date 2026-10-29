@@ -34,8 +34,8 @@ async function expectReadableContent(page: Page) {
     expect(state.visibility).toBe("visible");
     expect(state.display).not.toBe("none");
   }
-  await expect(page.locator('footer a[href^="mailto:"]')).toBeVisible();
-  await expect(page.locator('footer a[href^="https://cal.com/"]')).toBeVisible();
+  // The footer always carries the page's one ask (asks.ts).
+  await expect(page.locator("footer .cta-footer .cta").first()).toBeVisible();
 }
 
 /** The original geometry gate, including hero heading inners. No forced reveals. */
@@ -95,7 +95,7 @@ test("contact controls have no entrance or reveal gates", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   for (const path of READING_ROUTES) {
     await page.goto(path);
-    const gated = await page.locator('a[href^="mailto:"], a[href^="https://cal.com/"]').evaluateAll((links) => links.filter((link) => link.closest("[data-reveal], [data-reveal-lines], [data-reveal-raw], [data-reveal-fig], .enter, .lines")).map((link) => link.getAttribute("href")));
+    const gated = await page.locator('a[href^="mailto:"], a[href^="https://cal.com/"], [data-track], form').evaluateAll((links) => links.filter((link) => link.closest("[data-reveal], [data-reveal-lines], [data-reveal-raw], [data-reveal-fig], .enter, .lines")).map((link) => link.getAttribute("href") ?? link.getAttribute("action")));
     expect(gated, `contact ancestors on ${path}`).toEqual([]);
   }
 });

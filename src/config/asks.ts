@@ -61,7 +61,7 @@ export function askLink(ask: PageAsk, placement: string): AskLink {
       // PLACEHOLDER labels until the voice pass.
       return has101Booking
         ? { href: book101Href(placement), label: "Book a seat", event: "101 booking click", external: true }
-        : { href: book101Href(placement), label: "Register interest", event: "101 interest click", external: false };
+        : { href: book101Href(placement), label: "Register interest", short: "Register", event: "101 interest click", external: false };
     case "enquire":
       return { href: enquiryHref, label: "Ask about a course", short: "Enquire", event: "Enquiry click", external: false };
     case "subscribe":
