@@ -3,10 +3,12 @@
  * The document's final contact section stays in flow. With normal motion and
  * JavaScript it reveals beneath main; focus returns it to its natural position.
  * The invitation line + face chip, then the page's ask (asks.ts) as the
- * primary button, with a ghost "Email me" beside it when the ask isn't
- * already an email or a form, the plain © line, and the full-width lockup
- * signing the page. The free-hour explainer link shows only where the free
- * hour is the ask, and the Notes signup lives on essays, never here.
+ * primary button, with a ghost email link beside it only when it serves the
+ * same ask: another way to start the free-hour conversation, or the invoice
+ * route for a 101 seat once seats are booked by card. Then the plain © line
+ * and the full-width lockup signing the page. The free-hour explainer link
+ * shows only where the free hour is the ask, and the Notes signup lives on
+ * essays, never here.
  *
  * The invitation line is a named slot so each page can supply its own CTA copy
  * while keeping the chip + period consistent. Default = the homepage line.
@@ -14,7 +16,7 @@
 import FaceChip from "./FaceChip.astro";
 import Signoff from "./Signoff.astro";
 import { mailtoFor } from "../config/site";
-import { askLink, type PageAsk } from "../config/asks";
+import { askLink, invoice101Href, type PageAsk } from "../config/asks";
 interface Props {
   ask: PageAsk;
   /** The mailto (with optional prefilled ?subject=) built per-page in
@@ -23,7 +25,10 @@ interface Props {
 }
 const { ask, mailtoHref = mailtoFor() } = Astro.props;
 const action = askLink(ask, "footer");
-const showEmail = ask === "hour" || (ask === "book-101" && action.external);
+const email =
+  ask === "hour" ? { href: mailtoHref, label: "Email me" }
+  : ask === "book-101" && action.external ? { href: invoice101Href, label: "Paying by invoice? Email me" }
+  : undefined;
 ---
 <footer aria-labelledby="talk-h">
   <div class="wrap outro">
@@ -42,7 +47,7 @@ const showEmail = ask === "hour" || (ask === "book-101" && action.external);
         data-track={action.event}
         data-placement={action.event && "footer"}
       >{action.label}</a>
-      {showEmail && <a class="cta ghost" href={mailtoHref}>Email me</a>}
+      {email && <a class="cta ghost" href={email.href}>{email.label}</a>}
     </div>
     {ask === "hour" && (
       <p class="routes hour-link">

@@ -36,11 +36,11 @@ export function bookingHref(src?: string): string {
 }
 
 /**
- * How someone books a seat on the 101. Still open in the website brief (it
- * must exist before the 1 Dec invitations, and should ask "how did you hear
- * about this?"). Undefined until Alan decides: the 101's ask then falls back
- * to registering interest by email, and no link points at an undecided URL.
- * See askLink() in asks.ts.
+ * How someone books a seat on the 101: a Stripe Payment Link (Alan, 29 Oct
+ * 2026), with a required "how did you hear about this?" question, created once
+ * the price is set. It must exist before the 1 Dec invitations. Undefined
+ * until then: the 101's ask falls back to an email about a seat, and no link
+ * points at a URL that doesn't exist yet. See askLink() in asks.ts.
  */
 export const BOOKING_101_URL: string | undefined = undefined;
 
@@ -99,7 +99,7 @@ export const ORG_PROFILES = [
 /** The Organization's description. Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =
-  "Alan Harman-Box teaches Power BI and AI to teams, and works alongside Power BI and Fabric teams as a consultant.";
+  "Alan Harman-Box teaches Power BI and AI to people whose job isn't Power BI or AI, and works alongside teams on their own Power BI reports and models as a consultant.";
 
 /** Postal identity (no street — area-served advisory, not a storefront). */
 export const ORG_ADDRESS = {
@@ -121,15 +121,17 @@ export const ORG_LEGAL = {
 
 /** The business's areas of work — used as Organization `knowsAbout`. Training
  *  leads since the 27 Oct 2026 revamp; "Power BI training" matches the Google
- *  Business Profile's service name. (We model the business as schema.org
+ *  Business Profile's service name. Named in the brand lexicon's words
+ *  (consultancy, not advisory); Fabric work is advice, never build or
+ *  migration (claims ledger). (We model the business as schema.org
  *  Organization, not the now-discouraged generic ProfessionalService type;
  *  see burningsuit-schema-templates.) */
 export const SERVICE_AREAS = [
   "Power BI training",
   "AI training for teams",
-  "Power BI advisory",
-  "Microsoft Fabric advisory",
-  "AI advisory for data teams",
+  "Agentic development for Power BI",
+  "Power BI consultancy",
+  "Microsoft Fabric advice",
 ] as const;
 
 /**
@@ -142,9 +144,9 @@ export const SERVICE_AREAS = [
  */
 export const FOUNDER = {
   name: "Alan Harman-Box",
-  // Mirrors the visible ranking (owner call, 2026-07-02): Power BI & Fabric are
-  // the front door; AI stays in knowsAbout/SERVICE_AREAS (ordered last).
-  jobTitle: "Power BI & Fabric advisor",
+  // Mirrors the visible ranking since the 27 Oct 2026 training-first revamp:
+  // training leads, consultancy sits behind it.
+  jobTitle: "Power BI and AI trainer and consultant",
   knowsAbout: [
     "Power BI",
     "Microsoft Fabric",

@@ -13,7 +13,7 @@
  * Each ask carries the Umami event its clicks record (`event`) and a
  * placement-aware href. Elements render `data-track` / `data-placement`, which
  * enhance.ts reads, so an ask's event doesn't depend on where its link points
- * (the 101's booking route is still undecided and may be anywhere).
+ * (the 101's ask is an email until its booking link exists).
  */
 import { BOOKING_101_URL, CONTACT_EMAIL, bookingHref, mailtoFor } from "./site";
 import { course } from "./training";
@@ -37,19 +37,27 @@ export const NOTES_FORM_ID = "notes";
 
 const intro = course("agentic-101");
 
-/** Until the 101's booking route exists, its ask is registering interest by
- *  email, so no link ever points at an undecided URL. */
+/** Until the 101's booking link exists (a Stripe Payment Link, decided 29 Oct
+ *  2026, created once the price is set), its ask is an email about a seat, so
+ *  no link ever points at an undecided URL. The email asks how they heard
+ *  about it, the question the booking form will ask. */
 export const has101Booking = BOOKING_101_URL !== undefined;
 
+const seatEmailHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`A seat on the ${intro.title}`)}&body=${encodeURIComponent("How I heard about the 101:")}`;
+
 function book101Href(placement: string): string {
-  if (!BOOKING_101_URL) return mailtoFor(`${intro.title} - register interest`);
+  if (!BOOKING_101_URL) return seatEmailHref;
   const sep = BOOKING_101_URL.includes("?") ? "&" : "?";
   return `${BOOKING_101_URL}${sep}utm_source=burningsuit&utm_content=${encodeURIComponent(placement)}`;
 }
 
+/** The 101's invoice route: company payers who need an invoice or a purchase
+ *  order get a Xero invoice instead of the card checkout (29 Oct 2026). */
+export const invoice101Href = mailtoFor(`An invoice for a seat on the ${intro.title}`);
+
 /** The course enquiry: an email with the questions an outline with costs
  *  needs, prefilled. */
-const enquiryFields = ["Course:", "Roughly how many people:", "What they can already do:", "On site or remote, and where:", "Dates that suit:"];
+const enquiryFields = ["Course:", "Roughly how many people:", "What they can already do:", "Online, or on site (and where):", "Dates that suit:"];
 export const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A course for my team")}&body=${encodeURIComponent(enquiryFields.join("\r\n"))}`;
 
 /** The page's ask, built for one placement (header, footer, hero …). */
@@ -58,12 +66,11 @@ export function askLink(ask: PageAsk, placement: string): AskLink {
     case "hour":
       return { href: bookingHref(placement), label: "Book an hour", external: true };
     case "book-101":
-      // PLACEHOLDER labels until the voice pass.
       return has101Booking
         ? { href: book101Href(placement), label: "Book a seat", event: "101 booking click", external: true }
-        : { href: book101Href(placement), label: "Register interest", short: "Register", event: "101 interest click", external: false };
+        : { href: book101Href(placement), label: "Email me about a seat", short: "Email me", event: "101 interest click", external: false };
     case "enquire":
-      return { href: enquiryHref, label: "Ask about a course", short: "Enquire", event: "Enquiry click", external: false };
+      return { href: enquiryHref, label: "Ask for an outline with costs", short: "Enquire", event: "Enquiry click", external: false };
     case "subscribe":
       return { href: `#${NOTES_FORM_ID}`, label: "Get the notes", external: false };
   }
