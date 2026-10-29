@@ -1,4 +1,19 @@
 ---
+/**
+ * /power-bi: consultancy (the URL is kept for its history), written to the
+ * course-page playbook's consultancy variant: the problem and who has it, how
+ * it works, how it starts, the price, proof, a paragraph to forward and one
+ * action, the free hour. The opening summary carries the buying facts (a free
+ * hour on a call, then fixed price, quoted on request).
+ *
+ * Existing anchors stay valid: situations, deliver, skills, handover,
+ * how-the-work-runs, backup, second-opinion, ai (the /ai-fit-for-teams
+ * redirect lands here), start, discovery, pricing, ongoing.
+ *
+ * No consultancy price is a public claim (claims ledger, 28 Oct 2026), and
+ * this page never links the essay, which must stay apart from the law-firm
+ * study shown here.
+ */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Chapter from "../components/Chapter.astro";
 import Exhibit from "../components/Exhibit.astro";
@@ -10,14 +25,14 @@ import pbiHero from "../assets/photos/DSC08846-Edit_cropped.jpg";
 import BookCta from "../components/BookCta.astro";
 import { mailtoFor } from "../config/site";
 
-const contactSubject = "Power BI & Fabric - working together";
+const contactSubject = "Help with our Power BI";
 const contactMailto = mailtoFor(contactSubject);
-const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: "team", after: "." }];
+const heroLines: Line[] = ["Help with Power BI", "only one person", { before: "can ", em: "touch", after: "." }];
 ---
 
 <BaseLayout
-  title="Power BI and Microsoft Fabric consultancy - burningsuit"
-  description="Power BI and Fabric consultancy: how Alan works alongside your team on its own reporting, with advice for the person leading the work. Start with a free hour."
+  title="Power BI and Fabric consultancy for your own reports - burningsuit"
+  description="Power BI and Fabric consultancy from Alan Harman-Box: working alongside your team on its own reports and models until they can carry on without outside help. It starts with a free hour on a call."
   ogImage="/social/linkedin-power-bi.png"
   ogImageAlt="Working alongside your Power BI team, beside a field-notebook model diagram"
   ogImageWidth={1200}
@@ -29,9 +44,9 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
   <section class="page-hero pbi-hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <RiseHeading as="h1" kind="hero" label="Working alongside your Power BI team." lines={heroLines} />
-        <p class="lead enter appear-300">This is the consultancy side: help with your team's own reporting. Whether they need support to deliver something, or to get to grips with a system they've inherited, I help them sort out what the numbers should mean, how to model them and how to <strong>check the result</strong>.</p>
-        <p class="hero-sig enter appear-450">If you're responsible, but not the one building it, you've got me to talk things through with too. If you're looking for a course, those are on <a href="/training/">the training page</a>.</p>
+        <RiseHeading as="h1" kind="hero" label="Help with Power BI only one person can touch." lines={heroLines} />
+        <p class="lead enter appear-300">This is consultancy, for when the problem is your own reports and models: a report only one person can change, numbers two teams read differently, a system you've inherited without a proper handover. I work alongside your team on the real thing until they can <strong>carry on without me</strong>.</p>
+        <p class="hero-sig enter appear-450">It starts with a free hour on a call. The work after that is fixed price, quoted on request.</p>
         <BookCta src="power-bi-hero" mailtoHref={contactMailto} variant="hero" />
         <p class="routes hour-link"><a class="route" href="/hour/">What happens in the free hour?</a></p>
       </div>
@@ -43,78 +58,74 @@ const heroLines: Line[] = ["Working alongside", { before: "your Power BI ", em: 
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  <Chapter id="situations" kicker="What we can work on">
-    <p>Whether you have a report to deliver, or a system you've inherited and need to get to grips with, we'll start with that work and make room for the learning it needs.</p>
+  <Chapter id="situations" kicker="How it works">
+    <p>We start with the real work in front of your team and make room for the learning it needs. Your people do the work, with me alongside, so they understand the choices and can change them later.</p>
     <div class="offer-table">
-      <Offer id="deliver" title="Build and change your reporting">
-        <p>Your team has something to deliver. We work through the decisions behind it, from what a number needs to mean to how the model should calculate it. Your people do the work with my help, so they understand the choices and can change them later.</p>
-        <p>When a result looks wrong, we follow it back through the model. Finding the cause is useful in its own right; understanding how we found it helps the team deal with the next one.</p>
+      <Offer id="deliver" title="Something to deliver">
+        <p>Your team has a report or a model to build or change. We work through the decisions behind it, from what a number needs to mean to how the model should calculate it.</p>
+        <p>When a result looks wrong, we follow it back through the model together. Finding the cause is useful in its own right; knowing how you found it helps with the next one.</p>
       </Offer>
-      <Offer id="skills" title="Learn the why behind the how">
-        <p>If an idea is missing or misunderstood, I teach it through a practical example. That might need a focused explanation while we're working, or a workshop with time to practise afterwards.</p>
-        <p>A workshop here is built around your own reporting. If you want a course for a group, on my own teaching material, <a href="/training/">those are on the training page</a>.</p>
+      <Offer id="skills" title="One person, on their own work">
+        <p>Coaching someone on their own reports is consultancy too: the analyst who keeps bouncing off Power BI, or the lead who has inherited the reports. We work on their real work, with their hands on the keyboard, until they can manage without me.</p>
+        <p>If you want a course for a group instead, on my own teaching material, <a href="/training/">that's training</a>.</p>
       </Offer>
-      <Offer id="handover" title="Understand a system you inherited">
-        <p>A working system and a set of handover documents don't always give a team enough understanding to look after it. We trace how the reporting gets from source data to the numbers people use, then practise making and checking changes.</p>
-        <p>This can happen alongside an external build or after handover.</p>
+      <Offer id="handover" title="A system you've inherited">
+        <p>A working system and a pile of handover documents don't always leave a team able to look after it. We trace how the numbers get from the source data to the reports people use, then practise making and checking changes.</p>
+        <p>This can happen alongside an outside build, or after the handover.</p>
       </Offer>
     </div>
-    <Exhibit tab="Following a wrong number" caption="From the law-firm case study · a large international law firm's data team">
-      <p>During handover at an international law firm, a year-to-date number looked wrong. With me alongside, the team followed it through the new Fabric system to a stored procedure that was dropping the right rows. They went back to the consultancy with the likely cause already in hand.</p>
-      <div class="routes"><a class="route" href="/work/law-firm/">Read the law-firm story</a><a class="route" href="/work/">All four case studies</a></div>
-    </Exhibit>
-    <div class="routes"><a class="route" href="/hour/">Tell me what your reporting can't do (yet)</a></div>
   </Chapter>
 
-  <Chapter id="how-the-work-runs" kicker="Working through it together">
-    <p>It doesn't matter if it's skills or reports that we're building, we'll always be focussed on what's actually in front of the team through regular sessions direct with me. You bring the part you're stuck on, and together we take time to try things, check what happens and talk through the reasoning.</p>
-    <p>We can work in your own systems where your data rules allow it, or use examples that let us explore the same problem. Access to live data isn't a prerequisite.</p>
-    <p>We leave time between sessions for people to apply what we've worked through. An example can make sense while we're looking at it together, then the real data turns out to have a complication. We can pick that up when we next meet.</p>
+  <Chapter id="how-the-work-runs" kicker="How the sessions run">
+    <p>We meet regularly, and you bring the part you're stuck on. Together we try things, check what happens and talk through the reasoning. We can work in your own systems where your data rules allow it, or on examples that reproduce the same problem, so access to live data isn't essential.</p>
+    <p>Between sessions, people have time to apply what we've done. An example can make sense while we look at it together, and then the real data turns out to have a complication. We pick that up next time.</p>
+    <p>From the first session, your people do the work. As they need me less, we agree less time, and we stop when it stops being useful.</p>
     <Offer id="backup" title="Somewhere to bring the next question">
-      <p>Regular time for questions can sit alongside that work, with email support between calls. We agree how much time to set aside and review it as the team needs less help.</p>
+      <p>Regular time for questions can sit alongside that work, with email between calls. We agree how much time to set aside, and review it as the team needs less help.</p>
     </Offer>
-    <p>The <a href="/work/contact-centre/">contact-centre case study shows how this helped a lead build and maintain her own reporting</a>.</p>
+    <p>The <a href="/work/contact-centre/">contact-centre case study</a> shows how this helped a team lead build her own reporting and keep it going.</p>
   </Chapter>
 
   <Chapter id="second-opinion" kicker="Support for the person leading it" aside="No one person has to understand the full stack to every level of detail.">
-    <p>If you're being asked to sign off an architecture proposal, I'll help you work out what it would mean for the people who have to run it. And I'll say so if I think a new model won't fix the problem, or a clever addition will leave the team with more to maintain than it's worth.</p>
-    <p>We can also look at what a new hire needs to know, or whether the team is ready to take over a system. I can help you work out what you need to understand personally, what knowledge the team should hold, and where too much depends on one person.</p>
-    <p>A regular conversation of your own can sit alongside the team's sessions or be arranged separately. It gives you room to think about the direction of the work as well as the next thing to deliver.</p>
+    <p>If you're responsible for the reporting but not the one building it, you get someone to think it through with. Asked to sign off an architecture proposal? I'll help you work out what it would mean for the people who have to run it. I'll also say so if a new model won't fix the problem, or a clever addition will leave the team more to maintain than it's worth.</p>
+    <p>We can look at what a new hire needs to know, whether the team is ready to take over a system, and where too much depends on one person.</p>
+    <p>A regular conversation of your own can sit alongside the team's sessions, or be arranged on its own.</p>
   </Chapter>
 
   <Chapter id="ai" kicker="AI in the work">
-    <p>If your team is trying Copilot or coding agents, we can open up a piece of the work and go through it together. A measure can run without an error and still answer the wrong question. That's the bit I want the team to be able to spot.</p>
-    <p>We work out which bits to hand over, what information the tool can access, and how people will check what comes back. That means reading the calculation, understanding what the number is meant to represent, and knowing what to try when the two don't agree.</p>
-    <p>Every piece of work is a stack of decisions. Hand a problem to AI without naming those decisions, and it makes them for you - and a tool can't take responsibility for a decision.</p>
-    <p>I explore what this means for the people responsible in <a href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>, an essay about delegation, judgement and Power BI.</p>
+    <p>If your team is using Copilot or an AI agent on its own reports, we can open up a piece of that work and go through it together. A measure can run without an error and still answer the wrong question. That's the part I want the team to be able to spot.</p>
+    <p>We work out which parts to hand over, what the tool can see, and how people will check what comes back: reading the calculation, knowing what the number is meant to represent, and what to try when the two don't agree.</p>
+    <p>Every piece of work is a stack of decisions. Hand a problem to AI without naming those decisions, and it makes them for you, and a tool can't take responsibility for a decision.</p>
   </Chapter>
 
-  <Chapter id="start" kicker="Start with a conversation">
-    <p>The first step is a free 60-minute call. Tell me about the reporting, the team and what you're trying to do. We can work out where help would be useful and whether it makes sense to work together.</p>
-    <p>That conversation also tells us whether we need to spend more time understanding the work before agreeing an engagement. If we do, we can scope Discovery around what we need to find out.</p>
-    <div class="routes"><a class="route" href="/hour/">What happens in the free hour?</a></div>
-  </Chapter>
-
-  <Chapter id="discovery" kicker="Discovery, shaped around the question">
-    <p>Discovery is <strong>£1,950 excluding VAT</strong>. We use it to work out what needs doing before you commit to a larger engagement. The first call helps us agree which questions it needs to answer and what you'll take away.</p>
-    <p>Examples of useful takeaways are:</p>
-    <ul class="discovery-examples">
-      <li>An initial set of reporting requirements, based on the questions people need the reporting to answer.</li>
-      <li>A roadmap for the reporting work, or for the skills the team will need to deliver and maintain it.</li>
-      <li>An assessment of whether the ambition fits the team and the time available.</li>
-    </ul>
-    <p>We agree the outputs before you book, so you can put the scope and price to whoever needs to approve the work. You keep what we produce. If that gives you enough to carry on internally, we can stop there. If it leads to a bigger piece of work with me, the Discovery fee comes off that quote.</p>
+  <Chapter id="start" kicker="How it starts">
+    <p>With a free hour on a call. Tell me about the reporting, the team and what you're trying to do. By the end of the hour, you'll know what kind of problem it is and what a sensible next step looks like, whether or not that involves me.</p>
+    <Offer id="discovery" title="Working out what's needed">
+      <p>Sometimes the hour shows that we need to understand the work better before agreeing what to do. That time is part of the quote, not something you buy separately.</p>
+    </Offer>
   </Chapter>
 
   <Chapter id="pricing" kicker="What it costs">
-    <p>There are two ways we can work, and they're priced differently.</p>
-    <p><strong>A piece of work</strong> is a block of sessions over a set period: eight weekly sessions to get a model built and understood, for example. We agree the sessions and what they need to produce, and I give you one fixed quote for the lot, including preparation, materials and support between sessions. If you've done Discovery, its fee comes off any block of £5,000 or more.</p>
-    <p id="ongoing"><strong>Ongoing support</strong> is booked a month at a time, for a team that wants me around while the work carries on. For substantial ongoing work with a team, <strong>£3,000 to £6,000 a month excluding VAT</strong> is a guide. Lighter support is available below that range and quoted separately, including fewer sessions or a regular second opinion.</p>
-    <p>Either way, we choose the mix of work with the team and conversations with you according to what will help. As the team becomes more capable, we can reduce the time and cost together, and a monthly arrangement can stop when it stops being useful.</p>
+    <p>Consultancy is fixed price. No two pieces of work are the same, so there's no price list. After the free hour, I'll quote one fixed price for the whole piece of work, including the sessions, my preparation and support between sessions, and any time needed first to understand the problem. It's written so you can put it to whoever signs it off.</p>
+    <p id="ongoing">If you'd like me around while the work carries on, I'll quote for ongoing support a month at a time instead. We reduce it as the team needs less, and it stops when it stops being useful.</p>
+  </Chapter>
+
+  <Chapter id="proof" kicker="In practice">
+    <Exhibit tab="Following a wrong number" caption="From the law-firm case study · an international law firm's data team">
+      <p>During handover, a year-to-date number looked wrong. With me alongside, the team traced it down through the reporting and through the gold, silver and bronze layers of their data (from ready for reports back to raw) to a stored procedure. The source was year-opening values that a separate app wrote into specific rows. By handover, the team was tracing wrong numbers like this themselves.</p>
+      <div class="routes"><a class="route" href="/work/law-firm/">Read the law-firm story</a><a class="route" href="/work/">All four case studies</a></div>
+    </Exhibit>
+    <p>The case studies are anonymised. I don't name a client without their written permission.</p>
+  </Chapter>
+
+  <Chapter id="forward" kicker="To send to your manager">
+    {/* The paragraph to forward: it stands on its own when pasted into an
+        email to whoever signs the work off. */}
+    <p>burningsuit works alongside a team on its own Power BI reports and models, for teams whose reporting depends on one person, or who have inherited a system they need to understand. The team ends up able to carry on without outside help. It starts with a free hour on a call; the work after that is fixed price, quoted on request. To book the free hour: https://burningsuit.co.uk/hour/</p>
   </Chapter>
 
   <section class="cta-band" aria-label="Book an hour">
-    <div class="wrap"><BookCta src="power-bi-pricing" mailtoHref={contactMailto}>Bring the reporting question you're working on. We'll spend an hour thinking through a useful starting point; the call is free.</BookCta></div>
+    <div class="wrap"><BookCta src="power-bi-pricing" mailtoHref={contactMailto}>Bring the reporting question you're working on. We'll spend an hour on a useful starting point, and the call is free.</BookCta></div>
   </section>
 
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
