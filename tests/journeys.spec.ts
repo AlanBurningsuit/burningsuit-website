@@ -18,11 +18,16 @@ test("the training catalogue carries every course at a stable anchor", async ({ 
 // Training prices render only from the private ops file with
 // SHOW_TRAINING_PRICES set at build time. CI never sets it, so its build must
 // carry no training figure.
-test("the default build shows no training price", async ({ page }) => {
+test("the default build shows no training price, and says how to get one", async ({ page }) => {
   test.skip(process.env.SHOW_TRAINING_PRICES === "true", "priced build");
-  for (const route of ["/", "/training/"]) {
+  for (const [route, howToGetIt] of [
+    ["/", "founding rate"],
+    ["/training/", "outline with costs"],
+    ["/training/agentic-101/", "founding rate"],
+  ]) {
     await page.goto(route);
     await expect(page.locator("main")).not.toContainText("£");
+    await expect(page.locator("main")).toContainText(howToGetIt);
   }
 });
 
@@ -30,7 +35,7 @@ test("Power BI offers the hour explanation in its hero", async ({ page }) => {
   await page.goto("/power-bi/");
   await page.locator(".pbi-hero").getByRole("link", { name: /^What happens in the free hour\?/ }).click();
   await expect(page).toHaveURL(/\/hour\/$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tell me what your reporting can't do (yet).");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("A free hour on a call, for when your reporting is stuck.");
 });
 
 test("Home's consultancy door opens the consultancy page", async ({ page }) => {
@@ -40,10 +45,13 @@ test("Home's consultancy door opens the consultancy page", async ({ page }) => {
   await expect(page.locator('header nav a[aria-current="page"]')).toHaveText("Consultancy");
 });
 
-test("the pricing destination contains the ongoing price guide", async ({ page }) => {
+// No consultancy price is a public claim (claims ledger, 28 Oct 2026): the
+// pricing destination explains the fixed-price quote and carries no figure.
+test("the pricing destination says how consultancy is priced, with no figure", async ({ page }) => {
   await page.goto("/power-bi/#pricing");
   const chapter = page.locator('.chapter[aria-labelledby="pricing"]');
-  await expect(chapter).toContainText("£3,000 to £6,000 a month excluding VAT");
+  await expect(chapter).toContainText("fixed price");
+  await expect(chapter).not.toContainText("£");
   await expect(chapter.getByRole("heading", { name: "What it costs" })).toBeInViewport();
 });
 
@@ -80,7 +88,7 @@ test("Home's case-study action opens the complete collection", async ({ page }) 
 
 for (const [route, chapterId, study] of [
   ["/", "in-practice", "museum"],
-  ["/power-bi/", "situations", "law-firm"],
+  ["/power-bi/", "proof", "law-firm"],
 ]) {
   test(`${route} links its visible exhibit to the ${study} story`, async ({ page }) => {
     await page.goto(route);
@@ -92,7 +100,7 @@ for (const [route, chapterId, study] of [
   });
 }
 
-test("each case study offers engagement details and a route to the price guide", async ({ page }) => {
+test("each case study offers engagement details and a route to how consultancy is priced", async ({ page }) => {
   for (const study of ["contact-centre", "law-firm", "carbon-footprint", "museum"]) {
     await page.goto(`/work/${study}/`);
     const details = page.locator("[data-track-study-end]").getByRole("link", { name: "How we work together, and what it costs" });
@@ -101,7 +109,7 @@ test("each case study offers engagement details and a route to the price guide",
     await expect(page).toHaveURL(/\/power-bi\/$/);
     const pricing = page.locator('.chapter[aria-labelledby="pricing"]');
     await pricing.scrollIntoViewIfNeeded();
-    await expect(pricing).toContainText("£3,000 to £6,000 a month excluding VAT");
+    await expect(pricing).toContainText("fixed price");
   }
 });
 

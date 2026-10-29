@@ -125,7 +125,8 @@ for (const [path, placement, event] of [
   ["/", "header", event101], ["/", "footer", event101], ["/", "home-way-in", event101],
   ["/training/agentic-101/", "header", event101], ["/training/agentic-101/", "101-hero", event101],
   ["/training/agentic-101/", "101-band", event101], ["/training/agentic-101/", "footer", event101],
-  ["/training/", "header", "Enquiry click"], ["/training/", "training-band", "Enquiry click"],
+  ["/training/", "header", "Enquiry click"], ["/training/", "training-hero", "Enquiry click"],
+  ["/training/", "training-band", "Enquiry click"],
   ["/training/", "footer", "Enquiry click"],
 ]) {
 test(`${event} on ${path} ${placement}`, async ({ page }) => {
