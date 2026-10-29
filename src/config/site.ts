@@ -24,7 +24,8 @@ export const BOOKING_URL = "https://cal.com/alan-burningsuit/hour";
  * Placements renamed on 2026-09-08: header, footer, home-hero (retired
  * 2026-10-27, when Home's hero began leading to /training/),
  * home-situations (when present), power-bi-hero, power-bi-pricing, hour-page,
- * work. Historical hero, home-proof and power-bi-engagement names apply only
+ * work. Since 29 Oct 2026 header and footer carry the free hour only on
+ * pages whose ask it is (asks.ts). Historical hero, home-proof and power-bi-engagement names apply only
  * before this date. Study-read events retain their per-study URL identity.
  */
 export function bookingHref(src?: string): string {
@@ -57,7 +58,8 @@ export const KIT_ESSAY_FORM_ACTION = "https://app.kit.com/forms/10117647/subscri
 /**
  * Notes signup link tagged with the link location in `utm_content`, so Kit's
  * subscriber source and the "Notes click" event share one placement value.
- * Placements: footer, essay, archive.
+ * Placements: archive (the restored 2021 post). Before 29 Oct 2026 also
+ * footer and essay, which became the essays' inline form (asks.ts).
  */
 export function notesHref(src: string): string {
   return `${NOTES_URL}?utm_source=burningsuit&utm_content=${encodeURIComponent(src)}`;
