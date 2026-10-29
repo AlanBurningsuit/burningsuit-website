@@ -13,12 +13,15 @@ import type { Line } from "../components/RiseHeading.astro";
 import { Picture } from "astro:assets";
 import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
 import { mailtoFor } from "../config/site";
+import { askLink } from "../config/asks";
 import { course } from "../config/training";
 
 const contactSubject = "Power BI and AI training";
 const contactMailto = mailtoFor(contactSubject);
 const intro = course("agentic-101");
-const interestHref = mailtoFor(`${intro.title} - register interest`);
+// Home leads with training, and the 101 is the way in, so its ask is a 101
+// seat (asks.ts) — registering interest until the booking route exists.
+const way101 = askLink("book-101", "home-way-in");
 // The tagline, hand-split for the hero's 15ch measure. Check the hero height on preview.
 const heroLines: Line[] = ["Power BI and AI", "for people whose", { before: "job ", em: "isn't", after: "" }, "Power BI or AI."];
 const courseDoors: RowData[] = [
@@ -38,7 +41,7 @@ const statementLines: Line[] = [
 ];
 ---
 
-<BaseLayout title="Power BI and AI training - burningsuit" description="Power BI and AI training for people whose job isn't Power BI or AI. Courses for teams from Alan Harman-Box, with consultancy when the problem is your own reporting." contactSubject={contactSubject}>
+<BaseLayout title="Power BI and AI training - burningsuit" description="Power BI and AI training for people whose job isn't Power BI or AI. Courses for teams from Alan Harman-Box, with consultancy when the problem is your own reporting." contactSubject={contactSubject} ask="book-101">
   <Fragment slot="footer-invitation">Tell me what your team needs to learn, or what your reporting is wrestling with. Replies come from me</Fragment>
 
   <section class="hero">
@@ -66,11 +69,11 @@ const statementLines: Line[] = [
     <div class="wrap">
       <h2 class="section-head" id="way-in" data-reveal>Start with half a day</h2>
       <div class="prose" data-reveal>
-        <p>The place to start is <a href="/training/#agentic-101">{intro.title}</a> ({intro.length.toLowerCase()}), for anyone who builds in Power BI and wants to hand some of the work to an AI agent. It's about handing over the building decisions, not the business ones.</p>
+        <p>The place to start is <a href="/training/agentic-101/">{intro.title}</a> ({intro.length.toLowerCase()}), for anyone who builds in Power BI and wants to hand some of the work to an AI agent. It's about handing over the building decisions, not the business ones.</p>
         {/* DRAFT for Alan: confirm the pilot wording; no price, date or seat numbers yet. */}
         <p>It's booked by the seat, so you can come on your own. The first one will run as a pilot; register your interest and I'll tell you when there's a date. A hands-on day and a course on modelling for agents are being written to follow it.</p>
       </div>
-      <div class="routes"><a class="route" href="/training/#agentic-101">More about the 101</a><a class="route" href={interestHref}>Register your interest</a></div>
+      <div class="routes"><a class="route" href="/training/agentic-101/">More about the 101</a><a class="route" href={way101.href} target={way101.external ? "_blank" : undefined} rel={way101.external ? "noopener noreferrer" : undefined} data-track={way101.event} data-placement="home-way-in">{way101.external ? "Book a seat" : "Register your interest"}</a></div>
     </div>
   </section>
 

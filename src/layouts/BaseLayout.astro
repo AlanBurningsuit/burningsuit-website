@@ -15,6 +15,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Schema from "../components/seo/Schema.astro";
 import { mailtoFor, ANALYTICS } from "../config/site";
+import type { PageAsk } from "../config/asks";
 import { siteGraph, type SchemaNode } from "../lib/schema";
 import "../styles/app.css";
 
@@ -49,6 +50,10 @@ interface Props {
    *  The site graph (Organization/Person/WebSite) is always present; pages add
    *  only what's specific to them. */
   jsonLd?: SchemaNode | SchemaNode[];
+  /** The page's one ask (asks.ts). The header button and footer actions
+   *  follow it, so the shell never adds a second ask. Defaults to the free
+   *  hour, the ask of consultancy and of pages that don't sell a course. */
+  ask?: PageAsk;
 }
 const {
   title,
@@ -63,6 +68,7 @@ const {
   publishedTime,
   modifiedTime,
   jsonLd,
+  ask = "hour",
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
@@ -134,11 +140,11 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
   </head>
   <body>
     <a class="skip" href="#main">skip to content</a>
-    <Header />
+    <Header ask={ask} />
     <main id="main">
       <slot />
     </main>
-    <Footer mailtoHref={mailtoHref}>
+    <Footer ask={ask} mailtoHref={mailtoHref}>
       {
         hasFooterInvitation && (
           <Fragment slot="invitation">

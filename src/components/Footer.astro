@@ -2,22 +2,28 @@
 /**
  * The document's final contact section stays in flow. With normal motion and
  * JavaScript it reveals beneath main; focus returns it to its natural position.
- * The invitation line + face chip, then the two contact actions side by
- * side (primary "Book an hour", ghost "Email me", as in the hero), the
- * plain © line, and the full-width lockup signing the page.
+ * The invitation line + face chip, then the page's ask (asks.ts) as the
+ * primary button, with a ghost "Email me" beside it when the ask isn't
+ * already an email or a form, the plain © line, and the full-width lockup
+ * signing the page. The free-hour explainer link shows only where the free
+ * hour is the ask, and the Notes signup lives on essays, never here.
  *
  * The invitation line is a named slot so each page can supply its own CTA copy
  * while keeping the chip + period consistent. Default = the homepage line.
  */
 import FaceChip from "./FaceChip.astro";
 import Signoff from "./Signoff.astro";
-import { bookingHref, mailtoFor, notesHref } from "../config/site";
+import { mailtoFor } from "../config/site";
+import { askLink, type PageAsk } from "../config/asks";
 interface Props {
+  ask: PageAsk;
   /** The mailto (with optional prefilled ?subject=) built per-page in
    *  BaseLayout; defaults to a bare mailto. */
   mailtoHref?: string;
 }
-const { mailtoHref = mailtoFor() } = Astro.props;
+const { ask, mailtoHref = mailtoFor() } = Astro.props;
+const action = askLink(ask, "footer");
+const showEmail = ask === "hour" || (ask === "book-101" && action.external);
 ---
 <footer aria-labelledby="talk-h">
   <div class="wrap outro">
@@ -28,15 +34,21 @@ const { mailtoHref = mailtoFor() } = Astro.props;
       > <FaceChip loading="lazy" />.
     </p>
     <div class="cta-row cta-footer">
-      <a class="cta" href={bookingHref("footer")} target="_blank" rel="noopener noreferrer"
-        >Book an hour</a
-      >
-      <a class="cta ghost" href={mailtoHref}>Email me</a>
+      <a
+        class="cta"
+        href={action.href}
+        target={action.external ? "_blank" : undefined}
+        rel={action.external ? "noopener noreferrer" : undefined}
+        data-track={action.event}
+        data-placement={action.event && "footer"}
+      >{action.label}</a>
+      {showEmail && <a class="cta ghost" href={mailtoHref}>Email me</a>}
     </div>
-    <p class="routes hour-link">
-      <a class="route" href="/hour/">What happens in the free hour?</a>
-      <a class="route" href={notesHref("footer")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>
-    </p>
+    {ask === "hour" && (
+      <p class="routes hour-link">
+        <a class="route" href="/hour/">What happens in the free hour?</a>
+      </p>
+    )}
     <Signoff />
     <p class="legal">
       Burningsuit Limited is a limited company registered in England &amp; Wales&NewLine;Registered number: 05738130 &middot; Registered office: The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN &middot; &copy; 2026 &middot; <a href="/privacy">Privacy</a>{

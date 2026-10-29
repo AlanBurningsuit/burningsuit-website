@@ -34,6 +34,15 @@ export function bookingHref(src?: string): string {
   return `${BOOKING_URL}${sep}utm_source=burningsuit&utm_content=${placement}&placement=${placement}`;
 }
 
+/**
+ * How someone books a seat on the 101. Still open in the website brief (it
+ * must exist before the 1 Dec invitations, and should ask "how did you hear
+ * about this?"). Undefined until Alan decides: the 101's ask then falls back
+ * to registering interest by email, and no link points at an undecided URL.
+ * See askLink() in asks.ts.
+ */
+export const BOOKING_101_URL: string | undefined = undefined;
+
 /** The Kit signup page for "Notes from burningsuit". */
 export const NOTES_URL = "https://burningsuit.kit.com/";
 

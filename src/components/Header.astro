@@ -7,9 +7,13 @@
  * have contextual text links. The two contact paths (booking + email) also
  * live in the footer close. The drawn
  * underline (.u) and instant-flip CTA live in app.css. The header's one action is
- * "Book an hour" CTA.
+ * the page's ask (asks.ts), so the shell never adds a second one.
  */
-import { bookingHref } from "../config/site";
+import { askLink, type PageAsk } from "../config/asks";
+interface Props {
+  ask: PageAsk;
+}
+const action = askLink(Astro.props.ask, "header");
 // Short sentence-case labels; URLs stay stable for links and attribution.
 const nav = [
   { href: "/training/", label: "Training" },
@@ -46,6 +50,13 @@ const currentFor = (href: string): "page" | "true" | undefined => {
         <a class="u" href={n.href} aria-current={currentFor(n.href)}>{n.label}</a>
       ))}
     </nav>
-    <a class="cta" href={bookingHref("header")} target="_blank" rel="noopener noreferrer">Book an hour</a>
+    <a
+      class="cta"
+      href={action.href}
+      target={action.external ? "_blank" : undefined}
+      rel={action.external ? "noopener noreferrer" : undefined}
+      data-track={action.event}
+      data-placement={action.event && "header"}
+    >{action.short ?? action.label}</a>
   </div>
 </header>

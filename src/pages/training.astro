@@ -5,14 +5,18 @@
  *
  * Prices are build-time gated (see training.ts). Every course line reads
  * correctly both ways: with no price it invites people to ask; with a price
- * it shows the figure. The 101's pilot price is not settled, so it never
- * shows a price whatever the price file holds.
+ * it shows the figure. The 101 has its own landing page
+ * (/training/agentic-101/); here it is a short teaser that links there.
+ *
+ * The page's one ask is the course enquiry (asks.ts): an email for an
+ * outline with costs. The free hour is consultancy's ask and never appears
+ * here as a button; the consultancy chapter is a plain link to /power-bi/.
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Chapter from "../components/Chapter.astro";
 import Aside from "../components/Aside.astro";
 import Offer from "../components/Offer.astro";
-import { CONTACT_EMAIL, mailtoFor } from "../config/site";
+import { askLink } from "../config/asks";
 import { course, priceFor, showsPrices } from "../config/training";
 
 const contactSubject = "Power BI and AI training";
@@ -24,16 +28,14 @@ const priceNote = (id: string) => {
 const metaFor = (id: string) => `${course(id).length} · up to 8 people · ${priceNote(id)}`;
 
 const intro = course("agentic-101");
-const interestHref = mailtoFor(`${intro.title} - register interest`);
-
-const enquiryFields = ["Course:", "Roughly how many people:", "What they can already do:", "On site or remote, and where:", "Dates that suit:"];
-const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A course for my team")}&body=${encodeURIComponent(enquiryFields.join("\r\n"))}`;
+const enquiry = askLink("enquire", "training-band");
 ---
 
 <BaseLayout
   title="Power BI and AI training for teams - burningsuit"
   description="Courses from Alan Harman-Box: half a day on agentic development for Power BI, closed-group courses in Power BI, DAX and data modelling, and days on using Claude at work."
   contactSubject={contactSubject}
+  ask="enquire"
 >
   <Fragment slot="footer-invitation">Tell me which course you're looking at and roughly how many people. Replies come from me</Fragment>
 
@@ -53,8 +55,9 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
 
   <div class="thread" data-reveal-raw aria-hidden="true"></div>
 
-  {/* Written out rather than a <Chapter>: its contact link must sit outside the
-      reveal-gated prose (contact controls never wait on an entrance). */}
+  {/* Written out rather than a <Chapter>: its route link must sit outside the
+      reveal-gated prose (controls never wait on an entrance). The full page
+      is /training/agentic-101/; this id stays so old links still land. */}
   <section class="chapter" aria-labelledby="agentic-101">
     <div class="wrap what">
       <h2 class="section-head" id="agentic-101" data-reveal>{intro.title}</h2>
@@ -68,9 +71,10 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
           {/* DRAFT for Alan: 101 outline to come. */}
           <p>It's for {intro.audience.charAt(0).toLowerCase() + intro.audience.slice(1)}. Unlike the longer courses, it has public seats, so you'll book a place for yourself rather than arranging a day for a group.</p>
           {/* DRAFT for Alan: confirm the pilot wording; no price, date or seat numbers yet. */}
-          <p>The first one will be a pilot, at a reduced price. If you'd like a place, or just want to hear when it's on, register your interest and I'll let you know when there's a date.</p>
+          <p>The first one will be a pilot, at a reduced price.</p>
         </div>
-        <div class="routes"><a class="route" href={interestHref}>Register your interest by email</a></div>
+        {/* PLACEHOLDER link text until the voice pass. */}
+        <div class="routes"><a class="route" href="/training/agentic-101/">More about the 101, and booking a seat</a></div>
       </div>
     </div>
   </section>
@@ -139,7 +143,7 @@ const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A cou
     <div class="wrap">
       <div class="cta-invite">
         <p class="cta-note">The email comes with a few questions filled in: which course, how many people, what they can already do, on site or remote, and dates that suit.</p>
-        <a class="cta" href={enquiryHref}>Email me about a course</a>
+        <a class="cta" href={enquiry.href} data-track={enquiry.event} data-placement="training-band">Email me about a course</a>
       </div>
     </div>
   </section>
