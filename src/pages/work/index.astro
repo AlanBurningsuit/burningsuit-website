@@ -17,7 +17,7 @@ import BookCta from "../../components/BookCta.astro";
 import type { RowData } from "../../components/ServiceRow.astro";
 import { mailtoFor } from "../../config/site";
 
-const contactSubject = "Power BI & Fabric - one of these sounds like us";
+const contactSubject = "One of your case studies sounds like us";
 const contactMailto = mailtoFor(contactSubject);
 
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
@@ -33,12 +33,12 @@ const rows: RowData[] = studies.map((s) => ({
 ---
 
 <BaseLayout
-  title="Power BI & Fabric case studies - burningsuit"
+  title="Power BI and Fabric case studies - burningsuit"
   description="Power BI and Fabric case studies from Alan Harman-Box. See how people learned to take care of reporting they built themselves or took over from someone else."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
-    >If one of these sounds like where you are, tell me about it - even if you're
+    >If one of these sounds like where you are, tell me about it, even if you're
     not sure it's a project yet</Fragment
   >
 
@@ -46,7 +46,7 @@ const rows: RowData[] = studies.map((s) => ({
     <div class="wrap">
       <h1 class="enter appear-300">You'll recognise one of these.</h1>
       <p class="lead enter appear-450">
-        These are teams and people I've worked with on Power BI and Fabric. Some built the reporting themselves; others took over something built for them. Read the story that sounds closest to yours.
+        These are teams and people I've worked with on their own Power BI and Fabric. Some built the reporting themselves; others took over something built for them. Each one is anonymised, because I don't name a client without their written permission. Read the one that sounds closest to yours.
       </p>
     </div>
   </section>
