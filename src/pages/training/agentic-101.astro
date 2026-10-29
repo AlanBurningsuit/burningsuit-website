@@ -1,0 +1,115 @@
+---
+/**
+ * /training/agentic-101: the 101's own landing page (website brief, 29 Oct
+ * 2026). Bigger than a catalogue entry, with demos, and booking is its only
+ * ask: the header, hero, closing band and footer all carry the same 101 ask
+ * (asks.ts). Until the booking route exists that ask is registering interest
+ * by email; set BOOKING_101_URL in site.ts and every placement switches.
+ *
+ * STRUCTURE ONLY. Every visible "[Placeholder: …]" line marks a slot waiting
+ * for copy from the voice book; none of it is final, and the page must not go
+ * live while one remains (grep for data-placeholder).
+ *
+ * The shopping questions (what, who for, how long, how much) each get their
+ * own plainly labelled slot, so answer engines can quote them. Length and
+ * audience come from training.ts; the price comes only through the private
+ * price gate (priceFor), keyed "agentic-101".
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Chapter from "../../components/Chapter.astro";
+import Offer from "../../components/Offer.astro";
+import { askLink } from "../../config/asks";
+import { course, priceFor } from "../../config/training";
+
+const intro = course("agentic-101");
+const price = priceFor("agentic-101");
+const contactSubject = `${intro.title} - register interest`;
+const heroAsk = askLink("book-101", "101-hero");
+const bandAsk = askLink("book-101", "101-band");
+const linkAttrs = (a: typeof heroAsk, placement: string) => ({
+  href: a.href,
+  target: a.external ? "_blank" : undefined,
+  rel: a.external ? "noopener noreferrer" : undefined,
+  "data-track": a.event,
+  "data-placement": placement,
+});
+---
+
+<BaseLayout
+  title={`${intro.title} - burningsuit`}
+  description="Agentic development for Power BI 101: a half-day course from Alan Harman-Box for people who build in Power BI and don't code. What it covers, who it's for, how long it runs and how to book."
+  contactSubject={contactSubject}
+  ask="book-101"
+>
+  <Fragment slot="footer-invitation">[Placeholder: footer invitation for the 101.] Replies come from me</Fragment>
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="kicker meta enter">Training · {intro.length}</p>
+      <h1 class="enter appear-300">{intro.title}</h1>
+      <p class="lead enter appear-450" data-placeholder>[Placeholder: the promise of the half-day, in one or two sentences, for someone who builds in Power BI and thinks agents aren't for them.]</p>
+      <div class="cta-row enter appear-450">
+        <a class="cta" {...linkAttrs(heroAsk, "101-hero")}>{heroAsk.label}</a>
+      </div>
+      <ul class="routes enter appear-450">
+        <li><a class="route" href="#what">What it covers</a></li>
+        <li><a class="route" href="#who">Who it's for</a></li>
+        <li><a class="route" href="#details">How long, and how much</a></li>
+        <li><a class="route" href="#demos">See it working</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <Chapter id="what" kicker="What it covers">
+    <p data-placeholder>[Placeholder: what the half-day covers, as an outline of what people do and leave able to do. Plain enough to quote.]</p>
+  </Chapter>
+
+  <Chapter id="who" kicker="Who it's for">
+    <p data-placeholder>[Placeholder: who it's for, from the brief: builds in Power BI, doesn't code, thinks agents aren't for them. Power BI developers who don't code are welcome; not for people already at home with coding agents.]</p>
+  </Chapter>
+
+  <Chapter id="details" kicker="How long, how much, and how it runs">
+    <div class="offer-table">
+      <Offer id="how-long" title="How long" meta={intro.length}>
+        <p data-placeholder>[Placeholder: format: online or in person, public seats, group size.]</p>
+      </Offer>
+      <Offer id="how-much" title="How much" meta={price ?? "Price to follow"}>
+        {/* DRAFT for Alan: the pilot price comes from the private price file
+            ("agentic-101"); confirm per-seat wording and VAT. */}
+        <p data-placeholder>[Placeholder: what the price covers, and the pilot's founding discount.]</p>
+      </Offer>
+      <Offer id="when" title="When">
+        <p data-placeholder>[Placeholder: the pilot's date and seat numbers, once confirmed.]</p>
+      </Offer>
+    </div>
+  </Chapter>
+
+  <Chapter id="for-whoever-pays" kicker="For whoever signs it off">
+    {/* The forwardable paragraph: written to stand on its own when pasted
+        into an email to a manager or L&D, with no reference to this page. */}
+    <p data-placeholder>[Placeholder: one self-contained paragraph the reader can forward to whoever pays: what it is, who it's for, how long, the price, and what their person comes back able to do.]</p>
+  </Chapter>
+
+  <Chapter id="demos" kicker="See it working">
+    {/* Demo slots: each becomes a short recorded demo or an EssayFigure.
+        Ideas, arguments and demos are free (brief); the course is the
+        hands-on skill. The first demo must exist before the 1 Dec invitations. */}
+    <p data-placeholder>[Placeholder: demo 1, the first demo, needed before the 1 Dec invitations.]</p>
+    <p data-placeholder>[Placeholder: demo 2.]</p>
+    <p data-placeholder>[Placeholder: demo 3.]</p>
+  </Chapter>
+
+  <section class="cta-band" aria-label="Book a seat">
+    <div class="wrap">
+      <div class="cta-invite">
+        <p class="cta-note" data-placeholder>[Placeholder: the de-risk line beside booking.]</p>
+        <a class="cta" {...linkAttrs(bandAsk, "101-band")}>{bandAsk.label}</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>
