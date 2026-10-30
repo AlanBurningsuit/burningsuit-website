@@ -1,9 +1,11 @@
 import { test, expect } from "@playwright/test";
-import { ANALYTICS, BOOKING_URL, NOTES_URL } from "../src/config/site";
+import { ANALYTICS, BOOKING_URL, KIT_ESSAY_FORM_ACTION, NOTES_URL } from "../src/config/site";
+import { has101Booking } from "../src/config/asks";
 
 /**
- * The five custom events (404 tracking, email-intent, booking-intent,
- * notes-intent, study-read) reach umami.track() correctly. The tracker script is routed to a recording stub that defines
+ * The custom events (404 tracking, email-intent, booking-intent, the
+ * per-page asks — 101 booking or interest, course enquiry — notes-intent,
+ * the essay signup, study-read) reach umami.track() correctly. The tracker script is routed to a recording stub that defines
  * window.umami before enhance.ts runs (the mocked tag is a defer script in
  * <head>, the module runs at end of body), so assertions read the recorded
  * calls — no beacon mocking or counting (csp.spec.ts owns the beacon
@@ -34,7 +36,7 @@ test("404 page tracks a 404 event carrying the missed path", async ({ page }) =>
 });
 
 test("mailto click tracks an Email click event; regular pages track no 404", async ({ page }) => {
-  await page.goto("/", { waitUntil: "load" });
+  await page.goto("/about/", { waitUntil: "load" });
 
   // Keep headless browsers from attempting the external mailto protocol —
   // a capture-phase preventDefault; the site's bubble-phase listener still fires.
@@ -57,7 +59,7 @@ test("mailto click tracks an Email click event; regular pages track no 404", asy
 });
 
 for (const [path, placement] of [
-  ["/", "header"], ["/", "footer"], ["/", "home-hero"],
+  ["/about/", "header"], ["/about/", "footer"],
   ["/power-bi/", "power-bi-hero"], ["/power-bi/", "power-bi-pricing"],
   ["/work/", "work"],
   ["/hour/", "hour-page"],
@@ -89,8 +91,7 @@ test(`booking click on ${placement} keeps its event URL and attribution`, async 
 }
 
 for (const [path, placement] of [
-  ["/", "footer"],
-  ["/writing/we-are-all-middle-management-now/", "essay"],
+  ["/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "archive"],
 ]) {
 test(`notes click on ${placement} keeps its signup URL and attribution`, async ({ page }) => {
   await page.goto(path, { waitUntil: "load" });
@@ -116,6 +117,63 @@ test(`notes click on ${placement} keeps its signup URL and attribution`, async (
   expect(calls).toContainEqual(["Notes click", { placement }]);
 });
 }
+
+// Each page's ask records its own event with its placement; a mailto ask is
+// not also an "Email click".
+const event101 = has101Booking ? "101 booking click" : "101 interest click";
+for (const [path, placement, event] of [
+  ["/", "header", "101 page click"], ["/", "footer", "101 page click"], ["/", "home-way-in", "101 page click"],
+  ["/training/agentic-101/", "header", event101], ["/training/agentic-101/", "101-hero", event101],
+  ["/training/agentic-101/", "101-band", event101], ["/training/agentic-101/", "footer", event101],
+  ["/training/", "header", "Enquiry click"], ["/training/", "training-hero", "Enquiry click"],
+  ["/training/", "training-band", "Enquiry click"],
+  ["/training/", "footer", "Enquiry click"],
+]) {
+test(`${event} on ${path} ${placement}`, async ({ page }) => {
+  await page.goto(path, { waitUntil: "load" });
+  // Cancel the navigation (mailto or new tab) in the capture phase; the
+  // site's bubble-phase listener still fires.
+  await page.evaluate(() => {
+    document.addEventListener("click", (e) => {
+      if ((e.target as Element | null)?.closest?.("[data-track]")) e.preventDefault();
+    }, true);
+  });
+  const ask = page.locator(`[data-track][data-placement="${placement}"]`);
+  await expect(ask).toHaveCount(1);
+  await ask.click();
+  const calls = await readCalls(page);
+  expect(calls).toContainEqual([event, { placement }]);
+  expect(calls.some((ev) => ev[0] === "Email click")).toBe(false);
+});
+}
+
+test("an essay ends with the inline Kit form, and a signup tracks Notes signup", async ({ page }) => {
+  const posts: string[] = [];
+  await page.route(`${KIT_ESSAY_FORM_ACTION}**`, (route) => {
+    posts.push(route.request().postData() ?? "");
+    return route.fulfill({ status: 200, contentType: "text/html", body: "<p>ok</p>" });
+  });
+  await page.goto("/writing/we-are-all-middle-management-now/", { waitUntil: "load" });
+  // Record calls across the navigation the POST causes.
+  const recorded: unknown[][] = [];
+  await page.exposeFunction("__record", (call: unknown[]) => recorded.push(call));
+  await page.evaluate(() => {
+    const w = window as unknown as { umami: { track: (n: string, d?: unknown) => void }; __record: (c: unknown[]) => void };
+    const original = w.umami.track;
+    w.umami.track = (n, d) => { w.__record(d === undefined ? [n] : [n, d]); original(n, d); };
+  });
+  const form = page.locator("form.notes-form");
+  await expect(form).toHaveAttribute("action", KIT_ESSAY_FORM_ACTION);
+  await expect(form).toHaveAttribute("method", "post");
+  // An invalid address never submits, so it never counts.
+  await page.getByLabel("Email address").fill("not-an-email");
+  await form.getByRole("button").click();
+  expect(recorded).toHaveLength(0);
+  await page.getByLabel("Email address").fill("reader@example.com");
+  await Promise.all([page.waitForURL(KIT_ESSAY_FORM_ACTION), form.getByRole("button").click()]);
+  expect(recorded).toContainEqual(["Notes signup", { placement: "essay" }]);
+  expect(posts[0]).toContain("email_address=reader%40example.com");
+});
 
 test("reaching a case study's closing door tracks a Study read event", async ({ page }) => {
   await page.goto("/work/law-firm/", { waitUntil: "load" });

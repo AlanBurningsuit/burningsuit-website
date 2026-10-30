@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { LAYOUT_ROUTES, READING_ROUTES } from "./helpers/routes";
 
 /**
  * Responsive functional spec — the phone/tablet class of regression the
@@ -20,9 +21,6 @@ const VIEWPORTS = [
   { width: 896, height: 414 },
   { width: 1280, height: 720 },
 ];
-
-const ROUTES = ["/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/hour/", "/work/", "/about/", "/work/law-firm/"];
-const READING_ROUTES = [...ROUTES, "/work/contact-centre/", "/work/carbon-footprint/", "/work/museum/", "/privacy/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
 
 async function headerHeights(page: Page) {
   return page.evaluate(() => {
@@ -124,13 +122,13 @@ test("skip link is the first tab stop and lands on #main", async ({ page }) => {
   await expect(page.locator("main#main")).toBeVisible();
 });
 
-for (const route of ["/power-bi/", "/work/", "/about/", "/work/law-firm/"]) {
+for (const route of ["/training/", "/power-bi/", "/work/", "/about/", "/work/law-firm/"]) {
   test(`current page is marked in the nav on ${route}`, async ({ page }) => {
     await page.goto(route);
     const current = page.locator("header nav a[aria-current]");
     await expect(current, `no aria-current nav item on ${route}`).toHaveCount(1);
     // child routes mark their section as an ancestor, exact pages as "page"
-    const expected = ROUTES.includes(route) && route.split("/").filter(Boolean).length > 1
+    const expected = LAYOUT_ROUTES.includes(route) && route.split("/").filter(Boolean).length > 1
       ? "true"
       : "page";
     await expect(current).toHaveAttribute("aria-current", expected);

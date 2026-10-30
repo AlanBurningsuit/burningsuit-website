@@ -2,19 +2,13 @@
 import { defineConfig, fontProviders } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
+import { ANALYTICS } from "./src/config/analytics.mjs";
 // Tailwind v4 uses the established PostCSS integration (postcss.config.mjs).
 // Astro 6.4.8 resolves Vite; the earlier rolldown-vite compatibility workaround
 // no longer describes its bundler. The PostCSS integration stays unchanged.
 
-// Cookieless analytics (Umami Cloud). MUST match `ANALYTICS.enabled` in
-// src/config/site.ts. The CSP permits only the two provider hosts: the script
-// is served from cloud.umami.is but its event beacon POSTs to
-// gateway.umami.is/api/send (the script's built-in default endpoint), so
-// script-src and connect-src name different hosts. Swap both for a
-// self-hosted/proxied first-party endpoint to avoid the third party entirely.
-const ANALYTICS_ENABLED = true;
-const ANALYTICS_SCRIPT_HOST = "https://cloud.umami.is";
-const ANALYTICS_BEACON_HOST = "https://gateway.umami.is";
+// The tracker tag and its CSP permissions share one analytics configuration.
+const analyticsScriptHost = new URL(ANALYTICS.scriptSrc).origin;
 
 // https://astro.build/config
 export default defineConfig({
@@ -49,24 +43,26 @@ export default defineConfig({
     "/blog/burningsuit-featured-microsoft-business-applications-summit": "/about/",
     // "Power BI in practice" archive → the case-study index
     "/category/power-bi-in-practice": "/work/",
-    // Old offer pages → their successors ("done with you" absorbed training)
+    // Old offer pages → their successors. Since the 27 Oct 2026 training-first
+    // revamp, course and training-offer URLs lead to /training/; consultancy
+    // URLs keep /power-bi/.
     "/our-power-bi-consultancy": "/power-bi/",
-    "/microsoft-training/custom-training": "/power-bi/",
-    "/who-we-are/how-we-train": "/power-bi/",
+    "/microsoft-training/custom-training": "/training/",
+    "/who-we-are/how-we-train": "/training/",
     // Contact intent → the page that ends in the person + contact paths
     "/contact": "/about/",
     // Second sweep (GSC impressions, 2026-07-22 — the pre-relaunch URL-prefix
     // property still held 90 days of history). Training-era offer pages →
-    // /power-bi/ ("done with you" absorbed training); people/contact → /about/;
+    // /training/ (repointed 27 Oct 2026); people/contact → /about/;
     // case-study archive → /work/; legal → /privacy/.
-    "/fully-flexible-training-dax-skills": "/power-bi/",
-    "/fully-flexible-training-dax-skills/our-courses-power-bi-training": "/power-bi/",
+    "/fully-flexible-training-dax-skills": "/training/",
+    "/fully-flexible-training-dax-skills/our-courses-power-bi-training": "/training/",
     "/fully-flexible-training-dax-skills/our-courses-power-bi-training/3-power-bi-advanced":
-      "/power-bi/",
+      "/training/",
     "/fully-flexible-training-dax-skills/our-courses-power-bi-training/10-power-bi-dax-fundamentals":
-      "/power-bi/",
+      "/training/",
     "/fully-flexible-training-dax-skills/our-courses-power-bi-training/11-power-bi-dax-advanced":
-      "/power-bi/",
+      "/training/",
     "/experts-microsoft-consultancy-and-training-burningsuit": "/power-bi/",
     "/team-member/alan-harman-box": "/about/",
     "/get-in-touch": "/about/",
@@ -77,14 +73,14 @@ export default defineConfig({
     // Third sweep (2026-07-22): URLs still in Google's index or linked from
     // live Google Business Profile listings.
     "/get-touch": "/about/",
-    "/power-bi-training": "/power-bi/",
-    "/training/expert-power-bi-training": "/power-bi/",
-    "/who-we-are/person-power-bi-training": "/power-bi/",
-    "/who-we-are/how-we-train/online-powerbi-training": "/power-bi/",
+    "/power-bi-training": "/training/",
+    "/training/expert-power-bi-training": "/training/",
+    "/who-we-are/person-power-bi-training": "/training/",
+    "/who-we-are/how-we-train/online-powerbi-training": "/training/",
     "/who-we-are/our-clients": "/work/",
     // Fourth sweep (Plausible 404 events, 2026-07-16 → 2026-08-10): every real
-    // content URL visitors actually hit. All technique/training-era pages, so
-    // /power-bi/ is the topical successor throughout; /blog was the old index.
+    // content URL visitors actually hit. Technique pages go to /power-bi/ and the
+    // one course URL to /training/; /blog was the old index.
     "/blog": "/power-bi/",
     "/blog/i-have-powerquery-using-power-query-call-rest-apis": "/power-bi/",
     "/blog/categorising-measures-numeric-ranges-or-bins": "/power-bi/",
@@ -95,7 +91,7 @@ export default defineConfig({
     "/blog/using-continuous-x-axis-column-charts-year-and-month-labels": "/power-bi/",
     "/power-bi-composite-models-whats-the-big-deal": "/power-bi/",
     "/7-secrets-of-the-matrix-visual": "/power-bi/",
-    "/training/power-bi-training/power-bi-fundamentals": "/power-bi/",
+    "/training/power-bi-training/power-bi-fundamentals": "/training/",
     // Fifth sweep (Plausible 404 events, 2026-08-10 → 2026-08-13): five legacy
     // content URLs that surfaced only after sweep 4 shipped. All Power BI /
     // Charticulator-era pages (incl. the book page and a WP-slug variant of the
@@ -104,13 +100,13 @@ export default defineConfig({
     "/blog/2021/06/charticulator-in-power-bi-1": "/power-bi/",
     "/charticulator-in-power-bi-1": "/power-bi/",
     "/our-book-introducing-charticulator-for-power-bi": "/power-bi/",
-    "/power-bi-training/power-bi-fundamentals": "/power-bi/",
+    "/power-bi-training/power-bi-fundamentals": "/training/",
     // Sixth sweep (Search Console impressions 2026-07-16 → 2026-09-13, plus
     // one external forward): the only legacy course URL Google still shows,
     // and the old trainers page that a sister domain's web-forward still
     // points at. The Umami 404 log's other legacy slugs were crawler traffic
     // with no search impressions, so they stay 404.
-    "/power-bi-training/power-bi-advanced": "/power-bi/",
+    "/power-bi-training/power-bi-advanced": "/training/",
     "/about-us/our-trainers": "/about/",
   },
   build: {
@@ -185,13 +181,15 @@ export default defineConfig({
         "img-src 'self' data:",
         "font-src 'self'",
         "base-uri 'self'",
-        "form-action 'none'",
-        ...(ANALYTICS_ENABLED
-          ? [/** @type {`connect-src${string}`} */ (`connect-src ${ANALYTICS_BEACON_HOST}`)]
+        // The essays' inline Kit form (KIT_ESSAY_FORM_ACTION) is the site's
+        // only form.
+        "form-action https://app.kit.com",
+        ...(ANALYTICS.enabled
+          ? [/** @type {`connect-src${string}`} */ (`connect-src ${ANALYTICS.beaconHost}`)]
           : []),
       ],
       scriptDirective: {
-        resources: ["'self'", ...(ANALYTICS_ENABLED ? [ANALYTICS_SCRIPT_HOST] : [])],
+        resources: ["'self'", ...(ANALYTICS.enabled ? [analyticsScriptHost] : [])],
       },
       styleDirective: { resources: ["'self'"] },
     },

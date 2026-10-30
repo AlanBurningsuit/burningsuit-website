@@ -81,6 +81,18 @@ if (document.querySelector("[data-track-404]")) {
    are visible only here. New-tab links, so no navigation race. ---- */
 document.addEventListener("click", (e) => {
   const el = e.target as Element | null;
+  /* A page's ask names its own event (asks.ts renders data-track and
+     data-placement): "101 booking click", "101 interest click" and "Enquiry
+     click". It wins over the href rules below, so an enquiry mailto isn't
+     also an "Email click", and the 101's booking stays its own event wherever
+     its link points. The free hour keeps the href rule and its "Booking
+     click" name, for the dashboard's history. */
+  const asked = el?.closest?.<HTMLElement>("[data-track]");
+  if (asked?.dataset.track) {
+    const placement = asked.dataset.placement;
+    track(asked.dataset.track, placement ? { placement } : undefined);
+    return;
+  }
   if (el?.closest?.('a[href^="mailto:"]')) {
     track("Email click");
   }
@@ -89,12 +101,24 @@ document.addEventListener("click", (e) => {
     const placement = new URL((book as HTMLAnchorElement).href).searchParams.get("utm_content");
     track("Booking click", placement ? { placement } : undefined);
   }
-  // Notes signup links (notesHref in site.ts) follow the same pattern.
+  // Notes signup links (notesHref in site.ts; now only the archived post)
+  // follow the same pattern.
   const notes = el?.closest?.('a[href^="https://burningsuit.kit.com/"]');
   if (notes) {
     const placement = new URL((notes as HTMLAnchorElement).href).searchParams.get("utm_content");
     track("Notes click", placement ? { placement } : undefined);
   }
+});
+
+/* ---- signup tracking: the essays' inline Kit form (EssayLayout) is a plain
+   POST that navigates to Kit, so the event fires on submit, before the page
+   unloads; the tracker's beacon survives navigation. Only a submit the
+   browser accepted fires (required/type="email" validation runs first). ---- */
+document.addEventListener("submit", (e) => {
+  const form = (e.target as Element | null)?.closest?.<HTMLFormElement>("form[data-track-form]");
+  if (!form?.dataset.trackForm) return;
+  const placement = form.dataset.placement;
+  track(form.dataset.trackForm, placement ? { placement } : undefined);
 });
 
 /* ---- study-read tracking: a case study counts as READ when its closing

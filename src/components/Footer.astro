@@ -2,41 +2,64 @@
 /**
  * The document's final contact section stays in flow. With normal motion and
  * JavaScript it reveals beneath main; focus returns it to its natural position.
- * The invitation line + face chip, then the two contact actions side by
- * side (primary "Book an hour", ghost "Email me", as in the hero), the
- * plain © line, and the full-width lockup signing the page.
+ * The invitation line + face chip, then the page's ask (asks.ts) as the
+ * primary button, with a ghost email link beside it only when it serves the
+ * same ask: another way to start the free-hour conversation, or the invoice
+ * route for a 101 seat once seats are booked by card. Then the plain © line
+ * and the full-width lockup signing the page. The free-hour explainer link
+ * shows only where the free hour is the ask, and the Notes signup lives on
+ * essays, never here.
  *
  * The invitation line is a named slot so each page can supply its own CTA copy
  * while keeping the chip + period consistent. Default = the homepage line.
  */
 import FaceChip from "./FaceChip.astro";
 import Signoff from "./Signoff.astro";
-import { bookingHref, mailtoFor, notesHref } from "../config/site";
+import { mailtoFor } from "../config/site";
+import { askLink, invoice101Href, type PageAsk } from "../config/asks";
 interface Props {
+  ask: PageAsk;
   /** The mailto (with optional prefilled ?subject=) built per-page in
    *  BaseLayout; defaults to a bare mailto. */
   mailtoHref?: string;
 }
-const { mailtoHref = mailtoFor() } = Astro.props;
+const { ask, mailtoHref = mailtoFor() } = Astro.props;
+const action = askLink(ask, "footer");
+const email =
+  ask === "hour" ? { href: mailtoHref, label: "Email me" }
+  : ask === "book-101" && action.external ? { href: invoice101Href, label: "Paying by invoice? Email me" }
+  : undefined;
+// The heading names the ask when the button doesn't start a conversation:
+// card booking for the 101, or Home's route to the 101's page.
+const heading =
+  ask === "book-101" && action.external ? { before: "Book a ", em: "seat" }
+  : ask === "see-101" ? { before: "Start with the ", em: "101" }
+  : { before: "Let's ", em: "talk" };
 ---
 <footer aria-labelledby="talk-h">
   <div class="wrap outro">
-    <h2 id="talk-h">Let's <em>talk</em>.</h2>
+    <h2 id="talk-h">{heading.before}<em>{heading.em}</em>.</h2>
     <p class="sub">
       <slot name="invitation"
         >Tell me what your team is wrestling with. Replies come from me</slot
       > <FaceChip loading="lazy" />.
     </p>
     <div class="cta-row cta-footer">
-      <a class="cta" href={bookingHref("footer")} target="_blank" rel="noopener noreferrer"
-        >Book an hour</a
-      >
-      <a class="cta ghost" href={mailtoHref}>Email me</a>
+      <a
+        class="cta"
+        href={action.href}
+        target={action.external ? "_blank" : undefined}
+        rel={action.external ? "noopener noreferrer" : undefined}
+        data-track={action.event}
+        data-placement={action.event && "footer"}
+      >{action.label}</a>
+      {email && <a class="cta ghost" href={email.href}>{email.label}</a>}
     </div>
-    <p class="routes hour-link">
-      <a class="route" href="/hour/">What happens in the free hour?</a>
-      <a class="route" href={notesHref("footer")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>
-    </p>
+    {ask === "hour" && !Astro.url.pathname.startsWith("/hour") && (
+      <p class="routes hour-link">
+        <a class="route" href="/hour/">What happens in the free hour?</a>
+      </p>
+    )}
     <Signoff />
     <p class="legal">
       Burningsuit Limited is a limited company registered in England &amp; Wales&NewLine;Registered number: 05738130 &middot; Registered office: The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN &middot; &copy; 2026 &middot; <a href="/privacy">Privacy</a>{

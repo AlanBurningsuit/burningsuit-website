@@ -1,6 +1,4 @@
-// Tailwind v4 via PostCSS. Used instead of @tailwindcss/vite because the Vite
-// plugin is incompatible with Astro 6's default rolldown-vite
-// (withastro/astro#16542). Same engine and same CSS-first config.
+// Tailwind v4 uses PostCSS with the CSS-first config in src/styles/.
 export default {
   plugins: {
     "@tailwindcss/postcss": {},

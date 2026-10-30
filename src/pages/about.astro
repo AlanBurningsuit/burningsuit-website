@@ -1,5 +1,10 @@
 ---
-/** About Alan, with the talk, family origin and dog photographs. */
+/**
+ * About Alan, with the talk, family origin and dog photographs. Written to
+ * the website-page playbook: About is where Alan speaks most as himself, in
+ * the talking register, with claims kept to the ledger's facts, and it ends
+ * with the routes, plainly: the 101, the courses, the free hour.
+ */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Signoff from "../components/Signoff.astro";
 import { Picture } from "astro:assets";
@@ -11,20 +16,23 @@ const contactSubject = "Hello";
 ---
 
 <BaseLayout
-  title="About - burningsuit: Power BI, Fabric & AI for everyone else"
-  description="I'm Alan Harman-Box, the person behind burningsuit. I work alongside Power BI and Fabric teams, with a particular interest in what AI changes about responsibility."
+  title="About Alan Harman-Box - burningsuit"
+  description="I'm Alan Harman-Box, and burningsuit is me. I teach Power BI and AI to people whose job isn't Power BI or AI, and work alongside teams on their own reports."
   contactSubject={contactSubject}
 >
   <Fragment slot="footer-invitation"
-    >If any of this sounds like the kind of thing you're dealing with, I'd
-    genuinely like to hear about it</Fragment
+    >If it's your own reports you're stuck on, I'd like to hear about it</Fragment
   >
 
   <section class="page-hero">
     <div class="wrap">
-      <h1 class="enter appear-300">Power BI and AI - for everyone <em>else</em>.</h1>
+      <h1 class="enter appear-300">Power BI and AI for everyone <em>else</em>.</h1>
       <p class="lead enter appear-450">
-        I'm Alan, and burningsuit is me. There's a lot of noise about AI and Power BI at the moment, and most of it feels aimed at the people who are already knee-deep in 'agents'. I'm interested in everyone else - the people who just want to get their job done well and would rather not have to turn into a nerd to do it. Which is fine by me - I'm more than happy to be the nerd in the room, so you don't have to.
+        I'm Alan Harman-Box, and burningsuit is me. I teach Power BI and AI to people whose job isn't Power BI or AI, and I work alongside teams on their own reports.
+      </p>
+      {/* ALAN: your own words, lightly tidied; check they still sound like you. */}
+      <p class="lead enter appear-450">
+        There's a lot of noise about AI and Power BI at the moment, and most of it is aimed at people who are already knee-deep in AI agents. I'm interested in everyone else: the people who want to do their job well and would rather not turn into a nerd to do it. That's fine by me. I'm happy to be the nerd in the room so you don't have to be.
       </p>
     </div>
   </section>
@@ -36,18 +44,11 @@ const contactSubject = "Hello";
       <h2 class="section-head" id="capable" data-reveal>I start from what people can do</h2>
       <div class="prose">
         <p data-reveal>
-          I've got a fairly stubborn belief that, with the right instruction and
-          a bit of encouragement, almost anyone can learn almost anything - so I
-          won't turn up assuming a team's behind, or that the people are the
-          problem. Most of the teams I meet are more capable than they've been
-          given credit for; they're just busy with the day job, a bit wary of
-          the latest thing, and short on someone to think it through with.
+          I have a stubborn belief that, with the right teaching and a bit of encouragement, almost anyone can learn almost anything. So I don't turn up assuming a team is behind, or that the people are the problem. Most teams I meet are more capable than they've been given credit for. They're busy with the day job, wary of the latest thing, and short of someone to think it through with.
         </p>
         <p data-reveal>
-          There is more about <a href="/power-bi/">how I work with teams on their reporting</a>. If you'd sooner see the results, there are <a href="/work/">a few case studies</a>. And I'm on
-          <a href="https://www.linkedin.com/in/alan-harman-box"
-          target="_blank" rel="noopener noreferrer">LinkedIn</a>, if that's
-          where you check people out.
+          If you'd like to see the work, there are <a href="/work/">a few case studies</a>, written up without naming anyone. And I'm on <a href="https://www.linkedin.com/in/alan-harman-box"
+          target="_blank" rel="noopener noreferrer">LinkedIn</a>, if that's where you check people out.
         </p>
       </div>
     </div>
@@ -55,21 +56,21 @@ const contactSubject = "Hello";
 
   <section class="chapter" aria-labelledby="human">
     <div class="wrap">
-      <h2 class="section-head" id="human" data-reveal>The part that isn't really technical</h2>
+      <h2 class="section-head" id="human" data-reveal>The part that isn't technical</h2>
       <div class="prose">
         <p data-reveal>
-          The nuts and bolts of Power BI I can do, and I've done it a long time. But that's honestly not usually the thing that makes the difference. It's much more about whether people who are busy, and a bit sceptical, actually feel like having a go - and whether, by the end, your team reckons I get how they work, rather than someone turning up to tell them they've been doing it wrong. That's really the part I care about getting right.
+          I can do the nuts and bolts of Power BI. But that's rarely what makes the difference. What matters more is whether people who are busy, and a bit sceptical, feel like having a go, and whether your team ends up thinking I understand how they work, rather than that someone turned up to tell them they've been doing it wrong.
         </p>
         <p data-reveal>
-          I've spent about five years working with organisations getting to grips with Power BI and Fabric, and before that a decade or so in software delivery. I also give a talk at a few user groups, called <a href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>, about being responsible for work you've handed off to something that can't be held responsible for it. The thing that's stuck with me through all of it is that these projects mostly succeed or fail on the people side, well before the technology really comes into it.
+          I've spent about 5 years working with organisations getting to grips with Power BI and Microsoft Fabric, and a decade or so before that in software delivery: large systems, some of it for government. I've also given a talk called <a href="/writing/we-are-all-middle-management-now/">We're all middle management now</a> at the Bristol and Manchester Power BI user groups and at DataSwindon. It's about being responsible for work you've handed to something that can't be held responsible for it. What's stuck with me through all of it is that these projects succeed or fail on the people side, well before the technology comes into it.
         </p>
-        {/* The talk the paragraph above names, as it actually happens —
+        {/* The talk the paragraph above names, as it actually happens:
             evidence beside its claim. Clearance row in the ops ledger. */}
         <figure class="figure-inset" data-reveal-fig>
           <div class="ph">
             <Picture
               src={mmnTalk}
-              alt="Alan giving the 'we're all middle management now' talk at a user group, the title slide up beside him"
+              alt="Alan giving his talk We're all middle management now at a user group, the title slide up beside him"
               formats={["avif"]}
               fallbackFormat="webp"
               widths={[700, 1050, 1400]}
@@ -78,7 +79,7 @@ const contactSubject = "Hello";
               loading="lazy"
             />
           </div>
-          <figcaption class="ph-note">The talk, live - we're all middle management now</figcaption>
+          <figcaption class="ph-note">The talk, live: We're all middle management now</figcaption>
         </figure>
       </div>
     </div>
@@ -89,23 +90,16 @@ const contactSubject = "Hello";
       <h2 class="section-head" id="origin" data-reveal>Where burningsuit comes from</h2>
       <div class="prose">
         <p data-reveal>
-          burningsuit was my parents' Power BI training business. They handed it
-          over and they're properly retired now, so it's me. I've
-          taken it somewhere a bit different from where it started - these days
-          it's more about advising and designing alongside teams than running
-          courses - but the reason it exists hasn't really changed.
+          burningsuit was my parents' Power BI training business. Stuart and Alison handed it over, and they're properly retired now, so it's me. Teaching is still at the heart of it: I run courses, and I work alongside teams on their own reports. The reason it exists hasn't changed.
         </p>
         <p data-reveal>
-          As my mum said, burningsuit was for "everyone else" - normal people,
-          basically. Not the nerds, not the people who are always online
-          performing their work - just someone trying to get a job done. And
-          that's still the focus.
+          As my mum put it, burningsuit was for "everyone else". She meant normal people trying to get a job done: not the nerds, and not the ones who are always online performing their work. That's still who it's for.
         </p>
         <figure class="figure-inset" data-reveal-fig>
           <div class="ph">
             <Picture
               src={parents}
-              alt="Stuart and Alison, who ran burningsuit before Alan, at a laptop together - Alison pointing at the screen"
+              alt="Stuart and Alison, who ran burningsuit before Alan, at a laptop together, Alison pointing at the screen"
               formats={["avif"]}
               fallbackFormat="webp"
               widths={[700, 1050, 1400]}
@@ -114,7 +108,7 @@ const contactSubject = "Hello";
               loading="lazy"
             />
           </div>
-          <figcaption class="ph-note">Stuart &amp; Alison - the original Power BI people</figcaption>
+          <figcaption class="ph-note">Stuart and Alison, who ran burningsuit before me</figcaption>
         </figure>
       </div>
     </div>
@@ -125,10 +119,7 @@ const contactSubject = "Hello";
       <h2 class="section-head" id="dog" data-reveal>And the dog</h2>
       <div class="prose">
         <p data-reveal>
-          Last thing: this is Zelda, who I'm told is Chief Morale Officer. She's
-          no use at all with the DAX, but she's very good at making me get up and
-          go outside now and then, which honestly does more for the work than
-          you'd think.
+          This is Zelda, who I'm told is Chief Morale Officer. She's no use at all with the DAX, but she's very good at making me get up and go outside now and then, which does more for the work than you'd think.
         </p>
         <figure class="figure-inset" data-reveal-fig>
           <div class="ph">
@@ -145,8 +136,21 @@ const contactSubject = "Hello";
           </div>
           <figcaption class="ph-note">Chief Morale Officer, on duty</figcaption>
         </figure>
-        <Signoff reveal />
       </div>
+    </div>
+  </section>
+
+  {/* The routes About ends with (website-page playbook): written out, not a
+      chapter's reveal-gated prose, so the links never wait on an entrance. */}
+  <section class="chapter" aria-labelledby="next">
+    <div class="wrap">
+      <h2 class="section-head" id="next" data-reveal>Where to go from here</h2>
+      <ul class="routes routes-stack">
+        <li><a class="route" href="/training/agentic-101/">Agentic development for Power BI 101: half a day on handing Power BI work to an AI agent</a></li>
+        <li><a class="route" href="/training/">Private courses for teams, in Power BI and AI</a></li>
+        <li><a class="route" href="/hour/">A free hour on a call, if it's your own reports</a></li>
+      </ul>
+      <Signoff reveal />
     </div>
   </section>
 

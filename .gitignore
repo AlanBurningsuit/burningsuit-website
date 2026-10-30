@@ -13,11 +13,8 @@ test-results/
 .release-review/
 .review-pass/
 
-# design + source material — kept on disk locally, not tracked in the repo.
-# The built site only needs the optimised derivatives already committed under
-# src/assets; resources/ is the raw archive that prep-images.mjs draws from.
+# design/ is a local junction into the private ops repo; never tracked here.
 design/
-resources/
 
 # os / editor cruft
 .DS_Store
@@ -34,6 +31,8 @@ skills-lock.json
 # lowercase-only entry would let `git add .` stage CLAUDE.md there)
 CLAUDE.md
 claude.md
+AGENTS.md
+agents.md
 Burningsuit Brand Guidelines V1.pdf
 .agents/
 .claude/

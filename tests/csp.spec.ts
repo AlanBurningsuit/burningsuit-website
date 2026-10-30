@@ -13,6 +13,8 @@ import { ANALYTICS } from "../src/config/site";
 const pages = [
   "/",
   "/writing/we-are-all-middle-management-now/", "/hour/",
+  "/training/",
+  "/training/agentic-101/",
   "/power-bi/",
   "/about/",
   "/work/",
@@ -59,6 +61,8 @@ for (const path of pages) {
     expect(csp).toMatch(/script-src[^;]*'self'/);
     expect(csp).toMatch(/script-src[^;]*https:\/\/cloud\.umami\.is/);
     expect(csp).toMatch(/connect-src[^;]*https:\/\/gateway\.umami\.is/);
+    // The essays' inline Kit form is the only form the policy allows.
+    expect(csp).toMatch(/form-action https:\/\/app\.kit\.com(;|$)/);
     expect(csp).toMatch(/style-src[^;]*'self'/);
 
     // The site id rides in the tag's data-website-id attribute — pin it to

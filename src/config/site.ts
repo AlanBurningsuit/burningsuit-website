@@ -21,9 +21,11 @@ export const BOOKING_URL = "https://cal.com/alan-burningsuit/hour";
  * `placement`. Existing UTM attribution and analytics events keep the same
  * location value. Merges cleanly if BOOKING_URL grows its own query string.
  *
- * Placements renamed on 2026-09-08: header, footer, home-hero,
+ * Placements renamed on 2026-09-08: header, footer, home-hero (retired
+ * 2026-10-27, when Home's hero began leading to /training/),
  * home-situations (when present), power-bi-hero, power-bi-pricing, hour-page,
- * work. Historical hero, home-proof and power-bi-engagement names apply only
+ * work. Since 29 Oct 2026 header and footer carry the free hour only on
+ * pages whose ask it is (asks.ts). Historical hero, home-proof and power-bi-engagement names apply only
  * before this date. Study-read events retain their per-study URL identity.
  */
 export function bookingHref(src?: string): string {
@@ -33,50 +35,44 @@ export function bookingHref(src?: string): string {
   return `${BOOKING_URL}${sep}utm_source=burningsuit&utm_content=${placement}&placement=${placement}`;
 }
 
+/**
+ * How someone books a seat on the 101: a Stripe Payment Link (Alan, 29 Oct
+ * 2026), with a required "how did you hear about this?" question, created once
+ * the price is set. It must exist before the 1 Dec invitations. Undefined
+ * until then: the 101's ask falls back to an email about a seat, and no link
+ * points at a URL that doesn't exist yet. See askLink() in asks.ts.
+ */
+export const BOOKING_101_URL: string | undefined = undefined;
+
 /** The Kit signup page for "Notes from burningsuit". */
 export const NOTES_URL = "https://burningsuit.kit.com/";
 
 /**
+ * The inline signup form at the end of every essay posts here, as a plain
+ * HTML form: no Kit script, no popup. It is Kit's "Website essays (inline)"
+ * form, created 29 Oct 2026 for essays only, so Kit's per-form report is the
+ * count of sign-ups from essays. Allowed by the CSP's form-action.
+ */
+export const KIT_ESSAY_FORM_ACTION = "https://app.kit.com/forms/10117647/subscriptions";
+
+/**
  * Notes signup link tagged with the link location in `utm_content`, so Kit's
  * subscriber source and the "Notes click" event share one placement value.
- * Placements: footer, essay, archive.
+ * Placements: archive (the restored 2021 post). Before 29 Oct 2026 also
+ * footer and essay, which became the essays' inline form (asks.ts).
  */
 export function notesHref(src: string): string {
   return `${NOTES_URL}?utm_source=burningsuit&utm_content=${encodeURIComponent(src)}`;
 }
 
-/** Build a mailto with an optional prefilled subject (mirrors BaseLayout). */
+/** Build a mailto with an optional prefilled subject. */
 export function mailtoFor(subject?: string): string {
   return subject
     ? `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`
     : `mailto:${CONTACT_EMAIL}`;
 }
 
-/**
- * Cookieless Umami Cloud analytics (replaced Plausible, 2026-08-19). The
- * matching `ANALYTICS_ENABLED` flag in astro.config.mjs must stay enabled so
- * both provider hosts remain in the CSP — the script host (cloud.umami.is) in
- * script-src and the beacon host (gateway.umami.is, where the tracker POSTs
- * /api/send) in connect-src. The tracker auto-tracks pageviews on load and
- * needs no init call or inline snippet; the site id rides in the tag's
- * data-website-id attribute. Custom events go through `umami.track()` in
- * enhance.ts. Visitors can exclude themselves via the `umami.disabled`
- * localStorage flag (the /privacy opt-out toggle).
- *
- * `domains` rides in the tag's data-domains attribute: the tracker compares
- * it with window.location.hostname and stays silent anywhere else, so the
- * dev server, Playwright runs and Netlify previews stop reporting into the
- * live dashboard (a 2026-09 export was 92% localhost). `performance` sets
- * data-performance, which adds Core Web Vitals (LCP/INP/CLS/FCP/TTFB) to the
- * pageview beacon; those columns were empty without it.
- */
-export const ANALYTICS = {
-  enabled: true,
-  scriptSrc: "https://cloud.umami.is/script.js",
-  websiteId: "7a27ff45-e9ce-4aec-8940-260c61c35dff",
-  domains: "burningsuit.co.uk,www.burningsuit.co.uk",
-  performance: true,
-} as const;
+export { ANALYTICS } from "./analytics.mjs";
 
 /* ------------------------------------------------------------------ *
  * SEO / structured-data identity — the single source of truth for the
@@ -103,7 +99,7 @@ export const ORG_PROFILES = [
 /** The Organization's description. Distinct from a page's
  *  meta description, which each page writes for itself. */
 export const ORG_DESCRIPTION =
-  "Alan Harman-Box works alongside Power BI and Fabric teams so they can take ownership of their reporting.";
+  "Alan Harman-Box teaches Power BI and AI to people whose job isn't Power BI or AI, and works alongside teams on their own Power BI reports and models as a consultant.";
 
 /** Postal identity (no street — area-served advisory, not a storefront). */
 export const ORG_ADDRESS = {
@@ -123,13 +119,19 @@ export const ORG_LEGAL = {
   companyNumber: "05738130",
 } as const;
 
-/** The advisory's areas of work — used as Organization `knowsAbout`. (We model
- *  the business as schema.org Organization, not the now-discouraged generic
- *  ProfessionalService type; see burningsuit-schema-templates.) */
+/** The business's areas of work — used as Organization `knowsAbout`. Training
+ *  leads since the 27 Oct 2026 revamp; "Power BI training" matches the Google
+ *  Business Profile's service name. Named in the brand lexicon's words
+ *  (consultancy, not advisory); Fabric work is advice, never build or
+ *  migration (claims ledger). (We model the business as schema.org
+ *  Organization, not the now-discouraged generic ProfessionalService type;
+ *  see burningsuit-schema-templates.) */
 export const SERVICE_AREAS = [
-  "Power BI advisory",
-  "Microsoft Fabric advisory",
-  "AI advisory for data teams",
+  "Power BI training",
+  "AI training for teams",
+  "Agentic development for Power BI",
+  "Power BI consultancy",
+  "Microsoft Fabric advice",
 ] as const;
 
 /**
@@ -142,9 +144,9 @@ export const SERVICE_AREAS = [
  */
 export const FOUNDER = {
   name: "Alan Harman-Box",
-  // Mirrors the visible ranking (owner call, 2026-07-02): Power BI & Fabric are
-  // the front door; AI stays in knowsAbout/SERVICE_AREAS (ordered last).
-  jobTitle: "Power BI & Fabric advisor",
+  // Mirrors the visible ranking since the 27 Oct 2026 training-first revamp:
+  // training leads, consultancy sits behind it.
+  jobTitle: "Power BI and AI trainer and consultant",
   knowsAbout: [
     "Power BI",
     "Microsoft Fabric",
@@ -153,6 +155,7 @@ export const FOUNDER = {
     "semantic models",
     "Power BI governance",
     "AI for data teams",
+    "agentic development for Power BI",
   ],
   /** Owner-supplied, confirmed. Empty = omit. */
   sameAs: ["https://www.linkedin.com/in/alan-harman-box"] as string[],

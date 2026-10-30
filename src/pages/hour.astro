@@ -1,4 +1,11 @@
 ---
+/**
+ * /hour: the free hour, consultancy's ask, written to the website-page
+ * playbook: what happens in the hour, who it's for and what they'll leave
+ * with, then one action, book the hour. It never mentions courses. The whole
+ * offer and its contact actions fit the first desktop screen (journeys test),
+ * so keep it short.
+ */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import BookCta from "../components/BookCta.astro";
 import { mailtoFor } from "../config/site";
@@ -7,20 +14,20 @@ const contactSubject = "What our reporting can't do yet";
 const contactMailto = mailtoFor(contactSubject);
 ---
 
-<BaseLayout title="Tell me what your reporting can't do (yet) - burningsuit" description="A free hour on a call with Alan Harman-Box to get you unstuck: where the reporting has stalled, what kind of problem it is, and what to do next. Nothing to show, nothing to diagnose first." contactSubject={contactSubject}>
-  <Fragment slot="footer-invitation">Or just write to me about whatever you're stuck on. Replies come from me</Fragment>
+<BaseLayout title="A free hour on a call about your Power BI reporting - burningsuit" description="A free hour on a call with me, Alan Harman-Box, for when your own Power BI reports or models are stuck: you describe it, I ask, and you leave knowing what kind of problem it is and what to do next." contactSubject={contactSubject}>
+  <Fragment slot="footer-invitation">Or just write to me about the report you're stuck on. Replies come from me</Fragment>
   <section class="page-hero hour-hero">
     <div class="wrap hour-layout">
       <div class="hour-copy">
-      <h1 class="enter appear-300">Tell me what your reporting can't do (<em>yet</em>).</h1>
-      <p class="lead enter appear-450">Let's get you unstuck on whatever you're stuck on. It's an hour on a call, it's free, and you don't need to have worked out what's wrong before we talk. You tell me where the reporting has ground to a halt, or what the team keeps not quite managing to do, and I'll help you work out what kind of stuck it is - a scope problem, a skills problem, or something else entirely - and what a sensible next step looks like. You don't need to show me anything, either.</p>
+      <h1 class="enter appear-300">A free hour on a call, for when your Power BI reporting is <em>stuck</em>.</h1>
+      <p class="lead enter appear-450">Tell me what your reporting can't do (yet). It might be a report only one person can change, or numbers nobody trusts. You don't need to have worked out what's wrong, and you don't need to show me anything.</p>
       </div>
       <div class="hour-details">
       <div class="prose">
         <ol class="beats beats-body">
-          <li><strong>Before:</strong> book a slot and spend five minutes on the form: “What would you like to talk through?” and, if you can, “What's been tried so far, and by whom?” It means we can skip the preamble.</li>
-          <li><strong>During:</strong> we talk for up to an hour. You describe, I ask, and between us we work out which kind of stuck this is. If that's clear in twenty minutes, you get the rest of your hour back.</li>
-          <li><strong>After:</strong> you leave knowing what to do next. Sometimes that involves me and sometimes it doesn't, and I'll tell you straight either way.</li>
+          <li><strong>Before:</strong> when you book, the form asks 2 questions: "What would you like to talk through?" and, if you can, "What's been tried so far, and by whom?" Spending 5 minutes on them means we can skip the preamble.</li>
+          <li><strong>During:</strong> we talk for up to an hour. You describe, I ask, and between us we work out what kind of stuck it is. If that's clear in 20 minutes, you get the rest of your hour back.</li>
+          <li><strong>After:</strong> you leave knowing what kind of stuck it is and what to do next. If that involves me, I'll quote one fixed price for the work; if it doesn't, I'll tell you straight.</li>
         </ol>
       </div>
       <BookCta src="hour-page" mailtoHref={contactMailto} variant="hero" />

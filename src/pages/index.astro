@@ -1,47 +1,74 @@
 ---
+/**
+ * Home, written to the website-page playbook: what burningsuit is and who
+ * it's for, the way in (the 101) high on the page, the courses by what the
+ * reader wants to be able to do, consultancy as its own section with its own
+ * route, then proof, the statement and who's behind it. Home routes rather
+ * than converts: one route per section, each to the page that converts.
+ *
+ * Proof stays with consultancy, whose case studies it is. The law-firm study
+ * isn't shown here because the statement links the essay, and the claims
+ * ledger keeps the two apart.
+ */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import RiseHeading from "../components/RiseHeading.astro";
 import Chapter from "../components/Chapter.astro";
 import ServiceRows from "../components/ServiceRows.astro";
 import Exhibit from "../components/Exhibit.astro";
+import DoorRow from "../components/DoorRow.astro";
 import type { RowData } from "../components/ServiceRow.astro";
 import StatementChapter from "../components/StatementChapter.astro";
 import PhotoChapter from "../components/PhotoChapter.astro";
 import AboutTeaser from "../components/AboutTeaser.astro";
-import BookCta from "../components/BookCta.astro";
 import type { Line } from "../components/RiseHeading.astro";
 import { Picture } from "astro:assets";
 import heroPhoto from "../assets/photos/DSC08670-Edit.jpg";
-import { mailtoFor } from "../config/site";
+import { askLink } from "../config/asks";
+import { PILOT_101 as pilot, course, priceFor } from "../config/training";
 
-const contactSubject = "Power BI & Fabric";
-const contactMailto = mailtoFor(contactSubject);
-const heroLines: Line[] = ["Power BI your", { before: "team can ", em: "own", after: "." }];
-const evidenceRows: RowData[] = [
-  { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "A team lead had stalled when she tried Power BI on her own data. In one of our sessions, she reached for the right function before I got there - she recognised it from Excel.", cta: "Read the contact-centre story" },
-  { href: "/work/law-firm/", tab: "An international law firm", title: { before: "They ", em: "own", after: " a system someone else built." }, body: "A consultancy built their Fabric system. I worked with the team while it was happening. By handover, they were tracing wrong numbers through the new stack and finding the likely cause themselves.", cta: "Read the law-firm story" },
+const contactSubject = "Power BI and AI training";
+const intro = course("agentic-101");
+const introPrice = priceFor("agentic-101");
+// Home leads with training and the 101 is the way in, but Home routes rather
+// than converts, so its ask is the 101's page (asks.ts, see-101).
+const way101 = askLink("see-101", "home-way-in");
+// Hand-split for the hero's 15ch measure. Check the hero height on preview.
+// A non-breaking space keeps "Power BI" on one line at 320px.
+const heroLines: Line[] = ["Power\u00a0BI and AI", "training for", { before: "everyone ", em: "else", after: "." }];
+const courseDoors: RowData[] = [
+  { href: "/training/#power-bi-courses", title: { before: "Power BI, from a first report to DAX you ", em: "understand", after: "." }, body: `${course("power-bi-fundamentals").title}, ${course("dax-fundamentals").title}, the ${course("dax-deep-dive").title} and ${course("data-modelling").title}. 1 or 2 days each, run privately for your team.`, cta: "See the Power BI courses" },
+  { href: "/training/#ai-at-work", title: { before: "Claude, at ", em: "work", after: "." }, body: `${course("claude-day-job").title}: a day for any role, with no technical background needed. ${course("claude-consultants").title}: a day on writing down a method so Claude and your colleagues can use it again.`, cta: "See the AI days" },
 ];
+const consultancyDoor: RowData = { href: "/power-bi/", title: { before: "When it's your own reporting ", em: "problem", after: "." }, body: "I work alongside your team on the real thing, a report to deliver or a system you've inherited, until they can carry on without me.", cta: "See how consultancy works" };
+// Each card's line is the study's own published outcome.
+const evidenceRows: RowData[] = [
+  { href: "/work/contact-centre/", tab: "A national contact centre", title: { before: "She built the dashboard ", em: "herself", after: "." }, body: "The Power BI courses she'd taken before stalled the moment she swapped the sample data for her own. With me coaching, she built a dashboard on her real data, and she looks after it herself now.", cta: "Read the contact-centre story" },
+  { href: "/work/carbon-footprint/", tab: "A UK university", title: { before: "One person's spreadsheets, now a model he can ", em: "run", after: "." }, body: "A university's carbon reporting lived in one person's spreadsheets. I rebuilt his method in Power BI and handed it over; the annual refresh now takes him under half a day.", cta: "Read the carbon-footprint story" },
+];
+// The point of view from the content strategy, in its own words.
 const statementLines: Line[] = [
-  "AI will build",
-  "whatever you ask.",
-  "Someone still has to",
-  { before: "know what to ask ", em: "for", after: "." },
+  "AI makes the",
+  "building cheap.",
+  "Agreeing what the",
+  "numbers mean is",
+  { before: "still the ", em: "job", after: "." },
 ];
 ---
 
-<BaseLayout title="Power BI your team can own - burningsuit" description="Alan Harman-Box works alongside teams on Power BI and Fabric. Find the help that fits your reporting, or bring the question to a free hour on a call." contactSubject={contactSubject}>
-  <Fragment slot="footer-invitation">Tell me what your Power BI or Fabric team is wrestling with, and where you'd like it to get to. Replies come from me</Fragment>
+<BaseLayout title="Power BI and AI training for everyone else - burningsuit" description="Power BI and AI training for people whose job isn't Power BI or AI. Start with a half-day 101 on handing Power BI work to an AI agent, then private courses for your team." contactSubject={contactSubject} ask="see-101">
+  <Fragment slot="footer-invitation">Half a day on handing Power BI work to an AI agent, taught by me</Fragment>
 
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <RiseHeading as="h1" kind="hero" label="Power BI your team can own." lines={heroLines} />
+        <RiseHeading as="h1" kind="hero" label="Power BI and AI training for everyone else." lines={heroLines} />
         <div class="hero-introduction enter appear-300">
-          <p>I'm Alan. I've worked alongside teams on Power BI and Fabric for the last five years, and spent a decade in software before that.</p>
-          <p class="hero-motivation">I don't just want your team to have a report that works. I want them to understand why it works, so they can question a number, or make changes with confidence.</p>
-          <p class="hero-invitation">We can start with <a href="/hour/">a free hour</a> to talk through what you're working on.</p>
+          <p>For people whose job isn't Power BI or AI, but who need them to get things done: the person the reports landed on, and the colleagues who want to hand AI a task and check what comes back.</p>
+          <p class="hero-motivation">I'm Alan Harman-Box. I teach the parts worth knowing for what you want to do, so your team can carry on without me.</p>
         </div>
-        <BookCta src="home-hero" mailtoHref={contactMailto} variant="hero" />
+        <div class="cta-row">
+          <a class="cta" href="/training/">See the courses</a>
+        </div>
       </div>
       <figure class="hero-photo enter appear-300"><Picture src={heroPhoto} alt="Alan, who runs burningsuit, sitting outdoors and smiling" formats={["avif"]} fallbackFormat="webp" widths={[400, 600, 800]} sizes="(min-width: 62rem) 40vw, 100vw" quality={66} loading="eager" fetchpriority="high" /></figure>
     </div>
@@ -49,34 +76,55 @@ const statementLines: Line[] = [
 
   <div class="thread thread-snug" data-reveal-raw aria-hidden="true"></div>
 
-  <section class="chapter" aria-labelledby="in-practice">
+  {/* Written out rather than a <Chapter>: the seat ask must sit outside the
+      reveal-gated prose (contact controls never wait on an entrance). */}
+  <section class="chapter" aria-labelledby="way-in">
     <div class="wrap">
-      <h2 class="section-head" id="in-practice" data-reveal>What that looks like in practice</h2>
-      <ServiceRows rows={evidenceRows} />
-      <Exhibit tab="Three systems, one model" caption="A museum's counters, tills and ticketing feed one shared model the team runs themselves.">
-        <div class="exhibit-flow">
-          <p>what the counters count</p>
-          <p>what the tills take</p>
-          <p>what the shop &amp; ticketing sell</p>
-          <p class="model">one shared model</p>
-        </div>
-      </Exhibit>
-      <div class="routes"><a class="route" href="/work/museum/">Read the museum story</a><a class="route" href="/work/">All four case studies</a></div>
+      <h2 class="section-head" id="way-in" data-reveal>Half a day for people who build in Power&nbsp;BI</h2>
+      <div class="prose" data-reveal>
+        <p><a href="/training/agentic-101/">{intro.title}</a> is a half-day course for people who build in Power BI but don't write code. An agent is an AI tool that makes a change itself and then shows you what it did. You'll ask one, in plain English, to change a report built for teaching, check what it did, and keep the decisions about what your numbers mean for yourself.</p>
+        <p class="offer-meta">A morning in {pilot.week} · {pilot.time} · runs with {pilot.minSeats} to {pilot.maxSeats} people · {introPrice ? `${introPrice} + VAT a seat, the founding rate` : "a founding rate for the first run"}</p>
+      </div>
+      <div class="routes"><a class="route" href={way101.href} data-track={way101.event} data-placement="home-way-in">More about the 101, and how to get a seat</a></div>
     </div>
   </section>
 
-  <Chapter id="situations" kicker="Help with the work in front of you">
-    <p>Where we start depends on what your people need to be able to do next.</p>
-    <ul class="routes routes-stack">
-      <li><a class="route" href="/power-bi/#deliver">Build and change your reporting</a></li>
-      <li><a class="route" href="/power-bi/#skills">Learn the why behind the how</a></li>
-      <li><a class="route" href="/power-bi/#handover">Understand a system you inherited</a></li>
-    </ul>
-    <p>If you're the one responsible but not the one building it, you can bring your own questions: a proposal to sign off, a hire to make, whether the team is ready to take a system over. <a href="/power-bi/#second-opinion">I'll be the second opinion you'd otherwise have to do without.</a></p>
-    <div class="routes"><a class="route" href="/hour/">Tell me what your reporting can't do (yet)</a></div>
+  <section class="chapter" aria-labelledby="courses">
+    <div class="wrap">
+      <h2 class="section-head" id="courses" data-reveal>Courses for your team</h2>
+      <div class="prose" data-reveal>
+        <p>Every course runs on examples and material built for teaching, so nobody needs to bring their own data. More courses on agents and Power BI are being written to follow the 101.</p>
+      </div>
+      <div class="doors">
+        {courseDoors.map((door, i) => <DoorRow {...door} variant={i === 0 ? "lead" : "second"} index={i} />)}
+      </div>
+      <div class="routes"><a class="route" href="/training/">All the courses, and how they run</a></div>
+    </div>
+  </section>
+
+  <Chapter id="consultancy" kicker="A course, or help with your own reporting?">
+    <p>I keep the two apart on purpose. A course teaches a skill, on material built to teach it. Consultancy solves a particular problem of yours, on your own reports and models: a number that doesn't look right, a report only one person can change, a system you've taken over from someone else.</p>
+    <div class="doors"><DoorRow {...consultancyDoor} /></div>
+    <p>If it's your own reporting, <a href="/hour/">tell me what your reporting can't do (yet)</a>. The first conversation is a free hour on a call.</p>
   </Chapter>
 
-  <StatementChapter label="AI will build whatever you ask. Someone still has to know what to ask for." lines={statementLines} linkHref="/writing/we-are-all-middle-management-now/" linkLabel="Read the essay" />
+  <section class="chapter" aria-labelledby="in-practice">
+    <div class="wrap">
+      <h2 class="section-head" id="in-practice" data-reveal>Consultancy, in practice</h2>
+      <ServiceRows rows={evidenceRows} />
+      <Exhibit tab="Three systems, one model" caption="A museum's counters, tills and ticketing feed one shared model the team runs themselves.">
+        <div class="exhibit-flow">
+          <p>What the counters count</p>
+          <p>What the tills take</p>
+          <p>What the shop &amp; ticketing sell</p>
+          <p class="model">One shared model</p>
+        </div>
+      </Exhibit>
+      <div class="routes"><a class="route" href="/work/museum/">Read the museum story</a><a class="route" href="/work/">All the case studies</a></div>
+    </div>
+  </section>
+
+  <StatementChapter label="AI makes the building cheap. Agreeing what the numbers mean is still the job." lines={statementLines} linkHref="/writing/we-are-all-middle-management-now/" linkLabel="Read the essay" />
   <PhotoChapter />
   <AboutTeaser />
   <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>

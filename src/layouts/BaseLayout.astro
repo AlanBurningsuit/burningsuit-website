@@ -14,7 +14,8 @@ import { Font } from "astro:assets";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Schema from "../components/seo/Schema.astro";
-import { CONTACT_EMAIL, ANALYTICS } from "../config/site";
+import { mailtoFor, ANALYTICS } from "../config/site";
+import type { PageAsk } from "../config/asks";
 import { siteGraph, type SchemaNode } from "../lib/schema";
 import "../styles/app.css";
 
@@ -49,6 +50,10 @@ interface Props {
    *  The site graph (Organization/Person/WebSite) is always present; pages add
    *  only what's specific to them. */
   jsonLd?: SchemaNode | SchemaNode[];
+  /** The page's one ask (asks.ts). The header button and footer actions
+   *  follow it, so the shell never adds a second ask. Defaults to the free
+   *  hour, the ask of consultancy and of pages that don't sell a course. */
+  ask?: PageAsk;
 }
 const {
   title,
@@ -63,13 +68,11 @@ const {
   publishedTime,
   modifiedTime,
   jsonLd,
+  ask = "hour",
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 
-const contactEmail = CONTACT_EMAIL;
-const mailtoHref = contactSubject
-  ? `mailto:${contactEmail}?subject=${encodeURIComponent(contactSubject)}`
-  : `mailto:${contactEmail}`;
+const mailtoHref = mailtoFor(contactSubject);
 
 // Structured data: the site-wide identity graph (Organization/Person/WebSite,
 // from src/config/site.ts) plus any page-specific node(s). Assembled here and
@@ -116,9 +119,8 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     <Font cssVariable="--font-albert" preload />
     <Font cssVariable="--font-commit" preload />
 
-    {/* Cookieless analytics (Umami). The matching ANALYTICS_ENABLED flag in
-        astro.config.mjs adds the script host to script-src and the beacon
-        host to connect-src. is:inline keeps the external src untouched; it is
+    {/* Cookieless analytics (Umami). Astro's CSP reads the same configuration
+        for its script and beacon hosts. is:inline keeps the external src untouched; it is
         governed by the script-src host, not a hash. The tracker auto-tracks
         on load — no init, no inline snippet; custom events call umami.track()
         from enhance.ts (guarded, so adblock/outage costs nothing).
@@ -137,12 +139,12 @@ const hasFooterInvitation = Astro.slots.has("footer-invitation");
     )}
   </head>
   <body>
-    <a class="skip" href="#main">skip to content</a>
-    <Header mailtoHref={mailtoHref} />
+    <a class="skip" href="#main">Skip to content</a>
+    <Header ask={ask} />
     <main id="main">
       <slot />
     </main>
-    <Footer mailtoHref={mailtoHref}>
+    <Footer ask={ask} mailtoHref={mailtoHref}>
       {
         hasFooterInvitation && (
           <Fragment slot="invitation">

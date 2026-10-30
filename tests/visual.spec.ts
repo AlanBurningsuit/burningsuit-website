@@ -4,8 +4,7 @@ import { test, expect, type Page } from "@playwright/test";
  * Visual regression tripwire. Region snapshots (not whole-page) so a local
  * layout regression can't hide under a loose full-page threshold. These
  * baselines are the Astro build itself: they protect Phase B refinements from
- * silently breaking structure. Fidelity vs the B5 source is a separate,
- * human-signed comparison (scripts/shoot.mjs), not asserted here.
+ * silently breaking structure.
  */
 async function prepare(page: Page, path: string) {
   // Freeze time BEFORE load so nothing date-derived can drift between runs.
@@ -47,11 +46,19 @@ test("home — regions", async ({ page }, testInfo) => {
   await expect(page.locator(".hero")).toHaveScreenshot(`home-hero-${tag}.png`);
   // Paired evidence, an inline explanation of the work, and the stance.
   await expect(page.locator(".chapter:has(#in-practice)")).toHaveScreenshot(`home-trust-${tag}.png`);
-  await expect(page.locator(".chapter:has(#situations)")).toHaveScreenshot(`home-services-${tag}.png`);
+  await expect(page.locator(".chapter:has(#way-in)")).toHaveScreenshot(`home-way-in-${tag}.png`);
+  await expect(page.locator(".chapter:has(#courses)")).toHaveScreenshot(`home-courses-${tag}.png`);
   await expect(page.locator(".statement-ch")).toHaveScreenshot(`home-statement-${tag}.png`);
   await expect(page.locator(".about")).toHaveScreenshot(`home-about-${tag}.png`);
   // The footer is a normal-flow region; the locator scrolls it into view.
   await expect(page.locator("footer")).toHaveScreenshot(`home-footer-${tag}.png`);
+});
+
+test("training — regions", async ({ page }, testInfo) => {
+  await prepare(page, "/training/");
+  const tag = testInfo.project.name;
+  await expect(page.locator(".page-hero")).toHaveScreenshot(`training-hero-${tag}.png`);
+  await expect(page.locator(".chapter:has(#power-bi-courses)")).toHaveScreenshot(`training-courses-${tag}.png`);
 });
 
 test("hour — page", async ({ page }, testInfo) => {

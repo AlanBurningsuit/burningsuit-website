@@ -1,0 +1,231 @@
+---
+/**
+ * /training: the course catalogue, written to the course-page playbook. There
+ * are no separate pages for the private courses, so each course's entry here
+ * carries what a course page would: who it's for, what people will be able to
+ * do, the facts and its own paragraph to forward to whoever pays. Course
+ * names, lengths, audiences and prerequisites come from src/config/training.ts;
+ * the prose for each course is written here.
+ *
+ * Prices are build-time gated (see training.ts). Every price line reads
+ * correctly both ways: with a price it shows the figure for the team; without
+ * one it says how to get an outline with costs, and the page carries no "£".
+ * The 101 has its own landing page (/training/agentic-101/); here it is a
+ * short entry that links there.
+ *
+ * The page's one ask is the course enquiry (asks.ts): an email for an outline
+ * with costs. The free hour is consultancy's ask and never appears here; the
+ * consultancy chapter is a plain link to /power-bi/.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Chapter from "../components/Chapter.astro";
+import Aside from "../components/Aside.astro";
+import Offer from "../components/Offer.astro";
+import { askLink } from "../config/asks";
+import { CONTACT_EMAIL } from "../config/site";
+import { COURSES, PILOT_101 as pilot, course, priceFor } from "../config/training";
+
+const contactSubject = "Power BI and AI courses";
+
+/** The facts line under a course's title: length, then the team price when
+ *  this build shows prices. */
+const metaFor = (id: string) => {
+  const price = priceFor(id);
+  return price ? `${course(id).length} · ${price} + VAT for your team, on site` : course(id).length;
+};
+/** The close of a course's paragraph to forward: the price if shown, then how
+ *  to get an outline. */
+const forwardClose = (id: string) => {
+  const price = priceFor(id);
+  return price
+    ? `It's ${price} + VAT for the team, on site. For an outline: ${CONTACT_EMAIL}`
+    : `For an outline with costs: ${CONTACT_EMAIL}`;
+};
+
+const intro = course("agentic-101");
+const introPrice = priceFor("agentic-101");
+// The private courses (bookable, not the 101): the first screen says what
+// their prices cover, and stays true however many of them this build prices.
+const privateCourses = COURSES.filter((c) => c.id !== intro.id && !c.inDevelopment);
+const pricedPrivate = privateCourses.filter((c) => priceFor(c.id));
+const pricePhrase =
+  pricedPrivate.length === privateCourses.length ? "prices for your team, plus VAT, with each course"
+  : pricedPrivate.length > 0 ? "prices for your team, plus VAT, where shown; costs for the rest come with an outline"
+  : "costs come with an outline";
+const heroEnquiry = askLink("enquire", "training-hero");
+const enquiry = askLink("enquire", "training-band");
+---
+
+<BaseLayout
+  title="Power BI and AI courses for teams - burningsuit"
+  description="Power BI and AI courses for people with other jobs to do: a half-day 101 on handing Power BI work to an AI agent, private Power BI and DAX courses for teams, and days on using Claude at work."
+  contactSubject={contactSubject}
+  ask="enquire"
+>
+  <Fragment slot="footer-invitation">Tell me which course you're looking at and roughly how many people. Replies come from me</Fragment>
+
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="kicker meta enter">Power BI and AI training</p>
+      <h1 class="enter appear-300">Courses for everyone <em>else</em>.</h1>
+      <p class="lead enter appear-450">For people with other jobs to do: build reports people use, write DAX you understand, and hand work to AI and check what comes back.</p>
+      <p class="offer-meta enter appear-450">{intro.title}: a public half-day in January 2027, no coding needed · other courses: 1 or 2 days, private for your team, on prepared examples · {pricePhrase}</p>
+      <div class="cta-row routes">
+        <a class="cta" href={heroEnquiry.href} data-track={heroEnquiry.event} data-placement="training-hero">{heroEnquiry.label}</a>
+      </div>
+      <p class="hero-sig">The email opens with 5 questions for you to answer. I'll reply with an outline and the cost for your team, written so you can pass it on.</p>
+      <ul class="routes enter appear-450">
+        <li><a class="route" href="#agentic-101">The 101</a></li>
+        <li><a class="route" href="#power-bi-courses">Power BI courses</a></li>
+        <li><a class="route" href="#ai-at-work">AI at work</a></li>
+        <li><a class="route" href="#how-the-courses-run">How the courses run</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="thread" data-reveal-raw aria-hidden="true"></div>
+
+  <Chapter id="problem" kicker="Where you're starting from">
+    <p>You build the reports because someone had to, and some of the DAX was copied and tweaked until the number looked right. Or you've been asked to get your team using AI, and you're not sure what it's good for beyond a quick email. Either way, you've picked things up from videos, colleagues and trial and error. Each course fills one of those gaps properly, on examples built for teaching, so you understand why it works and can change it with confidence.</p>
+  </Chapter>
+
+  {/* Written out rather than a <Chapter>: its route link must sit outside the
+      reveal-gated prose (controls never wait on an entrance). The full page
+      is /training/agentic-101/; this id stays so old links still land. */}
+  <section class="chapter" aria-labelledby="agentic-101">
+    <div class="wrap what">
+      <h2 class="section-head" id="agentic-101" data-reveal>{intro.title}</h2>
+      <div class="label">
+        <Aside data-reveal>The agent can choose how a calculation is built. You still decide what the number should mean.</Aside>
+      </div>
+      <div>
+        <div class="prose" data-reveal>
+          <p class="offer-meta">{intro.length} · public seats · {pilot.minSeats} to {pilot.maxSeats} people · {introPrice ? `${introPrice} + VAT a seat` : "founding rate"}</p>
+          <p>It's the way in, for people who build in Power BI but don't write code. An agent is an AI tool that makes a change itself and then shows you what it did. In this half-day you'll hand one a change to a report, check what it did, and keep the decisions about what your numbers mean for yourself.</p>
+          <p>Unlike the other courses, it has public seats, so you book a place for yourself. The first run is a morning in {pilot.week}, at a founding rate.</p>
+        </div>
+        <div class="routes"><a class="route" href="/training/agentic-101/">More about the 101</a></div>
+      </div>
+    </div>
+  </section>
+
+  {/* The free 30-minute skills check that stood in for Power BI fundamentals
+      came from one client's syllabus; it stays off the page until Alan
+      confirms it as a general offer. */}
+  <Chapter id="power-bi-courses" kicker="Power BI courses">
+    <p>There are 4 courses, from opening Power BI for the first time to writing DAX you understand rather than copy, and each runs privately for your team.</p>
+    <p>DAX fundamentals, the DAX deep dive and data modelling assume people have done Power BI fundamentals, or have similar experience. If you're not sure, say so in the enquiry and I'll help you work it out.</p>
+    <div class="offer-table">
+      <Offer id="power-bi-fundamentals" title={course("power-bi-fundamentals").title} meta={metaFor("power-bi-fundamentals")}>
+        <p>It's for anyone new to Power BI, and it assumes nobody has opened it before. It starts where everything in Power BI ends up: a report in front of the people who use it. By the end, people can:</p>
+        <ul class="beats beats-body">
+          <li>take an Excel table into Power BI and build an interactive report from it;</li>
+          <li>clean and reshape data in Power Query, Power BI's tool for tidying data before it's used, so nobody fixes it by hand each month;</li>
+          <li>publish a report so colleagues can use it, and keep it up to date with a scheduled refresh;</li>
+          <li>bring several sources together into one model, and write their first DAX, the formula language behind Power BI's calculations;</li>
+          <li>say what Copilot in Power BI can help with, and what to check in what it writes.</li>
+        </ul>
+        <p class="offer-meta">To send to your manager</p>
+        <p>Power BI fundamentals is a 2-day course from burningsuit, run privately for a team that's new to Power BI. They'll go from an Excel table to a report their colleagues can use, tidy data in Power Query, and bring several sources together into one model, working on prepared examples, not live company data. {forwardClose("power-bi-fundamentals")}</p>
+      </Offer>
+      <Offer id="dax-fundamentals" title={course("dax-fundamentals").title} meta={metaFor("dax-fundamentals")}>
+        <p>It's for people who already build reports and want a proper first day of DAX, and it's the first day of the DAX deep dive, booked on its own. By the end, people can:</p>
+        <ul class="beats beats-body">
+          <li>lay out their tables as a star schema (one table of events, such as sales, with lookup tables around it, such as dates and products), which keeps DAX simple;</li>
+          <li>write measures, and know when a calculated column is the better choice;</li>
+          <li>explain why the same measure gives a different number on each row of a table;</li>
+          <li>calculate row by row with functions such as SUMX, so a total can be built from sums on each row first, like quantity times price;</li>
+          <li>use CALCULATE to change what a measure counts, adding and removing filters.</li>
+        </ul>
+        <p class="offer-meta">To send to your manager</p>
+        <p>DAX fundamentals is a 1-day course from burningsuit, run privately for a team that already builds Power BI reports. They'll write the calculations behind a report's numbers in DAX, Power BI's formula language, and learn to change what a calculation counts, working on prepared examples, not live company data. {forwardClose("dax-fundamentals")}</p>
+      </Offer>
+      <Offer id="dax-deep-dive" title={course("dax-deep-dive").title} meta={metaFor("dax-deep-dive")}>
+        <p>It's for people who build reports and want to write DAX they understand rather than copy. The first day is DAX fundamentals; on the second, people learn to:</p>
+        <ul class="beats beats-body">
+          <li>make totals and percentages respect what's selected on the page;</li>
+          <li>deal with blanks and zeros on purpose rather than by accident;</li>
+          <li>keep longer measures readable with variables;</li>
+          <li>build time intelligence, such as this year against last, on a proper date table;</li>
+          <li>use a relationship the model ignores by default, and change which way a filter travels, so one model can answer questions its usual set-up can't.</li>
+        </ul>
+        <p class="offer-meta">To send to your manager</p>
+        <p>The DAX deep dive is a 2-day course from burningsuit, run privately for a team that builds Power BI reports and wants to write DAX it understands rather than copies. After a first day on the foundations, they'll make totals respect what's selected, handle blanks, compare this year with last, and keep longer calculations readable, working on prepared examples, not live company data. {forwardClose("dax-deep-dive")}</p>
+      </Offer>
+      <Offer id="data-modelling" title={course("data-modelling").title} meta={metaFor("data-modelling")}>
+        <p>It's for people who build their own semantic models and want to get them right before they start on DAX. A semantic model is the part of a Power BI file that holds the tables, the relationships and the calculations, so everyone who uses it gets the same numbers. Much of the day is in Power Query. By the end, people can:</p>
+        <ul class="beats beats-body">
+          <li>turn a list of report requirements into a star schema, deciding what one row of each table means;</li>
+          <li>shape the data to fit in Power Query: types, cleaning, unpivoting, merging and appending;</li>
+          <li>build the relationships and a date table, and choose which way filters travel;</li>
+          <li>tidy the model so it's pleasant to work with, with keys hidden and names people understand.</li>
+        </ul>
+        <p class="offer-meta">To send to your manager</p>
+        <p>Data modelling is a 1-day course from burningsuit, run privately for a team that builds its own Power BI models. They'll turn report requirements into a well-shaped model, prepare the data in Power Query, and build the relationships and a date table, working on prepared examples, not live company data. {forwardClose("data-modelling")}</p>
+      </Offer>
+    </div>
+  </Chapter>
+
+  <Chapter id="ai-at-work" kicker="AI at work">
+    <p>There are 2 separate 1-day courses on using Claude well in everyday work. Neither is about Power BI, and neither needs any coding.</p>
+    <div class="offer-table">
+      <Offer id="claude-day-job" title={course("claude-day-job").title} meta={metaFor("claude-day-job")}>
+        <p>It's for people in any role who want to use Claude at work, with no technical background needed. People practise on a prepared piece of work on their own first, then in small groups. By the end, they can:</p>
+        <ul class="beats beats-body">
+          <li>brief Claude on a task, hand it over, and check what comes back against the sources;</li>
+          <li>pick a sensible model and level of effort, rather than the most capable model on its highest setting for a quick email;</li>
+          <li>write a short handover note so a colleague can pick up where they left off;</li>
+          <li>build something with colleagues, such as a comparison tool, for someone else to use;</li>
+          <li>name one place in their own work where it would help.</li>
+        </ul>
+        <p class="offer-meta">To send to your manager</p>
+        <p>Claude in your day job is a 1-day course from burningsuit, run privately for a team in any role, with no technical background needed. They'll learn to brief Claude, hand work over and check what comes back, and build something in small groups that a colleague can use, working on prepared examples, not live company work. {forwardClose("claude-day-job")}</p>
+      </Offer>
+      <Offer id="claude-consultants" title={course("claude-consultants").title} meta={metaFor("claude-consultants")}>
+        <p>It's for consultants and advanced users of AI tools, with no coding background needed. The thread through the day is the agent skill: a method you know well, written down so that Claude, and your colleagues, can apply it again. By the end, people can:</p>
+        <ul class="beats beats-body">
+          <li>capture a method in a skill, deciding when it applies, what a good result looks like, and where it should stop and ask a person;</li>
+          <li>use a colleague's skill on a fresh case, without its author there to explain it, and check whether it holds up;</li>
+          <li>improve their own skill from what came back.</li>
+        </ul>
+        <p class="offer-meta">To send to your manager</p>
+        <p>Claude for consultants is a 1-day course from burningsuit, run privately for consultants and advanced users of AI tools, with no coding background needed. They'll write down a method they know well as a skill that Claude and their colleagues can reuse, then test a colleague's skill on a fresh case and improve their own, working from prepared sources. {forwardClose("claude-consultants")}</p>
+      </Offer>
+    </div>
+  </Chapter>
+
+  <Chapter id="agentic-to-follow" kicker="To follow the 101">
+    <p>There are 2 more courses being written to follow the 101.</p>
+    <div class="offer-table">
+      <Offer id="agentic-hands-on" title={course("agentic-hands-on").title} meta="Being written">
+        <p>It's a day for people who've done the 101.</p>
+      </Offer>
+      <Offer id="modelling-for-agents" title={course("modelling-for-agents").title} meta="Being written">
+        <p>It's for people building models that agents will work on.</p>
+      </Offer>
+    </div>
+  </Chapter>
+
+  <Chapter id="how-the-courses-run" kicker="How the courses run">
+    <p>I teach every course myself. Apart from the 101, each one runs privately for a team from your organisation. Tell me roughly how many people, and the outline I send will say how the course works for that group.</p>
+    <p>Every course runs on examples and material built for teaching, so nobody brings their own data. That's deliberate: a course is for learning a skill, on material designed to teach it. Working on your own reports is a different job, and it isn't part of a course.</p>
+    <p>The outline covers the dates, where it runs, what people need on the day, the cost and the terms, so whoever signs it off has everything in one place. You don't need to talk to me first.</p>
+    {pricedPrivate.length > 0 && <p>The course prices shown are for your team, on site, plus VAT{introPrice ? "; the 101 is priced per seat" : ""}.</p>}
+  </Chapter>
+
+  <Chapter id="your-own-reporting" kicker="When it's your own reports">
+    <p>If your team needs help with its own reports, models or numbers, that's consultancy rather than a course, and it's priced separately. <a href="/power-bi/">Here's how consultancy works</a>.</p>
+  </Chapter>
+
+  <section class="cta-band" aria-label={enquiry.label}>
+    <div class="wrap">
+      <div class="cta-invite">
+        <p class="cta-note">The email opens with 5 questions for you to answer: which course, roughly how many people, what they can already do, whether you'd prefer online or on site, and dates that suit. I'll reply with an outline that says what's possible, and costs you can pass on.</p>
+        <a class="cta" href={enquiry.href} data-track={enquiry.event} data-placement="training-band">{enquiry.label}</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
+  <div class="talk-spacer"></div>
+</BaseLayout>
