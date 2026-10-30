@@ -60,7 +60,7 @@ export const invoice101Href = mailtoFor(`An invoice for a seat on the ${intro.ti
 
 /** The course enquiry: an email with the questions an outline with costs
  *  needs, prefilled. */
-const enquiryFields = ["Course:", "Roughly how many people:", "What they can already do:", "Online, or on site (and where):", "Dates that suit:"];
+const enquiryFields = ["Course:", "Roughly how many people:", "What they can already do:", "Online or on site, if you have a preference (and where):", "Dates that suit:"];
 export const enquiryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("A course for my team")}&body=${encodeURIComponent(enquiryFields.join("\r\n"))}`;
 
 /** The page's ask, built for one placement (header, footer, hero …). */
