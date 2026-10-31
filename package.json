@@ -28,7 +28,7 @@
     "gate": "npm run check && npm run build && npm run test:links && npm run check:seo"
   },
   "dependencies": {
-    "@astrojs/mdx": "^6.0.3",
+    "@astrojs/mdx": "^8.0.1",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^6.4.8",
     "sharp": "^0.35.4"
