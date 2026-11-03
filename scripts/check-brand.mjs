@@ -6,11 +6,12 @@
 // src/assets (diagrams, photos) is outside the check.
 
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { extname, join, relative, resolve } from "node:path";
+import { extname, join, relative } from "node:path";
+import { brandRoot } from "./brand-path.mjs";
 
 const root = process.cwd();
 const copy = join(root, "src/styles/brand.css");
-const source = resolve(root, "../burningsuit-brand/brand.css");
+const source = join(brandRoot, "brand.css");
 const problems = [];
 
 const brand = readFileSync(copy, "utf8");

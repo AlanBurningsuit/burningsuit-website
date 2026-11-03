@@ -3,28 +3,31 @@
  * any layout actually needs, writing capped derivatives into src/assets/photos.
  *
  * Why: astro:assets `<Image|Picture widths={[...]}>` emits a full-resolution
- * fallback <img src> in addition to the responsive srcset. The originals in
- * resources/photos are 5–6k px / 3–5 MB, so that fallback blew the <300 KB
+ * fallback <img src> in addition to the responsive srcset. The originals
+ * are 5–6k px / 3–5 MB, so that fallback blew the <300 KB
  * budget. Capping the SOURCE caps the fallback while leaving the srcset widths
  * untouched. Re-run with `npm run prep:images` if the source photos change.
  *
- * The originals in resources/photos are the archive and are never modified.
+ * The originals live in the brand repo's photo library (../burningsuit-brand/photos)
+ * and are never modified.
  */
 import sharp from "sharp";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { brandRoot } from "./brand-path.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const from = (p) => join(root, "resources/photos", p);
+const library = join(brandRoot, "photos");
+const from = (p) => join(library, p);
 const to = (p) => join(root, "src/assets/photos", p);
 
-// resources/photos is the local-only source archive (gitignored, not in CI). On
+// The photo library is in the private brand repo, which CI doesn't check out. On
 // a build where it's absent (Netlify, fresh clone), skip and let the build use
 // the committed derivatives already in src/assets/photos.
-if (!existsSync(join(root, "resources/photos"))) {
+if (!existsSync(library)) {
   console.log(
-    "[prep-images] resources/photos not present — skipping; using committed src/assets/photos.",
+    "[prep-images] Brand photo library not present — skipping; using committed src/assets/photos.",
   );
   process.exit(0);
 }

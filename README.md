@@ -32,12 +32,15 @@ npm run check      # astro check (types/templates)
 ### Images
 
 `src/assets/photos/*` are **pre-resized derivatives** (capped so the responsive
-fallback stays within budget). Regenerate them from the originals in
-`resources/photos/` (local-only) with:
+fallback stays within budget). Regenerate them from the private brand photo library with:
 
 ```bash
 npm run prep:images
 ```
+
+The photo library, diagram font and brand-parity check resolve the brand repo beside the original Git checkout, including from linked worktrees. Set `BURNINGSUIT_BRAND_DIR` to use another brand checkout. Builds without the photo library use the committed derivatives.
+
+Diagram sources live in `diagrams/`; run `node diagrams/export.mjs` from the repository root to export the wide and narrow SVGs. It uses draw.io desktop (`DRAWIO_EXE` or `~/.local/bin/drawio`) and `xvfb-run` when no display is available. Commit regenerated SVGs and update the matching dimensions in `src/components/EssayFigure.astro`.
 
 ## Verification gates
 
@@ -103,10 +106,4 @@ front. Everything else in the policy (`default-src 'none'`,
 `script-src 'self'`, `style-src 'self'`, etc.) is enforced, and
 `tests/csp.spec.ts` asserts both the policy and its runtime cleanliness.
 
-Analytics: **ON.** The site uses cookieless Umami Cloud behind two deliberately
-coupled flags (`ANALYTICS.enabled` in `src/config/site.ts` and
-`ANALYTICS_ENABLED` in `astro.config.mjs`). The CSP permits only Umami's two
-hosts — the tracker script (`cloud.umami.is`, script-src) and its event beacon
-(`gateway.umami.is`, connect-src). `tests/csp.spec.ts` asserts the script tag,
-website id and both CSP permissions together so the configuration points
-cannot drift.
+Analytics: **ON.** `src/config/analytics.mjs` supplies both the page shell (through `src/config/site.ts`) and Astro's CSP. It keeps the tracker, website ID, production-domain restriction and permitted beacon host together. The CSP allows `cloud.umami.is` for scripts and `gateway.umami.is` for event beacons; `tests/csp.spec.ts` checks the tag and policy together.
