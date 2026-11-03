@@ -1,0 +1,18 @@
+---
+interface Props { about?: string }
+const { about } = Astro.props;
+const href = about ? `/contact/?about=${encodeURIComponent(about)}` : "/contact/";
+---
+<section id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="wrap contact-inner">
+    <div>
+      <p class="eyebrow">Contact</p>
+      <h2 id="contact-title"><slot name="heading" /></h2>
+    </div>
+    <div>
+      <p><slot /></p>
+      <a class="contact-link" href={href}>Send an enquiry</a>
+      <p class="eyebrow">Or email <a href="mailto:alan@burningsuit.co.uk">alan@burningsuit.co.uk</a></p>
+    </div>
+  </div>
+</section>

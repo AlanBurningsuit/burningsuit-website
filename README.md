@@ -1,6 +1,6 @@
 # burningsuit.co.uk
 
-A minimal static Astro rebuild shell. The old page system is removed; the training-led site has not been implemented or approved for publication.
+A static Astro rebuild in progress. The homepage and Agentic development for Power BI 101 page implement the agreed notebook direction; the rest of the site remains a compatibility shell. Nothing is approved for publication.
 
 ## Develop and check
 
@@ -15,14 +15,16 @@ The gate checks canonical brand parity, Astro types, source permissions, a stati
 
 Tests serve the existing `dist/`; build first. Each Playwright run chooses a fresh port and refuses to reuse an existing listener. Use a separate checkout and fresh build for independent tests; never overwrite another review's build or stop its server. Leave the priced review at `127.0.0.1:4400` alone.
 
-`npm run test:lh` and `npm run test:lh:mobile` audit the existing build for performance and accessibility. If Chrome is not on PATH, set `CHROME_PATH` to the installed browser executable. Page-specific screenshot baselines will be added when there is a design to review.
+`npm run test:lh` and `npm run test:lh:mobile` audit both built pages for performance and accessibility. If Chrome is not on PATH, set `CHROME_PATH` to the installed browser executable. Functional tests attach full-page captures at 1366px and 390px for visual review; these are review artifacts, not approved screenshot baselines.
+
+The link gate permits only the explicit future destinations in `src/config/pending-routes.mjs` while they have no built HTML. They currently return 404: `/training/`, `/training/power-bi-fundamentals/` and `/training/how-i-train/`. Remove each reservation and its 404 test when building that page. Other broken internal links still fail. `/contact/` retains its existing redirect to the About placeholder; enquiry links preserve their proposed course context in source, but the form is not built. Email remains the working fallback.
 
 ## What remains
 
-- `src/pages/` and `src/layouts/BaseLayout.astro`: noindex placeholders and a 404 page, with no analytics runtime, forms, navigation, animation or content components.
+- `src/pages/index.astro` and `src/pages/training/agentic-development-for-power-bi.astro`: bespoke static pages with shared masthead, footer and contact band in `src/components/`. `BaseLayout.astro` keeps every page noindex; other routes retain their placeholders. No analytics runtime, forms or client rendering.
 - `src/config/compatibility.mjs`: existing redirect destinations and route/anchor reservations. These placeholders preserve addresses, not the old page content; the list does not prescribe the new page hierarchy. Restore meaningful destinations before release, including the cited archive article.
 - `content/`: the five original MDX entries and original privacy/archive page sources, preserved byte-for-byte for reference and outside the build. They are not current offer authority or automatically cleared copy. The content check still rejects a named frontmatter block unless its publication gate is explicitly open; actual permission remains in the private ledger.
-- `src/styles/brand.css`: canonical brand tokens, copied unchanged from the brand repo. Change shared identity there first. Website styles now contain only basic type, spacing and accessible focus behaviour.
+- `src/styles/brand.css`: canonical brand tokens, copied unchanged from the brand repo. Change shared identity there first. `app.css` defines shared page furniture; `home.css` and `course.css` hold page compositions. Headings keep sentence case. The portrait uses `astro:assets` and the committed photo derivative; generated responsive images belong only in the build output.
 - `src/components/seo/Schema.astro`: the retained JSON-LD emitter, with script-breakout escaping. Placeholder pages emit no schema or canonical links.
 - Photos, diagrams, logos and social assets remain available. Sources are not automatically rendered.
 

@@ -1,0 +1,91 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ContactBand from "../../components/ContactBand.astro";
+import "../../styles/course.css";
+---
+<BaseLayout
+  title="Agentic development for Power BI 101 | burningsuit"
+  description="A half-day online course for people who build or look after Power BI reports: get an AI agent to explain a report, document its measures and build one new measure you check."
+  placeholder={false}
+>
+  <div class="wrap crumbs eyebrow"><a href="/training/">Training</a> / Agentic development for Power BI 101</div>
+
+  <div class="course-opening wrap">
+    <section class="course-intro" aria-labelledby="page-title">
+      <p class="eyebrow">Half-day course · live online</p>
+      <h1 id="page-title">Agentic development for Power BI 101</h1>
+      <p class="standfirst">Understand a report, hand over a change and <span class="em">check</span> the result.</p>
+      <p>An AI agent is a tool that can read your files, make a change and show you what it did. "Agentic development" just means building with one. In one morning you'll use an agent on a prepared Power BI report: first to explain it, then to document it, then to build one new measure (a saved calculation behind the numbers) that you check properly.</p>
+    </section>
+
+    <aside class="public-run" aria-labelledby="facts-title">
+      <h2 id="facts-title" class="eyebrow">The first public run</h2>
+      <dl class="course-facts big">
+        <div><dt>Date</dt><dd><time datetime="2027-01-20">Wednesday 20 January 2027</time></dd></div>
+        <div><dt>Time</dt><dd>9:30am to 12:30pm UK time</dd></div>
+        <div><dt>Where</dt><dd>Live online</dd></div>
+        <div><dt>Group</dt><dd>4 to 8 people, each booking a seat</dd></div>
+        <div><dt>Price</dt><dd>Price on request</dd></div>
+      </dl>
+      <a class="text-link strong" href="/contact/?about=101">Ask about a seat</a>
+      <p class="aside">It runs with at least 4 people. If fewer book, it moves once, to February.</p>
+      <hr />
+      <p class="eyebrow">For your team</p>
+      <p>The 101 is also available as a private course. <a href="/contact/?about=101-private">Ask about a private 101</a></p>
+    </aside>
+
+    <section class="course-who" aria-labelledby="who-title">
+      <h2 class="course-sub" id="who-title">Who it's for</h2>
+      <p>You've built a report in Power BI Desktop, even a simple one: loading tables, putting fields into a visual and filtering a page. Reporting might be your main job or something you do alongside it. You don't need to write code, know advanced DAX or have used an AI agent before.</p>
+      <p class="aside">If you already use coding agents every day on Power BI work, this covers ground you know. If you haven't built a report yet, start with <a href="/training/power-bi-fundamentals/">Power BI fundamentals</a>.</p>
+    </section>
+  </div>
+
+  <section class="outcomes-band" aria-labelledby="do-title">
+    <div class="wrap">
+      <h2 id="do-title">What you'll be able to do</h2>
+      <ol class="outcomes">
+        <li><span class="outcome-index" aria-hidden="true">01</span><div><h3>Work in the files</h3><p>Point an agent at a Power BI project folder and bring its changes back into Power BI Desktop.</p></div></li>
+        <li><span class="outcome-index" aria-hidden="true">02</span><div><h3>Explain before anything changes</h3><p>Get the agent to explain a report that's new to you: its tables, relationships, data preparation steps and measures (the saved calculations behind the numbers).</p></div></li>
+        <li><span class="outcome-index" aria-hidden="true">03</span><div><h3>Document what's there</h3><p>Have it add comments and descriptions to the existing measures, then check them in Power BI Desktop.</p></div></li>
+        <li><span class="outcome-index" aria-hidden="true">04</span><div><h3>Build one, check it three ways</h3><p>Brief one new measure and check its total, a filtered result and an awkward case. Give the agent the evidence to correct a wrong answer, and go back to a clean copy when you need to.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="wrap course-details" aria-labelledby="run-title">
+    <div>
+      <h2 id="run-title">How the morning runs</h2>
+      <ol class="steps">
+        <li><h3>Get oriented</h3><p>What an agent is, and what the app around it does: it gives the AI tools, such as reading and editing files. How a Power BI project's files fit together, and what to check before giving a tool access to work files.</p></li>
+        <li><h3>Explain, document, build</h3><p>The three exercises, in that order. A short house-rules file (instructions the agent reads first) comes before the first edit, and the new measure gets a fresh chat.</p></li>
+        <li><h3>What next</h3><p>What further tools would let an agent check its own work, what the morning leaves out, and a checklist for back at your desk.</p></li>
+      </ol>
+      <p class="aside">You work on a prepared teaching report and sample data, not your company's reports. Help with your own reports is <a href="/power-bi/">consultancy</a>. <a href="/training/how-i-train/">How I train</a></p>
+    </div>
+    <div class="course-lists">
+      <div>
+        <h2 class="h-small">What you'll need</h2>
+        <ul>
+          <li>A Windows computer with Power BI Desktop <span class="to-confirm">version and settings to confirm</span>, and permission to install and use your agent tool. On a work laptop, check your organisation's approval early.</li>
+          <li>One of three tools: GitHub Copilot, Claude, or ChatGPT/Codex <span class="to-confirm">plan and cost for each to confirm</span>.</li>
+          <li>A folder on your computer for the teaching files <span class="to-confirm">where to confirm</span>, reliable internet and audio. A second screen helps.</li>
+          <li>A setup check before the day <span class="to-confirm">deadline and time needed to confirm</span>.</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="h-small">What's included</h2>
+        <ul>
+          <li>A live morning of teaching and supported practice.</li>
+          <li>The teaching project, a house-rules template and clean copies to start again from, to keep.</li>
+          <li>Setup notes for each tool, and a checklist for afterwards.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <ContactBand about="101">
+    <Fragment slot="heading">Questions about<br />the 101?</Fragment>
+    Ask about a seat, a private run for your team, or whether it suits what you do. If you're booking for someone else, say who it's for.
+  </ContactBand>
+</BaseLayout>

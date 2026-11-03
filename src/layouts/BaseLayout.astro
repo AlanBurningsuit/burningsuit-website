@@ -1,11 +1,20 @@
 ---
 import { Font } from "astro:assets";
 import { SITE_NAME } from "../config/site";
+import Masthead from "../components/Masthead.astro";
+import Footer from "../components/Footer.astro";
 import "../styles/app.css";
 
-interface Props { title?: string }
-const { title = SITE_NAME } = Astro.props;
-const description = "burningsuit website rebuild.";
+interface Props {
+  title?: string;
+  description?: string;
+  placeholder?: boolean;
+}
+const {
+  title = SITE_NAME,
+  description = "burningsuit website rebuild.",
+  placeholder = true,
+} = Astro.props;
 ---
 <!doctype html>
 <html lang="en-GB">
@@ -27,8 +36,10 @@ const description = "burningsuit website rebuild.";
     <Font cssVariable="--font-albert" preload />
     <Font cssVariable="--font-commit" />
   </head>
-  <body data-rebuild-placeholder>
+  <body id="top" data-rebuild-placeholder={placeholder || undefined}>
     <a class="skip" href="#main">Skip to content</a>
-    <main id="main" tabindex="-1"><slot /></main>
+    {!placeholder && <Masthead />}
+    <main id="main" tabindex="-1" class:list={{ placeholder }}><slot /></main>
+    {!placeholder && <Footer />}
   </body>
 </html>

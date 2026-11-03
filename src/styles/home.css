@@ -1,0 +1,63 @@
+.home-opening {
+  display: grid;
+  grid-template-columns: var(--home-columns);
+  grid-template-areas: "intro courses" "photo courses";
+  column-gap: var(--column-gap);
+  padding-block: 38px 70px;
+  align-items: start;
+}
+.introduction { grid-area: intro; }
+.introduction > p:not(.eyebrow) { max-width: 35ch; }
+.introduction > .text-link { margin-top: 18px; }
+.courses { grid-area: courses; border-top: var(--bw-spine) solid var(--fg); }
+.section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding-block: 15px 20px; }
+.section-heading h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); }
+.course { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 16px; padding-block: 28px 30px; border-top: var(--bw-hair) solid var(--line); }
+.course-index { font: 400 .76rem / var(--lh-body) var(--ff-mono); color: var(--fg-dim); padding-top: 3px; }
+.course-fit { color: var(--fg-dim); font-size: .88rem; margin-bottom: 8px; }
+.course h3 { font-size: clamp(1.65rem, 2.5vw, 2.1rem); margin-bottom: 14px; }
+.course > div > p:not(.course-fit) { font-size: 1rem; }
+.course .text-link { font-size: .94rem; }
+.course > div > p.prereq { font: 400 .8rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); margin-top: 12px; }
+.course-actions { display: flex; flex-wrap: wrap; gap: 4px 28px; }
+.course-footnote { border-top: var(--bw-hair) solid var(--line); padding-top: 16px; font-size: .86rem; color: var(--fg-dim); }
+.course-footnote p + p { margin-top: 6px; }
+.alan-photo { grid-area: photo; align-self: end; margin-top: 30px; }
+.alan-photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; border: var(--px) solid var(--deep); border-radius: var(--r); outline: var(--bw-hair) solid var(--paper-edge); box-shadow: 5px 5px 0 var(--deep); }
+.consultancy { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
+.consultancy-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 38px; align-items: center; }
+.consultancy h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); margin-top: 10px; }
+.consultancy-copy p { max-width: 46ch; }
+.proof { margin-top: 26px; background: var(--paper); color: var(--ink-soft); border: var(--px) solid var(--deep); border-radius: var(--r); outline: var(--bw-hair) solid var(--paper-edge); box-shadow: 5px 5px 0 var(--deep); padding: 22px 24px; }
+.proof .eyebrow { color: var(--ink-soft); display: block; margin-bottom: 10px; }
+.proof blockquote p { font: 600 1.08rem / var(--lh-snug) var(--ff-display); color: var(--ink); }
+.teaching { display: grid; grid-template-columns: var(--home-columns); gap: var(--column-gap); padding-block: 90px; align-items: center; }
+.teaching-intro h2 { margin: 14px 0 24px; }
+.exercise { background: var(--bg-2); padding: clamp(24px, 3.4vw, 44px); border: var(--px) solid var(--deep); border-radius: var(--r); box-shadow: 7px 7px 0 var(--deep); }
+.exercise h3 { font-size: 2.1rem; margin: 20px 0; }
+.exercise blockquote { padding-left: 16px; border-left: var(--bw-spine) solid var(--amber); }
+.exercise a { font-size: .9rem; font-weight: 600; padding-block: 8px; display: inline-block; }
+.about { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 25px 76px; }
+.about > .eyebrow { border-top: var(--bw-hair) solid var(--line); padding-top: 22px; }
+.about h2 { font-size: 1.75rem; margin-bottom: 22px; }
+
+@media (max-width: 900px) {
+  .course { grid-template-columns: minmax(0, 1fr); }
+  .course-index { display: none; }
+  .section-heading { flex-direction: column-reverse; gap: 5px; }
+}
+@media (max-width: 680px) {
+  .home-opening { grid-template-areas: "intro" "courses" "photo"; gap: 34px; padding-block: 34px 42px; }
+  .introduction > .text-link { margin-top: 12px; }
+  .section-heading { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .section-heading h2 { font-size: 1.9rem; }
+  .course { padding-block: 25px; }
+  .course h3 { font-size: 1.8rem; }
+  .alan-photo { margin-top: 4px; }
+  .consultancy-inner { row-gap: 24px; padding-block: 34px; }
+  .teaching { padding-block: 50px; gap: 28px; }
+  .exercise { padding: 26px; }
+  .exercise h3 { font-size: 1.85rem; }
+  .about { row-gap: 24px; padding-block: 10px 45px; }
+  .about h2 { font-size: 1.7rem; }
+}

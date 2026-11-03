@@ -1,0 +1,16 @@
+---
+const training = Astro.url.pathname.startsWith("/training/");
+---
+<header class="masthead-band">
+  <div class="masthead wrap">
+    <a class="brand" href="/" aria-label="burningsuit home">
+      <img src="/logos/burningsuit-on-green.svg" alt="burningsuit" width="200" height="44" />
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="/training/" aria-current={training ? "true" : undefined}>Training</a>
+      <a href="/power-bi/">Consultancy</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </div>
+</header>

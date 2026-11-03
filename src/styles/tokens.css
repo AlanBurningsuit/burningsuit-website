@@ -1,8 +1,14 @@
 @import "./brand.css";
 
 :root {
-  --page-gutter: clamp(1rem, 5vw, 3rem);
-  --content-width: 65ch;
+  /* Astro assigns unique family names; connect them to the brand's type roles. */
+  --ff-display: var(--font-mona);
+  --ff-body: var(--font-albert);
+  --ff-mono: var(--font-commit);
+  --page-gutter: clamp(22px, 5vw, 72px);
+  --content-width: 1280px;
+  --column-gap: clamp(40px, 6vw, 82px);
+  --home-columns: minmax(0, .88fr) minmax(0, 1.12fr);
   --body-size: 1.125rem;
-  --title-size: clamp(2rem, 6vw, 4rem);
+  --title-size: clamp(2.6rem, 4.2vw, 3.7rem);
 }
