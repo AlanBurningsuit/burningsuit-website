@@ -1,161 +1,34 @@
 ---
-/**
- * The document shell. Renders <head> (meta/OG, self-hosted <Font> tags, the
- * bundled enhancement module and analytics tracker), the sticky Header, the
- * page's <main>, and the Footer, which remains in document flow while sticky.
- *
- * The CSP <meta http-equiv> is injected automatically by Astro's `security.csp`
- * feature — do NOT add one here by hand. The page ships NO hand-written inline
- * scripts: the bundled enhance.ts module
- * (kept external by the build and allowed through script-src 'self'), and the
- * cookieless Umami tracker is governed by its explicit CSP hosts.
- */
 import { Font } from "astro:assets";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import Schema from "../components/seo/Schema.astro";
-import { CONTACT_EMAIL, ANALYTICS } from "../config/site";
-import { siteGraph, type SchemaNode } from "../lib/schema";
+import { SITE_NAME } from "../config/site";
 import "../styles/app.css";
 
-interface Props {
-  title: string;
-  description: string;
-  /** OG/twitter image, served from the site root. */
-  ogImage?: string;
-  /** Descriptive alt for the OG/twitter image (accessibility + best practice). */
-  ogImageAlt?: string;
-  /** Pixel dimensions of the ogImage. Scrapers lay the preview out from these
-   *  BEFORE fetching the file, so an override that isn't 1200×630 must pass its
-   *  real dimensions too. Defaults describe the stock /og-image.png. */
-  ogImageWidth?: number;
-  ogImageHeight?: number;
-  /** Emit <meta name="robots" content="noindex"> — used by /404 so error pages
-   *  stay out of the index. */
-  noindex?: boolean;
-  /** Prefilled mailto subject for the page's email path (the footer "email me"
-   *  and any page-level mailto). Part of the two contact paths — Book an hour +
-   *  email — giving the reader a contextual starting line. Omit for a bare
-   *  mailto. */
-  contactSubject?: string;
-  /** og:type — "website" (default) for landing pages, "article" for editorial
-   *  pages (case studies / essays). Drives the article:* time tags below. */
-  ogType?: "website" | "article";
-  /** ISO timestamps for og:article — emitted only when ogType is "article". */
-  publishedTime?: string;
-  modifiedTime?: string;
-  /** Page-specific JSON-LD node(s) — Article, BreadcrumbList, FAQPage, etc.
-   *  Appended to the site-wide identity graph and emitted as one @graph block.
-   *  The site graph (Organization/Person/WebSite) is always present; pages add
-   *  only what's specific to them. */
-  jsonLd?: SchemaNode | SchemaNode[];
-}
-const {
-  title,
-  description,
-  ogImage = "/og-image.png",
-  ogImageAlt = "The burningsuit flame mark and wordmark",
-  ogImageWidth = 1200,
-  ogImageHeight = 630,
-  noindex = false,
-  contactSubject,
-  ogType = "website",
-  publishedTime,
-  modifiedTime,
-  jsonLd,
-} = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
-
-const contactEmail = CONTACT_EMAIL;
-const mailtoHref = contactSubject
-  ? `mailto:${contactEmail}?subject=${encodeURIComponent(contactSubject)}`
-  : `mailto:${contactEmail}`;
-
-// Structured data: the site-wide identity graph (Organization/Person/WebSite,
-// from src/config/site.ts) plus any page-specific node(s). Assembled here and
-// emitted once via <Schema> as a connected @graph. See src/lib/schema.ts.
-const siteUrl = Astro.site?.href ?? "https://burningsuit.co.uk/";
-const pageNodes = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
-const graph: SchemaNode[] = [...siteGraph(siteUrl), ...pageNodes];
-const hasFooterInvitation = Astro.slots.has("footer-invitation");
+interface Props { title?: string }
+const { title = SITE_NAME } = Astro.props;
+const description = "burningsuit website rebuild.";
 ---
 <!doctype html>
 <html lang="en-GB">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex" />}
-    {/* noindex pages emit no canonical either — a canonical on a noindexed
-        page sends the mixed signal the Schema noindex gate exists to avoid. */}
-    {!noindex && <link rel="canonical" href={canonical} />}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <meta property="og:type" content={ogType} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
-    <meta property="og:image:width" content={String(ogImageWidth)} />
-    <meta property="og:image:height" content={String(ogImageHeight)} />
-    <meta property="og:image:alt" content={ogImageAlt} />
-    {ogType === "article" && publishedTime && (
-      <meta property="article:published_time" content={publishedTime} />
-    )}
-    {ogType === "article" && (modifiedTime ?? publishedTime) && (
-      <meta property="article:modified_time" content={modifiedTime ?? publishedTime} />
-    )}
-    <meta name="twitter:card" content="summary_large_image" />
-
-    <Schema schema={graph} noindex={noindex} />
-
-    <!-- self-hosted fonts (subset + preloaded at build) -->
+    <meta property="og:image" content={new URL("/og-image.png", Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The burningsuit flame mark and wordmark" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <Font cssVariable="--font-mona" preload />
     <Font cssVariable="--font-albert" preload />
-    <Font cssVariable="--font-commit" preload />
-
-    {/* Cookieless analytics (Umami). The matching ANALYTICS_ENABLED flag in
-        astro.config.mjs adds the script host to script-src and the beacon
-        host to connect-src. is:inline keeps the external src untouched; it is
-        governed by the script-src host, not a hash. The tracker auto-tracks
-        on load — no init, no inline snippet; custom events call umami.track()
-        from enhance.ts (guarded, so adblock/outage costs nothing).
-        data-domains limits reporting to the live hostnames (localhost,
-        Playwright and Netlify previews stay silent); data-performance adds
-        Core Web Vitals to the pageview beacon. */}
-    {ANALYTICS.enabled && (
-      <script
-        is:inline
-        defer
-        src={ANALYTICS.scriptSrc}
-        data-website-id={ANALYTICS.websiteId}
-        data-domains={ANALYTICS.domains}
-        data-performance={ANALYTICS.performance ? "true" : undefined}
-      />
-    )}
+    <Font cssVariable="--font-commit" />
   </head>
-  <body>
-    <a class="skip" href="#main">skip to content</a>
-    <Header mailtoHref={mailtoHref} />
-    <main id="main">
-      <slot />
-    </main>
-    <Footer mailtoHref={mailtoHref}>
-      {
-        hasFooterInvitation && (
-          <Fragment slot="invitation">
-            <slot name="footer-invitation" />
-          </Fragment>
-        )
-      }
-    </Footer>
-
-    <!-- Contact-intent tracking, study-read measurement and analytics opt-out.
-         Content, navigation and contact links work without this module. -->
-    <script>
-      import "../scripts/enhance.ts";
-    </script>
+  <body data-rebuild-placeholder>
+    <a class="skip" href="#main">Skip to content</a>
+    <main id="main" tabindex="-1"><slot /></main>
   </body>
 </html>

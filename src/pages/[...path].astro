@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { pages } from "../config/compatibility.mjs";
+
+export function getStaticPaths() {
+  return Object.entries(pages)
+    .filter(([path]) => path !== "")
+    .map(([path, anchors]) => ({ params: { path }, props: { anchors } }));
+}
+const { anchors } = Astro.props;
+---
+<BaseLayout>
+  {anchors.map((id: string) => <span id={id} aria-hidden="true" />)}
+  <h1>burningsuit</h1>
+  <p>Website rebuild in progress.</p>
+</BaseLayout>

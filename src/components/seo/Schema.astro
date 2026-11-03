@@ -14,7 +14,7 @@
  * Gated by `noindex`: pages kept out of the index (e.g. /404) emit no schema,
  * mirroring the meta-robots rule so the two never disagree.
  */
-import type { SchemaNode } from "../../lib/schema";
+type SchemaNode = Record<string, unknown>;
 
 interface Props {
   /** One node or many — emitted together under a single @graph. */

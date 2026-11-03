@@ -1,109 +1,41 @@
 # burningsuit.co.uk
 
-The burningsuit company site. Static, hand-built, no CMS. Current design is
-**"the field notebook"** (flat Everforest green, 2026-07-11 warmth delta;
-tokens + semantic classes in `src/styles/`).
+A minimal static Astro rebuild shell. The old page system is removed; the training-led site has not been implemented or approved for publication.
 
-**Stack:** Astro 6 · Tailwind v4 (via PostCSS) · MDX content collections (the
-`/work` case studies and `/writing` essays) · self-hosted fonts (Astro Fonts API) · `astro:assets`
-images (AVIF/WebP) · published to **GitHub Pages** by GitHub Actions
-(`.github/workflows/deploy.yml`, on push to `main`).
+## Develop and check
 
-**Branch reality:** `main` is production and serves the full Astro site. `dev` is integration with a Netlify preview. Merging `dev` → `main` deploys to the live apex; see `AGENTS.md` for the checklist. Ask before pushing any branch.
-
-Both ownership comparison treatments were rejected; their copy was broadly accepted. The existing field-notebook design is retained, with no selection pending. The [implementation record](docs/ownership-preview-review.md) tracks the content transfer and validation.
-
-The [September review pass](docs/ownership-redesign-implementation.md) records the free hour, Home routing, AI fold and essay work, including authorised placeholders still awaiting Alan's final inputs. Header navigation is Power BI, Case studies and About, plus Book an hour. Contextual links lead to `/hour/` and the essay.
-
-## Local development
-
-Requires **Node 22.20+** (see `.nvmrc`).
-
-> **Develop outside OneDrive**, under `~/dev/Projects/`. OneDrive is for shared deliverables, never a git checkout. GitHub is the canonical remote.
+Use Node 22.20+ and LF line endings. Install with `npm ci`, run `npm run dev`, and validate with:
 
 ```bash
-npm install
-npm run dev        # local dev server
-npm run build      # prep:images + static build → dist/ + byte-budget gate
-npm run preview    # preview the built site
-npm run check      # astro check (types/templates)
+npm run gate
+npm run test:functional
 ```
 
-### Images
+The gate checks canonical brand parity, Astro types, source permissions, a static build, byte budgets, links, metadata, redirects and reserved anchors. Functional checks cover CSP, keyboard access, small screens, no-JavaScript behaviour, source permissions and the release block. Checks establish technical behaviour, not editorial approval.
 
-`src/assets/photos/*` are **pre-resized derivatives** (capped so the responsive
-fallback stays within budget). Regenerate them from the private brand photo library with:
+Tests serve the existing `dist/`; build first. Each Playwright run chooses a fresh port and refuses to reuse an existing listener. Use a separate checkout and fresh build for independent tests; never overwrite another review's build or stop its server. Leave the priced review at `127.0.0.1:4400` alone.
 
-```bash
-npm run prep:images
-```
+`npm run test:lh` and `npm run test:lh:mobile` audit the existing build for performance and accessibility. If Chrome is not on PATH, set `CHROME_PATH` to the installed browser executable. Page-specific screenshot baselines will be added when there is a design to review.
 
-The photo library, diagram font and brand-parity check resolve the brand repo beside the original Git checkout, including from linked worktrees. Set `BURNINGSUIT_BRAND_DIR` to use another brand checkout. Builds without the photo library use the committed derivatives.
+## What remains
 
-Diagram sources live in `diagrams/`; run `node diagrams/export.mjs` from the repository root to export the wide and narrow SVGs. It uses draw.io desktop (`DRAWIO_EXE` or `~/.local/bin/drawio`) and `xvfb-run` when no display is available. Commit regenerated SVGs and update the matching dimensions in `src/components/EssayFigure.astro`.
+- `src/pages/` and `src/layouts/BaseLayout.astro`: noindex placeholders and a 404 page, with no analytics runtime, forms, navigation, animation or content components.
+- `src/config/compatibility.mjs`: existing redirect destinations and route/anchor reservations. These placeholders preserve addresses, not the old page content; the list does not prescribe the new page hierarchy. Restore meaningful destinations before release, including the cited archive article.
+- `content/`: the five original MDX entries and original privacy/archive page sources, preserved byte-for-byte for reference and outside the build. They are not current offer authority or automatically cleared copy. The content check still rejects a named frontmatter block unless its publication gate is explicitly open; actual permission remains in the private ledger.
+- `src/styles/brand.css`: canonical brand tokens, copied unchanged from the brand repo. Change shared identity there first. Website styles now contain only basic type, spacing and accessible focus behaviour.
+- `src/components/seo/Schema.astro`: the retained JSON-LD emitter, with script-breakout escaping. Placeholder pages emit no schema or canonical links.
+- Photos, diagrams, logos and social assets remain available. Sources are not automatically rendered.
 
-## Verification gates
+The shared analytics configuration remains available for the eventual site and its CSP, but the shell loads no tracker. Restore a working privacy notice and opt-out if analytics is reintroduced.
 
-```bash
-npm run gate         # astro check → build (+byte budget)
-                     #   → linkinator on dist/ → SEO/JSON-LD assertions
-npm run serve        # serves dist/ on :4321 (Playwright runs against this)
-npm run test:functional # type-checks tests/, then Chromium behavioural checks
-npm run test:visual  # type-checks tests/, then Playwright region snapshots
-                     #   (chromium + firefox + a 390px mobile project)
-npm run test:lh      # Lighthouse CI (perf/a11y; slow lane, run pre-merge)
-npm run test:lh:mobile # Home + Power BI: three mobile runs with analytics
-```
+## Asset tools
 
-`npm run test:visual` needs browsers once: `npx playwright install chromium firefox`.
-Baselines are committed for **this Windows machine** (`…-win32.png`); on other
-platforms regenerate a set first (`npm run test:visual:update`). The visual
-gate is a **regression tripwire**, not a pixel oracle.
+`npm run prep:images` prepares committed photo derivatives; `node diagrams/export.mjs` exports the diagram sources using draw.io desktop and `xvfb-run` on headless Linux. Both use the brand checkout beside the original Git checkout, including from linked worktrees; `BURNINGSUIT_BRAND_DIR` overrides that location. Missing photo originals leave committed derivatives available. Commit regenerated assets and use their actual dimensions in future markup.
 
-Both Lighthouse commands audit the existing `dist/`; neither builds it. Run `npm run gate` or `npm run build` successfully first, and rebuild after any source change before repeating either command. The desktop gate is unchanged. Mobile uses default mobile emulation and throttling, includes analytics, and requires median performance ≥0.95 and median CLS of zero over three runs per URL. The footer review also checks every individual run for zero CLS. Exported mobile reports are retained in `.lighthouseci/mobile/`; preserve raw `.lighthouseci/lhr-*` reports before the next collection clears them.
+## Publication and safeguards
 
-If mobile fails, inspect the reports for font, image and motion shifts. Retain those results before repeating the same mobile configuration with analytics blocked to isolate its contribution. Fix site-caused shortfalls; any proposed tracker exception needs both reports, audit rows and observed FCP/LCP, with Alan's documented decision.
+All shell pages are noindex; `robots.txt` disallows crawling. `npm run check:release` deliberately fails for the shell and is required by the production workflow before artifact upload. This is not a release candidate. Restore indexing, sitemap, substantive content, privacy controls and appropriate checks before a release is considered.
 
-## Content
+`main` publishes to GitHub Pages; `dev` is integration. Branches and Netlify previews can be public. Commit locally and ask before every push; a push, merge or deployment needs its existing authorization. Keep the local push-readiness hook enabled. The production workflow validates and tests one artifact before publishing it; the Netlify preview stays hard-noindexed. GitHub Pages cannot enforce HSTS or frame-ancestors through a meta CSP.
 
-Content tracks:
-
-- **Case studies / proof** → an `.mdx` entry in the `work` collection
-  (`src/content/work/`; schema in `src/content.config.ts`). The filename is the
-  slug; the route and the `/work` tile are automatic.
-- **Standing pages** → bespoke `.astro` under `src/pages/`.
-- **Essays** → an `.mdx` entry in `src/content/writing/`, rendered through `EssayLayout` with Article metadata and a Home → title breadcrumb. With one essay, `/writing/` redirects to it. Replace that redirect with an index when a second essay is published. Publication dates and talk appearances are supplied editorial facts; omit them until known.
-
-**Naming is gated per study** by `namePublished` frontmatter: the named client +
-quote render only when it is `true` AND written permission has landed. While
-`false`, nothing named reaches the HTML — and the schema now **fails the build**
-if a `named` block is committed with the gate closed (client names must never
-enter this public repo's history). `src/config/flags.ts` is an empty shell kept
-for future build-time copy flags.
-
-## Deployment (GitHub Pages)
-
-The Pages source is **GitHub Actions**. `deploy.yml` checks out the source, sets up Node 22 with npm caching, runs `npm ci` and `npm run gate`, installs Playwright Chromium with OS dependencies, then runs `npm run test:functional` against the existing `dist/`. It uploads that tested artifact, including `.nojekyll`, without another build. Only the deployment job has publishing permissions, and its guard permits `main` only. The Pages environment and concurrency protection remain in place.
-
-`validate.yml` runs the same installation and validation steps for pushes to `dev` and PRs targeting `dev` or `main`, with read-only repository permissions and no publishing. Functional tests include test type-checking and use the built site. Windows screenshot baselines stay out of Linux CI because rendering and baseline names are platform-specific. The CSP tests retain deterministic tracker and beacon stubs.
-
-**Go-live** means promoting `dev` → `main` after the required checks and preview review, then verifying the apex. Ask before pushing; preview publication and production promotion are separate authorisations. Roll back by reverting the release merge on `main`; the Action validates and redeploys the previous site. [Workflow verification and Dependabot reconciliation](docs/workflow-review.md) records the pinned releases and remaining remote follow-up.
-
-`public/CNAME` preserves the apex domain; `public/.nojekyll` stops Jekyll
-touching `_astro/`. DNS (Mythic Beasts, apex → GitHub Pages) is configured
-separately. The Netlify preview (`netlify.toml`, production branch = `dev`) is
-hard-noindexed and never competes with the apex.
-
-### Security headers — platform limitation
-
-CSP ships as a `<meta http-equiv>` tag generated by Astro (`security.csp`).
-The page deliberately ships **no inline scripts** — the one external module is
-covered by `script-src 'self'`, so there are no inline hashes to keep in sync.
-**Plain GitHub Pages cannot send response headers**, so `frame-ancestors`
-(clickjacking) and HSTS are **not enforceable** here — a meta CSP ignores
-`frame-ancestors` by design. Revisit only if a CDN/proxy is ever placed in
-front. Everything else in the policy (`default-src 'none'`,
-`script-src 'self'`, `style-src 'self'`, etc.) is enforced, and
-`tests/csp.spec.ts` asserts both the policy and its runtime cleanliness.
-
-Analytics: **ON.** `src/config/analytics.mjs` supplies both the page shell (through `src/config/site.ts`) and Astro's CSP. It keeps the tracker, website ID, production-domain restriction and permitted beacon host together. The CSP allows `cloud.umami.is` for scripts and `gateway.umami.is` for event beacons; `tests/csp.spec.ts` checks the tag and policy together.
+Local `AGENTS.md`, hooks and the private `design/` symlink remain untracked. Back up local instructions before a checkout/rebase over history that tracked them. Current website decisions live in the private brief, course scope in Practice, and voice/identity in the brand repo. Earlier implementations remain in git history; they are not current requirements.

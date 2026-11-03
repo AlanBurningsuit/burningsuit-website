@@ -1,296 +1,76 @@
-/**
- * SEO / structured-data gate. The build proves pages RENDER; this proves every
- * page carries the head essentials and that any JSON-LD is actually valid —
- * the deterministic, non-negotiable slice of publish-readiness that no existing
- * gate covers. A model can't talk its way past it.
- *
- * Per built page (dist/**.html) it asserts:
- *   - exactly one non-empty <title>
- *   - exactly one non-empty <meta name="description">
- *   - exactly one <link rel="canonical"> with an absolute href
- *   - every <script type="application/ld+json"> parses as JSON and carries
- *     "@context" plus "@graph" (or "@type")
- *   - indexable pages emit ≥1 JSON-LD block; noindex pages (meta robots
- *     noindex) emit NONE — the schema gate and the index gate must agree
- *   - the Organization has its existing logo, resolved to an absolute URL and
- *     a built asset; Alan's LinkedIn belongs to the Person only
- *   - exactly one og:image, absolute on the production origin, whose PNG is in
- *     dist/ and whose real pixel size matches the declared og:image:width/height
- *     (LinkedIn lays the preview out from those, and a missing asset falls back
- *     to a random in-page image or none)
- *
- * Run after `npm run build` (needs dist/). FAILS the gate (exit 1) on any
- * violation. Mirrors scripts/check-budget.mjs in style.
- */
+import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { pages as reserved, redirects } from "../src/config/compatibility.mjs";
 
-const DIST = "dist";
-// The canonical origin. astro.config.mjs `site` is authoritative — keep in sync.
-const SITE = "https://burningsuit.co.uk";
-const ORG_LOGO_PATH = "social/burningsuit-mark-on-green.png";
-const FOUNDER_PROFILE = "https://www.linkedin.com/in/alan-harman-box";
-// Legacy posts restored at their original URLs because external citations
-// link to them, mapped to their writer. Each must build as a real page (a
-// redirect stub would strand the citation again) and name its writer as the
-// Article author.
-const ARCHIVE_AUTHORS = {
-  "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/": "Stuart Box",
-};
+const dist = "dist";
+const site = "https://burningsuit.co.uk";
+const files = readdirSync(dist, { recursive: true }).filter((name) => name.endsWith(".html"));
+assert(files.length, "No HTML pages: build first.");
+const htmlAt = (path) => readFileSync(join(dist, path), "utf8");
+const fileAt = (path) => path === "/" ? "index.html" : path.replace(/^\//, "").replace(/\/$/, "") + "/index.html";
+const tags = (html, type) => [...html.matchAll(new RegExp("<" + type + "\\b[^>]*>", "gi"))].map((match) => match[0]);
+const attr = (tag, name) => tag.match(new RegExp("\\b" + name + '="([^"]*)"', "i"))?.[1];
+const errors = [];
+const check = (condition, message) => { if (!condition) errors.push(message); };
 
-const all = readdirSync(DIST, { recursive: true }).map((f) => String(f).replaceAll("\\", "/"));
-const pages = all.filter((f) => f.endsWith(".html")).sort();
-
-// A dist with zero pages must never read as a pass ("checked 0 pages ✓").
-if (pages.length === 0) {
-  console.error("SEO gate FAILED — dist/ contains no .html pages (build first?)");
-  process.exit(1);
+for (const [path, anchors] of Object.entries(reserved)) {
+  const file = fileAt("/" + path);
+  check(files.includes(file), "Missing reserved route: /" + path);
+  if (!files.includes(file)) continue;
+  for (const id of anchors) check(htmlAt(file).includes('id="' + id + '"'), "Missing reserved anchor: /" + path + "#" + id);
 }
-
-const metaTags = (html) => [...html.matchAll(/<meta\b[^>]*>/gi)].map((m) => m[0]);
-const linkTags = (html) => [...html.matchAll(/<link\b[^>]*>/gi)].map((m) => m[0]);
-const attr = (tag, name) => {
-  const m = tag.match(new RegExp(`\\b${name}\\s*=\\s*"([^"]*)"`, "i"));
-  return m ? m[1] : null;
-};
-// Width and height from a PNG's IHDR chunk (bytes 16–23), no decoder needed.
-const pngSize = (file) => {
-  const bytes = readFileSync(file);
-  if (bytes.length < 24 || bytes.toString("latin1", 1, 4) !== "PNG") return [NaN, NaN];
-  return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
-};
-
-let failed = false;
-let redirectStubs = 0;
-const problems = [];
-const fail = (route, msg) => {
-  failed = true;
-  problems.push(`  ✗ ${route}  —  ${msg}`);
-};
-
-if (!pages.includes("writing/index.html")) fail("/writing/", "missing redirect to the first essay");
-if (!pages.includes("writing/we-are-all-middle-management-now/index.html")) fail("/writing/", "first essay is missing from the build");
-for (const route of Object.keys(ARCHIVE_AUTHORS)) {
-  if (!pages.includes(route.slice(1) + "index.html")) fail(route, "restored archive post is missing from the build");
+for (const [from, target] of Object.entries(redirects)) {
+  const file = fileAt(from);
+  check(files.includes(file), "Missing legacy redirect: " + from);
+  if (!files.includes(file)) continue;
+  const found = htmlAt(file).match(/<meta http-equiv="refresh" content="\d+;url=([^"]+)"/i);
+  check(found && new URL(found[1], site).href === new URL(target, site).href, "Changed legacy redirect: " + from);
 }
-
-for (const rel of pages) {
-  const route = "/" + rel.replace(/index\.html$/, "").replace(/\.html$/, "");
-  const html = readFileSync(join(DIST, rel), "utf8");
-  // Astro static-redirect stubs (meta refresh + noindex + canonical→target)
-  // are intentionally not real pages — exempt them from the page contract,
-  // but verify the target they point at actually exists in this build. Stubs
-  // are linked from nowhere, so the link checker never crawls them: without
-  // this, renaming a page silently strands every stub pointing at it.
-  // No real page emits meta refresh (BaseLayout doesn't; a hand-added one
-  // would be a bug worth surfacing in review, not here).
+for (const file of files) {
+  const html = htmlAt(file);
   const refresh = html.match(/<meta http-equiv="refresh" content="\d+;url=([^"]+)"/i);
   if (refresh) {
-    redirectStubs++;
-    if (ARCHIVE_AUTHORS[route]) fail(route, "restored archive post must be the page itself, not a redirect stub");
-    let targetUrl;
-    try {
-      targetUrl = new URL(refresh[1], SITE);
-    } catch {
-      fail(route, `redirect stub has an invalid target: ${refresh[1]}`);
-      continue;
-    }
-    const target = targetUrl.pathname;
-    const targetFile = (target.endsWith("/") ? target + "index.html" : target + "/index.html")
-      .replace(/^\//, "");
-    if (targetUrl.origin !== SITE || !pages.includes(targetFile)) {
-      fail(route, `redirect stub points at ${targetUrl.href}, which is not in this build`);
-    } else if (targetUrl.hash) {
-      let fragment;
-      try {
-        fragment = decodeURIComponent(targetUrl.hash.slice(1));
-      } catch {
-        fail(route, `redirect stub has an invalid fragment: ${targetUrl.hash}`);
-        continue;
-      }
-      const targetHtml = readFileSync(join(DIST, targetFile), "utf8");
-      const ids = [...targetHtml.matchAll(/<[^>]+\bid="([^"]+)"/gi)].map((match) => match[1]);
-      if (!ids.includes(fragment)) fail(route, `redirect fragment #${fragment} does not exist on ${target}`);
-    }
-    if (route === "/writing/" && (target !== "/writing/we-are-all-middle-management-now/" || targetUrl.hash)) {
-      fail(route, "writing has no index yet: its redirect must lead directly to the first essay");
+    const target = new URL(refresh[1], site);
+    check(target.origin === site && files.includes(fileAt(target.pathname)), file + ": redirect target is not built.");
+    if (target.hash && files.includes(fileAt(target.pathname))) {
+      check(htmlAt(fileAt(target.pathname)).includes('id="' + decodeURIComponent(target.hash.slice(1)) + '"'), file + ": redirect fragment missing.");
     }
     continue;
   }
-
-  if (route === "/writing/") fail(route, "writing must remain a redirect until there is a second essay");
-
-  // Head-only slice for the <title> count: an accessible inline-SVG <title>
-  // in the body must not read as a duplicate document title.
-  const headEnd = html.indexOf("</head>");
-  const head = headEnd === -1 ? html : html.slice(0, headEnd);
-
-  // <title>
-  const titles = [...head.matchAll(/<title[^>]*>([\s\S]*?)<\/title>/gi)].map((m) => m[1].trim());
-  if (titles.length !== 1) fail(route, `expected 1 <title> in <head>, found ${titles.length}`);
-  else if (!titles[0]) fail(route, "<title> is empty");
-
-  // <meta name="description">
-  const descs = metaTags(html)
-    .filter((t) => attr(t, "name") === "description")
-    .map((t) => (attr(t, "content") ?? "").trim());
-  if (descs.length !== 1) fail(route, `expected 1 meta description, found ${descs.length}`);
-  else if (!descs[0]) fail(route, "meta description is empty");
-
-  // robots noindex? (needed by the canonical rule below, and the JSON-LD rule)
-  const noindex = metaTags(html).some(
-    (t) => attr(t, "name") === "robots" && /noindex/i.test(attr(t, "content") ?? ""),
-  );
-
-  const archiveAuthor = ARCHIVE_AUTHORS[route];
-  const editorial = (route.startsWith("/writing/") && route !== "/writing/") || Boolean(archiveAuthor);
-  if (editorial && noindex) fail(route, "essay page is unexpectedly noindexed");
-
-  // <link rel="canonical"> — mirrors the JSON-LD rule: noindex pages emit NO
-  // canonical (a canonical on a noindexed page is a mixed signal); indexable
-  // pages emit exactly one, absolute, pointing at THIS route.
-  const canons = linkTags(html)
-    .filter((t) => attr(t, "rel") === "canonical")
-    .map((t) => attr(t, "href"));
-  if (noindex) {
-    if (canons.length) fail(route, `noindex page emits ${canons.length} canonical(s) — should emit none`);
-  } else if (canons.length !== 1) fail(route, `expected 1 canonical, found ${canons.length}`);
-  else if (!/^https?:\/\//.test(canons[0] ?? "")) fail(route, `canonical not absolute: ${canons[0]}`);
-  else {
-    // The canonical must point at THIS route on the production origin —
-    // otherwise a single BaseLayout/site regression canonicalises every page
-    // to the homepage (mass deindexing) while a presence-only check stays
-    // green. Trailing-slash form is normalised, not asserted.
-    const norm = (u) => u.replace(/\/+$/, "");
-    const expected = SITE + route;
-    if (norm(canons[0]) !== norm(expected)) {
-      fail(route, `canonical ${canons[0]} does not match its route (expected ${expected})`);
-    }
-  }
-
-  // og:image — the social preview every page advertises. Presence isn't
-  // enough: the asset must be a built PNG whose real size matches the
-  // declared width/height, or LinkedIn's scraper (which trusts the numbers,
-  // then verifies the bytes) drops the card silently.
-  const og = (name) =>
-    metaTags(head)
-      .filter((t) => attr(t, "property") === name)
-      .map((t) => attr(t, "content") ?? "");
-  const images = og("og:image");
-  if (images.length !== 1) fail(route, `expected 1 og:image, found ${images.length}`);
-  else {
-    let imageUrl;
+  const head = html.split("</head>")[0];
+  const titles = [...head.matchAll(/<title[^>]*>([\s\S]*?)<\/title>/gi)];
+  check(titles.length === 1 && titles[0][1].trim(), file + ": needs one non-empty title.");
+  const metas = tags(head, "meta");
+  const descriptions = metas.filter((tag) => attr(tag, "name") === "description");
+  check(descriptions.length === 1 && attr(descriptions[0], "content")?.trim(), file + ": needs one description.");
+  const noindex = metas.some((tag) => attr(tag, "name") === "robots" && /noindex/i.test(attr(tag, "content") ?? ""));
+  const canonical = tags(head, "link").filter((tag) => attr(tag, "rel") === "canonical");
+  const route = "/" + file.replace(/index\.html$/, "").replace(/\.html$/, "");
+  check(noindex ? canonical.length === 0 : canonical.length === 1 && attr(canonical[0], "href")?.replace(/\/$/, "") === (site + route).replace(/\/$/, ""), file + ": invalid canonical/noindex combination.");
+  const schemas = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)];
+  check(noindex ? schemas.length === 0 : schemas.length > 0, file + ": schema disagrees with indexing.");
+  for (const block of schemas) {
     try {
-      imageUrl = new URL(images[0]);
-    } catch {
-      fail(route, `og:image is not an absolute URL: ${images[0]}`);
-    }
-    if (imageUrl) {
-      const asset = imageUrl.pathname.replace(/^\//, "");
-      if (imageUrl.origin !== SITE) fail(route, `og:image must live on ${SITE}: ${images[0]}`);
-      else if (!asset.endsWith(".png")) fail(route, `og:image must be a PNG: ${images[0]}`);
-      else if (!all.includes(asset)) fail(route, `og:image asset is missing from dist/: /${asset}`);
-      else {
-        const [w, h] = pngSize(join(DIST, asset));
-        const declared = [og("og:image:width"), og("og:image:height")].map((v) => (v.length === 1 ? Number(v[0]) : NaN));
-        if (declared.some((n) => !Number.isInteger(n) || n <= 0)) fail(route, "og:image needs one numeric og:image:width and og:image:height");
-        else if (declared[0] !== w || declared[1] !== h) {
-          fail(route, `og:image declares ${declared[0]}×${declared[1]} but /${asset} is ${w}×${h}`);
-        }
-      }
-      const alts = og("og:image:alt");
-      if (alts.length !== 1 || !alts[0].trim()) fail(route, "og:image needs one non-empty og:image:alt");
-    }
+      const data = JSON.parse(block[1]);
+      check(data["@context"] && (data["@graph"] || data["@type"]), file + ": incomplete JSON-LD.");
+    } catch { errors.push(file + ": invalid JSON-LD."); }
   }
-
-  // JSON-LD blocks
-  const blocks = [
-    ...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi),
-  ].map((m) => m[1]);
-
-  if (noindex) {
-    if (blocks.length) fail(route, `noindex page emits ${blocks.length} JSON-LD block(s) — should emit none`);
-  } else {
-    if (!blocks.length) fail(route, "indexable page has no JSON-LD");
-    const nodes = [];
-    for (const raw of blocks) {
-      let parsed;
-      try {
-        parsed = JSON.parse(raw);
-      } catch (e) {
-        fail(route, `JSON-LD does not parse: ${String(e.message).slice(0, 80)}`);
-        continue;
-      }
-      if (!parsed["@context"]) fail(route, "JSON-LD missing @context");
-      if (!parsed["@graph"] && !parsed["@type"]) fail(route, "JSON-LD missing @graph/@type");
-      if (Array.isArray(parsed["@graph"])) nodes.push(...parsed["@graph"]);
-      else if (parsed["@type"]) nodes.push(parsed);
-    }
-    const organizations = nodes.filter((node) => node?.["@type"] === "Organization");
-    const people = nodes.filter((node) => node?.["@type"] === "Person");
-    if (organizations.length !== 1) fail(route, `expected 1 Organization, found ${organizations.length}`);
-    if (people.length !== 1) fail(route, `expected 1 Person, found ${people.length}`);
-    const organization = organizations[0];
-    const person = people[0];
-    if (organization) {
-      if (organization.logo !== `${SITE}/${ORG_LOGO_PATH}`) {
-        fail(route, "Organization logo must be the absolute URL of the existing company PNG");
-      }
-      if (!all.includes(ORG_LOGO_PATH)) fail(route, "Organization logo is missing from dist/");
-      const profiles = Array.isArray(organization.sameAs) ? organization.sameAs : [organization.sameAs];
-      if (profiles.includes(FOUNDER_PROFILE)) fail(route, "Organization sameAs contains Alan's personal LinkedIn");
-    }
-    if (person && (!Array.isArray(person.sameAs) || !person.sameAs.includes(FOUNDER_PROFILE))) {
-      fail(route, "Person sameAs is missing Alan's confirmed LinkedIn");
-    }
-    if (editorial) {
-      const articles = nodes.filter((node) => node?.["@type"] === "Article");
-      const breadcrumbs = nodes.filter((node) => node?.["@type"] === "BreadcrumbList");
-      if (articles.length !== 1) fail(route, `expected 1 essay Article, found ${articles.length}`);
-      if (breadcrumbs.length !== 1) fail(route, `expected 1 essay BreadcrumbList, found ${breadcrumbs.length}`);
-      const article = articles[0];
-      if (article) {
-        if (archiveAuthor) {
-          // Inline, not a second top-level Person: the identity graph's one
-          // Person is Alan, and the post is not his.
-          if (article.author?.["@type"] !== "Person" || article.author?.name !== archiveAuthor || article.author?.["@id"]) {
-            fail(route, `archive Article author must be ${archiveAuthor}, inline`);
-          }
-        } else if (article.author?.["@id"] !== person?.["@id"]) fail(route, "essay author must reference Alan's Person node");
-        if (article.publisher?.["@id"] !== organization?.["@id"]) fail(route, "essay publisher must reference the Organization node");
-        if (article.url !== SITE + route || article.mainEntityOfPage !== SITE + route) fail(route, "essay Article must identify its own canonical page");
-        if (typeof article.headline !== "string" || !article.headline.trim()) fail(route, "essay Article headline is empty");
-        const publishedTags = metaTags(head).filter((tag) => attr(tag, "property") === "article:published_time");
-        const modifiedTags = metaTags(head).filter((tag) => attr(tag, "property") === "article:modified_time");
-        for (const [field, tags] of [["datePublished", publishedTags], ["dateModified", modifiedTags]]) {
-          const value = article[field];
-          if (value === undefined) {
-            if (tags.length) fail(route, `${field} is absent in Article but its Open Graph date is emitted`);
-          } else {
-            const date = typeof value === "string" ? new Date(value) : new Date(NaN);
-            if (!Number.isFinite(date.getTime()) || date.toISOString() !== value) fail(route, `essay ${field} must be a valid ISO timestamp`);
-            if (tags.length !== 1 || attr(tags[0], "content") !== value) fail(route, `essay ${field} must match one Open Graph date`);
-          }
-        }
-        if (article.dateModified && !article.datePublished) fail(route, "essay modification date needs a publication date");
-        if (article.datePublished && article.dateModified && new Date(article.dateModified) < new Date(article.datePublished)) fail(route, "essay modification date precedes publication");
-      }
-      const items = breadcrumbs[0]?.itemListElement;
-      if (!Array.isArray(items) || items.length !== 2) {
-        fail(route, "essay breadcrumb must be Home → title, with no Writing index crumb");
-      } else {
-        if (items[0].position !== 1 || items[0].name !== "Home" || items[0].item !== `${SITE}/`) fail(route, "essay breadcrumb must start at Home");
-        if (items[1].position !== 2 || items[1].item !== SITE + route || typeof items[1].name !== "string" || !items[1].name.trim()) fail(route, "essay breadcrumb must end at its own title and URL");
-      }
-    }
-  }
+  const og = (key) => metas.filter((tag) => attr(tag, "property") === key).map((tag) => attr(tag, "content"));
+  try {
+    assert.equal(og("og:image").length, 1);
+    const image = new URL(og("og:image")[0]);
+    assert.equal(image.origin, site);
+    const png = readFileSync(join(dist, image.pathname));
+    assert.equal(png.toString("latin1", 1, 4), "PNG");
+    assert.equal(Number(og("og:image:width")[0]), png.readUInt32BE(16));
+    assert.equal(Number(og("og:image:height")[0]), png.readUInt32BE(20));
+    assert.equal(og("og:image:alt").length, 1);
+    assert(og("og:image:alt")[0]?.trim());
+  } catch { errors.push(file + ": invalid/missing Open Graph image or dimensions."); }
 }
-
-console.log(
-  `SEO gate: checked ${pages.length - redirectStubs} pages (${redirectStubs} redirect stubs skipped)`,
-);
-if (failed) {
-  console.error(`\nSEO gate FAILED — ${problems.length} problem(s):\n${problems.join("\n")}\n`);
+if (errors.length) {
+  console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log("SEO gate passed ✓ (title, description, canonical, og:image, JSON-LD and identity on every page)\n");
+console.log("SEO and compatibility checks passed (" + files.length + " HTML files).");

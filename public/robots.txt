@@ -1,4 +1,2 @@
 User-agent: *
-Allow: /
-
-Sitemap: https://burningsuit.co.uk/sitemap-index.xml
+Disallow: /

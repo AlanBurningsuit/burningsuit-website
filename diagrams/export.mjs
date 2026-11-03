@@ -1,7 +1,7 @@
 // Run from the repository root: node diagrams/export.mjs
 // Exports each diagram's Wide and Narrow pages to src/assets/diagrams/ with the draw.io
 // desktop app, embedding Albert Sans from the brand repo. Prints the sizes for
-// src/components/EssayFigure.astro. Sources are read, never rewritten.
+// the consuming markup. Sources are read, never rewritten.
 import {readFile,writeFile,mkdtemp,rm} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {existsSync} from 'node:fs';

@@ -31,7 +31,6 @@ jobs:
         run: npm run gate
       - name: Install Playwright Chromium and OS dependencies
         run: npx playwright install --with-deps chromium
-      # test:functional type-checks tests and serves the existing dist/. Windows
-      # visual baselines are platform-specific, so screenshot tests stay local.
+      # Functional checks serve the fresh artifact produced by the gate.
       - name: Test the built artifact
         run: npm run test:functional
