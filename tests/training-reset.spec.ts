@@ -187,6 +187,7 @@ test("course discovery, facts and email routes work without JavaScript", async (
   await expect(page.locator('.course-book a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
   await expect(page.locator(".do-steps li").first()).toBeVisible();
   // Keyboard order skips the unavailable controls and reaches each live link.
+  // Assumes the skip link is the first tab stop and moves focus to main.
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
   const reached: string[] = [];
