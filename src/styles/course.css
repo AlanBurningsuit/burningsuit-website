@@ -1,53 +1,88 @@
-.crumbs { padding-top: 26px; }
-.crumbs a { color: var(--fg-dim); }
+/* Power BI with AI agents 101: the course page composition. Shared furniture lives in app.css. */
+
+/* Opening: the introduction, with the deciding facts beside it on wide screens and after it on narrow ones. */
 .course-opening {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr);
-  grid-template-areas: "intro facts" "who facts";
-  grid-template-rows: auto 1fr;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr);
   column-gap: var(--column-gap);
-  padding-block: 18px 72px;
+  padding-block: 46px 80px;
   align-items: start;
 }
-.course-intro { grid-area: intro; }
-.course-who { grid-area: who; }
-.course-intro > p:not(.eyebrow), .course-who > p { max-width: 60ch; }
-.course-intro h1 { font-size: clamp(2.5rem, 4.6vw, 3.9rem); margin: 14px 0 22px; }
-.course-sub { font-size: 1.35rem; margin: 34px 0 10px; letter-spacing: var(--ls-display-tight); }
-.public-run { grid-area: facts; border-top: var(--bw-spine) solid var(--fg); padding-top: 16px; position: sticky; top: 20px; }
-.public-run h2.eyebrow { font-weight: 400; letter-spacing: var(--ls-mono-wide); }
-.course-facts.big { font-size: .98rem; margin-top: 12px; }
-.course-facts.big > div { grid-template-columns: 70px minmax(0, 1fr); border-bottom: var(--bw-hair) solid var(--line); padding-block: 9px; }
-.text-link.strong { font-size: 1.1rem; margin-top: 6px; }
-.public-run .aside { margin-top: 6px; }
-.public-run hr { border: 0; border-top: var(--bw-hair) solid var(--line); margin: 24px 0 16px; }
-.public-run .eyebrow + p { margin-top: 6px; }
-.outcomes-band { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); padding-block: 64px; }
-.outcomes { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(32px, 5vw, 72px); }
-.outcomes li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; border-top: var(--bw-hair) solid var(--line); padding-block: 22px 26px; }
-.outcome-index { font: 400 .76rem / var(--lh-body) var(--ff-mono); color: var(--amber); padding-top: 5px; }
-.outcomes h3 { font-size: 1.3rem; margin-bottom: 8px; }
-.outcomes p { font-size: 1rem; }
-.course-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--column-gap); padding-block: 72px; }
-.steps { list-style: none; margin: 26px 0 22px; padding: 0; }
-.steps li { border-left: var(--bw-spine) solid var(--line); padding: 0 0 22px 20px; }
-.steps h3 { font-size: 1.15rem; margin-bottom: 6px; }
-.steps p { font-size: 1rem; }
-.h-small { font-size: 1.2rem; letter-spacing: var(--ls-display-tight); margin-bottom: 10px; }
-.course-lists > div + div { margin-top: 30px; }
-.course-lists ul { margin: 0; padding-left: 1.1rem; font-size: 1rem; }
-.course-lists li + li { margin-top: 8px; }
-.course-lists li::marker { color: var(--amber); }
-.to-confirm { font: 400 .74rem / var(--lh-relaxed) var(--ff-mono); color: var(--bg); background: var(--moss); padding: 2px 6px; border-radius: var(--r-xs); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.course-intro h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); }
+.course-intro > p { max-width: 60ch; }
+.course-intro .standfirst { max-width: 32ch; }
+.course-fit { border-left: var(--bw-spine) solid var(--amber); padding-left: 18px; }
+p + p.course-fit { margin-top: 1.4rem; }
+
+.course-run { border-top: var(--bw-spine) solid var(--fg); padding-top: 6px; margin-top: 10px; }
+.run-facts { list-style: none; margin: 0; padding: 0; font: 600 1.05rem / var(--lh-snug) var(--ff-display); }
+.run-facts li { border-bottom: var(--bw-hair) solid var(--line); padding-block: 13px; }
+
+.booking { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 24px; }
+.book-button {
+  font: 600 1.05rem / 1 var(--ff-display);
+  border: var(--px) solid var(--deep);
+  border-radius: var(--r-sm);
+  padding: 14px 30px;
+}
+/* The only state today: paid booking is closed, so the control is visibly unavailable. */
+.book-button:disabled { color: var(--fg-dim); background: var(--bg-3); cursor: not-allowed; }
+.booking-status { font: 400 .8rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
+.private-ask { margin-top: 26px; padding-top: 16px; border-top: var(--bw-hair) solid var(--line); font-size: 1rem; }
+.private-ask a { font-weight: 600; }
+
+/* What you'll do: a raised band with the four steps on a numbered spine. */
+.course-do { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
+.do-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 64px 70px; align-items: start; }
+.do-lead h2 { margin-bottom: 16px; }
+.do-lead p { font-size: 1.15rem; max-width: 30ch; }
+.do-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+.do-steps li { counter-increment: step; position: relative; border-left: var(--bw-spine) solid var(--line); padding: 0 0 28px 56px; }
+.do-steps li::before { content: counter(step, decimal-leading-zero) / ""; position: absolute; left: 20px; top: 5px; font: 400 .76rem / 1 var(--ff-mono); color: var(--amber); }
+.do-steps h3 { font-size: 1.3rem; margin-bottom: 8px; }
+.do-steps p { font-size: 1rem; max-width: 62ch; }
+.do-next { margin-top: 6px; padding-top: 22px; border-top: var(--bw-hair) solid var(--line); max-width: 62ch; }
+
+/* Why can I trust it: the checking, with who's teaching beside it. */
+.course-trust { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: var(--column-gap); padding-block: 76px 64px; align-items: start; }
+.trust-check h2 { margin-bottom: 22px; }
+.trust-check p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
+.trust-teacher { border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; margin-top: 10px; max-width: 40ch; }
+.trust-teacher h3 { font-size: 1.3rem; margin-bottom: 10px; }
+.trust-teacher .text-link { margin-top: 12px; }
+
+/* What you'll need, then what you keep. */
+.course-need { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 80px; align-items: start; }
+.need-list { margin: 0; padding: 0; list-style: none; }
+.need-list li { border-top: var(--bw-hair) solid var(--line); padding-block: 12px; max-width: 64ch; }
+.need-list li:last-child { border-bottom: var(--bw-hair) solid var(--line); }
+.need-note { margin-top: 18px; font-size: 1rem; color: var(--fg-dim); max-width: 64ch; }
+.keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; max-width: 52ch; }
+.to-confirm { font: 400 .74rem / var(--lh-relaxed) var(--ff-mono); color: var(--bg); background: var(--moss); padding: 2px 6px; border-radius: var(--r-xs); white-space: nowrap; }
+
+/* Book a seat: the closing band. */
+.course-book { background: var(--bg-band); }
+.book-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--column-gap); padding-block: 60px 66px; align-items: start; }
+.book-inner h2 { margin-bottom: 16px; }
+.book-facts { font-size: 1.1rem; max-width: 40ch; }
+.book-inner .booking { margin-top: 6px; }
+.invoice { margin-top: 26px; font-size: 1rem; max-width: 52ch; }
 
 @media (max-width: 900px) {
-  .course-opening, .course-details { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
-  .course-opening { grid-template-areas: "intro" "facts" "who"; grid-template-rows: auto; }
-  .course-sub { margin-top: 0; }
-  .public-run { position: static; }
-  .outcomes { grid-template-columns: minmax(0, 1fr); }
+  .course-opening, .do-inner, .course-trust, .course-need, .book-inner { grid-template-columns: minmax(0, 1fr); row-gap: 30px; }
+  .course-opening { padding-block: 34px 56px; row-gap: 40px; }
+  .course-run { margin-top: 0; }
+  .do-inner { padding-block: 50px 54px; }
+  .course-trust { padding-block: 56px 40px; }
+  .trust-teacher { margin-top: 0; }
+  .course-need { padding-block: 24px 60px; row-gap: 22px; }
+  .book-inner { padding-block: 46px 52px; row-gap: 20px; }
 }
 @media (max-width: 680px) {
-  .course-opening { padding-bottom: 48px; }
-  .outcomes-band, .course-details { padding-block: 48px; }
+  .course-opening { padding-block: 30px 48px; }
+  .do-steps li { padding-left: 46px; }
+  .do-steps li::before { left: 14px; }
+  .trust-check p { font-size: 1.1rem; }
+  .keep { font-size: 1.1rem; margin-top: 32px; }
+  .to-confirm { white-space: normal; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 }

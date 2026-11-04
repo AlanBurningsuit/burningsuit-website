@@ -64,26 +64,73 @@ for (const route of ["/", course]) {
   }
 }
 
-test("the 101 keeps public and private enquiries distinct and open setup facts visible", async ({ page }) => {
+test("the 101 follows the visitor questions, keeps booking closed and open setup facts visible", async ({ page }) => {
   await page.goto(course);
   await expect(page.locator('nav a[aria-current]')).toHaveText("Training");
-  await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
-  await expect(page.locator(".course-facts")).toContainText("Price on request");
-  await expect(page.getByRole("link", { name: "Ask about a seat" })).toHaveAttribute("href", "/contact/?about=101");
-  await expect(page.getByRole("link", { name: "Ask about a private 101" })).toHaveAttribute("href", "/contact/?about=101-private");
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll do", "How you'll check its answers", "What you'll need", "Book a seat"]);
+  await expect(page.locator(".do-steps > li")).toHaveCount(4);
+  await expect(page.locator(".do-steps h3")).toHaveText(["Get your bearings.", "Understand a report you didn't build.", "Document its calculations.", "Build one new calculation and check it."]);
+  await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toBeVisible();
+  await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText(["Wednesday 20 January 2027", "Wednesday 20 January 2027"]);
+  await expect(page.locator(".run-facts > li")).toHaveText(["Half a day, live online", "Wednesday 20 January 2027, 9:30am to 12:30pm UK time", "4 to 8 people", "Price on request"]);
+  await expect(page.locator(".book-facts")).toContainText("Price on request.");
+
+  // Paid booking is closed: both controls are unavailable, explained and lead nowhere.
+  const book = page.getByRole("button", { name: "Book a seat" });
+  await expect(book).toHaveCount(2);
+  for (const control of await book.all()) {
+    await expect(control).toBeDisabled();
+    await expect(control).toHaveAccessibleDescription("Booking isn't open yet.");
+  }
+  await expect(page.locator("main form, main a[href*='stripe'], main a[href*='pay'], main a[href^='/contact'], main a[href='#contact']")).toHaveCount(0);
+
+  // Email is the private-course and invoice route; How I train is the one teaching-method link.
+  await expect(page.getByRole("link", { name: "Ask about a private course." })).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
+  await expect(page.getByRole("link", { name: /private/i })).toHaveCount(1);
+  await expect(page.locator(".invoice a")).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
+  await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
+  const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+  expect(mainLinks).toEqual(["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
+
+  // Open facts stay tagged; withheld gaps, the parked showcase and "If plans change" stay off the page.
   await expect(page.locator(".to-confirm")).toHaveCount(4);
   for (const tag of await page.locator(".to-confirm").all()) await expect(tag).toContainText("to confirm");
-  await expect(page.getByRole("heading", { name: "If plans change" })).toHaveCount(0);
-  await expect(page.locator(".outcomes > li")).toHaveCount(4);
-  await page.setViewportSize({ width: 390, height: 844 });
-  const intro = await page.locator(".course-intro").boundingBox();
-  const facts = await page.locator(".public-run").boundingBox();
-  const who = await page.locator(".course-who").boundingBox();
-  expect(facts!.y).toBeGreaterThanOrEqual(intro!.y + intro!.height);
-  expect(who!.y).toBeGreaterThanOrEqual(facts!.y + facts!.height);
+  const text = await page.locator("main").innerText();
+  for (const absent of [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, /refund/i, /checklist/i, /house-rules template/i, /setup notes/i, /founding rate/i]) expect(text).not.toMatch(absent);
+  await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a recording of the morning, along with the teaching project and clean copies, so you can work through it again.");
 });
 
-test("course discovery, facts and email fallback work without JavaScript", async ({ browser, baseURL }) => {
+test("the 101 puts facts beside the introduction on wide screens and after the prerequisite on narrow ones", async ({ page }) => {
+  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto(course);
+  let intro = await box(".course-intro"), facts = await box(".course-run");
+  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
+  expect(facts.y).toBeLessThan(intro.y + intro.height);
+  const [check, teacher] = [await box(".trust-check"), await box(".trust-teacher")];
+  expect(teacher.x).toBeGreaterThanOrEqual(check.x + check.width);
+
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    intro = await box(".course-intro"); facts = await box(".course-run");
+    const fit = await box(".course-fit");
+    expect(fit.y).toBeLessThan(facts.y);
+    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
+    expect((await box(".course-do")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    const [narrowCheck, narrowTeacher] = [await box(".trust-check"), await box(".trust-teacher")];
+    expect(narrowTeacher.y).toBeGreaterThanOrEqual(narrowCheck.y + narrowCheck.height);
+    // Steps, tags and the booking control stay inside the viewport.
+    for (const selector of [".do-steps", ".need-list", ".book-button"]) {
+      for (const item of await page.locator(selector).all()) {
+        const b = (await item.boundingBox())!;
+        expect(b.x).toBeGreaterThanOrEqual(0);
+        expect(b.x + b.width).toBeLessThanOrEqual(width);
+      }
+    }
+  }
+});
+
+test("course discovery, facts and email routes work without JavaScript", async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
   await page.goto("/");
@@ -91,7 +138,18 @@ test("course discovery, facts and email fallback work without JavaScript", async
   await expect(page).toHaveURL(baseURL! + course);
   await expect(page.getByRole("heading", { name: "Power BI with AI agents 101", exact: true })).toBeVisible();
   await expect(page.locator(".to-confirm")).toHaveCount(4);
-  await expect(page.locator('#contact a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
+  await expect(page.getByRole("button", { name: "Book a seat" }).first()).toBeDisabled();
+  await expect(page.locator('.course-book a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
+  await expect(page.locator(".do-steps li").first()).toBeVisible();
+  // Keyboard order skips the unavailable controls and reaches each live link.
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");
+  const reached: string[] = [];
+  for (let i = 0; i < 3; i++) {
+    await page.keyboard.press("Tab");
+    reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? document.activeElement?.tagName ?? ""));
+  }
+  expect(reached).toEqual(["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
   await context.close();
 });
 
