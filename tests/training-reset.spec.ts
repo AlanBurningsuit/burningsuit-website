@@ -115,6 +115,22 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
   await expect(page.locator(".specialist-names > li")).toHaveText(["DAX fundamentals (1 day)", "Data modelling (1 day)", "DAX deep dive (2 days)"]);
   await expect(page.locator(".specialist-names")).toBeVisible();
+  // Separators are decorative: hidden from assistive technology and never left at a line start or end.
+  await expect(page.locator(".specialist-names")).toMatchAriaSnapshot(`
+    - list:
+      - listitem: DAX fundamentals (1 day)
+      - listitem: Data modelling (1 day)
+      - listitem: DAX deep dive (2 days)
+  `);
+  const separators = () => page.locator(".specialist-names").evaluate((list) => {
+    const edge = list.getBoundingClientRect().left;
+    const clipped = getComputedStyle(list).overflow === "hidden";
+    return [...list.children].map((item) => {
+      const left = item.getBoundingClientRect().left;
+      return { rowStart: Math.abs(left - edge) < 1, shown: !clipped || left + parseFloat(getComputedStyle(item, "::before").left) >= edge };
+    });
+  });
+  for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
   await expect(page.getByRole("link", { name: "Compare all courses" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: /^Tell me what you use Power BI for now/ })).toHaveAttribute("href", "#contact");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Find your starting point", "Understanding that lasts", "Help with your own reporting", "Tell me what you're looking for."]);
@@ -135,6 +151,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   intro = await box(".introduction"); list = await box(".courses"); photo = await box(".alan-photo");
   expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
   expect(photo.y).toBeGreaterThanOrEqual(list.y + list.height);
+  for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
 });
 
 test("enquiry form is a labelled plain POST with nothing preselected that validates without JavaScript", async ({ browser, baseURL }) => {

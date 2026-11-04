@@ -31,7 +31,7 @@
 /* Separators sit in the gap before each name; one that starts a wrapped line falls outside the row and is clipped. */
 .specialist-names { list-style: none; margin: 8px 0 10px; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 1.2em; overflow: hidden; font: 600 1.2rem / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display-tight); }
 .specialist-names li { position: relative; }
-.specialist-names li::before { content: "·"; position: absolute; left: -.85em; color: var(--fg-dim); }
+.specialist-names li::before { content: "·" / ""; position: absolute; left: -.85em; color: var(--fg-dim); }
 .specialist-names .days { font: 400 .8rem / 1 var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
 .specialists > p:last-child { font-size: .96rem; }
 .specialists a, .not-sure a { font-weight: 600; }
