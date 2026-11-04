@@ -1,0 +1,47 @@
+---
+// A plain HTML POST: no JavaScript, prefill or client validation beyond the browser's own.
+import "../styles/enquiry.css";
+import { ENQUIRY } from "../config/enquiry.mjs";
+---
+<section id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="wrap contact-inner enquiry">
+    <div class="enquiry-intro">
+      <h2 id="contact-title"><slot name="heading" /></h2>
+      <p><slot /></p>
+    </div>
+    <div>
+      <form class="enquiry-form" method="post" action={ENQUIRY.action ?? undefined} aria-labelledby="contact-title">
+        <div class="field">
+          <label for="enquiry-name">Name</label>
+          <input id="enquiry-name" name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="enquiry-email">Email</label>
+          <input id="enquiry-email" name="email" type="email" autocomplete="email" spellcheck="false" required />
+        </div>
+        <div class="field">
+          <label for="enquiry-organisation">Organisation <span class="optional">(optional)</span></label>
+          <input id="enquiry-organisation" name="organisation" type="text" autocomplete="organization" />
+        </div>
+        <fieldset class="field topics">
+          <legend>What's it about?</legend>
+          <div class="topic-options">
+            {ENQUIRY.topics.map((topic, index) => (
+              <label class="topic" for={`enquiry-about-${index}`}>
+                <input id={`enquiry-about-${index}`} type="radio" name="about" value={topic} required />
+                <span>{topic}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="enquiry-message">Your message</label>
+          <p class="hint" id="enquiry-message-hint">Tell me as much or as little as you know: a course name, how many people, or what's going on with your reports.</p>
+          <textarea id="enquiry-message" name="message" rows="6" aria-describedby="enquiry-message-hint" required></textarea>
+        </div>
+        <button class="send" type="submit">Send</button>
+      </form>
+      <p class="fallback">Or email <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>
+    </div>
+  </div>
+</section>

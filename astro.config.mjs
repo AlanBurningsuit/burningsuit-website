@@ -2,6 +2,7 @@
 import { defineConfig, fontProviders } from "astro/config";
 import { ANALYTICS } from "./src/config/analytics.mjs";
 import { redirects } from "./src/config/compatibility.mjs";
+import { formActionSource } from "./src/config/enquiry.mjs";
 
 export default defineConfig({
   site: "https://burningsuit.co.uk",
@@ -32,7 +33,7 @@ export default defineConfig({
       algorithm: "SHA-256",
       directives: [
         "default-src 'none'", "img-src 'self' data:", "font-src 'self'",
-        "base-uri 'self'", "form-action 'none'",
+        "base-uri 'self'", /** @type {`form-action${string}`} */ (`form-action ${formActionSource}`),
         ...(ANALYTICS.enabled
           ? [/** @type {`connect-src${string}`} */ (`connect-src ${ANALYTICS.beaconHost}`)]
           : []),

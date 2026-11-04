@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
+import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
 const course = "/training/agentic-development-for-power-bi/";
 
@@ -21,10 +22,11 @@ for (const route of ["/", course]) {
     for (const family of ["Mona Sans", "Albert Sans", "Commit Mono"]) expect(loadedFonts.some((font) => font.startsWith(family))).toBe(true);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-    await expect(page.locator('script, form, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
+    await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
+    await expect(page.locator("form")).toHaveCount(route === "/" ? 1 : 0);
     await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");
-    expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain("form-action 'none'");
+    expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
     expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
@@ -85,11 +87,98 @@ test("course discovery, facts and email fallback work without JavaScript", async
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
   await page.goto("/");
-  await page.getByRole("link", { name: "Read the 101 outline" }).click();
+  await page.getByRole("article", { name: "Power BI with AI agents 101" }).getByRole("link", { name: "Read the course outline" }).click();
   await expect(page).toHaveURL(baseURL! + course);
-  await expect(page.getByRole("heading", { name: "Agentic development for Power BI 101", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Power BI with AI agents 101", exact: true })).toBeVisible();
   await expect(page.locator(".to-confirm")).toHaveCount(4);
   await expect(page.locator('#contact a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
+  await context.close();
+});
+
+test("homepage keeps the approved sections, order and starting points", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto("/");
+  await expect(page.locator(".home-opening .eyebrow")).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /how i train/i })).toHaveCount(0);
+  await expect(page.locator("main img")).toHaveCount(1);
+  await expect(page.locator("h1 .em")).toHaveText("isn't");
+  await expect(page.locator(".introduction strong")).toHaveText("someone");
+  const courses = page.getByRole("article");
+  await expect(courses.getByRole("heading", { level: 3 })).toHaveText(["Power BI fundamentals", "Power BI with AI agents 101"]);
+  for (const [name, ask] of [["Power BI fundamentals", "Ask about dates"], ["Power BI with AI agents 101", "Ask about a seat"]]) {
+    const entry = page.getByRole("article", { name });
+    await expect(entry.locator(".facts > li")).toHaveCount(4);
+    await expect(entry.locator(".facts > li").last()).toHaveText("Price on request");
+    await expect(entry.getByRole("link", { name: "Read the course outline" })).toHaveCount(1);
+    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", "#contact");
+  }
+  await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
+  await expect(page.locator(".specialist-names > li")).toHaveText(["DAX fundamentals (1 day)", "Data modelling (1 day)", "DAX deep dive (2 days)"]);
+  await expect(page.locator(".specialist-names")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Compare all courses" })).toHaveAttribute("href", "/training/");
+  await expect(page.getByRole("link", { name: /^Tell me what you use Power BI for now/ })).toHaveAttribute("href", "#contact");
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Find your starting point", "Understanding that lasts", "Help with your own reporting", "Tell me what you're looking for."]);
+  await expect(page.getByRole("link", { name: "Book a free hour on a call" })).toHaveAttribute("href", "https://cal.com/alan-burningsuit/hour");
+  await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
+  await expect(page.locator(".proof, .exercise, blockquote")).toHaveCount(0);
+  for (const id of ["training", "teaching", "consultancy", "contact"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+
+  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
+  let intro = await box(".introduction"), list = await box(".courses"), photo = await box(".alan-photo");
+  expect(list.x).toBeGreaterThanOrEqual(intro.x + intro.width);
+  expect(list.y).toBeLessThan(intro.y + intro.height);
+  expect(photo.x + photo.width).toBeLessThanOrEqual(list.x);
+  const [fundamentals, agents] = [await box('article[aria-labelledby="fundamentals-title"]'), await box('article[aria-labelledby="agents-101-title"]')];
+  expect(Math.abs(fundamentals.width - agents.width)).toBeLessThanOrEqual(1);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  intro = await box(".introduction"); list = await box(".courses"); photo = await box(".alan-photo");
+  expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
+  expect(photo.y).toBeGreaterThanOrEqual(list.y + list.height);
+});
+
+test("enquiry form is a labelled plain POST with nothing preselected and works without JavaScript", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+  const page = await context.newPage();
+  await page.goto("/");
+  await page.getByRole("link", { name: "Ask about a seat" }).click();
+  await expect(page).toHaveURL(baseURL! + "/#contact");
+  const form = page.getByRole("form", { name: "Tell me what you're looking for." });
+  await expect(form).toBeVisible();
+  await expect(form).toHaveAttribute("method", "post");
+  if (ENQUIRY.action) await expect(form).toHaveAttribute("action", ENQUIRY.action);
+  else await expect(form).not.toHaveAttribute("action", /./);
+  const topics = form.getByRole("group", { name: "What's it about?" }).getByRole("radio");
+  await expect(topics).toHaveCount(ENQUIRY.topics.length);
+  for (const [index, topic] of ENQUIRY.topics.entries()) {
+    await expect(topics.nth(index)).toHaveAccessibleName(topic);
+    await expect(topics.nth(index)).not.toBeChecked();
+  }
+  await expect(form.getByLabel("Organisation (optional)")).not.toHaveAttribute("required", "");
+  await expect(form.getByLabel("Your message")).toHaveAccessibleDescription(/^Tell me as much or as little as you know/);
+  const send = form.getByRole("button");
+  await expect(send).toHaveText("Send");
+  await expect(send).toHaveAttribute("type", "submit");
+  await expect(page.locator('#contact a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
+
+  // Browser validation holds an incomplete enquiry, then accepts one completed from the keyboard.
+  await send.click();
+  await expect(page).toHaveURL(baseURL! + "/#contact");
+  await expect(form.locator(":invalid")).not.toHaveCount(0);
+  await form.getByLabel("Name").fill("Test Person");
+  await page.keyboard.press("Tab");
+  await page.keyboard.type("test@example.com");
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Tab");
+  await expect(topics.first()).toBeFocused();
+  await page.keyboard.press("Space");
+  await expect(topics.first()).toBeChecked();
+  await page.keyboard.press("Tab");
+  await expect(form.getByLabel("Your message")).toBeFocused();
+  await page.keyboard.type("A team of four.");
+  await page.keyboard.press("Tab");
+  await expect(send).toBeFocused();
+  await expect(form.locator(":invalid")).toHaveCount(0);
   await context.close();
 });
 

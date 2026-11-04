@@ -43,3 +43,9 @@ test("normal indexable homepage passes the rebuild release check", () => {
 test("remaining placeholder blocks release even when the homepage is finished", () => {
   assert.equal(runFixture("check-release.mjs", "index.html", "<h1>Example</h1>", { "unfinished.html": "<body data-rebuild-placeholder></body>" }).status, 1);
 });
+test("a form without a delivery endpoint blocks release", () => {
+  assert.equal(runFixture("check-release.mjs", "index.html", '<meta name="robots" content="index, follow"><form method="post"></form>').status, 1);
+});
+test("a form posting to an HTTPS endpoint does not block release", () => {
+  assert.equal(runFixture("check-release.mjs", "index.html", '<meta name="robots" content="index, follow"><form method="post" action="https://forms.example/submit"></form>').status, 0);
+});
