@@ -63,7 +63,7 @@ a:hover { text-decoration-thickness: 2px; }
   .masthead { flex-direction: column; justify-content: center; gap: 0; min-height: 0; padding-block: 10px; }
   .brand { padding: 16px 0 12px; }
   .brand img { width: 174px; }
-  .masthead nav { justify-content: center; gap: 6px clamp(12px, 4vw, 18px); padding: 4px 0 12px; }
+  .masthead nav { align-self: stretch; justify-content: space-between; gap: 6px 11px; padding: 4px 0 12px; }
   .masthead nav a { font-size: .88rem; }
   .course-facts > div { grid-template-columns: 80px minmax(0, 1fr); gap: 8px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }
@@ -71,6 +71,5 @@ a:hover { text-decoration-thickness: 2px; }
   .footer { font-size: .7rem; gap: 12px; }
 }
 @media (max-width: 360px) {
-  .masthead nav { column-gap: 11px; }
   .masthead nav a { font-size: .84rem; }
 }
