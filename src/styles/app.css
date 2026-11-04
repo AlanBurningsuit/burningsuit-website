@@ -60,13 +60,17 @@ a:hover { text-decoration-thickness: 2px; }
   :root { --page-gutter: 22px; --title-size: clamp(2.5rem, 11vw, 3.2rem); }
   h1 { margin-top: 16px; margin-bottom: 22px; }
   .standfirst { font-size: 1.2rem; }
-  .masthead { display: block; min-height: 0; padding-block: 10px; }
-  .brand { display: inline-block; padding: 16px 0 12px; }
+  .masthead { flex-direction: column; justify-content: center; gap: 0; min-height: 0; padding-block: 10px; }
+  .brand { padding: 16px 0 12px; }
   .brand img { width: 174px; }
-  .masthead nav { flex-wrap: wrap; justify-content: flex-start; gap: 6px 16px; padding: 4px 0 12px; }
+  .masthead nav { justify-content: center; gap: 6px clamp(12px, 4vw, 18px); padding: 4px 0 12px; }
   .masthead nav a { font-size: .88rem; }
   .course-facts > div { grid-template-columns: 80px minmax(0, 1fr); gap: 8px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }
   .contact-link { font-size: 1.13rem; }
   .footer { font-size: .7rem; gap: 12px; }
+}
+@media (max-width: 360px) {
+  .masthead nav { column-gap: 11px; }
+  .masthead nav a { font-size: .84rem; }
 }
