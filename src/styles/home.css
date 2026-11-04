@@ -15,7 +15,7 @@
 .courses { grid-area: courses; }
 .courses > h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); padding-block: 4px 22px; }
 .course { padding-block: 22px 24px; border-top: var(--bw-hair) solid var(--line); }
-.course-fit { font: 600 1rem / var(--lh-snug) var(--ff-display); margin-bottom: 8px; }
+.course-fit, .specialists-lead { font: 600 1rem / var(--lh-snug) var(--ff-display); margin-bottom: 8px; }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
 .course > p:not(.course-fit) { font-size: 1rem; }
 .facts { list-style: none; margin: 16px 0 12px; padding: 0; font-size: .92rem; }
@@ -27,7 +27,6 @@
 .course .text-link { font-size: .96rem; }
 
 .specialists { border-top: var(--bw-hair) solid var(--line); padding-block: 22px 4px; }
-.specialists-lead { color: var(--fg-dim); font-size: .92rem; }
 /* Separators sit in the gap before each name; one that starts a wrapped line falls outside the row and is clipped. */
 .specialist-names { list-style: none; margin: 8px 0 10px; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 1.2em; overflow: hidden; font: 600 1.2rem / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display-tight); }
 .specialist-names li { position: relative; }
@@ -58,6 +57,7 @@
   .home-opening { grid-template-areas: "intro" "courses" "photo"; grid-template-rows: none; row-gap: 34px; padding-block: 34px 50px; }
   .alan-photo { margin-top: 0; position: static; }
   .introduction > p { max-width: 60ch; }
+  .course > p { max-width: 62ch; }
   .teacher { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 50px 54px; }
   .teacher-origin { margin-top: 0; }
   .consultancy-inner { row-gap: 20px; padding-block: 40px; }
