@@ -3,15 +3,16 @@
 // Paid booking stays closed until delivery, demo, payment and setup readiness are verified,
 // so "Book a seat" renders as an unavailable control with no destination.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ENQUIRY } from "../../config/enquiry.mjs";
 import "../../styles/course.css";
 
-const email = "alan@burningsuit.co.uk";
+const { email } = ENQUIRY;
 const price = "Price on request";
 const bookingStatus = "Booking isn't open yet.";
 ---
 <BaseLayout
   title="Power BI with AI agents 101 | burningsuit"
-  description="Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations. Then you have it build one new calculation, and you check its answers yourself."
+  description="Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations."
   placeholder={false}
 >
   <div class="course-opening wrap">
@@ -24,7 +25,7 @@ const bookingStatus = "Booking isn't open yet.";
     </section>
 
     <aside class="course-run" aria-label="Course facts and booking">
-      <ul class="run-facts">
+      <ul class="run-facts" role="list">
         <li>Half a day, live online</li>
         <li><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
         <li>4 to 8 people</li>
@@ -45,7 +46,7 @@ const bookingStatus = "Booking isn't open yet.";
         <p>One prepared report runs through the whole morning.</p>
       </div>
       <div class="do-body">
-        <ol class="do-steps">
+        <ol class="do-steps" role="list">
           <li><h3>Get your bearings.</h3><p>You see what an agent is, how a Power BI report's files fit together and what to check before giving a tool access to work files. Then you point your agent (GitHub Copilot, Claude or ChatGPT/Codex) at the teaching report.</p></li>
           <li><h3>Understand a report you didn't build.</h3><p>You ask the agent to explain the report: what each page shows, the tables behind it, how they connect, how the data is prepared and what each calculation does. Nothing changes yet.</p></li>
           <li><h3>Document its calculations.</h3><p>You give the agent a short set of house rules, then have it add comments and descriptions to the existing calculations, so whoever opens the report next can see what each one does. You bring the changes back into Power BI Desktop and check them there.</p></li>
@@ -73,7 +74,7 @@ const bookingStatus = "Booking isn't open yet.";
   <section class="course-need wrap" aria-labelledby="need-title">
     <h2 id="need-title">What you'll need</h2>
     <div class="need-body">
-      <ul class="need-list">
+      <ul class="need-list" role="list">
         <li>A Windows computer with Power BI Desktop <span class="to-confirm">version and settings: to confirm</span>.</li>
         <li>One of three agent tools, on a paid plan: GitHub Copilot, Claude or ChatGPT/Codex <span class="to-confirm">which app and plan, and what it costs: to confirm</span>.</li>
         <li>Permission to install and use that tool. On a work laptop, check with your IT team early.</li>
@@ -85,7 +86,7 @@ const bookingStatus = "Booking isn't open yet.";
     </div>
   </section>
 
-  <section id="book" class="course-book" aria-labelledby="book-title">
+  <section class="course-book" aria-labelledby="book-title">
     <div class="wrap book-inner">
       <div>
         <h2 id="book-title">Book a seat</h2>

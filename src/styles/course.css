@@ -27,13 +27,14 @@ p + p.course-fit { margin-top: 1.4rem; }
 }
 /* The only state today: paid booking is closed, so the control is visibly unavailable. */
 .book-button:disabled { color: var(--fg-dim); background: var(--bg-3); cursor: not-allowed; }
-.booking-status { font: 400 .8rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
+.booking-status { font: 400 .85rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
 .private-ask { margin-top: 26px; padding-top: 16px; border-top: var(--bw-hair) solid var(--line); font-size: 1rem; }
 .private-ask a { font-weight: 600; }
 
 /* What you'll do: a raised band with the four steps on a numbered spine. */
 .course-do { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
 .do-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 64px 70px; align-items: start; }
+@media (min-width: 901px) { .do-lead { position: sticky; top: 24px; } }
 .do-lead h2 { margin-bottom: 16px; }
 .do-lead p { font-size: 1.15rem; max-width: 30ch; }
 .do-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
@@ -58,7 +59,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 .need-list li:last-child { border-bottom: var(--bw-hair) solid var(--line); }
 .need-note { margin-top: 18px; font-size: 1rem; color: var(--fg-dim); max-width: 64ch; }
 .keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; max-width: 52ch; }
-.to-confirm { font: 400 .74rem / var(--lh-relaxed) var(--ff-mono); color: var(--bg); background: var(--moss); padding: 2px 6px; border-radius: var(--r-xs); white-space: nowrap; }
+.to-confirm { font: 400 .74rem / var(--lh-relaxed) var(--ff-mono); color: var(--bg); background: var(--moss); padding: 2px 6px; border-radius: var(--r-xs); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 
 /* Book a seat: the closing band. */
 .course-book { background: var(--bg-band); }
@@ -84,5 +85,4 @@ p + p.course-fit { margin-top: 1.4rem; }
   .do-steps li::before { left: 14px; }
   .trust-check p { font-size: 1.1rem; }
   .keep { font-size: 1.1rem; margin-top: 32px; }
-  .to-confirm { white-space: normal; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 }

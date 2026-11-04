@@ -93,8 +93,44 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   expect(mainLinks).toEqual(["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
 
   // Open facts stay tagged; withheld gaps, the parked showcase and "If plans change" stay off the page.
+  // Each open fact stays tagged on the requirement it qualifies.
+  const needs = page.locator(".need-list > li");
+  await expect(needs).toHaveCount(5);
+  for (const [index, tag] of [[0, "version and settings: to confirm"], [1, "which app and plan, and what it costs: to confirm"], [3, "where: to confirm"], [4, "when, and how long it takes: to confirm"]] as const) {
+    await expect(needs.nth(index).locator(".to-confirm")).toHaveText(tag);
+  }
   await expect(page.locator(".to-confirm")).toHaveCount(4);
-  for (const tag of await page.locator(".to-confirm").all()) await expect(tag).toContainText("to confirm");
+  await expect(needs.nth(1)).toContainText("One of three agent tools, on a paid plan: GitHub Copilot, Claude or ChatGPT/Codex");
+
+  // The deciding opening and trust sentences, and the step sequence as a list for assistive technology.
+  await expect(page.locator(".course-intro .standfirst")).toHaveText("Want to be ready for where Power BI is going?");
+  await expect(page.locator(".course-fit")).toHaveText("If you've built a report in Power BI Desktop, even a simple one, you're ready. No coding or AI experience needed. If you already use coding agents on Power BI work every day, this covers ground you know.");
+  await expect(page.locator(".trust-check p")).toHaveText("An agent can sound sure of itself and still be wrong. You learn to check its work against numbers you can confirm, correct it with evidence and go back to a clean copy when you need to. Deciding whether an answer is right stays with you.");
+  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI.");
+  await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`
+    - list:
+      - listitem:
+        - heading "Get your bearings." [level=3]
+        - paragraph
+      - listitem:
+        - heading "Understand a report you didn't build." [level=3]
+        - paragraph
+      - listitem:
+        - heading "Document its calculations." [level=3]
+        - paragraph
+      - listitem:
+        - heading "Build one new calculation and check it." [level=3]
+        - paragraph
+  `);
+  await expect(page.locator(".run-facts")).toMatchAriaSnapshot(`
+    - list:
+      - listitem: Half a day, live online
+      - listitem:
+        - time: Wednesday 20 January 2027
+        - text: ", 9:30am to 12:30pm UK time"
+      - listitem: 4 to 8 people
+      - listitem: Price on request
+  `);
   const text = await page.locator("main").innerText();
   for (const absent of [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, /refund/i, /checklist/i, /house-rules template/i, /setup notes/i, /founding rate/i]) expect(text).not.toMatch(absent);
   await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a recording of the morning, along with the teaching project and clean copies, so you can work through it again.");
@@ -109,6 +145,14 @@ test("the 101 puts facts beside the introduction on wide screens and after the p
   expect(facts.y).toBeLessThan(intro.y + intro.height);
   const [check, teacher] = [await box(".trust-check"), await box(".trust-teacher")];
   expect(teacher.x).toBeGreaterThanOrEqual(check.x + check.width);
+
+  // Enlarged text wraps the tags inside their requirement rather than overrunning it.
+  await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
+  for (const item of await page.locator(".need-list > li").all()) {
+    const [li, overflow] = await item.evaluate((el) => [el.getBoundingClientRect().right, Math.max(...[...el.querySelectorAll(".to-confirm")].flatMap((tag) => [...tag.getClientRects()].map((r) => r.right)), 0)]);
+    expect(overflow).toBeLessThanOrEqual(li + 0.5);
+  }
+  await page.evaluate(() => { document.documentElement.style.fontSize = ""; });
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
