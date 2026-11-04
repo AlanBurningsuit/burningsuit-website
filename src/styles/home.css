@@ -13,7 +13,7 @@
 .introduction strong { font-weight: 600; }
 
 .courses { grid-area: courses; }
-.courses > h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); padding-block: 4px 22px; }
+.courses > h2 { font-size: clamp(2.1rem, 3.4vw, 2.9rem); padding-block: 4px 26px; }
 .course { padding-block: 22px 24px; border-top: var(--bw-hair) solid var(--line); }
 .course-fit, .specialists-lead { font: 600 1rem / var(--lh-snug) var(--ff-display); margin-bottom: 8px; }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
@@ -64,7 +64,7 @@
 }
 @media (max-width: 680px) {
   .home-opening { padding-block: 30px 46px; }
-  .courses > h2 { font-size: 1.9rem; padding-bottom: 16px; }
+  .courses > h2 { font-size: 1.9rem; padding-bottom: 18px; }
   .course { padding-block: 24px; }
   .course h3 { font-size: 1.65rem; }
   .specialist-names { font-size: 1.1rem; }
