@@ -122,14 +122,16 @@ test("homepage keeps the approved sections, order and starting points", async ({
       - listitem: Data modelling (1 day)
       - listitem: DAX deep dive (2 days)
   `);
-  const separators = () => page.locator(".specialist-names").evaluate((list) => {
+  // Course facts and specialist names share the same wrapping middot line.
+  const separators = async () => (await page.locator(".dot-list").evaluateAll((lists) => lists.flatMap((list) => {
     const edge = list.getBoundingClientRect().left;
     const clipped = getComputedStyle(list).overflow === "hidden";
     return [...list.children].map((item) => {
       const left = item.getBoundingClientRect().left;
       return { rowStart: Math.abs(left - edge) < 1, shown: !clipped || left + parseFloat(getComputedStyle(item, "::before").left) >= edge };
     });
-  });
+  })));
+  expect(await page.locator(".dot-list").count()).toBe(3);
   for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
   await expect(page.getByRole("link", { name: "Compare all courses" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: /^Tell me what you use Power BI for now/ })).toHaveAttribute("href", "#contact");
@@ -149,8 +151,9 @@ test("homepage keeps the approved sections, order and starting points", async ({
 
   await page.setViewportSize({ width: 390, height: 844 });
   intro = await box(".introduction"); list = await box(".courses"); photo = await box(".alan-photo");
-  expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-  expect(photo.y).toBeGreaterThanOrEqual(list.y + list.height);
+  // Narrow screens: introduction, then the portrait, then the courses.
+  expect(photo.y).toBeGreaterThanOrEqual(intro.y + intro.height);
+  expect(list.y).toBeGreaterThanOrEqual(photo.y + photo.height);
   for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
 });
 
