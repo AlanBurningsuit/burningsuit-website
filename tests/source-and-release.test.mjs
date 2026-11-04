@@ -4,6 +4,7 @@ import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
+import { formActionFor } from "../src/config/enquiry.mjs";
 import { fileURLToPath } from "node:url";
 
 function runFixture(script, filename, content, extraFiles = {}) {
@@ -48,4 +49,14 @@ test("a form without a delivery endpoint blocks release", () => {
 });
 test("a form posting to an HTTPS endpoint does not block release", () => {
   assert.equal(runFixture("check-release.mjs", "index.html", '<meta name="robots" content="index, follow"><form method="post" action="https://forms.example/submit"></form>').status, 0);
+});
+test("a data-action attribute is not a delivery endpoint", () => {
+  assert.equal(runFixture("check-release.mjs", "index.html", '<meta name="robots" content="index, follow"><form method="post" data-action="https://forms.example/submit"></form>').status, 1);
+});
+test("CSP form-action follows the configured endpoint", () => {
+  assert.equal(formActionFor(null), "'none'");
+  assert.equal(formActionFor("/enquiry/"), "'self'");
+  assert.equal(formActionFor("https://forms.example/submit?x=1"), "https://forms.example");
+  assert.throws(() => formActionFor("http://forms.example/submit"));
+  assert.throws(() => formActionFor("//forms.example/submit"));
 });

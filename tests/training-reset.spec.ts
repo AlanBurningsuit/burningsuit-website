@@ -137,7 +137,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect(photo.y).toBeGreaterThanOrEqual(list.y + list.height);
 });
 
-test("enquiry form is a labelled plain POST with nothing preselected and works without JavaScript", async ({ browser, baseURL }) => {
+test("enquiry form is a labelled plain POST with nothing preselected that validates without JavaScript", async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
   await page.goto("/");
@@ -159,11 +159,12 @@ test("enquiry form is a labelled plain POST with nothing preselected and works w
   const send = form.getByRole("button");
   await expect(send).toHaveText("Send");
   await expect(send).toHaveAttribute("type", "submit");
+  // Without a delivery endpoint, Send is visibly unavailable rather than silently failing.
+  if (ENQUIRY.action) await expect(send).toBeEnabled();
+  else await expect(send).toBeDisabled();
   await expect(page.locator('#contact a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
 
-  // Browser validation holds an incomplete enquiry, then accepts one completed from the keyboard.
-  await send.click();
-  await expect(page).toHaveURL(baseURL! + "/#contact");
+  // Browser validation marks an incomplete enquiry, then accepts one completed from the keyboard.
   await expect(form.locator(":invalid")).not.toHaveCount(0);
   await form.getByLabel("Name").fill("Test Person");
   await page.keyboard.press("Tab");
@@ -177,7 +178,8 @@ test("enquiry form is a labelled plain POST with nothing preselected and works w
   await expect(form.getByLabel("Your message")).toBeFocused();
   await page.keyboard.type("A team of four.");
   await page.keyboard.press("Tab");
-  await expect(send).toBeFocused();
+  if (ENQUIRY.action) await expect(send).toBeFocused();
+  else await expect(page.locator(`#contact .fallback a[href="mailto:${ENQUIRY.email}"]`)).toBeFocused();
   await expect(form.locator(":invalid")).toHaveCount(0);
   await context.close();
 });

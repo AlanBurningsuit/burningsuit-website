@@ -10,7 +10,7 @@ const pages = readdirSync(dist, { recursive: true })
 const unfinished = pages.some((page) => /data-rebuild-placeholder/.test(page));
 // A form without a delivery endpoint cannot send an enquiry.
 const undelivered = pages.some((page) => [...page.matchAll(/<form\b[^>]*>/gi)]
-  .some((form) => !/\baction=["']?(https:\/\/|\/)[^"'\s>]+/i.test(form[0])));
+  .some((form) => !/\saction=["']?(https:\/\/|\/(?!\/))[^"'\s>]+/i.test(form[0])));
 const noindex = /<meta\b(?=[^>]*\bname=["']robots["'])(?=[^>]*\bcontent=["'][^"']*noindex)[^>]*>/i.test(html);
 if (unfinished || undelivered || noindex) {
   console.error("Release blocked: unfinished rebuild pages, a form without a delivery endpoint or a noindex homepage remain.");

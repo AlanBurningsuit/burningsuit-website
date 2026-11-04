@@ -21,5 +21,16 @@ export const ENQUIRY = Object.freeze({
   ]),
 });
 
-/** The CSP form-action source list for the configured endpoint. */
-export const formActionSource = ENQUIRY.action ? new URL(ENQUIRY.action).origin : "'none'";
+/**
+ * The CSP form-action source for an endpoint: 'none' without one, 'self' for a
+ * root-relative or same-site path, otherwise the endpoint's HTTPS origin.
+ * @param {string | null} action
+ */
+export function formActionFor(action) {
+  if (!action) return "'none'";
+  if (/^\/(?!\/)/.test(action)) return "'self'";
+  const url = new URL(action);
+  if (url.protocol !== "https:") throw new Error("Enquiry form action must be HTTPS or a root-relative path.");
+  return url.origin;
+}
+export const formActionSource = formActionFor(ENQUIRY.action);

@@ -39,7 +39,8 @@ import { ENQUIRY } from "../config/enquiry.mjs";
           <p class="hint" id="enquiry-message-hint">Tell me as much or as little as you know: a course name, how many people, or what's going on with your reports.</p>
           <textarea id="enquiry-message" name="message" rows="6" aria-describedby="enquiry-message-hint" required></textarea>
         </div>
-        <button class="send" type="submit">Send</button>
+        {/* Disabled until a delivery endpoint is configured, so Send never silently fails. */}
+        <button class="send" type="submit" disabled={!ENQUIRY.action}>Send</button>
       </form>
       <p class="fallback">Or email <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>
     </div>
