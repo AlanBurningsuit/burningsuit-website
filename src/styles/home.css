@@ -14,15 +14,15 @@
 
 .courses { grid-area: courses; }
 .courses > h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); padding-block: 4px 22px; }
-.course { padding-block: 26px 28px; border-top: var(--bw-hair) solid var(--line); }
-.course-fit { color: var(--fg-dim); font-size: .92rem; margin-bottom: 8px; }
-.course h3 { font-size: clamp(1.65rem, 2.5vw, 2.1rem); margin-bottom: 14px; }
+.course { padding-block: 22px 24px; border-top: var(--bw-hair) solid var(--line); }
+.course-fit { font: 600 1rem / var(--lh-snug) var(--ff-display); margin-bottom: 8px; }
+.course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
 .course > p:not(.course-fit) { font-size: 1rem; }
-.facts { list-style: none; margin: 18px 0 14px; padding: 0; font-size: .92rem; }
-.facts li { padding-block: 7px; border-bottom: var(--bw-hair) solid var(--line); }
+.facts { list-style: none; margin: 16px 0 12px; padding: 0; font-size: .92rem; }
+.facts li { padding-block: 5px; border-bottom: var(--bw-hair) solid var(--line); }
 .facts li:first-child { border-top: var(--bw-hair) solid var(--line); }
 .fact-label { color: var(--fg-dim); }
-.course > p.prereq { font: 400 .8rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
+.course > p.prereq { font-size: .95rem; }
 .course-actions { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 10px; }
 .course .text-link { font-size: .96rem; }
 
@@ -34,17 +34,18 @@
 .specialist-names li::before { content: "·" / ""; position: absolute; left: -.85em; color: var(--fg-dim); }
 .specialist-names .days { font: 400 .8rem / 1 var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
 .specialists > p:last-child { font-size: .96rem; }
-.specialists a, .not-sure a { font-weight: 600; }
+.specialists a { font-weight: 600; }
 .not-sure { margin-top: 26px; font-size: 1rem; }
 
-.alan-photo { grid-area: photo; margin-top: 40px; max-width: 520px; }
+/* On wide screens the portrait travels beside the course column instead of leaving a gap below it. */
+.alan-photo { grid-area: photo; margin-top: 40px; max-width: 520px; position: sticky; top: 24px; }
 .alan-photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; border: var(--px) solid var(--deep); border-radius: var(--r); outline: var(--bw-hair) solid var(--paper-edge); box-shadow: 5px 5px 0 var(--deep); }
 
 .teacher { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); column-gap: var(--column-gap); padding-block: 40px 88px; align-items: start; }
 .teacher-teaching h2 { margin-bottom: 26px; }
 .teacher-teaching p { max-width: 58ch; }
 .teacher-origin { border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; margin-top: 84px; max-width: 42ch; }
-.teacher-origin p { font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); }
+.teacher-origin p { font-size: 1.15rem; line-height: var(--lh-relaxed); }
 .teacher-origin .text-link { margin-top: 14px; }
 
 .consultancy { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
@@ -53,15 +54,19 @@
 .consultancy-copy p { max-width: 58ch; }
 .consultancy-copy .text-link { margin-top: 14px; }
 
-@media (max-width: 680px) {
-  .home-opening { grid-template-areas: "intro" "courses" "photo"; grid-template-rows: none; row-gap: 34px; padding-block: 30px 46px; }
-  .courses > h2 { font-size: 1.9rem; padding-bottom: 16px; }
-  .course { padding-block: 24px; }
-  .course h3 { font-size: 1.8rem; }
-  .specialist-names { font-size: 1.1rem; }
-  .alan-photo { margin-top: 0; }
+@media (max-width: 900px) {
+  .home-opening { grid-template-areas: "intro" "courses" "photo"; grid-template-rows: none; row-gap: 34px; padding-block: 34px 50px; }
+  .alan-photo { margin-top: 0; position: static; }
+  .introduction > p { max-width: 60ch; }
   .teacher { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 50px 54px; }
   .teacher-origin { margin-top: 0; }
-  .teacher-origin p { font-size: 1.1rem; }
   .consultancy-inner { row-gap: 20px; padding-block: 40px; }
+}
+@media (max-width: 680px) {
+  .home-opening { padding-block: 30px 46px; }
+  .courses > h2 { font-size: 1.9rem; padding-bottom: 16px; }
+  .course { padding-block: 24px; }
+  .course h3 { font-size: 1.65rem; }
+  .specialist-names { font-size: 1.1rem; }
+  .teacher-origin p { font-size: 1.1rem; }
 }

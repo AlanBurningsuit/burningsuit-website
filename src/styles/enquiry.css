@@ -19,7 +19,8 @@
 .enquiry-form textarea { resize: vertical; min-height: 9rem; }
 .enquiry-form input:focus-visible, .enquiry-form textarea:focus-visible { outline-offset: 2px; border-color: var(--amber); }
 .topic-options { display: flex; flex-wrap: wrap; gap: 10px; }
-.enquiry-form .topic { display: inline-flex; align-items: center; gap: 10px; padding: 9px 14px; border: var(--bw-hair) solid var(--fg-dim); border-radius: var(--r-sm); background: var(--bg); font: 400 .98rem / var(--lh-snug) var(--ff-body); cursor: pointer; }
+.enquiry-form .topic { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 9px 14px; border: var(--bw-hair) solid var(--fg-dim); border-radius: var(--r-sm); background: var(--bg); font: 400 .98rem / var(--lh-snug) var(--ff-body); cursor: pointer; }
+.enquiry-form .topic:hover { border-color: var(--fg); }
 .enquiry-form .topic:has(input:checked) { border-color: var(--amber); background: var(--bg-2); }
 .enquiry-form .topic:has(input:focus-visible) { outline: var(--px) solid var(--amber); outline-offset: 2px; }
 .enquiry-form .topic input { margin: 0; width: 1.05rem; height: 1.05rem; accent-color: var(--amber); }
