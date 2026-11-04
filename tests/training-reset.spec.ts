@@ -85,6 +85,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator("main form, main a[href*='stripe'], main a[href*='pay'], main a[href^='/contact'], main a[href='#contact']")).toHaveCount(0);
 
   // Email is the private-course and invoice route; How I train is the one teaching-method link.
+  // The address is literal on purpose: a wrong config value must fail here.
   await expect(page.getByRole("link", { name: "Ask about a private course." })).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
   await expect(page.getByRole("link", { name: /private/i })).toHaveCount(1);
   await expect(page.locator(".invoice a")).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
