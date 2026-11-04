@@ -56,7 +56,7 @@ test("a data-action attribute is not a delivery endpoint", () => {
 test("CSP form-action follows the configured endpoint", () => {
   assert.equal(formActionFor(null), "'none'");
   assert.equal(formActionFor("/enquiry/"), "'self'");
-  assert.equal(formActionFor("https://forms.example/submit?x=1"), "https://forms.example");
+  assert.equal(formActionFor("https://forms.example/submit?x=1"), "https://forms.example 'self'");
   assert.throws(() => formActionFor("http://forms.example/submit"));
   assert.throws(() => formActionFor("//forms.example/submit"));
 });

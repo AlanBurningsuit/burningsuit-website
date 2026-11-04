@@ -198,6 +198,8 @@ test("enquiry form is a labelled plain POST with nothing preselected that valida
   await expect(form.getByLabel("Your message")).toBeFocused();
   await page.keyboard.type("A team of four.");
   await page.keyboard.press("Tab");
+  await expect(form.getByRole("link", { name: "Read how I handle your information" })).toBeFocused();
+  await page.keyboard.press("Tab");
   if (ENQUIRY.action) await expect(send).toBeFocused();
   else await expect(page.locator(`#contact .fallback a[href="mailto:${ENQUIRY.email}"]`)).toBeFocused();
   await expect(form.locator(":invalid")).toHaveCount(0);

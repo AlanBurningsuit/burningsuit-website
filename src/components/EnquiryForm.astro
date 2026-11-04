@@ -10,7 +10,12 @@ import { ENQUIRY } from "../config/enquiry.mjs";
       <p><slot /></p>
     </div>
     <div>
-      <form class="enquiry-form" method="post" action={ENQUIRY.action ?? undefined} aria-labelledby="contact-title">
+      <form class="enquiry-form" method="post" action={ENQUIRY.action ?? undefined} aria-labelledby="contact-title" aria-describedby="enquiry-privacy">
+        <input type="hidden" name="_redirect" value={ENQUIRY.successPath} />
+        <input type="hidden" name="_error" value={ENQUIRY.errorPath} />
+        {/* Formspark otherwise appends the submitted personal data to the URL. */}
+        <input type="hidden" name="_append" value="false" />
+        <input type="checkbox" name="_gotcha" hidden tabindex="-1" autocomplete="off" aria-hidden="true" />
         <div class="field">
           <label for="enquiry-name">Name</label>
           <input id="enquiry-name" name="name" type="text" autocomplete="name" required />
@@ -39,7 +44,8 @@ import { ENQUIRY } from "../config/enquiry.mjs";
           <p class="hint" id="enquiry-message-hint">Tell me as much or as little as you know: a course name, how many people, or what's going on with your reports.</p>
           <textarea id="enquiry-message" name="message" rows="6" aria-describedby="enquiry-message-hint" required></textarea>
         </div>
-        {/* Disabled until a delivery endpoint is configured, so Send never silently fails. */}
+        <p class="hint" id="enquiry-privacy">I use your details to reply to your enquiry. Formspark delivers this form. <a href={ENQUIRY.privacyPath}>Read how I handle your information</a>.</p>
+        {/* A missing endpoint makes Send unavailable rather than silently failing. */}
         <button class="send" type="submit" disabled={!ENQUIRY.action}>Send</button>
       </form>
       <p class="fallback">Or email <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>
