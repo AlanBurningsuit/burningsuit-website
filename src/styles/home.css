@@ -36,8 +36,7 @@
 .specialists a { font-weight: 600; }
 .not-sure { margin-top: 26px; font-size: 1rem; }
 
-/* On wide screens the portrait travels beside the course column instead of leaving a gap below it. */
-.alan-photo { grid-area: photo; margin-top: 40px; max-width: 520px; position: sticky; top: 24px; }
+.alan-photo { grid-area: photo; margin-top: 40px; max-width: 520px; }
 .alan-photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; border: var(--px) solid var(--deep); border-radius: var(--r); outline: var(--bw-hair) solid var(--paper-edge); box-shadow: 5px 5px 0 var(--deep); }
 
 .teacher { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); column-gap: var(--column-gap); padding-block: 40px 88px; align-items: start; }
@@ -55,7 +54,7 @@
 
 @media (max-width: 900px) {
   .home-opening { grid-template-areas: "intro" "photo" "courses"; grid-template-rows: none; row-gap: 34px; padding-block: 34px 50px; }
-  .alan-photo { margin-top: 0; position: static; }
+  .alan-photo { margin-top: 0; }
   .introduction > p { max-width: 60ch; }
   .course > p { max-width: 62ch; }
   .teacher { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 50px 54px; }
