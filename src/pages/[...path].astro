@@ -4,7 +4,8 @@ import { pages } from "../config/compatibility.mjs";
 
 export function getStaticPaths() {
   return Object.entries(pages)
-    .filter(([path]) => path !== "")
+    // Bespoke pages own their routes and keep the reserved anchors themselves.
+    .filter(([path]) => !["", "power-bi"].includes(path))
     .map(([path, anchors]) => ({ params: { path }, props: { anchors } }));
 }
 const { anchors } = Astro.props;

@@ -1,0 +1,62 @@
+/* Power BI consultancy page: reuses the course page composition in course.css; only the differences live here. */
+
+/* The opening panel's action is a text link, not the 101's booking button. */
+.run-action { margin-top: 18px; }
+
+/* Ruled lists whose entries open with a bold lead. */
+.lead-list strong { font: 600 1.05em / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display-tight); }
+
+/* The work I take on: heading and one-line introduction beside the ruled list. */
+.consult-split { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
+@media (min-width: 901px) { .split-lead { position: sticky; top: 24px; } }
+.split-lead h2 { margin-bottom: 16px; }
+.split-lead p { font-size: 1.15rem; max-width: 30ch; }
+.consult-split .lead-list { margin: 0; padding: 0; list-style: none; }
+.consult-split .lead-list li { border-top: var(--bw-hair) solid var(--line); padding-block: 16px; max-width: 64ch; }
+.consult-split .lead-list li:last-child { border-bottom: var(--bw-hair) solid var(--line); }
+.build-line { margin-top: 22px; max-width: 64ch; }
+.courses-line { margin-top: 26px; max-width: 64ch; }
+
+/* AI agents: the page's only raised band, heading beside the copy as on the homepage band. */
+.ai-band { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
+.ai-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: start; }
+.ai-band h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); }
+.ai-copy p { max-width: 58ch; }
+.ai-copy .text-link { margin-top: 14px; }
+
+/* How the work runs: the 101's numbered spine on the page background, so only the AI band is raised. */
+.work-runs .do-inner { padding-block: 76px 56px; }
+.do-steps h3 a { color: inherit; text-decoration-color: var(--amber); }
+.do-steps h3 a:hover { color: var(--amber); }
+#pricing { scroll-margin-top: 1.5rem; }
+
+/* After the work: the introduction beside the support options. */
+.ongoing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
+.ongoing-lead h2 { margin-bottom: 20px; }
+.ongoing-lead p { max-width: 46ch; }
+.ongoing-price { margin-top: 18px; max-width: 64ch; }
+
+/* Who does the work: an amber-ruled note at body width, without the 101's 40ch limit. */
+.who-does { padding-block: 24px 80px; }
+.who-note { border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; }
+.who-note p { max-width: 64ch; }
+.who-note .text-link { margin-top: 12px; }
+
+/* How to start: the free hour on the page background, ahead of the shared enquiry band. */
+.start { border-top: var(--bw-hair) solid var(--line); }
+.start .book-inner { align-items: center; }
+.start-ask { font-size: 1.1rem; max-width: 40ch; }
+.start-link { font-size: 1.3rem; line-height: var(--lh-snug); }
+
+@media (max-width: 900px) {
+  .consult-split, .ongoing, .ai-inner { grid-template-columns: minmax(0, 1fr); row-gap: 22px; }
+  .consult-split { padding-block: 24px 56px; }
+  .ai-inner { row-gap: 20px; padding-block: 40px; }
+  .work-runs .do-inner { padding-block: 54px 40px; }
+  .ongoing { padding-block: 24px 56px; }
+  .who-does { padding-block: 16px 60px; }
+  .start .book-inner { align-items: start; }
+}
+@media (max-width: 680px) {
+  .start-link { font-size: 1.2rem; }
+}

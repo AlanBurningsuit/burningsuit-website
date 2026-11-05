@@ -1,5 +1,6 @@
 ---
 const training = Astro.url.pathname.startsWith("/training/");
+const consultancy = Astro.url.pathname.startsWith("/power-bi/");
 ---
 <header class="masthead-band">
   <div class="masthead wrap">
@@ -8,7 +9,7 @@ const training = Astro.url.pathname.startsWith("/training/");
     </a>
     <nav aria-label="Main navigation">
       <a href="/training/" aria-current={training ? "true" : undefined}>Training</a>
-      <a href="/power-bi/">Consultancy</a>
+      <a href="/power-bi/" aria-current={consultancy ? "true" : undefined}>Consultancy</a>
       <a href="/about/">About</a>
       <a href="/contact/">Contact</a>
     </nav>

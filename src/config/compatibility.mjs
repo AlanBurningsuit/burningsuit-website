@@ -76,17 +76,11 @@ export const pages = {
   ],
   "power-bi": [
     "situations",
-    "deliver",
-    "skills",
-    "handover",
     "how-the-work-runs",
-    "backup",
-    "second-opinion",
-    "ai",
-    "start",
-    "discovery",
     "pricing",
-    "ongoing"
+    "ai",
+    "ongoing",
+    "start"
   ],
   "work": [
     "cases"
