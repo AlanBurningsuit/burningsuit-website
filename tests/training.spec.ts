@@ -182,31 +182,30 @@ test("training chooser layout: equal entries side by side on wide screens, stack
   }
 });
 
-test("the starting points carry the page's weight: raised band, spined entries, recessed deciding facts", async ({ page }) => {
+test("the starting points carry the page's weight: lifted, spined cards with recessed deciding facts on the daylight body", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
   const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
-  const ground = await bg("body");
-  const band = await bg(".starting-points");
-  // Three tones in order of weight: raised course band, ground for specialists and teacher, darker enquiry band.
+  // The dark opening and enquiry band bookend the daylight body; the entries are cards lifted off it, the specialists a quieter recessed block.
+  const ground = await bg("main");
+  expect(ground).not.toBe(await bg("body"));
+  expect(await page.locator(".training-intro").evaluate((el) => getComputedStyle(el.parentElement!).backgroundColor)).toBe(await bg("body"));
+  for (const selector of [".starting-points", ".specialist-courses", ".training-teacher", ".specialist-rows > li"]) expect(await bg(selector)).toBe("rgba(0, 0, 0, 0)");
+  const band = await bg(".starting-points .course");
   expect(band).not.toBe(ground);
-  for (const selector of [".training-intro", ".specialist-courses", ".training-teacher", ".specialist-rows > li"]) expect(await bg(selector)).toBe("rgba(0, 0, 0, 0)");
+  expect(await bg(".specialist-rows")).not.toBe(ground);
+  expect(await bg(".specialist-rows")).not.toBe(band);
   expect(await bg("#contact")).not.toBe(ground);
-  expect(await bg("#contact")).not.toBe(band);
-  // The band spans the viewport and is bounded by rules.
-  const bandBox = await box(page, ".starting-points");
-  expect(bandBox.x).toBe(0);
-  expect(bandBox.width).toBe(1366);
-  expect(await page.locator(".starting-points").evaluate((el) => getComputedStyle(el).borderTopStyle)).toBe("solid");
-  // Each entry keeps its facts and prerequisite together in one recessed block, darker than the band.
+  // Each entry keeps its facts and prerequisite together in one recessed block, set back from its card.
   for (const entry of await page.getByRole("article").all()) {
     const deciding = entry.locator(".deciding");
     await expect(deciding).toHaveCount(1);
     await expect(deciding.locator(".facts")).toHaveCount(1);
     await expect(deciding.locator(".prereq")).toHaveCount(1);
     const tone = await deciding.evaluate((el) => getComputedStyle(el).backgroundColor);
+    // Recessed: cut back from its card to the daylight ground.
     expect(tone).not.toBe(band);
-    expect(tone).not.toBe(ground);
+    expect(tone).toBe(ground);
     const spine = await entry.evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth));
     // A spine, heavier than the specialists' hairline rows.
     expect(spine).toBeGreaterThan(await page.locator(".specialist-rows > li").first().evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth)));

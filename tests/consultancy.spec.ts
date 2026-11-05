@@ -75,7 +75,8 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   // Alan's line leads the support column in display type; the options follow their own introduction.
   await expect(page.locator("#ongoing .ongoing-body > *").nth(0)).toHaveClass(/pull-line/);
   const pull = await page.locator(".pull-line").evaluate((el) => { const s = getComputedStyle(el); return { weight: s.fontWeight, rule: s.borderLeftStyle, size: parseFloat(s.fontSize), body: parseFloat(getComputedStyle(document.body).fontSize) }; });
-  expect(pull.weight).toBe("800");
+  // Section weight (700): display 800 is reserved for the page title.
+  expect(pull.weight).toBe("700");
   expect(pull.rule).toBe("solid");
   expect(pull.size).toBeGreaterThan(pull.body * 1.3);
   await expect(page.locator("#ongoing .ongoing-body > *").nth(1)).toHaveClass(/ongoing-intro/);
@@ -96,12 +97,13 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator("#ongoing .lead-list > li")).toHaveText(["Retained support for your team.", "Strategic advice as your reporting changes.", "Regular office hours, such as a monthly call in a fixed window, where your team brings whatever has come up."]);
   await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to in the free hour is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.");
 
-  // Only the AI band is raised; the spine sits on the page background.
+  // The AI band and the free hour are raised off the daylight body; the sequence and lists sit on it.
   const background = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
-  const ground = await background("body");
+  const ground = await background("main");
   expect(await background("#ai")).not.toBe(ground);
-  for (const selector of ["#how-the-work-runs", "#situations", "#ongoing", "#start"]) expect(await background(selector)).toBe("rgba(0, 0, 0, 0)");
-  // #start leads with the free hour on the page background, before the shared form's band.
+  expect(await background("#start")).toBe(await background("#ai"));
+  for (const selector of ["#how-the-work-runs", "#situations", "#ongoing"]) expect(await background(selector)).toBe("rgba(0, 0, 0, 0)");
+  // #start leads with the free hour, before the shared form's dark band.
   expect(await background("#contact")).not.toBe(ground);
   expect(await page.locator("#start + #contact").count()).toBe(1);
 

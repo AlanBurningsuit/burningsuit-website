@@ -1,64 +1,76 @@
+/* Opening: the dark bookend introduces Alan, beside his portrait; the starting points follow on daylight. */
 .home-opening {
   display: grid;
-  grid-template-columns: var(--home-columns);
-  grid-template-areas: "intro courses" "photo courses";
-  grid-template-rows: auto 1fr;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  grid-template-areas: "intro photo";
   column-gap: var(--column-gap);
-  padding-block: 46px 76px;
-  align-items: start;
+  padding-block: 36px 60px;
+  align-items: center;
 }
 .introduction { grid-area: intro; }
 .introduction h1 { margin-top: 0; }
-.introduction > p { max-width: 36ch; }
+.introduction > p { max-width: 56ch; }
 .introduction strong { font-weight: 600; }
+.alan-photo { grid-area: photo; justify-self: end; width: 100%; max-width: 520px; }
+.alan-photo img { aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; }
 
-.courses { grid-area: courses; }
-.courses > h2 { font-size: clamp(2.1rem, 3.4vw, 2.9rem); padding-block: 4px 26px; }
-.course { padding-block: 22px 24px; border-top: var(--bw-hair) solid var(--line); }
-.course-fit, .specialists-lead { font: 600 1rem / var(--lh-snug) var(--ff-display); margin-bottom: 8px; }
+/* Find your starting point: the two primary entries as equal cards, the specialists in a quieter block beneath. */
+.courses { padding-block: 72px 76px; }
+.courses > h2 { padding-bottom: 28px; }
+.course-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
+.course { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
+/* Side by side, the cards share rows, so the fact blocks and actions line up whatever the description length. */
+@media (min-width: 901px) {
+  .course-list { grid-template-rows: repeat(6, auto); }
+  .course-list > .course { display: grid; grid-template-rows: subgrid; grid-row: span 6; row-gap: 0; align-content: start; }
+  .course-list .facts { align-self: start; }
+}
+.course-fit, .specialists-lead { font: 600 1rem / var(--lh-snug) var(--ff-display); color: var(--text-dim); margin-bottom: 8px; }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
 .course > p:not(.course-fit) { font-size: 1rem; }
-.facts { margin: 16px 0 12px; padding-block: 9px; border-block: var(--bw-hair) solid var(--line); font-size: .95rem; row-gap: 2px; }
-.fact-label { color: var(--fg-dim); }
+.facts { margin: 16px 0 12px; padding: 10px 14px; background: var(--surface); border-radius: var(--r-sm); font-size: .95rem; row-gap: 2px; }
+.fact-label { color: var(--text-dim); }
 .course > p.prereq { font-size: .95rem; }
 .course-actions { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 10px; }
 .course .text-link { font-size: .96rem; }
 
-.specialists { border-top: var(--bw-hair) solid var(--line); padding-block: 22px 4px; }
+.specialists { margin-top: 28px; padding: 22px 30px; background: var(--surface-raised); border-radius: var(--r); }
 /* A wrapping line of items separated by middots. Each separator sits in the gap before its item;
    one that would start a wrapped line falls outside the list and is clipped. Hidden from assistive technology. */
 .dot-list { list-style: none; padding-inline: 0; display: flex; flex-wrap: wrap; column-gap: 1.2em; overflow: hidden; }
 .dot-list > li { position: relative; }
-.dot-list > li::before { content: "·" / ""; position: absolute; left: -.74em; color: var(--fg-dim); }
+.dot-list > li::before { content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
 .specialist-names { margin: 8px 0 10px; padding-block: 0; row-gap: 4px; font: 600 1.2rem / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display-tight); }
-.specialist-names .days { font: 400 .8rem / 1 var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
+.specialist-names .days { font: 400 .8rem / 1 var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
 .specialists > p:last-child { font-size: .96rem; }
 .specialists a { font-weight: 600; }
 .not-sure { margin-top: 26px; font-size: 1rem; }
 
-.alan-photo { grid-area: photo; margin-top: 40px; max-width: 520px; }
-.alan-photo img { aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; }
-
-.teacher { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); column-gap: var(--column-gap); padding-block: 40px 88px; align-items: start; }
+/* The teacher: the method at reading width, with the family origin as a margin note. */
+.teacher { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); column-gap: var(--column-gap); padding-block: 24px 88px; align-items: start; }
 .teacher-teaching h2 { margin-bottom: 26px; }
 .teacher-teaching p { max-width: 58ch; }
-.teacher-origin { border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; margin-top: 84px; max-width: 42ch; }
-.teacher-origin p { font-size: 1.15rem; line-height: var(--lh-relaxed); }
-.teacher-origin .text-link { margin-top: 14px; }
+.teacher-origin { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--amber); padding: 24px 28px; margin-top: 78px; max-width: 44ch; }
+.teacher-origin p { font-size: 1.1rem; line-height: var(--lh-relaxed); }
+.teacher-origin .text-link { margin-top: 12px; }
 
 @media (max-width: 900px) {
-  .home-opening { grid-template-areas: "intro" "photo" "courses"; grid-template-rows: none; row-gap: 34px; padding-block: 34px 50px; }
-  .alan-photo { margin-top: 0; }
+  .home-opening { grid-template-columns: minmax(0, 1fr); grid-template-areas: "photo" "intro"; row-gap: 28px; padding-block: 24px 48px; }
+  .alan-photo { justify-self: start; max-width: 560px; }
   .introduction > p { max-width: 60ch; }
+  .courses { padding-block: 52px 56px; }
+  .course-list { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .course > p { max-width: 62ch; }
-  .teacher { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 50px 54px; }
+  .teacher { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 16px 56px; }
   .teacher-origin { margin-top: 0; }
 }
 @media (max-width: 680px) {
-  .home-opening { padding-block: 30px 46px; }
+  .home-opening { padding-block: 18px 40px; row-gap: 24px; }
   .courses > h2 { font-size: 1.9rem; padding-bottom: 18px; }
-  .course { padding-block: 24px; }
-  .course h3 { font-size: 1.65rem; }
+  .course { padding: 22px 20px 20px; }
+  .course h3 { font-size: 1.6rem; }
+  .specialists { padding: 20px; }
   .specialist-names { font-size: 1.1rem; }
-  .teacher-origin p { font-size: 1.1rem; }
+  .teacher-origin { padding: 20px 22px; }
+  .teacher-origin p { font-size: 1.05rem; }
 }

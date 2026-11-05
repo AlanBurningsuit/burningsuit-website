@@ -11,4 +11,27 @@
   --home-columns: minmax(0, .88fr) minmax(0, 1.12fr);
   --body-size: 1.125rem;
   --title-size: clamp(2.6rem, 4.2vw, 3.7rem);
+  --lift: 0 1px 2px color-mix(in srgb, var(--pine) 8%, transparent), 0 14px 32px -22px color-mix(in srgb, var(--pine) 45%, transparent);
+}
+
+/* Surface roles. Components colour themselves through these rather than a raw ground, so a band reads as a
+   dark bookend or the daylight body by its role alone. The page and its bookends (.dark: masthead, opening,
+   closing bands, footer) keep the brand's dark ground; main's body reads on eucalyptus mist. */
+:root, .dark {
+  --surface: var(--bg);
+  --surface-raised: var(--bg-2);
+  --surface-card: var(--bg-2);
+  --text: var(--fg);
+  --text-dim: var(--fg-dim);
+  --rule: var(--line);
+  --link: var(--amber);
+}
+main {
+  --surface: var(--mist);
+  --surface-raised: var(--sage);
+  --surface-card: var(--leaf);
+  --text: var(--pine);
+  --text-dim: var(--pine-soft);
+  --rule: var(--mist-line);
+  --link: var(--fern);
 }

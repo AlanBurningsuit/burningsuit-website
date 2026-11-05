@@ -138,8 +138,8 @@ test("Fundamentals layout: facts beside the introduction on wide screens, direct
   const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(await bg(".agenda")).not.toBe(await bg("body"));
   for (const selector of [".outcomes", "section[aria-labelledby='need-title']"]) expect(await bg(selector)).toBe("rgba(0, 0, 0, 0)");
-  // The opening's specialist pointer keeps the 101's amber course-fit spine.
-  const amber = await page.locator(".agenda-steps > li").first().evaluate((el) => getComputedStyle(el, "::before").color);
+  // The opening's specialist pointer keeps the 101's amber course-fit spine (amber is the dark opening's link colour).
+  const amber = await page.locator(".course-run a").first().evaluate((el) => getComputedStyle(el).color);
   expect(await page.locator(".course-fit").evaluate((el) => getComputedStyle(el).borderLeftColor)).toBe(amber);
 
   for (const width of [390, 320]) {

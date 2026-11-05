@@ -1,6 +1,6 @@
 /* Power BI with AI agents 101: the course page composition. Shared furniture lives in app.css. */
 
-/* Opening: the introduction, with the deciding facts beside it on wide screens and after it on narrow ones. */
+/* Opening: the dark bookend, with the deciding facts on a raised card beside it on wide screens and after it on narrow ones. */
 .course-opening {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr);
@@ -14,9 +14,9 @@
 .course-fit { border-left: var(--bw-spine) solid var(--amber); padding-left: 18px; }
 p + p.course-fit { margin-top: 1.4rem; }
 
-.course-run { border-top: var(--bw-spine) solid var(--fg); padding-top: 6px; margin-top: 10px; }
+.course-run { background: var(--surface-card); border-radius: var(--r); padding: 18px 26px 24px; margin-top: 10px; }
 .run-facts { list-style: none; margin: 0; padding: 0; font: 600 1.05rem / var(--lh-snug) var(--ff-display); }
-.run-facts li { border-bottom: var(--bw-hair) solid var(--line); padding-block: 13px; }
+.run-facts li { padding-block: 8px; }
 
 .booking { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-top: 24px; }
 .book-button {
@@ -26,38 +26,38 @@ p + p.course-fit { margin-top: 1.4rem; }
   padding: 14px 30px;
 }
 /* The only state today: paid booking is closed, so the control is visibly unavailable. */
-.book-button:disabled { color: var(--fg-dim); background: var(--bg-3); border-color: var(--fg-dim); border-style: dashed; border-width: var(--bw-hair); padding: 16px 32px; cursor: not-allowed; }
-.booking-status { font: 400 .85rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
-.private-ask { margin-top: 26px; padding-top: 16px; border-top: var(--bw-hair) solid var(--line); font-size: 1rem; }
+.book-button:disabled { color: var(--text-dim); background: var(--bg-3); border-color: var(--text-dim); border-style: dashed; border-width: var(--bw-hair); padding: 16px 32px; cursor: not-allowed; }
+.booking-status { font: 400 .85rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
+.private-ask { margin-top: 22px; font-size: 1rem; }
 .private-ask a { font-weight: 600; }
 
 /* What you'll do: a raised band with the four steps on a numbered spine. */
-.course-do { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
+.course-do { background: var(--surface-raised); }
 .do-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 64px 70px; align-items: start; }
 @media (min-width: 901px) { .do-lead, .course-need > h2 { position: sticky; top: 24px; } }
 .do-lead h2 { margin-bottom: 16px; }
 .do-lead p { font-size: 1.15rem; max-width: 30ch; }
 .do-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
-.do-steps li { counter-increment: step; position: relative; border-left: var(--bw-spine) solid var(--line); padding: 0 0 28px 56px; }
-.do-steps li::before { content: counter(step, decimal-leading-zero) / ""; position: absolute; left: 20px; top: 5px; font: 400 .76rem / 1 var(--ff-mono); color: var(--amber); }
+.do-steps li { counter-increment: step; position: relative; border-left: var(--bw-spine) solid var(--rule); padding: 0 0 28px 56px; }
+.do-steps li::before { content: counter(step, decimal-leading-zero) / ""; position: absolute; left: 20px; top: 5px; font: 400 .76rem / 1 var(--ff-mono); color: var(--link); }
 .do-steps h3 { font-size: 1.3rem; margin-bottom: 8px; }
 .do-steps p { font-size: 1rem; max-width: 62ch; }
-.do-next { margin-top: 6px; padding-top: 22px; border-top: var(--bw-hair) solid var(--line); max-width: 62ch; }
+.do-next { margin-top: 10px; max-width: 62ch; }
 
-/* Why can I trust it: the checking, with who's teaching beside it. */
+/* Why can I trust it: the checking, with who's teaching beside it as a margin note. */
 .course-trust { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: var(--column-gap); padding-block: 76px 64px; align-items: start; }
 .trust-check h2 { margin-bottom: 22px; }
 .trust-check p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
-.trust-teacher { border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; margin-top: 10px; max-width: 40ch; }
+.trust-teacher { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--amber); padding: 22px 26px; margin-top: 10px; max-width: 42ch; }
 .trust-teacher h3 { font-size: 1.3rem; margin-bottom: 10px; }
 .trust-teacher .text-link { margin-top: 12px; }
 
-/* What you'll need, then what you keep. */
+/* What you'll need, then what you keep: the list on a lifted card, its items set apart by space and a warm marker rather than rules. */
 .course-need { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 80px; align-items: start; }
-.need-list { margin: 0; padding: 0; list-style: none; }
-.need-list li { border-top: var(--bw-hair) solid var(--line); padding-block: 12px; max-width: 64ch; }
-.need-list li:last-child { border-bottom: var(--bw-hair) solid var(--line); }
-.need-note { margin-top: 18px; font-size: 1rem; color: var(--fg-dim); max-width: 64ch; }
+.need-list { margin: 0; padding: 14px 30px; list-style: none; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
+.need-list li { position: relative; padding: 10px 0 10px 22px; max-width: 64ch; }
+.need-list li::before { content: ""; position: absolute; left: 0; top: calc(10px + .62em); width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
+.need-note { margin-top: 18px; font-size: 1rem; color: var(--text-dim); max-width: 64ch; }
 .keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; max-width: 52ch; }
 .to-confirm { font: 400 .82rem / 1.4 var(--ff-mono); vertical-align: baseline; color: var(--bg); background: var(--moss); padding: 2px 6px; border-radius: var(--r-xs); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 
@@ -82,6 +82,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 @media (max-width: 680px) {
   .course-opening { padding-block: 30px 48px; }
   .do-steps li { padding-left: 46px; }
+  .need-list { padding: 10px 20px; }
   .do-steps li::before { left: 14px; }
   .trust-check p { font-size: 1.1rem; }
   .keep { font-size: 1.1rem; margin-top: 32px; }

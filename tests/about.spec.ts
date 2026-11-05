@@ -138,13 +138,16 @@ test("About works without JavaScript, from the keyboard and from a legacy alias"
   await context.close();
 });
 
-test("About layout: headings beside their prose on wide screens, stacked on phones", async ({ page }) => {
+test("About layout: one essay column, each heading above its prose at every width", async ({ page }) => {
   const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
   for (const id of ["capable", "human", "origin", "dog"]) {
     const [h, p] = [await box(`#${id} h2`), await box(`#${id} .about-prose`)];
-    expect(p.x).toBeGreaterThanOrEqual(h.x + h.width);
+    expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
+    expect(Math.abs(p.x - h.x)).toBeLessThanOrEqual(1);
+    // A reading column, not the full content width.
+    expect(p.width).toBeLessThanOrEqual(760);
   }
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });

@@ -249,18 +249,24 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect(await bg("#consultancy")).not.toBe(await bg("body"));
 
   const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
+  // Wide screens: the dark opening holds only the introduction and portrait, side by side; the starting points follow below it.
   let intro = await box(".introduction"), list = await box(".courses"), photo = await box(".alan-photo");
-  expect(list.x).toBeGreaterThanOrEqual(intro.x + intro.width);
-  expect(list.y).toBeLessThan(intro.y + intro.height);
-  expect(photo.x + photo.width).toBeLessThanOrEqual(list.x);
+  expect(photo.x).toBeGreaterThanOrEqual(intro.x + intro.width);
+  expect(list.y).toBeGreaterThanOrEqual(Math.max(intro.y + intro.height, photo.y + photo.height));
+  expect(await bg(".home-opening")).toBe("rgba(0, 0, 0, 0)");
+  expect(await page.locator(".home-opening").evaluate((el) => getComputedStyle(el.parentElement!).backgroundColor)).toBe(await bg("body"));
+  expect(await bg("main")).not.toBe(await bg("body"));
+  // The two primary entries sit side by side at equal width; the specialists follow beneath them.
   const [fundamentals, agents] = [await box('article[aria-labelledby="fundamentals-title"]'), await box('article[aria-labelledby="agents-101-title"]')];
   expect(Math.abs(fundamentals.width - agents.width)).toBeLessThanOrEqual(1);
+  expect(Math.abs(fundamentals.y - agents.y)).toBeLessThanOrEqual(1);
+  expect((await box(".specialists")).y).toBeGreaterThanOrEqual(Math.max(fundamentals.y + fundamentals.height, agents.y + agents.height));
 
   await page.setViewportSize({ width: 390, height: 844 });
   intro = await box(".introduction"); list = await box(".courses"); photo = await box(".alan-photo");
-  // Narrow screens: introduction, then the portrait, then the courses.
-  expect(photo.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-  expect(list.y).toBeGreaterThanOrEqual(photo.y + photo.height);
+  // Narrow screens: the portrait, then the introduction, then the courses.
+  expect(intro.y).toBeGreaterThanOrEqual(photo.y + photo.height);
+  expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
   for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
 });
 

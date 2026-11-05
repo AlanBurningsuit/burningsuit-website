@@ -1,21 +1,15 @@
-/* About: a personal narrative in the notebook layout. Shared furniture (framed photo, .em, masthead, footer) lives in app.css. */
+/* About: a personal narrative read as one essay column, its photos following the prose. Shared furniture (framed photo, .em, masthead, footer) lives in app.css. */
+.wrap:is(.about-opening, .about-section) { max-width: calc(46rem + 2 * var(--page-gutter)); }
 
 /* Opening: the headline and Alan's introduction at reading width. */
 .about-opening { padding-block: 46px 64px; }
 .about-opening h1 { margin-top: 0; max-width: 18ch; text-wrap: balance; }
 .about-lead { font-size: 1.25rem; line-height: var(--lh-relaxed); max-width: 58ch; }
 
-/* Each chapter: heading beside its prose on a hairline rule, the notebook's ruled page. */
-.about-section {
-  display: grid;
-  grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr);
-  column-gap: var(--column-gap);
-  padding-block: 40px 64px;
-  align-items: start;
-}
-.about-section > h2 { padding-top: 22px; border-top: var(--bw-spine) solid var(--fg); }
-@media (min-width: 901px) { .about-section > h2 { position: sticky; top: 24px; } }
-.about-prose { padding-top: 22px; border-top: var(--bw-hair) solid var(--line); }
+/* Each chapter: its heading above the prose, separated from the next by space alone. */
+.about-section { padding-block: 56px 0; }
+.about-section > h2 { margin-bottom: 20px; }
+.about-section:last-of-type { padding-bottom: 80px; }
 .about-prose p { max-width: 62ch; }
 
 /* Photos follow the prose they belong to, each at its own aspect ratio, in the carved frame. */
@@ -24,19 +18,19 @@
 .parents-photo { max-width: 560px; }
 .zelda-photo { max-width: 460px; }
 /* Captions are metadata only (who or what), in the mono margin voice. */
-.about-photo figcaption { margin-top: 14px; font: 400 .8rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
+.about-photo figcaption { margin-top: 14px; font: 400 .8rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
 
 /* Where to start: the closing band, matching the enquiry band's ground without a form. */
-.about-start { background: var(--bg-band); margin-top: 16px; }
+.about-start { background: var(--bg-band); }
 .about-start-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 56px 62px; align-items: baseline; }
 .about-start p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
 .about-start a { font-weight: 600; }
 
 @media (max-width: 900px) {
   .about-opening { padding-block: 34px 44px; }
-  .about-section, .about-start-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
-  .about-section { padding-block: 16px 48px; }
-  .about-prose { padding-top: 0; border-top: 0; }
+  .about-start-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
+  .about-section { padding-block: 44px 0; }
+  .about-section:last-of-type { padding-bottom: 56px; }
   .about-start-inner { padding-block: 44px 50px; }
 }
 @media (max-width: 680px) {

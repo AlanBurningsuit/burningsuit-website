@@ -2,52 +2,52 @@
 
 * { box-sizing: border-box; }
 html { color-scheme: dark; scroll-padding-top: 1.5rem; }
+/* Zero specificity for .dark, so a closing band's own darker ground wins whatever the stylesheet order. */
+body, main, :where(.dark) { background: var(--surface); color: var(--text); }
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--fg);
   font: 400 var(--body-size) / var(--lh-body) var(--ff-body);
   overflow-wrap: anywhere;
 }
 img { display: block; max-width: 100%; height: auto; }
 h1, h2, h3, p, figure, blockquote, dl { margin: 0; }
-h1, h2, h3 { font-family: var(--ff-display); font-weight: 800; letter-spacing: var(--ls-display); }
-h1 { margin: 18px 0 26px; font-size: var(--title-size); line-height: var(--lh-display); letter-spacing: var(--ls-display-loose); }
-h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); line-height: var(--lh-snug); }
-h3 { line-height: var(--lh-snug); }
+/* Display weight steps down the outline: 800 for the page title, 700 for sections, 600 for items, so long pages read at a conversational volume. */
+h1, h2, h3 { font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
+h1 { margin: 18px 0 26px; font-size: var(--title-size); font-weight: 800; line-height: var(--lh-display); letter-spacing: var(--ls-display-loose); }
+h2 { font-size: clamp(1.75rem, 2.7vw, 2.5rem); font-weight: 700; line-height: var(--lh-snug); letter-spacing: var(--ls-display); }
+h3 { font-weight: 600; line-height: var(--lh-snug); }
 p + p { margin-top: 1rem; }
-a { color: var(--amber); text-decoration-thickness: 1px; text-underline-offset: .2em; }
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: .2em; }
 a:hover { text-decoration-thickness: 2px; }
-:focus-visible { outline: var(--px) solid var(--amber); outline-offset: 5px; border-radius: var(--r-xs); }
+:focus-visible { outline: var(--px) solid var(--link); outline-offset: 5px; border-radius: var(--r-xs); }
 .wrap { max-width: var(--content-width); margin-inline: auto; padding-inline: var(--page-gutter); }
 .placeholder { max-width: 65ch; margin-inline: auto; padding: var(--page-gutter); }
-.eyebrow { font: 400 .72rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono-wide); color: var(--fg-dim); }
+.eyebrow { font: 400 .72rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono-wide); color: var(--text-dim); }
 .em { color: var(--amber); }
 .standfirst { font-size: 1.3rem; line-height: var(--lh-relaxed); font-weight: 600; margin-bottom: 18px; }
 .text-link { display: inline-flex; align-items: baseline; gap: 16px; font-weight: 600; padding-block: 7px; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 14px; }
 .links a { font-weight: 600; padding-block: 6px; }
-.aside { font-size: .92rem; color: var(--fg-dim); }
+.aside { font-size: .92rem; color: var(--text-dim); }
 .course-facts { margin: 18px 0 12px; font-size: .86rem; }
 .course-facts > div { display: grid; grid-template-columns: 98px minmax(0, 1fr); gap: 12px; padding-block: 4px; }
-.course-facts dt { color: var(--fg-dim); }
+.course-facts dt { color: var(--text-dim); }
 .course-facts dd { margin: 0; }
 
 .skip { position: absolute; top: 12px; left: 16px; z-index: 10; padding: 12px; background: var(--bg-band); transform: translateY(-200%); }
 .skip:focus { transform: none; }
-.masthead-band { border-bottom: var(--bw-hair) solid var(--line); }
 .masthead { display: flex; align-items: center; justify-content: space-between; min-height: 96px; gap: 40px; }
 .brand { padding-block: 24px; flex-shrink: 0; }
 .brand img { width: 200px; height: auto; }
 .masthead nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 30px; }
-.masthead nav a { color: var(--fg); text-decoration: none; font: 600 1rem / var(--lh-snug) var(--ff-display); padding-block: 10px; }
-.masthead nav a:hover, .masthead nav a[aria-current] { color: var(--amber); }
+.masthead nav a { color: var(--text); text-decoration: none; font: 600 1rem / var(--lh-snug) var(--ff-display); padding-block: 10px; }
+.masthead nav a:hover, .masthead nav a[aria-current] { color: var(--link); }
 
-/* A candid photo in the brand's carved frame: deep border, frame radius, paper-edge hairline and the hard offset shadow. */
-.framed-photo img { display: block; width: 100%; height: auto; border: var(--px) solid var(--deep); border-radius: var(--r); outline: var(--bw-hair) solid var(--paper-edge); box-shadow: 5px 5px 0 var(--deep); }
+/* A candid photo, matted like a print: a card-coloured mount, the frame radius and the soft lift. */
+.framed-photo img { display: block; width: 100%; height: auto; border: 6px solid var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
 
 /* A raised band with its heading beside the copy: the homepage consultancy band and the consultancy page's AI band. */
-.raised-band { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
+.raised-band { background: var(--surface-raised); }
 .raised-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: start; }
 .raised-band h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); }
 .raised-copy p { max-width: 58ch; }
@@ -56,8 +56,8 @@ a:hover { text-decoration-thickness: 2px; }
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }
 .contact h2 { margin-top: 14px; }
-.footer { display: flex; justify-content: space-between; gap: 20px; padding-block: 26px; font-size: .78rem; color: var(--fg-dim); }
-.footer a { color: var(--fg-dim); }
+.footer { display: flex; justify-content: space-between; gap: 20px; padding-block: 26px; font-size: .78rem; color: var(--text-dim); }
+.footer a { color: var(--text-dim); }
 .foot-links { display: flex; flex-wrap: wrap; gap: 4px 18px; }
 
 @media (max-width: 900px) {
