@@ -6,9 +6,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import "../styles/course.css";
 import "../styles/consultancy.css";
+import working from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
 
 const hour = "https://cal.com/alan-burningsuit/hour";
-import working from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
 ---
 <BaseLayout
   title="Power BI consultancy | burningsuit"
@@ -105,7 +105,7 @@ import working from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
     <div class="who-lead">
       <h2 id="who-title">Who does the work</h2>
       <figure class="who-photo framed-photo">
-        <Image src={working} alt="Alan Harman-Box writing on a tablet at an outdoor café table" widths={[400, 640, 960]} sizes="(max-width: 900px) calc(100vw - 56px), 420px" format="webp" loading="lazy" />
+        <Image src={working} alt="Alan Harman-Box writing on a tablet at an outdoor café table" width={960} widths={[400, 640, 960]} sizes="(max-width: 680px) calc(100vw - 44px), (max-width: 900px) calc(100vw - 56px), 420px" format="webp" loading="lazy" />
       </figure>
     </div>
     <div class="who-note">

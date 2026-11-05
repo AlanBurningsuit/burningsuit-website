@@ -71,9 +71,12 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
     "They do as much of it as they can, with me alongside.",
     "Your team finishes knowing what we did and why, how to change it and what will happen when they do. You keep our notes and the session recordings, so there's something to fall back on. If you'd rather not be recorded, just say.",
   ]);
-  // After the work: the support options follow their own introduction.
   // Alan's line leads the support column in display type; the options follow their own introduction.
   await expect(page.locator("#ongoing .ongoing-body > *").nth(0)).toHaveClass(/pull-line/);
+  const pull = await page.locator(".pull-line").evaluate((el) => { const s = getComputedStyle(el); return { weight: s.fontWeight, rule: s.borderLeftStyle, size: parseFloat(s.fontSize), body: parseFloat(getComputedStyle(document.body).fontSize) }; });
+  expect(pull.weight).toBe("800");
+  expect(pull.rule).toBe("solid");
+  expect(pull.size).toBeGreaterThan(pull.body * 1.3);
   await expect(page.locator("#ongoing .ongoing-body > *").nth(1)).toHaveClass(/ongoing-intro/);
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
   await expect(page.locator(".course-intro > p:not(.standfirst)")).toHaveText([
@@ -223,9 +226,34 @@ for (const width of [1366, 390]) {
   test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(route);
-    await page.evaluate(() => document.fonts.ready);
+    // Load the lazy photo before the full-page capture so review artifacts include it.
+    await page.locator(".who-photo img").scrollIntoViewIfNeeded();
+    await page.locator(".who-photo img").evaluate((img: HTMLImageElement) => img.decode());
+    await page.evaluate(() => { window.scrollTo(0, 0); return document.fonts.ready; });
     const capture = info.outputPath("page.png");
     await page.screenshot({ path: capture, fullPage: true });
     await info.attach("page", { path: capture, contentType: "image/png" });
   });
 }
+
+test("consultancy enquiry posts plainly from this page without JavaScript", async ({ browser, baseURL }) => {
+  // The provider is stubbed: no sample enquiry is ever sent.
+  const context = await browser.newContext({ baseURL, javaScriptEnabled: false });
+  const page = await context.newPage();
+  let payload: URLSearchParams | undefined;
+  await context.route(ENQUIRY.action!, async (request) => {
+    payload = new URLSearchParams(request.request().postData()!);
+    await request.fulfill({ status: 302, headers: { location: new URL(payload.get("_redirect")!, baseURL).href } });
+  });
+  await page.goto(route + "#contact");
+  const form = page.getByRole("form", { name: "Prefer to write?" });
+  await form.getByLabel("Name", { exact: true }).fill("Test Person");
+  await form.getByLabel("Email", { exact: true }).fill("test@example.com");
+  await form.getByLabel("Consultancy", { exact: true }).check();
+  await form.getByLabel("Your message", { exact: true }).fill("A sample consultancy enquiry.");
+  await form.getByRole("button", { name: "Send", exact: true }).click();
+  await expect(page).toHaveURL(new URL(ENQUIRY.successPath, baseURL).href);
+  expect(payload!.get("message")).toBe("A sample consultancy enquiry.");
+  expect(payload!.get("_append")).toBe("false");
+  await context.close();
+});

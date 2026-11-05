@@ -46,7 +46,6 @@
 .teacher-origin p { font-size: 1.15rem; line-height: var(--lh-relaxed); }
 .teacher-origin .text-link { margin-top: 14px; }
 
-
 @media (max-width: 900px) {
   .home-opening { grid-template-areas: "intro" "photo" "courses"; grid-template-rows: none; row-gap: 34px; padding-block: 34px 50px; }
   .alan-photo { margin-top: 0; }
