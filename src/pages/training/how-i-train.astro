@@ -1,0 +1,59 @@
+---
+// Approved wording: private ops site/how-i-train-page-copy.md. Its field labels, layout notes and private notes are not copy.
+// No enquiry form here: the closing links reach email and the Contact page.
+// Fundamentals is a pending route (src/config/pending-routes.mjs); 101 booking stays on its own page.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ENQUIRY } from "../../config/enquiry.mjs";
+import "../../styles/how-i-train.css";
+
+const { email } = ENQUIRY;
+---
+<BaseLayout
+  title="How I train | burningsuit"
+  description="How I teach Power BI: practice on prepared examples, questions about your own work, help when you get stuck, and reasons behind recommendations."
+  placeholder={false}
+>
+  <section class="hit-opening wrap" aria-labelledby="page-title">
+    <h1 id="page-title">How I train</h1>
+    <p class="hit-lead">My courses are about understanding how Power BI works and putting it to use.</p>
+  </section>
+
+  <section class="hit-answer hit-do wrap" aria-labelledby="do-title">
+    <h2 id="do-title">What you'll do</h2>
+    <div class="hit-prose">
+      <p>Mostly, I explain and show you how something works, then you do it yourself on examples I've prepared for teaching. I want you to ask questions as we go. My aim is to make clear what each part is for before we get into how it works.</p>
+    </div>
+  </section>
+
+  <section class="hit-stuck raised-band" aria-labelledby="stuck-title">
+    <div class="hit-answer wrap">
+      <h2 id="stuck-title">If you get stuck</h2>
+      <div class="hit-prose">
+        <p>I've made almost every mistake in Power BI worth making. If something isn't making sense, say so. I'll help you work out where it went wrong and build back up from there. I keep groups small so there's time to work through questions and help everyone follow what's happening.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="hit-pair wrap">
+    <section class="hit-pair-item" aria-labelledby="own-work-title">
+      <h2 id="own-work-title">Questions about your own work</h2>
+      <p>Yes. Ask how an idea applies where you work, and I'll follow the question within what the course covers. If there's something specific you'd like to get working with your own data, <a href="/power-bi/">we can work together</a>.</p>
+    </section>
+    <section class="hit-pair-item" aria-labelledby="afterwards-title">
+      <h2 id="afterwards-title">Helping you use it afterwards</h2>
+      <p>I aim for explanations you can use again. When I recommend a way of doing something, I tell you what it helps with and when it matters, so you can make your own choice when a similar problem turns up. I also name things as we meet them, because knowing what something's called helps you ask better questions.</p>
+    </section>
+  </div>
+
+  <section class="hit-facts wrap" aria-labelledby="facts-title">
+    <h2 id="facts-title">On every course</h2>
+    <p class="hit-facts-note">I write and teach every course myself, for groups of up to 8 people. Dates, setup and what's included vary from course to course.</p>
+  </section>
+
+  <section class="hit-next" aria-labelledby="next-title">
+    <div class="wrap hit-next-inner">
+      <h2 id="next-title">Where next</h2>
+      <p>Compare <a href="/training/">all the courses</a>, or start with <a href="/training/power-bi-fundamentals/">Power BI fundamentals</a> or <a href="/training/agentic-development-for-power-bi/">Power BI with AI agents 101</a>. If you've got a question about how I teach, <a href={`mailto:${email}`}>email me</a> or use <a href="/contact/">the enquiry form</a>. There's more <a href="/about/">about me</a> too.</p>
+    </div>
+  </section>
+</BaseLayout>

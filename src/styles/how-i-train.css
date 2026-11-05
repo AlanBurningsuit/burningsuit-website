@@ -1,0 +1,53 @@
+/* How I train (/training/how-i-train/): four related answers in the notebook layout. Shared furniture (raised band, masthead, footer) lives in app.css. */
+
+/* Opening: the settled course-page title and one line at reading width. */
+.hit-opening { padding-block: 46px 44px; }
+.hit-opening h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
+.hit-lead { max-width: 52ch; font-size: 1.25rem; line-height: var(--lh-relaxed); text-wrap: pretty; }
+
+/* An answer: heading beside its prose on the ruled page, as on About. */
+.hit-answer { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; }
+.hit-answer > h2, .hit-pair-item > h2, .hit-facts > h2 { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
+.hit-answer > h2 { padding-top: 22px; border-top: var(--bw-spine) solid var(--fg); }
+.hit-prose { padding-top: 22px; border-top: var(--bw-hair) solid var(--line); }
+.hit-prose p, .hit-pair-item p { max-width: 62ch; }
+.hit-do { padding-block: 24px 60px; }
+
+/* If you get stuck: the personal answer, lifted onto the raised band with an amber spine and larger prose. */
+.hit-stuck .hit-answer { padding-block: 52px 58px; }
+.hit-stuck .hit-answer > h2 { border-top-color: var(--amber); }
+.hit-stuck .hit-prose p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 56ch; }
+
+/* Own work and using it afterwards: two related answers side by side, each on its own hairline. */
+.hit-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); padding-block: 64px 56px; align-items: start; }
+.hit-pair-item { border-top: var(--bw-spine) solid var(--fg); padding-top: 22px; }
+.hit-pair-item > h2 { padding-bottom: 16px; }
+.hit-pair-item a { font-weight: 600; }
+
+/* On every course: a short supporting note, quieter than the answers, beside its small heading. */
+.hit-facts { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 8px 72px; align-items: baseline; }
+.hit-facts > h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: var(--ls-display-tight); }
+.hit-facts-note { border-left: var(--bw-spine) solid var(--line); padding-left: 22px; max-width: 64ch; font-size: .98rem; }
+
+/* Where next: the closing band, matching About's ground without a form. */
+.hit-next { background: var(--bg-band); }
+.hit-next-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 56px 62px; align-items: baseline; }
+.hit-next p { font-size: 1.15rem; line-height: var(--lh-relaxed); max-width: 52ch; }
+.hit-next a { font-weight: 600; }
+
+@media (max-width: 900px) {
+  .hit-opening { padding-block: 34px 36px; }
+  .hit-answer, .hit-facts, .hit-next-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
+  .hit-prose { padding-top: 0; border-top: 0; }
+  .hit-do { padding-block: 16px 48px; }
+  .hit-stuck .hit-answer { padding-block: 40px 46px; }
+  .hit-pair { grid-template-columns: minmax(0, 1fr); row-gap: 48px; padding-block: 48px 44px; }
+  .hit-facts { row-gap: 12px; padding-block: 4px 56px; }
+  .hit-next-inner { padding-block: 44px 50px; }
+}
+@media (max-width: 680px) {
+  .hit-opening { padding-block: 30px 30px; }
+  .hit-lead { font-size: 1.12rem; }
+  .hit-stuck .hit-prose p { font-size: 1.1rem; }
+  .hit-next p { font-size: 1.05rem; }
+}
