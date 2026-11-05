@@ -43,6 +43,13 @@ a:hover { text-decoration-thickness: 2px; }
 .masthead nav a { color: var(--fg); text-decoration: none; font: 600 1rem / var(--lh-snug) var(--ff-display); padding-block: 10px; }
 .masthead nav a:hover, .masthead nav a[aria-current] { color: var(--amber); }
 
+/* A raised band with its heading beside the copy: the homepage consultancy band and the consultancy page's AI band. */
+.raised-band { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
+.raised-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: start; }
+.raised-band h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); }
+.raised-copy p { max-width: 58ch; }
+.raised-copy .text-link { margin-top: 14px; }
+
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }
 .contact h2 { margin-top: 14px; }
@@ -53,6 +60,7 @@ a:hover { text-decoration-thickness: 2px; }
 @media (max-width: 900px) {
   :root { --page-gutter: 28px; --column-gap: 36px; --title-size: 3.2rem; --home-columns: minmax(0, 1fr); }
   .contact-inner { row-gap: 24px; }
+  .raised-inner { row-gap: 20px; padding-block: 40px; }
   .masthead { gap: 24px; }
 }
 @media (max-width: 680px) {

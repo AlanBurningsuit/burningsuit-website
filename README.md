@@ -1,6 +1,6 @@
 # burningsuit.co.uk
 
-A static Astro rebuild in progress. The homepage implements the approved homepage design, and the Power BI with AI agents 101 page the agreed notebook direction; the rest of the site remains a compatibility shell. Nothing is approved for publication.
+A static Astro rebuild in progress. The homepage implements the approved homepage design, the Power BI with AI agents 101 page the agreed notebook direction, and `/power-bi/` the approved consultancy page; the rest of the site remains a compatibility shell. Nothing is approved for publication.
 
 ## Develop and check
 
@@ -25,10 +25,10 @@ The form sets distinct `_redirect` and `_error` paths to `/enquiry-received/` an
 
 ## What remains
 
-- `src/pages/index.astro` and `src/pages/training/agentic-development-for-power-bi.astro`: bespoke static pages with shared masthead, footer and enquiry form in `src/components/`. `BaseLayout.astro` keeps every page noindex; other routes retain their placeholders. No analytics runtime or client rendering; the enquiry form renders and validates without JavaScript and sends once an endpoint is set.
+- `src/pages/index.astro`, `src/pages/training/agentic-development-for-power-bi.astro` and `src/pages/power-bi.astro`: bespoke static pages with shared masthead, footer and enquiry form in `src/components/`. The consultancy page reuses `course.css` with differences in `consultancy.css`; the raised band shared with the homepage lives in `app.css`. `[...path].astro` skips routes that have a bespoke page, which must keep that route's reserved anchors (`check:seo` enforces them). `BaseLayout.astro` keeps every page noindex; other routes retain their placeholders. No analytics runtime or client rendering; the enquiry form renders and validates without JavaScript and sends once an endpoint is set.
 - `src/config/compatibility.mjs`: existing redirect destinations and route/anchor reservations. These placeholders preserve addresses, not the old page content; the list does not prescribe the new page hierarchy. Restore meaningful destinations before release, including the cited archive article.
 - `content/`: the five original MDX entries and original privacy/archive page sources, preserved byte-for-byte for reference and outside the build. They are not current offer authority or automatically cleared copy. The content check still rejects a named frontmatter block unless its publication gate is explicitly open; the gate is not permission.
-- `src/styles/brand.css`: canonical brand tokens, copied unchanged from the brand repo. Change shared identity there first. `app.css` defines shared page furniture; `home.css`, `course.css` and `enquiry.css` hold page compositions. Headings keep sentence case. The portrait uses `astro:assets` and the committed photo derivative; generated responsive images belong only in the build output.
+- `src/styles/brand.css`: canonical brand tokens, copied unchanged from the brand repo. Change shared identity there first. `app.css` defines shared page furniture; `home.css`, `course.css`, `consultancy.css` and `enquiry.css` hold page compositions. Headings keep sentence case. The portrait uses `astro:assets` and the committed photo derivative; generated responsive images belong only in the build output.
 - `src/components/seo/Schema.astro`: the retained JSON-LD emitter, with script-breakout escaping. Placeholder pages emit no schema or canonical links.
 - Photos, diagrams, logos and social assets remain available. Sources are not automatically rendered.
 

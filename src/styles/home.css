@@ -46,11 +46,6 @@
 .teacher-origin p { font-size: 1.15rem; line-height: var(--lh-relaxed); }
 .teacher-origin .text-link { margin-top: 14px; }
 
-.consultancy { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
-.consultancy-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: start; }
-.consultancy h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); }
-.consultancy-copy p { max-width: 58ch; }
-.consultancy-copy .text-link { margin-top: 14px; }
 
 @media (max-width: 900px) {
   .home-opening { grid-template-areas: "intro" "photo" "courses"; grid-template-rows: none; row-gap: 34px; padding-block: 34px 50px; }
@@ -59,7 +54,6 @@
   .course > p { max-width: 62ch; }
   .teacher { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 50px 54px; }
   .teacher-origin { margin-top: 0; }
-  .consultancy-inner { row-gap: 20px; padding-block: 40px; }
 }
 @media (max-width: 680px) {
   .home-opening { padding-block: 30px 46px; }

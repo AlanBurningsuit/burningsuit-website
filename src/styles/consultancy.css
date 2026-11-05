@@ -15,12 +15,7 @@
 .build-line { margin-top: 22px; max-width: 64ch; }
 .courses-line { margin-top: 26px; max-width: 64ch; }
 
-/* AI agents: the page's only raised band, heading beside the copy as on the homepage band. */
-.ai-band { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
-.ai-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: start; }
-.ai-band h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); }
-.ai-copy p { max-width: 58ch; }
-.ai-copy .text-link { margin-top: 14px; }
+/* AI agents: the page's only raised band uses the shared .raised-band from app.css. */
 
 /* How the work runs: the 101's numbered spine on the page background, so only the AI band is raised. */
 .work-runs .do-inner { padding-block: 76px 56px; }
@@ -29,7 +24,7 @@
 #pricing { scroll-margin-top: 1.5rem; }
 
 /* After the work: the principle beside the support options, which follow their own introduction. */
-.ongoing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
+.ongoing { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
 .ongoing-lead h2 { margin-bottom: 20px; }
 .ongoing-lead p { max-width: 46ch; }
 .ongoing-intro { margin-bottom: 16px; max-width: 64ch; }
@@ -48,9 +43,8 @@
 .start-link { font-size: 1.3rem; line-height: var(--lh-snug); }
 
 @media (max-width: 900px) {
-  .consult-split, .ongoing, .ai-inner { grid-template-columns: minmax(0, 1fr); row-gap: 22px; }
+  .consult-split, .ongoing { grid-template-columns: minmax(0, 1fr); row-gap: 22px; }
   .consult-split { padding-block: 24px 56px; }
-  .ai-inner { row-gap: 20px; padding-block: 40px; }
   .work-runs .do-inner { padding-block: 54px 40px; }
   .ongoing { padding-block: 24px 56px; }
   .who-does { padding-block: 16px 60px; }
