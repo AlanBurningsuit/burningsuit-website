@@ -10,16 +10,13 @@
 .starting-points { padding-block: 64px 40px; }
 .starting-points h2 { font-size: clamp(2.1rem, 3.4vw, 2.9rem); padding-bottom: 26px; }
 .start-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); align-items: start; }
-.starting-points .course { border-top: var(--px) solid var(--amber); padding: 24px 30px 26px; }
+.starting-points .course { border-top: var(--bw-spine) solid var(--amber); padding: 24px 30px 26px; }
 /* Side by side, the entries share rows, so the two fact blocks and outline links line up whatever the description length. */
 @media (min-width: 901px) {
   .start-list { grid-template-rows: repeat(6, auto); }
   .starting-points .course { display: grid; grid-template-rows: subgrid; grid-row: span 6; row-gap: 0; align-content: start; }
 }
 .starting-points .course h3 { font-size: clamp(1.7rem, 2.5vw, 2.05rem); }
-.deciding { margin: 18px 0 14px; padding: 14px 18px 16px; background: var(--surface); border-radius: var(--r-sm); }
-.deciding .facts { margin: 0 0 8px; padding: 0; background: none; font-size: .95rem; row-gap: 2px; }
-.deciding .prereq { font-size: .95rem; }
 .course > p.private-ask { margin-top: 10px; font-size: .96rem; }
 .private-ask a { font-weight: 600; }
 /* The public group size stays in one piece when the date line wraps. */
@@ -32,7 +29,7 @@
 .specialist-rows { list-style: none; margin: 0 0 18px; padding: 12px 30px; background: var(--surface-raised); border-radius: var(--r); }
 .specialist-rows > li { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: baseline; padding-block: 10px; }
 .specialist-rows h3 { font-size: 1.2rem; font-weight: 600; letter-spacing: var(--ls-display-tight); }
-.specialist-rows .facts { margin: 0; padding: 0; border: 0; }
+.specialist-rows .facts { margin: 0; }
 .specialist-courses .text-link { font-size: .96rem; }
 .name-course { font-size: .96rem; color: var(--text-dim); }
 .specialist-courses .not-sure { margin-top: 30px; }
@@ -59,7 +56,6 @@
   .specialists-head h2 { font-size: 1.7rem; }
   /* With enlarged text a long course name hyphenates rather than breaking at its last letter. */
   .starting-points .course h3 { font-size: 1.65rem; hyphens: auto; }
-  .deciding { padding: 12px 14px 14px; }
   .starting-points .course { padding: 22px 20px 22px; }
   .specialist-rows { padding: 10px 20px; }
   .specialist-rows > li { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }

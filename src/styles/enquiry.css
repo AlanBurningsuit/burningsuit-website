@@ -1,8 +1,15 @@
-.contact-inner.enquiry { align-items: start; padding-block: 52px 56px; }
+.contact-inner.enquiry { align-items: start; padding-block: 44px 48px; }
 .contact .enquiry-intro :is(h1, h2) { margin: 0 0 20px; }
 .enquiry-intro p { max-width: 40ch; }
-/* On wide screens the introduction stays beside the form rather than leaving an empty column. */
-@media (min-width: 901px) { .enquiry-intro { position: sticky; top: 24px; } }
+/* On wide screens the introduction stays beside the form, with the email fallback beneath it rather than under the form,
+   so the closing band stays a compact bookend. */
+@media (min-width: 901px) {
+  .contact-inner.enquiry { grid-template-rows: auto 1fr; }
+  .enquiry-body { display: contents; }
+  .enquiry-intro { grid-area: 1 / 1; }
+  .enquiry-form { grid-area: 1 / 2 / span 2; }
+  .fallback { grid-area: 2 / 1; margin-top: 24px; }
+}
 .enquiry-form { display: grid; gap: 20px; max-width: 620px; }
 /* On wider screens name and email share a row, so the closing band stays a compact bookend. */
 @media (min-width: 681px) {
@@ -22,7 +29,7 @@
   border-radius: var(--r-sm);
   padding: 10px 12px;
 }
-.enquiry-form textarea { resize: vertical; height: 8rem; min-height: 6rem; }
+.enquiry-form textarea { resize: vertical; height: 6.5rem; min-height: 5rem; }
 .enquiry-form input:focus-visible, .enquiry-form textarea:focus-visible { outline-offset: 2px; border-color: var(--amber); }
 .send {
   justify-self: start;

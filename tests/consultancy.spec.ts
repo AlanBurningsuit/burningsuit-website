@@ -183,10 +183,12 @@ test("consultancy layout: facts beside the introduction on wide screens, after i
   let intro = await box(".course-intro"), facts = await box(".course-run");
   expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
   expect(facts.y).toBeLessThan(intro.y + intro.height);
-  for (const [lead, body] of [["#situations .split-lead", "#situations .split-body"], ["#ongoing .ongoing-lead", "#ongoing .ongoing-body"], [".who-does h2", ".who-note"], ["#start .book-inner > div:first-child", ".start-link"]]) {
+  for (const [lead, body] of [["#situations .split-lead", "#situations .split-body"], ["#ongoing .ongoing-lead", "#ongoing .ongoing-body"], [".who-does h2", ".who-note"]]) {
     const [l, b] = [await box(lead), await box(body)];
     expect(b.x).toBeGreaterThanOrEqual(l.x + l.width);
   }
+  // How to start breaks the run of side-by-side sections: its heading and ask sit above the link.
+  expect((await box(".start-link")).y).toBeGreaterThanOrEqual((await box("#start .book-inner > div:first-child")).y + (await box("#start .book-inner > div:first-child")).height);
   // Who does the work reads at body width, not the 101's narrow aside.
   expect((await box(".who-note")).width).toBeGreaterThan(600);
 

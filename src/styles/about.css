@@ -9,7 +9,6 @@
 /* Each chapter: its heading above the prose, separated from the next by space alone. */
 .about-section { padding-block: 56px 0; }
 .about-section > h2 { margin-bottom: 20px; }
-.about-section:last-of-type { padding-bottom: 80px; }
 .about-prose p { max-width: 62ch; }
 
 /* Photos follow the prose they belong to, each at its own aspect ratio, in the carved frame. */
@@ -21,7 +20,7 @@
 .about-photo figcaption { margin-top: 14px; font: 400 .8rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
 
 /* Where to start: the closing band, matching the enquiry band's ground without a form. */
-.about-start { background: var(--bg-band); }
+.about-start { background: var(--bg-band); margin-top: 80px; }
 .about-start-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 56px 62px; align-items: baseline; }
 .about-start p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
 .about-start a { font-weight: 600; }
@@ -30,7 +29,7 @@
   .about-opening { padding-block: 34px 44px; }
   .about-start-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
   .about-section { padding-block: 44px 0; }
-  .about-section:last-of-type { padding-bottom: 56px; }
+  .about-start { margin-top: 56px; }
   .about-start-inner { padding-block: 44px 50px; }
 }
 @media (max-width: 680px) {

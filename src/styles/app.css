@@ -4,6 +4,8 @@
 html { color-scheme: dark; scroll-padding-top: 1.5rem; }
 /* Zero specificity for .dark, so a closing band's own darker ground wins whatever the stylesheet order. */
 body, main, :where(.dark) { background: var(--surface); color: var(--text); }
+main { color-scheme: light; }
+:where(.dark) { color-scheme: dark; }
 body {
   margin: 0;
   font: 400 var(--body-size) / var(--lh-body) var(--ff-body);
@@ -36,8 +38,8 @@ a:hover { text-decoration-thickness: 2px; }
 
 .skip { position: absolute; top: 12px; left: 16px; z-index: 10; padding: 12px; background: var(--bg-band); transform: translateY(-200%); }
 .skip:focus { transform: none; }
-.masthead { display: flex; align-items: center; justify-content: space-between; min-height: 96px; gap: 40px; }
-.brand { padding-block: 24px; flex-shrink: 0; }
+.masthead { display: flex; align-items: center; justify-content: space-between; min-height: 84px; gap: 40px; }
+.brand { padding-block: 20px; flex-shrink: 0; }
 .brand img { width: 200px; height: auto; }
 .masthead nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 30px; }
 .masthead nav a { color: var(--text); text-decoration: none; font: 600 1rem / var(--lh-snug) var(--ff-display); padding-block: 10px; }

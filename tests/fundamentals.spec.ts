@@ -141,6 +141,14 @@ test("Fundamentals layout: facts beside the introduction on wide screens, direct
   // The opening's specialist pointer keeps the 101's amber course-fit spine (amber is the dark opening's link colour).
   const amber = await page.locator(".course-run a").first().evaluate((el) => getComputedStyle(el).color);
   expect(await page.locator(".course-fit").evaluate((el) => getComputedStyle(el).borderLeftColor)).toBe(amber);
+  // On the daylight agenda band the step numbers take the daylight link colour, not amber (1.9:1 there).
+  const daylightLink = await page.locator(".teacher-links a").first().evaluate((el) => getComputedStyle(el).color);
+  expect(daylightLink).not.toBe(amber);
+  expect(await page.locator(".agenda-steps > li").first().evaluate((el) => getComputedStyle(el, "::before").color)).toBe(daylightLink);
+  // On wide screens the two days run side by side.
+  const [day1, day2] = [await box(page, "#day-1-title"), await box(page, "#day-2-title")];
+  expect(day2.x).toBeGreaterThanOrEqual(day1.x + day1.width);
+  expect(Math.abs(day1.y - day2.y)).toBeLessThanOrEqual(1);
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });

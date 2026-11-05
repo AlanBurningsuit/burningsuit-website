@@ -1,15 +1,15 @@
 /* Opening: the dark bookend introduces Alan, beside his portrait; the starting points follow on daylight. */
 .home-opening {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
   grid-template-areas: "intro photo";
   column-gap: var(--column-gap);
-  padding-block: 36px 60px;
+  padding-block: 28px 52px;
   align-items: center;
 }
 .introduction { grid-area: intro; }
 .introduction h1 { margin-top: 0; }
-.introduction > p { max-width: 56ch; }
+.introduction > p { max-width: 62ch; }
 .introduction strong { font-weight: 600; }
 .alan-photo { grid-area: photo; justify-self: end; width: 100%; max-width: 520px; }
 .alan-photo img { aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; }
@@ -21,16 +21,18 @@
 .course { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
 /* Side by side, the cards share rows, so the fact blocks and actions line up whatever the description length. */
 @media (min-width: 901px) {
-  .course-list { grid-template-rows: repeat(6, auto); }
-  .course-list > .course { display: grid; grid-template-rows: subgrid; grid-row: span 6; row-gap: 0; align-content: start; }
-  .course-list .facts { align-self: start; }
+  .course-list { grid-template-rows: repeat(5, auto); }
+  .course-list > .course { display: grid; grid-template-rows: subgrid; grid-row: span 5; row-gap: 0; align-content: start; }
 }
 .course-fit, .specialists-lead { font: 600 1rem / var(--lh-snug) var(--ff-display); color: var(--text-dim); margin-bottom: 8px; }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
 .course > p:not(.course-fit) { font-size: 1rem; }
-.facts { margin: 16px 0 12px; padding: 10px 14px; background: var(--surface); border-radius: var(--r-sm); font-size: .95rem; row-gap: 2px; }
+/* Each entry's deciding facts and prerequisite sit together in one block, recessed to the daylight ground;
+   it keeps its own height when the neighbouring entry's block is taller. */
+.deciding { align-self: start; margin: 16px 0 14px; padding: 14px 18px 16px; background: var(--surface); border-radius: var(--r-sm); }
+.facts { margin: 0 0 8px; padding: 0; font-size: .95rem; row-gap: 2px; }
 .fact-label { color: var(--text-dim); }
-.course > p.prereq { font-size: .95rem; }
+.prereq { font-size: .95rem; }
 .course-actions { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 10px; }
 .course .text-link { font-size: .96rem; }
 
@@ -66,6 +68,7 @@
 }
 @media (max-width: 680px) {
   .home-opening { padding-block: 18px 40px; row-gap: 24px; }
+  .alan-photo img { aspect-ratio: 16 / 10; }
   .courses > h2 { font-size: 1.9rem; padding-bottom: 18px; }
   .course { padding: 22px 20px 20px; }
   .course h3 { font-size: 1.6rem; }

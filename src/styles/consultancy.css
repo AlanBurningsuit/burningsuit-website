@@ -36,8 +36,8 @@
   .work-runs .do-steps li { border-left: 0; border-top: var(--bw-spine) solid var(--amber); padding: 40px 0 0; }
   .work-runs .do-steps li::before { left: 0; top: 16px; }
 }
-.do-steps h3 a { color: inherit; text-decoration-color: var(--amber); }
-.do-steps h3 a:hover { color: var(--amber); }
+.do-steps h3 a { color: inherit; }
+.do-steps h3 a:hover { color: var(--link); }
 /* #pricing lands clear of the top edge through the global scroll-padding-top in app.css. */
 
 /* After the work: the principle beside the support options, which follow their own introduction. */
@@ -60,9 +60,9 @@
 .who-note p { max-width: 64ch; }
 .who-note .text-link { margin-top: 12px; }
 
-/* How to start: the free hour on a raised band, ahead of the shared enquiry band. */
+/* How to start: the free hour on a raised band, heading above the ask and link, ahead of the shared enquiry band. */
 .start { background: var(--surface-raised); }
-.start .book-inner { align-items: center; }
+.start .book-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
 .start-ask { font-size: 1.1rem; max-width: 40ch; }
 .start-link { font-size: 1.3rem; line-height: var(--lh-snug); }
 
@@ -70,7 +70,6 @@
   .consult-split { grid-template-columns: minmax(0, 1fr); row-gap: 22px; padding-block: 24px 56px; }
   .work-runs .do-inner { padding-block: 54px 40px; }
   .who-does { padding-block: 16px 60px; }
-  .start .book-inner { align-items: start; }
 }
 @media (max-width: 680px) {
   .pull-line { font-size: 1.4rem; }

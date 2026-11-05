@@ -19,7 +19,7 @@ const Heading = headingLevel === 1 ? "h1" : "h2";
       <Heading id="contact-title"><slot name="heading" /></Heading>
       {Astro.slots.has("intro") ? <slot name="intro" /> : <p><slot /></p>}
     </div>
-    <div>
+    <div class="enquiry-body">
       <form class="enquiry-form" method="post" action={ENQUIRY.action ?? undefined} aria-labelledby="contact-title" aria-describedby="enquiry-privacy">
         <input type="hidden" name="_redirect" value={ENQUIRY.successPath} />
         <input type="hidden" name="_error" value={ENQUIRY.errorPath} />
