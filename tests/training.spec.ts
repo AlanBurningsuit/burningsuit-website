@@ -40,8 +40,9 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await page.goto(route);
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
   await expect(page.locator("h1")).toHaveText("Power BI courses");
-  await expect(page.locator(".training-intro .standfirst")).toHaveText("Not sure where to start?");
-  await expect(page.locator(".training-intro > p:not(.standfirst)")).toHaveText("If you're new to Power BI, start with Power BI fundamentals. If you've already built a report, Power BI with AI agents 101 shows you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.");
+  await expect(page.locator("h1 .em")).toHaveText("courses");
+  // Revision 3 omits the opening fit question: the introduction is the only paragraph before the starting points.
+  await expect(page.locator(".training-intro > p")).toHaveText("If you're new to Power BI, start with Power BI fundamentals. If you've already built a report, Power BI with AI agents 101 shows you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Two places to start", "Want to dive deeper into Power BI?", "Who's teaching", "Ask about a course"]);
 
   const entries = page.getByRole("article");
@@ -92,7 +93,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   expect(mainLinks).toEqual([fundamentals, "#contact", course101, email, "#contact", "#contact", "/training/how-i-train/", "/about/", ENQUIRY.privacyPath, email]);
   const text = await page.locator("main").innerText();
   // Developing and Claude courses stay off; no arrows, seats, booking or promises the copy doesn't make.
-  for (const absent of [/hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, /seat/i, /book/i, /\[|\]/, /to confirm/i, /coming soon/i]) expect(text).not.toMatch(absent);
+  for (const absent of [/Not sure where to start/i, /hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, /seat/i, /book/i, /\[|\]/, /to confirm/i, /coming soon/i]) expect(text).not.toMatch(absent);
   await expect(page.locator("blockquote, .to-confirm, .proof, button:not(.send)")).toHaveCount(0);
 });
 
@@ -179,6 +180,49 @@ test("training chooser layout: equal entries side by side on wide screens, stack
     }
     for (const link of await page.locator("main .text-link").all()) expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(24);
   }
+});
+
+test("the starting points carry the page's weight: raised band, spined entries, recessed deciding facts", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto(route);
+  const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
+  const ground = await bg("body");
+  const band = await bg(".starting-points");
+  // Three tones in order of weight: raised course band, ground for specialists and teacher, darker enquiry band.
+  expect(band).not.toBe(ground);
+  for (const selector of [".training-intro", ".specialist-courses", ".training-teacher", ".specialist-rows > li"]) expect(await bg(selector)).toBe("rgba(0, 0, 0, 0)");
+  expect(await bg("#contact")).not.toBe(ground);
+  expect(await bg("#contact")).not.toBe(band);
+  // The band spans the viewport and is bounded by rules.
+  const bandBox = await box(page, ".starting-points");
+  expect(bandBox.x).toBe(0);
+  expect(bandBox.width).toBe(1366);
+  expect(await page.locator(".starting-points").evaluate((el) => getComputedStyle(el).borderTopStyle)).toBe("solid");
+  // Each entry keeps its facts and prerequisite together in one recessed block, darker than the band.
+  for (const entry of await page.getByRole("article").all()) {
+    const deciding = entry.locator(".deciding");
+    await expect(deciding).toHaveCount(1);
+    await expect(deciding.locator(".facts")).toHaveCount(1);
+    await expect(deciding.locator(".prereq")).toHaveCount(1);
+    const tone = await deciding.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(tone).not.toBe(band);
+    expect(tone).not.toBe(ground);
+    const spine = await entry.evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth));
+    // A spine, heavier than the specialists' hairline rows.
+    expect(spine).toBeGreaterThan(await page.locator(".specialist-rows > li").first().evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth)));
+  }
+  // Side by side, the deciding blocks and outline links line up across the two entries.
+  const tops = async (selector: string) => (await page.locator(selector).evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top))));
+  for (const selector of [".starting-points .deciding", ".starting-points .course-actions"]) {
+    const [first, second] = await tops(selector);
+    expect(Math.abs(first - second)).toBeLessThanOrEqual(1);
+  }
+  // Specialists stay lighter than the starting points; the teacher note is not amber-ruled.
+  const size = (selector: string) => page.locator(selector).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(await size("#specialists-title")).toBeLessThan(await size("#start-points-title"));
+  const amber = await page.locator("h1 .em").evaluate((el) => getComputedStyle(el).color);
+  expect(await page.locator(".teacher-note").evaluate((el) => getComputedStyle(el).borderLeftColor)).not.toBe(amber);
+  expect(await page.getByRole("article").first().evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(amber);
 });
 
 test("fact separators never start or end a wrapped line", async ({ page }) => {

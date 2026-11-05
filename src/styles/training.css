@@ -1,23 +1,33 @@
 /* Training chooser (/training/): the course entries come from home.css; only this page's composition lives here. */
 
-/* Opening: the 101 and consultancy opening's type, without a facts column; the starting points follow it. */
-.training-intro { padding-block: 46px 34px; }
+/* Opening: the settled course-page title and introduction, compact, without a facts column. */
+.training-intro { padding-block: 46px 48px; }
 .training-intro h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
-.training-intro .standfirst { max-width: 34ch; text-wrap: balance; }
-.training-intro > p { max-width: 60ch; }
+.training-intro > p { max-width: 60ch; font-size: 1.15rem; line-height: var(--lh-relaxed); text-wrap: pretty; }
 
-/* Two places to start: the homepage's equal entries, side by side on wide screens. */
-.starting-points { padding-bottom: 72px; }
-.starting-points > h2, .specialists-head h2 { font-size: clamp(2.1rem, 3.4vw, 2.9rem); padding-block: 4px 26px; }
+/* Two places to start: the page's main choice, on a full-width raised band. The two equal entries
+   open on an amber spine; each one's deciding facts and prerequisite sit together in a recessed block. */
+.starting-points { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); padding-block: 52px 64px; }
+.starting-points h2 { font-size: clamp(2.1rem, 3.4vw, 2.9rem); padding-bottom: 26px; }
 .start-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); align-items: start; }
+.starting-points .course { border-top: var(--bw-spine) solid var(--amber); padding-block: 22px 0; }
+/* Side by side, the entries share rows, so the two fact blocks and outline links line up whatever the description length. */
+@media (min-width: 901px) {
+  .start-list { grid-template-rows: repeat(6, auto); }
+  .starting-points .course { display: grid; grid-template-rows: subgrid; grid-row: span 6; row-gap: 0; align-content: start; }
+}
+.starting-points .course h3 { font-size: clamp(1.7rem, 2.5vw, 2.05rem); }
+.deciding { margin: 18px 0 14px; padding: 14px 18px 16px; background: var(--bg-dim); border-radius: var(--r-sm); }
+.deciding .facts { margin: 0 0 10px; padding: 0 0 10px; border-block: 0; border-bottom: var(--bw-hair) solid var(--line); font-size: .95rem; row-gap: 2px; }
+.deciding .prereq { font-size: .95rem; }
 .course > p.private-ask { margin-top: 10px; font-size: .96rem; }
 .private-ask a { font-weight: 600; }
 /* The public group size stays in one piece when the date line wraps. */
 .facts .together { white-space: nowrap; }
 
 /* Specialists: lighter ruled rows, name beside its facts on wide screens; no cards, fit questions or per-row links. */
-.specialist-courses { padding-bottom: 80px; }
-.specialists-head h2 { padding-bottom: 14px; }
+.specialist-courses { padding-block: 64px 80px; }
+.specialists-head h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); padding-bottom: 14px; }
 .specialists-head p { max-width: 60ch; margin-bottom: 22px; }
 .specialist-rows { list-style: none; margin: 0 0 18px; padding: 0; }
 .specialist-rows > li { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: baseline; border-top: var(--bw-hair) solid var(--line); padding-block: 14px; }
@@ -29,23 +39,28 @@
 .specialist-courses .not-sure { margin-top: 30px; padding-top: 20px; border-top: var(--bw-hair) solid var(--line); }
 .not-sure a { font-weight: 600; }
 
-/* Who's teaching: heading beside an amber-ruled note, in the consultancy page's "Who does the work" proportions, without its photo. */
+/* Who's teaching: heading beside a quietly ruled note (amber spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */
 .training-teacher { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 24px 80px; align-items: start; }
-.teacher-note { border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; }
+.teacher-note { border-left: var(--bw-spine) solid var(--line); padding-left: 22px; }
 .teacher-note p { max-width: 64ch; }
 .teacher-note .course-actions { margin-top: 12px; }
 
 @media (min-width: 901px) { .teacher-note { margin-top: 10px; } }
 @media (max-width: 900px) {
-  .training-intro { padding-block: 34px 26px; }
-  .start-list { grid-template-columns: minmax(0, 1fr); }
-  .starting-points { padding-bottom: 54px; }
-  .specialist-courses { padding-bottom: 60px; }
+  .training-intro { padding-block: 34px 38px; }
+  .start-list { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
+  .starting-points { padding-block: 40px 48px; }
+  .specialist-courses { padding-block: 48px 60px; }
   .training-teacher { grid-template-columns: minmax(0, 1fr); row-gap: 22px; padding-block: 16px 60px; }
 }
 @media (max-width: 680px) {
-  .training-intro { padding-block: 30px 22px; }
-  .starting-points > h2, .specialists-head h2 { font-size: 1.9rem; padding-bottom: 18px; }
+  .training-intro { padding-block: 30px 32px; }
+  .training-intro > p { font-size: 1.05rem; }
+  .starting-points h2 { font-size: 1.9rem; padding-bottom: 18px; }
+  .specialists-head h2 { font-size: 1.7rem; }
+  /* With enlarged text a long course name hyphenates rather than breaking at its last letter. */
+  .starting-points .course h3 { font-size: 1.65rem; hyphens: auto; }
+  .deciding { padding: 12px 14px 14px; }
   .specialist-rows > li { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }
   .specialist-rows h3 { font-size: 1.1rem; }
 }
