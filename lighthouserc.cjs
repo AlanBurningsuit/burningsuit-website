@@ -3,7 +3,7 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: "./dist",
-      url: ["http://localhost/index.html", "http://localhost/training/agentic-development-for-power-bi/", "http://localhost/power-bi/", "http://localhost/training/", "http://localhost/about/"],
+      url: ["http://localhost/index.html", "http://localhost/training/agentic-development-for-power-bi/", "http://localhost/power-bi/", "http://localhost/training/", "http://localhost/about/", "http://localhost/hour/"],
       numberOfRuns: 1,
       settings: { preset: "desktop", blockedUrlPatterns: ["*umami.is*"] },
     },

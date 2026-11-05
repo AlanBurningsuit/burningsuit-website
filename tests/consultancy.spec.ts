@@ -3,7 +3,7 @@ import { pages } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
 const route = "/power-bi/";
-const hour = "https://cal.com/alan-burningsuit/hour";
+const call = "/hour/";
 
 test("consultancy page stays static, private and CSP-clean", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -45,13 +45,13 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".do-steps > li").nth(1)).toHaveAttribute("id", "pricing");
   for (const id of ["deliver", "skills", "handover", "backup", "second-opinion", "discovery"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(0);
 
-  await expect(page.locator(".run-facts > li")).toHaveText(["Price on request, usually a fixed price", "You get me, working with your team", "Built so your team can run it without me afterwards", "It starts with a free hour on a call"]);
+  await expect(page.locator(".run-facts > li")).toHaveText(["Price on request, usually a fixed price", "You get me, working with your team", "Built so your team can run it without me afterwards", "It starts with a free 30-minute call"]);
   await expect(page.locator("#situations .lead-list > li strong")).toHaveText(["Thinking through your reporting as a whole.", "Owning the Power BI you've already got.", "Building or moving something, together.", "Getting started with AI agents."]);
   await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`
     - list:
       - listitem:
-        - heading "The free hour." [level=3]:
-          - link "The free hour"
+        - heading "The free call." [level=3]:
+          - link "The free call"
         - paragraph
       - listitem:
         - heading "A price for the whole job." [level=3]
@@ -83,7 +83,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".course-intro > p:not(.standfirst)")).toHaveText([
     "Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running and people rely on it, but it all rests on one person, or two reports give different answers to the same question.",
     "That's what my consultancy is for. I work with your team on your own Power BI: how the data gets in, the models, the reports and how they reach the people who use them. I explain as I go, in your words rather than mine. The aim is a team that understands what was built and can change it, not one that relies on yet another contractor.",
-    "Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free hour on a call.",
+    "Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free 30-minute call.",
   ]);
   await expect(page.locator("#situations .split-lead p")).toHaveText("Ideally, the work is done with you, not for you.");
   await expect(page.locator(".courses-line")).toHaveText("Just need your team to understand Power BI? That's what the courses are for.");
@@ -94,14 +94,14 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator("#ai .raised-copy p")).toHaveText("If your team wants to start using AI agents, we start from what you already have: your licences, tools, skills and setup. We work out what to hand to an agent, what to keep it away from, and how your team checks what it changed. Your team learns to use agents themselves, so you get work you can check, not new risks or a mess to clear up later.");
   await expect(page.locator("#ongoing p")).toHaveText(["The whole point is that you don't need me.", "I'll teach your team the tool; I won't teach them to wait for me.", "Some teams still want someone to call on. If you do, we shape the support to fit the work we've done, for example:", "It's priced on request, like the rest of the work."]);
   await expect(page.locator("#ongoing .lead-list > li")).toHaveText(["Retained support for your team.", "Strategic advice as your reporting changes.", "Regular office hours, such as a monthly call in a fixed window, where your team brings whatever has come up."]);
-  await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to in the free hour is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.");
+  await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to on the free call is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.");
 
   // Only the AI band is raised; the spine sits on the page background.
   const background = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
   const ground = await background("body");
   expect(await background("#ai")).not.toBe(ground);
   for (const selector of ["#how-the-work-runs", "#situations", "#ongoing", "#start"]) expect(await background(selector)).toBe("rgba(0, 0, 0, 0)");
-  // #start leads with the free hour on the page background, before the shared form's band.
+  // #start leads with the free call on the page background, before the shared form's band.
   expect(await background("#contact")).not.toBe(ground);
   expect(await page.locator("#start + #contact").count()).toBe(1);
 
@@ -116,17 +116,17 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   expect(await photo.evaluate((el) => getComputedStyle(el).borderTopStyle)).toBe("solid");
 });
 
-test("consultancy links go to the free hour, the AI band, the courses and About", async ({ page }) => {
+test("consultancy links go to the free call page, the AI band, the courses and About", async ({ page }) => {
   await page.goto(route);
-  const free = page.getByRole("link", { name: "Book a free hour on a call" });
+  const free = page.getByRole("link", { name: "Book a free 30-minute call" });
   await expect(free).toHaveCount(3);
-  for (const link of await free.all()) await expect(link).toHaveAttribute("href", hour);
-  await expect(page.getByRole("link", { name: "The free hour" })).toHaveAttribute("href", hour);
+  for (const link of await free.all()) await expect(link).toHaveAttribute("href", call);
+  await expect(page.getByRole("link", { name: "The free call" })).toHaveAttribute("href", call);
   await expect(page.getByRole("link", { name: "More on that below", exact: true })).toHaveAttribute("href", "#ai");
   await expect(page.getByRole("link", { name: "That's what the courses are for." })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([hour, "#ai", "/training/", hour, hour, "/about/", hour, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
+  expect(mainLinks).toEqual([call, "#ai", "/training/", call, call, "/about/", call, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
 });
 
 test("consultancy enquiry form is labelled, plain and has nothing preselected", async ({ page }) => {
@@ -166,7 +166,7 @@ test("consultancy page works without JavaScript, from keyboard and from a legacy
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
   }
-  expect(reached).toEqual([hour, "#ai", "/training/", hour, hour, "/about/", hour]);
+  expect(reached).toEqual([call, "#ai", "/training/", call, call, "/about/", call]);
   // The step heading link shows a visible focus ring.
   await page.locator(".do-steps h3 a").focus();
   expect(await page.locator(".do-steps h3 a").evaluate((el) => parseFloat(getComputedStyle(el).outlineWidth))).toBeGreaterThanOrEqual(2);

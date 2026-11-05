@@ -43,7 +43,7 @@
 .who-note p { max-width: 64ch; }
 .who-note .text-link { margin-top: 12px; }
 
-/* How to start: the free hour on the page background, ahead of the shared enquiry band. */
+/* How to start: the free call on the page background, ahead of the shared enquiry band. */
 .start { border-top: var(--bw-hair) solid var(--line); }
 .start .book-inner { align-items: center; }
 .start-ask { font-size: 1.1rem; max-width: 40ch; }

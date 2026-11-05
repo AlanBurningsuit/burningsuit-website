@@ -240,7 +240,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.getByRole("link", { name: "Compare all courses" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: /^Tell me what you use Power BI for now/ })).toHaveAttribute("href", "#contact");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Find your starting point", "Understanding that lasts", "Help with your own reporting", "Tell me what you're looking for."]);
-  await expect(page.getByRole("link", { name: "Book a free hour on a call" })).toHaveAttribute("href", "https://cal.com/alan-burningsuit/hour");
+  await expect(page.getByRole("link", { name: "Book a free 30-minute call" })).toHaveAttribute("href", "/hour/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   await expect(page.locator(".proof, .exercise, blockquote")).toHaveCount(0);
   for (const id of ["training", "teaching", "consultancy", "contact"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
