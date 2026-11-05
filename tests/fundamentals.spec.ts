@@ -108,7 +108,7 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await expect(page.getByRole("heading", { name: /who's teaching/i })).toHaveCount(0);
 
   // Alan supplied dates, equipment/licences and takeaways during rendered review.
-  // Only accounts/workspace access and individual publishing practice remain open.
+  // His setup clarification resolves the remaining annotations without guaranteeing individual publishing.
   await expect(page.locator("#need-title")).toHaveText("What to arrange");
   const needs = page.locator(".course-need:not(.outcomes) .need-list > li");
   await expect(needs).toHaveText([
@@ -116,17 +116,11 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
     "On site: you use my training laptops. I provide the course materials and manage the Power BI Desktop version and licences.",
     "Online: use your own computer with a version of Power BI Desktop released in the 3 months before the course. I provide the course materials; you arrange your licences.",
     "Online licences: a Power BI Pro licence is ideal, but most of the course works with a free licence.",
-    "Accounts and workspace access what's needed and who supplies them: to confirm",
-    "Publishing practice depends on licences and access publishing yourself or watching it done: to confirm",
+    "Publishing practice depends on licences and access.",
   ]);
-  for (const item of (await needs.all()).slice(0, 4)) await expect(item.locator(".to-confirm")).toHaveCount(0);
-  for (const item of (await needs.all()).slice(4)) await expect(item.locator(".to-confirm")).toHaveCount(1);
   await expect(page.locator(".need-note")).toHaveText("You don't bring company data. Help with your own reports is consultancy.");
   await expect(page.locator(".keep")).toHaveText("On site, you take away the course materials. Online, you get the course materials and a recording of the session.");
-  await expect(page.locator(".to-confirm")).toHaveText([
-    "what's needed and who supplies them: to confirm",
-    "publishing yourself or watching it done: to confirm",
-  ]);
+  await expect(page.locator(".to-confirm")).toHaveCount(0);
 
   await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me you're interested in Power BI fundamentals, how many people would come and roughly when.");
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
@@ -194,11 +188,6 @@ for (const width of [320, 390, 768, 1024, 1366]) {
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       const spills = await page.locator("main *").evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === "visible" && el.clientWidth > 0).map((el) => el.className || el.tagName));
       expect(spills).toEqual([]);
-      // Tags wrap inside the line they qualify; a tag's background may overhang a line end by about a pixel at 200%.
-      for (const item of await page.locator(".need-list > li, .run-facts > li, .keep").all()) {
-        const [right, tag] = await item.evaluate((el) => [el.getBoundingClientRect().right, Math.max(...[...el.querySelectorAll(".to-confirm")].flatMap((t) => [...t.getClientRects()].map((r) => r.right)), 0)]);
-        expect(tag).toBeLessThanOrEqual(right + 1.5);
-      }
     }
   });
 }

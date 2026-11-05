@@ -21,9 +21,6 @@
 .teacher-links { display: flex; flex-wrap: wrap; column-gap: 28px; margin-top: 6px; }
 .teacher-links .text-link { font-size: .96rem; }
 
-/* Reserve space for the cloned padding of wrapped gap tags at enlarged text sizes. */
-.need-body .need-list > li { padding-inline-end: 6px; }
-
 @media (max-width: 900px) {
   .course-need.outcomes { padding-block: 0 56px; }
 }
