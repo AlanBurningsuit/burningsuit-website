@@ -26,7 +26,7 @@ p + p.course-fit { margin-top: 1.4rem; }
   padding: 14px 30px;
 }
 /* The only state today: paid booking is closed, so the control is visibly unavailable. */
-.book-button:disabled { color: var(--text-dim); background: var(--bg-3); border: 0; padding: 17px 33px; cursor: not-allowed; }
+.book-button:disabled { color: var(--text); background: var(--bg-3); border: 0; padding: 17px 33px; cursor: not-allowed; }
 .booking-status { font: 400 .85rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
 .private-ask { margin-top: 22px; font-size: 1rem; }
 .private-ask a { font-weight: 600; }
@@ -58,8 +58,15 @@ p + p.course-fit { margin-top: 1.4rem; }
 .need-list li { position: relative; padding: 10px 0 10px 22px; max-width: 64ch; }
 .need-list li::before { content: ""; position: absolute; left: 0; top: calc(10px + .62em); width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
 .need-note { margin-top: 18px; font-size: 1rem; color: var(--text-dim); max-width: 64ch; }
+/* A need section with a body (the 101's "What you'll need", fundamentals' "What to arrange") stacks its heading above
+   the card on wide screens, so it doesn't repeat the side-by-side sections before it. */
+@media (min-width: 901px) {
+  .course-need:has(> .need-body) { grid-template-columns: minmax(0, 1fr); row-gap: 22px; }
+  .course-need:has(> .need-body) > h2 { position: static; }
+  .need-body { max-width: 76ch; }
+}
 .keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; max-width: 52ch; }
-.to-confirm { font: 400 .82rem / 1.4 var(--ff-mono); vertical-align: baseline; color: var(--text-dim); background: var(--surface-raised); padding: 2px 6px; border-radius: var(--r-xs); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.to-confirm { font: 400 .82rem / 1.4 var(--ff-mono); vertical-align: baseline; color: var(--text-dim); background: var(--surface-raised); padding: 2px 6px; border-radius: var(--r-xs); display: inline-block; }
 
 /* Book a seat: the closing band. */
 .course-book { background: var(--bg-band); }

@@ -14,10 +14,10 @@ body {
 img { display: block; max-width: 100%; height: auto; }
 h1, h2, h3, p, figure, blockquote, dl { margin: 0; }
 /* Display weight steps down the outline: 800 for the page title, 700 for sections, 600 for items, so long pages read at a conversational volume. */
-h1, h2, h3 { font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
+h1, h2, h3 { font-family: var(--ff-display); }
 h1 { margin: 18px 0 26px; font-size: var(--title-size); font-weight: 800; line-height: var(--lh-display); letter-spacing: var(--ls-display-loose); }
 h2 { font-size: clamp(1.75rem, 2.7vw, 2.5rem); font-weight: 700; line-height: var(--lh-snug); letter-spacing: var(--ls-display); }
-h3 { font-weight: 600; line-height: var(--lh-snug); }
+h3 { font-weight: 600; line-height: var(--lh-snug); letter-spacing: var(--ls-display-tight); }
 p + p { margin-top: 1rem; }
 a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: .2em; }
 a:hover { text-decoration-thickness: 2px; }

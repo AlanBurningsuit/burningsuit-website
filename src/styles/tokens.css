@@ -16,7 +16,8 @@
 
 /* Surface roles. Components colour themselves through these rather than a raw ground, so a band reads as a
    dark bookend or the daylight body by its role alone. The page and its bookends (.dark: masthead, opening,
-   closing bands, footer) keep the brand's dark ground; main's body reads on eucalyptus mist. */
+   closing bands, footer) keep the brand's dark ground; main's body reads on eucalyptus mist. Mark a band inside
+   main with .dark, never main itself, or the whole body flips to the dark roles. */
 :root, .dark {
   --surface: var(--bg);
   --surface-raised: var(--bg-2);

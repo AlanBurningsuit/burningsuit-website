@@ -1,18 +1,19 @@
-/* How I train (/training/how-i-train/): four related answers in the notebook layout. Shared furniture (raised band, masthead, footer) lives in app.css. */
+/* How I train (/training/how-i-train/): four related answers on the daylight body between dark bookends. Shared furniture (raised band, masthead, footer) lives in app.css. */
 
 /* Opening: the settled course-page title and one line at reading width. */
 .hit-opening { padding-block: 46px 44px; }
 .hit-opening h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
 .hit-lead { max-width: 52ch; font-size: 1.25rem; line-height: var(--lh-relaxed); text-wrap: pretty; }
 
-/* An answer: heading beside its prose on the ruled page, as on About. */
+/* An answer: heading beside its prose, separated by space rather than rules. */
 .hit-answer { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; }
 .hit-answer > h2, .hit-pair-item > h2, .hit-facts > h2 { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
 .hit-prose p, .hit-pair-item p { max-width: 62ch; }
-.hit-do { padding-block: 24px 60px; }
+.hit-do { padding-block: 48px 60px; }
 
-/* If you get stuck: the personal answer, lifted onto the raised band with larger prose. */
+/* If you get stuck: the personal answer, on the raised band in a lifted card with the warm spine and larger prose. */
 .hit-stuck .hit-answer { padding-block: 52px 58px; }
+.hit-stuck .hit-prose { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--amber); padding: 26px 32px 28px; }
 .hit-stuck .hit-prose p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 56ch; }
 
 /* Own work and using it afterwards: two related answers side by side, each on its own card. */
@@ -35,7 +36,7 @@
 @media (max-width: 900px) {
   .hit-opening { padding-block: 34px 36px; }
   .hit-answer, .hit-facts, .hit-next-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
-  .hit-do { padding-block: 16px 48px; }
+  .hit-do { padding-block: 32px 48px; }
   .hit-stuck .hit-answer { padding-block: 40px 46px; }
   .hit-pair { grid-template-columns: minmax(0, 1fr); row-gap: 48px; padding-block: 48px 44px; }
   .hit-facts { row-gap: 12px; padding-block: 4px 56px; }
@@ -45,6 +46,7 @@
   .hit-opening { padding-block: 30px 30px; }
   .hit-lead { font-size: 1.12rem; }
   .hit-stuck .hit-prose p { font-size: 1.1rem; }
+  .hit-stuck .hit-prose { padding: 20px 22px 22px; }
   .hit-next p { font-size: 1.05rem; }
   .hit-pair-item { padding: 22px 20px 24px; }
 }
