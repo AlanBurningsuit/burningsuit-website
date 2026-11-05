@@ -111,6 +111,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator("main img")).toHaveCount(1);
   const photo = page.locator(".who-does figure.framed-photo img");
   await expect(photo).toHaveAttribute("alt", "Alan Harman-Box writing on a tablet at an outdoor café table");
+  await expect(photo).toHaveAttribute("src", /DSC09119/);
   expect(await photo.evaluate((el) => getComputedStyle(el).borderTopStyle)).toBe("solid");
 });
 
