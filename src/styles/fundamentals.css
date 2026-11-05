@@ -1,0 +1,32 @@
+/* Power BI fundamentals: reuses the 101 composition in course.css; only this page's differences live here. */
+
+/* The facts panel's action is a text link, not the 101's booking button. */
+.run-action { margin-top: 18px; }
+
+/* What you'll be able to do: the ruled need-list treatment, straight after the opening, with no numbers of its own. */
+.course-need.outcomes { padding-block: 0 76px; }
+
+/* The two days: one numbered spine across both day groups. The counter lives on the body, so day 2 continues from 05. */
+.agenda .do-body { counter-reset: step; }
+.agenda .agenda-steps { counter-reset: none; }
+.agenda .exercises { margin-bottom: 30px; max-width: 62ch; }
+.agenda .day-title { font-size: 1.3rem; margin-bottom: 18px; padding-top: 16px; border-top: var(--bw-hair) solid var(--line); text-wrap: balance; }
+.agenda .agenda-steps + .day-title { margin-top: 18px; }
+.agenda-steps li { padding-bottom: 22px; }
+.agenda-steps strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
+
+/* Who teaches: one small line below the spine; biography and method link out. */
+.teacher-line { margin-top: 10px; padding-top: 20px; border-top: var(--bw-hair) solid var(--line); max-width: 62ch; }
+.teacher-line p { font-size: .96rem; color: var(--fg-dim); }
+.teacher-links { display: flex; flex-wrap: wrap; column-gap: 28px; margin-top: 6px; }
+.teacher-links .text-link { font-size: .96rem; }
+
+@media (max-width: 900px) {
+  .course-need.outcomes { padding-block: 0 56px; }
+}
+@media (max-width: 680px) {
+  .course-need.outcomes { padding-block: 0 48px; }
+  .agenda .day-title { font-size: 1.2rem; }
+  /* With enlarged text the long title hyphenates rather than breaking at an arbitrary letter (the training chooser's treatment). */
+  .course-intro h1 { hyphens: auto; }
+}
