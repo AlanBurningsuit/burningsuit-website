@@ -21,8 +21,8 @@
 .teacher-links { display: flex; flex-wrap: wrap; column-gap: 28px; margin-top: 6px; }
 .teacher-links .text-link { font-size: .96rem; }
 
-/* What to arrange: the short take-away tag moves to the next line whole rather than splitting past the paragraph's edge. */
-.keep .to-confirm { white-space: nowrap; }
+/* Reserve space for the cloned padding of wrapped gap tags at enlarged text sizes. */
+.need-body .need-list > li { padding-inline-end: 6px; }
 
 @media (max-width: 900px) {
   .course-need.outcomes { padding-block: 0 56px; }

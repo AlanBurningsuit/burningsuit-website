@@ -34,7 +34,7 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   expect(body).not.toMatch(/[£$€]\s*\d|\d\s*(GBP|ex VAT)/i);
   await expect(page.getByText("Price on request", { exact: true })).toHaveCount(1);
   await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
-  for (const absent of [/seat/i, /book/i, /public/i, /free hour/i, /recording/i, /Windows/i, /setup check/i, /\[|\]|\{|\}/, /founding/i]) expect(body).not.toMatch(absent);
+  for (const absent of [/seat/i, /book/i, /public/i, /free hour/i, /Windows/i, /setup check/i, /\[|\]|\{|\}/, /founding/i]) expect(body).not.toMatch(absent);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -107,24 +107,25 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
   await expect(page.getByRole("heading", { name: /who's teaching/i })).toHaveCount(0);
 
-  // What to arrange keeps every open fact visibly tagged; the keep gap is a whole sentence.
+  // Alan supplied dates, equipment/licences and takeaways during rendered review.
+  // Only accounts/workspace access and individual publishing practice remain open.
   await expect(page.locator("#need-title")).toHaveText("What to arrange");
   const needs = page.locator(".course-need:not(.outcomes) .need-list > li");
   await expect(needs).toHaveText([
-    "Dates how dates are arranged: to confirm",
-    "Equipment and Power BI Desktop version what's needed and who supplies it: to confirm",
-    "Accounts, publishing and sharing licences, and workspace access what's needed and who supplies them: to confirm",
+    "Dates: I'll arrange dates with you after you get in touch.",
+    "On site: you use my training laptops. I provide the course materials and manage the Power BI Desktop version and licences.",
+    "Online: use your own computer with a version of Power BI Desktop released in the 3 months before the course. I provide the course materials; you arrange your licences.",
+    "Online licences: a Power BI Pro licence is ideal, but most of the course works with a free licence.",
+    "Accounts and workspace access what's needed and who supplies them: to confirm",
     "Publishing practice depends on licences and access publishing yourself or watching it done: to confirm",
   ]);
-  for (const item of await needs.all()) await expect(item.locator(".to-confirm")).toHaveCount(1);
+  for (const item of (await needs.all()).slice(0, 4)) await expect(item.locator(".to-confirm")).toHaveCount(0);
+  for (const item of (await needs.all()).slice(4)) await expect(item.locator(".to-confirm")).toHaveCount(1);
   await expect(page.locator(".need-note")).toHaveText("You don't bring company data. Help with your own reports is consultancy.");
-  await expect(page.locator(".keep")).toHaveText("What you take away is still to confirm: materials, exercise files and any follow-through.");
+  await expect(page.locator(".keep")).toHaveText("On site, you take away the course materials. Online, you get the course materials and a recording of the session.");
   await expect(page.locator(".to-confirm")).toHaveText([
-    "how dates are arranged: to confirm",
-    "what's needed and who supplies it: to confirm",
     "what's needed and who supplies them: to confirm",
     "publishing yourself or watching it done: to confirm",
-    "to confirm",
   ]);
 
   await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me you're interested in Power BI fundamentals, how many people would come and roughly when.");
