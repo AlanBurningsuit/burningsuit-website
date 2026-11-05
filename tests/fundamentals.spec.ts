@@ -128,7 +128,7 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
     "to confirm",
   ]);
 
-  await expect(page.locator(".enquiry-intro p")).toHaveText(`Choose Power BI fundamentals under "What's it about?" and tell me roughly when you have in mind.`);
+  await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me you're interested in Power BI fundamentals, how many people would come and roughly when.");
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
   const mainLinks = await page.locator("main a").evaluateAll((els) => els.map((el) => el.getAttribute("href")));
   expect(mainLinks).toEqual(links);
@@ -229,55 +229,26 @@ test("Fundamentals page works from the keyboard without JavaScript", async ({ br
   await context.close();
 });
 
-for (const outcome of ["success", "error"] as const) {
-  test(`Fundamentals enquiry posts plainly without JavaScript, nothing preselected (${outcome})`, async ({ browser, baseURL }) => {
-    // The provider is stubbed: no sample enquiry is ever sent.
-    const context = await browser.newContext({ baseURL, javaScriptEnabled: false });
-    const page = await context.newPage();
-    const violations: string[] = [];
-    page.on("console", (message) => { if (/content security policy/i.test(message.text())) violations.push(message.text()); });
-    let payload: URLSearchParams | undefined;
-    let requests = 0;
-    await context.route(ENQUIRY.action!, async (request) => {
-      requests++;
-      expect(request.request().method()).toBe("POST");
-      payload = new URLSearchParams(request.request().postData()!);
-      await request.fulfill({ status: 302, headers: { location: new URL(payload.get(outcome === "success" ? "_redirect" : "_error")!, baseURL).href } });
-    });
-    await page.goto(route);
-    const form = page.getByRole("form", { name: "Ask about dates" });
-    await expect(form).toHaveAttribute("method", "post");
-    await expect(form).toHaveAttribute("action", ENQUIRY.action!);
-    await expect(form).toHaveAccessibleDescription(/^I use your details to reply to your enquiry/);
-    const topics = form.getByRole("group", { name: "What's it about?" }).getByRole("radio");
-    await expect(topics).toHaveCount(ENQUIRY.topics.length);
-    for (const [index, topic] of ENQUIRY.topics.entries()) {
-      await expect(topics.nth(index)).toHaveAccessibleName(topic);
-      await expect(topics.nth(index)).not.toBeChecked();
-    }
-    await expect(form.getByLabel("Your message")).toHaveAccessibleDescription(/^Tell me as much or as little as you know/);
-
-    // Native validation holds an incomplete enquiry on the page.
-    await form.getByRole("button", { name: "Send", exact: true }).click();
-    await expect(page.locator("#enquiry-name")).toBeFocused();
-    expect(requests).toBe(0);
-
-    await form.getByLabel("Name", { exact: true }).fill("Test Person");
-    await form.getByLabel("Email", { exact: true }).fill("test@example.com");
-    await form.getByLabel("Power BI fundamentals", { exact: true }).check();
-    await form.getByLabel("Your message", { exact: true }).fill("Two days for six people, roughly March.");
-    await form.getByRole("button", { name: "Send", exact: true }).click();
-    const path = outcome === "success" ? ENQUIRY.successPath : ENQUIRY.errorPath;
-    await expect(page).toHaveURL(new URL(path, baseURL).href);
-    expect(new URL(page.url()).search).toBe("");
-    expect(requests).toBe(1);
-    expect(payload!.get("about")).toBe("Power BI fundamentals");
-    expect(payload!.get("_append")).toBe("false");
-    expect(payload!.has("_gotcha")).toBe(false);
-    expect(violations).toEqual([]);
-    await context.close();
-  });
-}
+test("Fundamentals enquiry keeps the shared plain-POST protections without depending on optional fields", async ({ browser, baseURL }) => {
+  // Shared delivery/validation journeys belong to the component's own tests.
+  // This page stays compatible with the approved simpler form when Contact is integrated.
+  const context = await browser.newContext({ baseURL, javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto(route);
+  const form = page.getByRole("form", { name: "Ask about dates" });
+  await expect(form).toHaveAttribute("method", "post");
+  await expect(form).toHaveAttribute("action", ENQUIRY.action!);
+  await expect(form).toHaveAccessibleDescription(/^I use your details to reply to your enquiry/);
+  await expect(form.getByLabel("Email", { exact: true })).toHaveAttribute("required", "");
+  await expect(form.getByLabel("Your message", { exact: true })).toHaveAttribute("required", "");
+  await expect(form.getByLabel("Your message", { exact: true })).toHaveAttribute("aria-describedby", "enquiry-message-hint");
+  await expect(form.locator('[name="_append"]')).toHaveValue("false");
+  await expect(form.locator('[name="_redirect"]')).toHaveValue(ENQUIRY.successPath);
+  await expect(form.locator('[name="_error"]')).toHaveValue(ENQUIRY.errorPath);
+  await expect(form.locator('[name="_gotcha"]')).toBeHidden();
+  await expect(page.locator("#contact .fallback a")).toHaveAttribute("href", email);
+  await context.close();
+});
 
 for (const [width, height] of [[1366, 900], [390, 844], [1024, 900], [768, 900]] as const) {
   test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
