@@ -43,6 +43,9 @@ a:hover { text-decoration-thickness: 2px; }
 .masthead nav a { color: var(--fg); text-decoration: none; font: 600 1rem / var(--lh-snug) var(--ff-display); padding-block: 10px; }
 .masthead nav a:hover, .masthead nav a[aria-current] { color: var(--amber); }
 
+/* A candid photo in the brand's carved frame: deep border, frame radius, paper-edge hairline and the hard offset shadow. */
+.framed-photo img { display: block; width: 100%; height: auto; border: var(--px) solid var(--deep); border-radius: var(--r); outline: var(--bw-hair) solid var(--paper-edge); box-shadow: 5px 5px 0 var(--deep); }
+
 /* A raised band with its heading beside the copy: the homepage consultancy band and the consultancy page's AI band. */
 .raised-band { background: var(--bg-2); border-block: var(--bw-hair) solid var(--line); }
 .raised-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: start; }

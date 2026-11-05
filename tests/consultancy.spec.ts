@@ -72,7 +72,9 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
     "Your team finishes knowing what we did and why, how to change it and what will happen when they do. You keep our notes and the session recordings, so there's something to fall back on. If you'd rather not be recorded, just say.",
   ]);
   // After the work: the support options follow their own introduction.
-  await expect(page.locator("#ongoing .ongoing-body > *").first()).toHaveClass(/ongoing-intro/);
+  // Alan's line leads the support column in display type; the options follow their own introduction.
+  await expect(page.locator("#ongoing .ongoing-body > *").nth(0)).toHaveClass(/pull-line/);
+  await expect(page.locator("#ongoing .ongoing-body > *").nth(1)).toHaveClass(/ongoing-intro/);
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
   await expect(page.locator(".course-intro > p:not(.standfirst)")).toHaveText([
     "Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running and people rely on it, but it all rests on one person, or two reports give different answers to the same question.",
@@ -86,7 +88,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".build-line")).toHaveText("If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.");
   await expect(page.locator('[aria-labelledby="method-title"] .lead-list > li')).toHaveText(["Coaching your team to do it. I take your team through each part of the work and, wherever I can, have them do it themselves while I help and check.", "In your own setup. We work with your data, models and reports, and the deadlines you actually have."]);
   await expect(page.locator("#ai .raised-copy p")).toHaveText("If your team wants to start using AI agents, we start from what you already have: your licences, tools, skills and setup. We work out what to hand to an agent, what to keep it away from, and how your team checks what it changed. Your team learns to use agents themselves, so you get work you can check, not new risks or a mess to clear up later.");
-  await expect(page.locator("#ongoing p")).toHaveText(["The whole point is that you don't need me. I'll teach your team the tool; I won't teach them to wait for me.", "Some teams still want someone to call on. If you do, we shape the support to fit the work we've done, for example:", "It's priced on request, like the rest of the work."]);
+  await expect(page.locator("#ongoing p")).toHaveText(["The whole point is that you don't need me.", "I'll teach your team the tool; I won't teach them to wait for me.", "Some teams still want someone to call on. If you do, we shape the support to fit the work we've done, for example:", "It's priced on request, like the rest of the work."]);
   await expect(page.locator("#ongoing .lead-list > li")).toHaveText(["Retained support for your team.", "Strategic advice as your reporting changes.", "Regular office hours, such as a monthly call in a fixed window, where your team brings whatever has come up."]);
   await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to in the free hour is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.");
 
@@ -101,7 +103,12 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
 
   const text = await page.locator("main").innerText();
   for (const absent of [/\[|\]/, /second opinion/i, /discovery/i, /case stud/i]) expect(text).not.toMatch(absent);
-  await expect(page.locator("main img, blockquote, .to-confirm")).toHaveCount(0);
+  await expect(page.locator("blockquote, .to-confirm")).toHaveCount(0);
+  // One candid photo, in Who does the work, in the brand's carved frame.
+  await expect(page.locator("main img")).toHaveCount(1);
+  const photo = page.locator(".who-does figure.framed-photo img");
+  await expect(photo).toHaveAttribute("alt", "Alan Harman-Box writing on a tablet at an outdoor café table");
+  expect(await photo.evaluate((el) => getComputedStyle(el).borderTopStyle)).toBe("solid");
 });
 
 test("consultancy links go to the free hour, the AI band, the courses and About", async ({ page }) => {

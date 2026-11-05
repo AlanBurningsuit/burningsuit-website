@@ -37,7 +37,7 @@
 .not-sure { margin-top: 26px; font-size: 1rem; }
 
 .alan-photo { grid-area: photo; margin-top: 40px; max-width: 520px; }
-.alan-photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; border: var(--px) solid var(--deep); border-radius: var(--r); outline: var(--bw-hair) solid var(--paper-edge); box-shadow: 5px 5px 0 var(--deep); }
+.alan-photo img { aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; }
 
 .teacher { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); column-gap: var(--column-gap); padding-block: 40px 88px; align-items: start; }
 .teacher-teaching h2 { margin-bottom: 26px; }

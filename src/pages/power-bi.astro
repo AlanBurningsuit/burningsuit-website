@@ -1,12 +1,14 @@
 ---
 // Approved wording: ops site/consultancy-page-copy.md (5 Nov 2026). Bracketed items there are notes, not copy.
 // Kept anchors: situations, how-the-work-runs, pricing (step 2), ai, ongoing, start; see src/config/compatibility.mjs.
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import "../styles/course.css";
 import "../styles/consultancy.css";
 
 const hour = "https://cal.com/alan-burningsuit/hour";
+import working from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
 ---
 <BaseLayout
   title="Power BI consultancy | burningsuit"
@@ -85,9 +87,10 @@ const hour = "https://cal.com/alan-burningsuit/hour";
   <section id="ongoing" class="consult-split ongoing wrap" aria-labelledby="ongoing-title">
     <div class="split-lead ongoing-lead">
       <h2 id="ongoing-title">After the work</h2>
-      <p>The whole point is that you don't need me. I'll teach your team the tool; I won't teach them to wait for me.</p>
+      <p>The whole point is that you don't need me.</p>
     </div>
     <div class="ongoing-body">
+      <p class="pull-line">I'll teach your team the tool; I won't teach them to wait for me.</p>
       <p class="ongoing-intro">Some teams still want someone to call on. If you do, we shape the support to fit the work we've done, for example:</p>
       <ul class="need-list lead-list" role="list">
         <li><strong>Retained support</strong> for your team.</li>
@@ -99,7 +102,12 @@ const hour = "https://cal.com/alan-burningsuit/hour";
   </section>
 
   <section class="course-need who-does wrap" aria-labelledby="who-title">
-    <h2 id="who-title">Who does the work</h2>
+    <div class="who-lead">
+      <h2 id="who-title">Who does the work</h2>
+      <figure class="who-photo framed-photo">
+        <Image src={working} alt="Alan Harman-Box writing on a tablet at an outdoor café table" widths={[400, 640, 960]} sizes="(max-width: 900px) calc(100vw - 56px), 420px" format="webp" loading="lazy" />
+      </figure>
+    </div>
     <div class="who-note">
       <p>I'm Alan Harman-Box. The person you talk to in the free hour is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.</p>
       <a class="text-link" href="/about/">More about me</a>
