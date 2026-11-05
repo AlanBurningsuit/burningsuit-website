@@ -37,7 +37,7 @@
 /* On wide screens the note starts level with the heading, beside the photo. */
 @media (min-width: 901px) { .who-note { margin-top: 10px; } }
 .who-photo { max-width: 420px; }
-.who-photo img { aspect-ratio: 3 / 2; } /* guard: the derivative is already 3:2 */
+.who-photo img { aspect-ratio: 3 / 2; object-fit: cover; } /* guard: the derivative is already 3:2 */
 .who-does { padding-block: 24px 80px; }
 .who-note { border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; }
 .who-note p { max-width: 64ch; }
