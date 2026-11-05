@@ -55,7 +55,7 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
       - listitem: On site or online
       - listitem: Up to 8 people
       - listitem: Price on request
-      - listitem: "daily hours: to confirm"
+      - listitem: 9:30am to 4pm each day
   `);
   await expect(page.locator(".run-action")).toHaveText("Ask about dates");
 
@@ -120,7 +120,6 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await expect(page.locator(".need-note")).toHaveText("You don't bring company data. Help with your own reports is consultancy.");
   await expect(page.locator(".keep")).toHaveText("What you take away is still to confirm: materials, exercise files and any follow-through.");
   await expect(page.locator(".to-confirm")).toHaveText([
-    "daily hours: to confirm",
     "how dates are arranged: to confirm",
     "what's needed and who supplies it: to confirm",
     "what's needed and who supplies them: to confirm",
