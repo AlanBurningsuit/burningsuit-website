@@ -46,7 +46,6 @@ a:hover { text-decoration-thickness: 2px; }
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }
 .contact h2 { margin-top: 14px; }
-.contact-link { display: inline-block; margin-top: 20px; font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: 600; padding-block: 7px; }
 .footer { display: flex; justify-content: space-between; gap: 20px; padding-block: 26px; font-size: .78rem; color: var(--fg-dim); }
 .footer a { color: var(--fg-dim); }
 .foot-links { display: flex; flex-wrap: wrap; gap: 4px 18px; }
@@ -67,7 +66,6 @@ a:hover { text-decoration-thickness: 2px; }
   .masthead nav a { font-size: .88rem; }
   .course-facts > div { grid-template-columns: 80px minmax(0, 1fr); gap: 8px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }
-  .contact-link { font-size: 1.13rem; }
   .footer { font-size: .7rem; gap: 12px; }
 }
 @media (max-width: 360px) {
