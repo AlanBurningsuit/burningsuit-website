@@ -1,0 +1,291 @@
+import { test, expect, type Page } from "@playwright/test";
+import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
+
+const route = "/training/power-bi-fundamentals/";
+const email = "mailto:alan@burningsuit.co.uk";
+const links = ["/training/", "#contact", "#need-title", "/training/how-i-train/", "/about/", "/power-bi/", ENQUIRY.privacyPath, email];
+
+const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
+
+test("Fundamentals page stays static, private, price-safe and CSP-clean", async ({ page, baseURL }) => {
+  const errors: string[] = [];
+  const external: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  page.on("request", (request) => {
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+  });
+  await page.addInitScript(() => {
+    document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
+  });
+  expect((await page.goto(route))?.status()).toBe(200);
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page).toHaveTitle("Power BI fundamentals | burningsuit");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "A two-day private course for teams new to Power BI: build an interactive report, prepare its data, and learn how it's shared and kept up to date. Price on request.");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
+  await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder], main img')).toHaveCount(0);
+  const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
+  for (const directive of ["default-src 'none'", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
+  await expect(page.locator("h1")).toHaveCount(1);
+  await expect(page.locator("form")).toHaveCount(1);
+  await expect(page.locator("nav a[aria-current]")).toHaveText("Training");
+  // Private only: price on request everywhere, no public run, booking or payment route.
+  const body = await page.locator("body").innerText();
+  expect(body).not.toMatch(/[£$€]\s*\d|\d\s*(GBP|ex VAT)/i);
+  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(1);
+  await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
+  for (const absent of [/seat/i, /book/i, /public/i, /free hour/i, /recording/i, /Windows/i, /setup check/i, /\[|\]|\{|\}/, /founding/i]) expect(body).not.toMatch(absent);
+  expect(errors).toEqual([]);
+  expect(external).toEqual([]);
+});
+
+test("Fundamentals page renders the approved wording, gaps and question order", async ({ page }) => {
+  await page.goto(route);
+  // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
+  await expect(page.locator("h1")).toHaveText("Power BI fundamentals");
+  await expect(page.locator(".course-intro .standfirst")).toHaveText("New to Power BI?");
+  await expect(page.locator(".course-intro > p:not(.standfirst):not(.course-fit)")).toHaveText("This two-day course takes your team from preparing data to sharing reports and keeping them up to date. No Power BI experience, DAX or coding needed.");
+  await expect(page.locator(".course-fit")).toHaveText("Already building reports and looking for a day on calculations or table design? Compare DAX fundamentals and Data modelling.");
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll be able to do", "The two days", "What to arrange", "Ask about dates"]);
+
+  await expect(page.getByRole("complementary", { name: "Course facts" }).locator(".run-facts")).toMatchAriaSnapshot(`
+    - list:
+      - listitem: 2 days
+      - listitem: Private, for your team
+      - listitem: On site or online
+      - listitem: Up to 8 people
+      - listitem: Price on request
+      - listitem: "daily hours: to confirm"
+  `);
+  await expect(page.locator(".run-action")).toHaveText("Ask about dates");
+
+  // Outcomes are ruled, not a second numbered sequence.
+  await expect(page.locator(".outcomes ol")).toHaveCount(0);
+  await expect(page.locator(".outcomes .need-list > li")).toHaveText([
+    "Build an interactive report and check how filters change its numbers.",
+    "Clean and reshape data in Power Query, so the steps run again when the data changes.",
+    "Connect several tables in a semantic model: the tables, relationships and calculations behind a report.",
+    "Publish and share a report, knowing who can see it and what keeps its data current.",
+    "Identify which part of Power BI a problem sits in, and use its vocabulary to find help.",
+  ]);
+
+  // Practice: two sentences lead the agenda; the exercises sentence opens its body, immediately before Day 1.
+  await expect(page.locator(".agenda .do-lead p")).toHaveText("I explain and demonstrate using prepared teaching data. You build and practise, with time for questions.");
+  expect(await page.locator(".agenda .do-body > *").evaluateAll((els) => els.slice(0, 2).map((el) => el.textContent))).toEqual(["Exercises include recreating a visual and building a report page.", "Day 1: from an Excel table to a shared report"]);
+
+  // Both day groups continue one 01–09 sequence, visually and for assistive technology.
+  await expect(page.locator(".agenda .day-title")).toHaveText(["Day 1: from an Excel table to a shared report", "Day 2: what sits underneath"]);
+  const steps = page.locator(".agenda-steps > li");
+  await expect(steps).toHaveCount(9);
+  await expect(page.locator(".agenda-steps").nth(1)).toHaveAttribute("start", "5");
+  await expect(steps.locator("strong")).toHaveText(["Build a first report", "Make it useful to its reader:", "Get it in front of people:", "Prepare data you can use again", "Build a report page:", "Bring tables together:", "Meet DAX,", "Distribute and maintain it:", "Copilot in Power BI, briefly:"]);
+  await expect(steps.nth(2)).toContainText("publishing to the Power BI service, sharing, subscriptions, comments, dashboards and a second report from the published model. See publishing arrangements.");
+  await expect(steps.nth(2).getByRole("link", { name: "publishing arrangements" })).toHaveAttribute("href", "#need-title");
+  // The learner's own measure stays conditional; Copilot is awareness only.
+  await expect(steps.nth(6)).toHaveText("Meet DAX, Power BI's formula language. I demonstrate a simple measure, a calculation responding to filters. You may write one, depending on the group's progress.");
+  await expect(steps.nth(8)).toHaveText("Copilot in Power BI, briefly: what it can help with, why access varies and what to check. No exercise depends on it.");
+  await expect(page.locator(".agenda")).toMatchAriaSnapshot(`
+    - heading /^Day 1/ [level=3]
+    - list /^Day 1/:
+      - listitem
+      - listitem
+      - listitem
+      - listitem
+    - heading /^Day 2/ [level=3]
+    - list /^Day 2/:
+      - listitem
+      - listitem
+      - listitem
+      - listitem
+      - listitem
+  `);
+  // Ordered-list semantics: the second list's first item is item 5.
+  expect(await steps.nth(4).evaluate((li) => (li.parentElement as HTMLOListElement).start)).toBe(5);
+
+  // One teacher line below the spine; biography and philosophy link out.
+  await expect(page.locator(".teacher-line p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
+  await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
+  await expect(page.getByRole("heading", { name: /who's teaching/i })).toHaveCount(0);
+
+  // What to arrange keeps every open fact visibly tagged; the keep gap is a whole sentence.
+  await expect(page.locator("#need-title")).toHaveText("What to arrange");
+  const needs = page.locator(".course-need:not(.outcomes) .need-list > li");
+  await expect(needs).toHaveText([
+    "Dates how dates are arranged: to confirm",
+    "Equipment and Power BI Desktop version what's needed and who supplies it: to confirm",
+    "Accounts, publishing and sharing licences, and workspace access what's needed and who supplies them: to confirm",
+    "Publishing practice depends on licences and access publishing yourself or watching it done: to confirm",
+  ]);
+  for (const item of await needs.all()) await expect(item.locator(".to-confirm")).toHaveCount(1);
+  await expect(page.locator(".need-note")).toHaveText("You don't bring company data. Help with your own reports is consultancy.");
+  await expect(page.locator(".keep")).toHaveText("What you take away is still to confirm: materials, exercise files and any follow-through.");
+  await expect(page.locator(".to-confirm")).toHaveText([
+    "daily hours: to confirm",
+    "how dates are arranged: to confirm",
+    "what's needed and who supplies it: to confirm",
+    "what's needed and who supplies them: to confirm",
+    "publishing yourself or watching it done: to confirm",
+    "to confirm",
+  ]);
+
+  await expect(page.locator(".enquiry-intro p")).toHaveText(`Choose Power BI fundamentals under "What's it about?" and tell me roughly when you have in mind.`);
+  await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
+  const mainLinks = await page.locator("main a").evaluateAll((els) => els.map((el) => el.getAttribute("href")));
+  expect(mainLinks).toEqual(links);
+});
+
+test("Fundamentals layout: facts beside the introduction on wide screens, directly after it on phones", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto(route);
+  let intro = await box(page, ".course-intro"), facts = await box(page, ".course-run");
+  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
+  expect(facts.y).toBeLessThan(intro.y + intro.height);
+  // The agenda is the page's raised band; outcomes and arrangements sit on the ground.
+  const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(await bg(".agenda")).not.toBe(await bg("body"));
+  for (const selector of [".outcomes", "section[aria-labelledby='need-title']"]) expect(await bg(selector)).toBe("rgba(0, 0, 0, 0)");
+  // The opening's specialist pointer keeps the 101's amber course-fit spine.
+  const amber = await page.locator(".agenda-steps > li").first().evaluate((el) => getComputedStyle(el, "::before").color);
+  expect(await page.locator(".course-fit").evaluate((el) => getComputedStyle(el).borderLeftColor)).toBe(amber);
+
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    intro = await box(page, ".course-intro"); facts = await box(page, ".course-run");
+    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
+    expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    // Steps, tags and links stay inside the viewport.
+    for (const selector of [".agenda-steps", ".need-list", ".run-facts"]) {
+      for (const item of await page.locator(selector).all()) {
+        const b = (await item.boundingBox())!;
+        expect(b.x).toBeGreaterThanOrEqual(0);
+        expect(b.x + b.width).toBeLessThanOrEqual(width);
+      }
+    }
+    for (const link of await page.locator("main a").all()) {
+      for (const r of await link.evaluate((el) => [...el.getClientRects()].map(({ left, right }) => ({ left, right })))) {
+        expect(r.left).toBeGreaterThanOrEqual(0);
+        expect(r.right).toBeLessThanOrEqual(width);
+      }
+    }
+    for (const link of await page.locator("main .text-link").all()) expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(24);
+  }
+});
+
+test("the agenda's visible numbers run 01 to 09 across both days", async ({ browser, baseURL }) => {
+  // The numbers are decorative (alt text ""), so a test-only style exposes the same counter to Chromium's accessibility tree.
+  const context = await browser.newContext({ baseURL, bypassCSP: true });
+  const page = await context.newPage();
+  await page.goto(route);
+  await page.addStyleTag({ content: ".agenda-steps > li::before { content: counter(step, decimal-leading-zero) !important; }" });
+  const cdp = await context.newCDPSession(page);
+  const { nodes } = await cdp.send("Accessibility.getFullAXTree") as { nodes: { role?: { value?: string }; name?: { value?: string } }[] };
+  const numbers = nodes.filter((node) => node.role?.value === "StaticText" && /^\d\d$/.test(node.name?.value ?? "")).map((node) => node.name!.value!);
+  expect(numbers).toEqual(["01", "02", "03", "04", "05", "06", "07", "08", "09"]);
+  await context.close();
+});
+
+for (const width of [320, 390, 768, 1024, 1366]) {
+  test(`Fundamentals page reflows at ${width}px with enlarged text`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 768 });
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    for (const size of ["100%", "200%"]) {
+      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      const spills = await page.locator("main *").evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === "visible" && el.clientWidth > 0).map((el) => el.className || el.tagName));
+      expect(spills).toEqual([]);
+      // Tags wrap inside the line they qualify; a tag's background may overhang a line end by about a pixel at 200%.
+      for (const item of await page.locator(".need-list > li, .run-facts > li, .keep").all()) {
+        const [right, tag] = await item.evaluate((el) => [el.getBoundingClientRect().right, Math.max(...[...el.querySelectorAll(".to-confirm")].flatMap((t) => [...t.getClientRects()].map((r) => r.right)), 0)]);
+        expect(tag).toBeLessThanOrEqual(right + 1.5);
+      }
+    }
+  });
+}
+
+test("Fundamentals page works from the keyboard without JavaScript", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+  const page = await context.newPage();
+  await page.goto(route);
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("main")).toBeFocused();
+  const reached: string[] = [];
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press("Tab");
+    reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
+    expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(2);
+  }
+  expect(reached).toEqual(links.slice(0, 6));
+
+  // The agenda link lands on the arrangements heading; the panel action lands on the form.
+  await page.locator('a[href="#need-title"]').click();
+  await expect(page).toHaveURL(baseURL! + route + "#need-title");
+  await expect(page.locator("#need-title")).toBeInViewport();
+  await page.locator(".run-action").click();
+  await expect(page).toHaveURL(baseURL! + route + "#contact");
+  await expect(page.getByRole("form", { name: "Ask about dates" })).toBeInViewport();
+  await context.close();
+});
+
+for (const outcome of ["success", "error"] as const) {
+  test(`Fundamentals enquiry posts plainly without JavaScript, nothing preselected (${outcome})`, async ({ browser, baseURL }) => {
+    // The provider is stubbed: no sample enquiry is ever sent.
+    const context = await browser.newContext({ baseURL, javaScriptEnabled: false });
+    const page = await context.newPage();
+    const violations: string[] = [];
+    page.on("console", (message) => { if (/content security policy/i.test(message.text())) violations.push(message.text()); });
+    let payload: URLSearchParams | undefined;
+    let requests = 0;
+    await context.route(ENQUIRY.action!, async (request) => {
+      requests++;
+      expect(request.request().method()).toBe("POST");
+      payload = new URLSearchParams(request.request().postData()!);
+      await request.fulfill({ status: 302, headers: { location: new URL(payload.get(outcome === "success" ? "_redirect" : "_error")!, baseURL).href } });
+    });
+    await page.goto(route);
+    const form = page.getByRole("form", { name: "Ask about dates" });
+    await expect(form).toHaveAttribute("method", "post");
+    await expect(form).toHaveAttribute("action", ENQUIRY.action!);
+    await expect(form).toHaveAccessibleDescription(/^I use your details to reply to your enquiry/);
+    const topics = form.getByRole("group", { name: "What's it about?" }).getByRole("radio");
+    await expect(topics).toHaveCount(ENQUIRY.topics.length);
+    for (const [index, topic] of ENQUIRY.topics.entries()) {
+      await expect(topics.nth(index)).toHaveAccessibleName(topic);
+      await expect(topics.nth(index)).not.toBeChecked();
+    }
+    await expect(form.getByLabel("Your message")).toHaveAccessibleDescription(/^Tell me as much or as little as you know/);
+
+    // Native validation holds an incomplete enquiry on the page.
+    await form.getByRole("button", { name: "Send", exact: true }).click();
+    await expect(page.locator("#enquiry-name")).toBeFocused();
+    expect(requests).toBe(0);
+
+    await form.getByLabel("Name", { exact: true }).fill("Test Person");
+    await form.getByLabel("Email", { exact: true }).fill("test@example.com");
+    await form.getByLabel("Power BI fundamentals", { exact: true }).check();
+    await form.getByLabel("Your message", { exact: true }).fill("Two days for six people, roughly March.");
+    await form.getByRole("button", { name: "Send", exact: true }).click();
+    const path = outcome === "success" ? ENQUIRY.successPath : ENQUIRY.errorPath;
+    await expect(page).toHaveURL(new URL(path, baseURL).href);
+    expect(new URL(page.url()).search).toBe("");
+    expect(requests).toBe(1);
+    expect(payload!.get("about")).toBe("Power BI fundamentals");
+    expect(payload!.get("_append")).toBe("false");
+    expect(payload!.has("_gotcha")).toBe(false);
+    expect(violations).toEqual([]);
+    await context.close();
+  });
+}
+
+for (const [width, height] of [[1366, 900], [390, 844], [1024, 900], [768, 900]] as const) {
+  test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
+    await page.setViewportSize({ width, height });
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    const capture = info.outputPath("page.png");
+    await page.screenshot({ path: capture, fullPage: true });
+    await info.attach("page", { path: capture, contentType: "image/png" });
+  });
+}
