@@ -1,0 +1,105 @@
+---
+// Approved wording: ops site/training-page-copy.md (accepted for implementation 5 Nov 2026). Its field labels, layout notes and annotations are not copy.
+// The two starting points reuse the homepage's course entries (home.css); training.css holds this page's composition.
+// Fundamentals and How I train are pending routes (src/config/pending-routes.mjs); 101 booking stays on its own page.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EnquiryForm from "../../components/EnquiryForm.astro";
+import { ENQUIRY } from "../../config/enquiry.mjs";
+import "../../styles/home.css";
+import "../../styles/training.css";
+
+const { email } = ENQUIRY;
+const price = "Price on request";
+const privateFacts = ["Private, for your team", "On site or online", "Up to 8 people", price];
+const specialists = [
+  { name: "DAX fundamentals", length: "1 day" },
+  { name: "Data modelling", length: "1 day" },
+  { name: "DAX deep dive", length: "2 days" },
+];
+---
+<BaseLayout
+  title="Power BI courses | burningsuit"
+  description="Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each. Price on request."
+  placeholder={false}
+>
+  <section class="training-intro wrap" aria-labelledby="page-title">
+    <h1 id="page-title">Power BI courses</h1>
+    <p class="standfirst">Not sure where to start?</p>
+    <p>If you're new to Power BI, start with Power BI fundamentals. If you've already built a report, Power BI with AI agents 101 shows you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.</p>
+  </section>
+
+  <section class="starting-points wrap" aria-labelledby="start-points-title">
+    <h2 id="start-points-title">Two places to start</h2>
+    <div class="start-list">
+      <article class="course" aria-labelledby="fundamentals-title">
+        <p class="course-fit">New to Power BI?</p>
+        <h3 id="fundamentals-title">Power BI fundamentals</h3>
+        <p>Learn to build an interactive report, prepare the data behind it and share it with the people who need it.</p>
+        <ul class="facts dot-list">
+          <li>2 days</li>
+          {privateFacts.map((fact) => <li>{fact}</li>)}
+        </ul>
+        <p class="prereq">No Power BI experience needed.</p>
+        <div class="course-actions">
+          <a class="text-link" href="/training/power-bi-fundamentals/">Read the course outline</a>
+          <a class="text-link" href="#contact">Ask about dates</a>
+        </div>
+      </article>
+      <article class="course" aria-labelledby="agents-101-title">
+        <p class="course-fit">Want to be ready for where Power BI is going?</p>
+        <h3 id="agents-101-title">Power BI with AI agents 101</h3>
+        <p>In one morning, you get an AI agent to explain a report you haven't seen before and write notes on its calculations. Then you have it build a new calculation and check its answers yourself.</p>
+        <ul class="facts dot-list">
+          <li>Half a day, live online</li>
+          <li><span class="fact-label">Public course:</span> <time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time, <span class="together">4 to 8 people</span></li>
+          <li>Also private, for your team</li>
+          <li>{price}</li>
+        </ul>
+        <p class="prereq">You've built a report in Power BI Desktop, even a simple one. No coding or AI experience needed.</p>
+        <div class="course-actions">
+          <a class="text-link" href="/training/agentic-development-for-power-bi/">Read the course outline</a>
+        </div>
+        <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section class="specialist-courses wrap" aria-labelledby="specialists-title">
+    <div class="specialists-head">
+      <h2 id="specialists-title">Want to dive deeper into Power BI?</h2>
+      <p>Private courses for teams on calculations and table design.</p>
+    </div>
+    <div class="specialists-body">
+      <ul class="specialist-rows" role="list">
+        {specialists.map(({ name, length }) => (
+          <li>
+            <h3>{name}</h3>
+            <ul class="facts dot-list">
+              <li>{length}</li>
+              {privateFacts.map((fact) => <li>{fact}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ul>
+      <a class="text-link" href="#contact" aria-describedby="name-course">Ask about one of these</a>
+      <p class="name-course" id="name-course">Name the course in your message.</p>
+      <p class="not-sure">Not sure which fits? <a href="#contact">Tell me what you use Power BI for now, and I'll suggest where to start.</a></p>
+    </div>
+  </section>
+
+  <section class="training-teacher wrap" aria-labelledby="teacher-title">
+    <h2 id="teacher-title">Who's teaching</h2>
+    <div class="teacher-note">
+      <p>I'm Alan Harman-Box. I write and teach every course myself, and I've spent about five years working with organisations as they adopt Power BI. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course.</p>
+      <div class="course-actions">
+        <a class="text-link" href="/training/how-i-train/">How I train</a>
+        <a class="text-link" href="/about/">More about me</a>
+      </div>
+    </div>
+  </section>
+
+  <EnquiryForm>
+    <Fragment slot="heading">Ask about a course</Fragment>
+    If you know which course you want, name it in your message. If you don't, tell me what you use Power BI for now and I'll suggest where to start.
+  </EnquiryForm>
+</BaseLayout>
