@@ -33,6 +33,7 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
 test("consultancy page follows the visitor questions with the kept anchors", async ({ page }) => {
   await page.goto(route);
   await expect(page.locator("h1")).toHaveText("Power BI consultancy that leaves your team independent");
+  // The last heading is the shared form's slot text, so a change to the form's heading slot fails here too.
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["The work I take on", "How I work with your team", "AI agents on your own Power BI", "How the work runs", "After the work", "Who does the work", "How to start", "Prefer to write?"]);
 
   // Exactly the kept anchors from the route manifest, each on its own section, and none of the dropped ones.
@@ -200,6 +201,12 @@ test("consultancy layout: facts beside the introduction on wide screens, after i
         expect(b.x + b.width).toBeLessThanOrEqual(width);
       }
     }
+    // The display line wraps evenly on phones (no forced clause break): three lines at most.
+    const lines = await page.locator(".pull-line").evaluate((el) => {
+      const range = document.createRange(); range.selectNodeContents(el);
+      return new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+    });
+    expect(lines).toBeLessThanOrEqual(3);
     // The step heading link's focus ring, offset outside the link, stays on screen beside the spine.
     const ring = await page.locator(".do-steps h3 a").evaluate((el) => {
       (el as HTMLElement).focus();

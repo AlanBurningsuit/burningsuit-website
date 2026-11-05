@@ -2,6 +2,7 @@
 
 /* The opening panel's action is a text link, not the 101's booking button. */
 .run-action { margin-top: 18px; }
+.run-facts li { text-wrap: balance; }
 
 /* Ruled lists whose entries open with a bold lead: display face, weight and a small size step; line-height is inherited so a wrapping lead keeps the paragraph's leading. */
 .lead-list strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
@@ -51,4 +52,9 @@
   .work-runs .do-inner { padding-block: 54px 40px; }
   .who-does { padding-block: 16px 60px; }
   .start .book-inner { align-items: start; }
+}
+/* The clause break suits wide screens; on phones the line balances naturally. */
+@media (max-width: 680px) {
+  .pull-line br { display: none; }
+  .pull-line { font-size: 1.4rem; }
 }
