@@ -4,16 +4,14 @@
 .run-action { margin-top: 18px; }
 
 /* Ruled lists whose entries open with a bold lead. */
-.lead-list strong { font: 600 1.05em / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display-tight); }
+/* Weight and face only, so a wrapping lead keeps the paragraph's leading. */
+.lead-list strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
 
 /* The work I take on: heading and one-line introduction beside the ruled list. */
 .consult-split { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
 @media (min-width: 901px) { .split-lead { position: sticky; top: 24px; } }
 .split-lead h2 { margin-bottom: 16px; }
-.split-lead p { font-size: 1.15rem; max-width: 30ch; }
-.consult-split .lead-list { margin: 0; padding: 0; list-style: none; }
-.consult-split .lead-list li { border-top: var(--bw-hair) solid var(--line); padding-block: 16px; max-width: 64ch; }
-.consult-split .lead-list li:last-child { border-bottom: var(--bw-hair) solid var(--line); }
+.split-lead p { max-width: 30ch; }
 .build-line { margin-top: 22px; max-width: 64ch; }
 .courses-line { margin-top: 26px; max-width: 64ch; }
 
@@ -30,10 +28,11 @@
 .do-steps h3 a:hover { color: var(--amber); }
 #pricing { scroll-margin-top: 1.5rem; }
 
-/* After the work: the introduction beside the support options. */
+/* After the work: the principle beside the support options, which follow their own introduction. */
 .ongoing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
 .ongoing-lead h2 { margin-bottom: 20px; }
 .ongoing-lead p { max-width: 46ch; }
+.ongoing-intro { margin-bottom: 16px; max-width: 64ch; }
 .ongoing-price { margin-top: 18px; max-width: 64ch; }
 
 /* Who does the work: an amber-ruled note at body width, without the 101's 40ch limit. */
@@ -56,7 +55,4 @@
   .ongoing { padding-block: 24px 56px; }
   .who-does { padding-block: 16px 60px; }
   .start .book-inner { align-items: start; }
-}
-@media (max-width: 680px) {
-  .start-link { font-size: 1.2rem; }
 }

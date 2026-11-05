@@ -62,6 +62,17 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
         - paragraph
   `);
   await expect(page.locator(".do-steps h3 a")).not.toHaveClass(/text-link/);
+  // Approved body wording, not just headings: the opening and the spine a budget holder may be forwarded.
+  await expect(page.locator(".course-intro .standfirst")).toHaveText("Got a Power BI problem training won't fix?");
+  await expect(page.locator(".course-intro > p:not(.standfirst)").first()).toHaveText("Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running and people rely on it, but it all rests on one person, or two reports give different answers to the same question.");
+  await expect(page.locator(".do-steps > li > p")).toHaveText([
+    "We talk through what's going on. Sometimes that's enough: I can point you to what to do next, or tell you if it isn't something I can help with.",
+    "Every job is different, so I quote case by case, usually as a fixed price. Getting to know your Power BI properly is part of the work, so there's nothing separate to pay for first.",
+    "They do as much of it as they can, with me alongside.",
+    "Your team finishes knowing what we did and why, how to change it and what will happen when they do. You keep our notes and the session recordings, so there's something to fall back on. If you'd rather not be recorded, just say.",
+  ]);
+  // After the work: the support options follow their own introduction.
+  await expect(page.locator("#ongoing .ongoing-body > *").first()).toHaveClass(/ongoing-intro/);
 
   // Only the AI band is raised; the spine sits on the page background.
   const background = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
@@ -162,6 +173,15 @@ test("consultancy layout: facts beside the introduction on wide screens, after i
         expect(b.x + b.width).toBeLessThanOrEqual(width);
       }
     }
+    // The step heading link's focus ring, offset outside the link, stays on screen beside the spine.
+    const ring = await page.locator(".do-steps h3 a").evaluate((el) => {
+      (el as HTMLElement).focus();
+      const r = el.getBoundingClientRect(), s = getComputedStyle(el);
+      const out = parseFloat(s.outlineOffset) + parseFloat(s.outlineWidth);
+      return { left: r.left - out, right: r.right + out };
+    });
+    expect(ring.left).toBeGreaterThanOrEqual(0);
+    expect(ring.right).toBeLessThanOrEqual(width);
   }
 });
 
