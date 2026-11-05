@@ -38,7 +38,7 @@ a:hover { text-decoration-thickness: 2px; }
 .masthead-band { border-bottom: var(--bw-hair) solid var(--line); }
 .masthead { display: flex; align-items: center; justify-content: space-between; min-height: 96px; gap: 40px; }
 .brand { padding-block: 24px; flex-shrink: 0; }
-.brand img { width: 200px; height: auto; }
+.brand img { width: 200px; height: auto; aspect-ratio: 285.1 / 51.57; } /* Reserve the SVG viewBox ratio before it loads. */
 .masthead nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 30px; }
 .masthead nav a { color: var(--fg); text-decoration: none; font: 600 1rem / var(--lh-snug) var(--ff-display); padding-block: 10px; }
 .masthead nav a:hover, .masthead nav a[aria-current] { color: var(--amber); }

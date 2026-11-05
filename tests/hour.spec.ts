@@ -176,7 +176,44 @@ test("free call layout: facts beside the introduction on wide screens, after it 
   }
 });
 
-for (const width of [320, 390, 768, 1366]) {
+test("loading the shared logo does not move the page", async ({ page }) => {
+  await page.setViewportSize({ width: 412, height: 823 });
+  let releaseLogo!: () => void;
+  const pendingLogo = new Promise<void>((resolve) => { releaseLogo = resolve; });
+  await page.route("**/logos/burningsuit-on-green.svg", async (request) => {
+    await pendingLogo;
+    await request.continue();
+  });
+  await page.goto(route, { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => document.fonts.ready);
+  const before = (await page.locator("main").boundingBox())!.y;
+  releaseLogo();
+  await page.locator(".brand img").evaluate((image) => (image as HTMLImageElement).decode());
+  const after = (await page.locator("main").boundingBox())!.y;
+  expect(Math.abs(after - before)).toBeLessThan(1);
+});
+
+test("loaded fonts leave no empty reserved line at phone wrap boundaries", async ({ page }) => {
+  await page.goto(route);
+  await page.evaluate(() => document.fonts.ready);
+  for (const width of [352, 353, 359, 390, 412, 413, 414, 423, 424, 428, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    for (const selector of [".course-intro h1", ".run-facts li:nth-child(3)"]) {
+      const extra = await page.locator(selector).evaluate((element) => {
+        const el = element as HTMLElement;
+        const actual = el.getBoundingClientRect().height;
+        const previous = el.style.minHeight;
+        el.style.minHeight = "0";
+        const natural = el.getBoundingClientRect().height;
+        el.style.minHeight = previous;
+        return actual - natural;
+      });
+      expect(extra, `${selector} has an empty reserved line at ${width}px`).toBeLessThan(1);
+    }
+  }
+});
+
+for (const width of [320, 390, 414, 428, 768, 1366]) {
   test(`free call page reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
