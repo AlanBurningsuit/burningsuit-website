@@ -1,7 +1,8 @@
 ---
-// Training marks a section ("true": its pages sit under /training/); Consultancy marks the page itself.
+// Training marks a section ("true": its pages sit under /training/); Consultancy and About mark the page itself.
 const training = Astro.url.pathname.startsWith("/training/");
 const consultancy = Astro.url.pathname.startsWith("/power-bi/");
+const about = Astro.url.pathname.startsWith("/about/");
 ---
 <header class="masthead-band">
   <div class="masthead wrap">
@@ -11,7 +12,7 @@ const consultancy = Astro.url.pathname.startsWith("/power-bi/");
     <nav aria-label="Main navigation">
       <a href="/training/" aria-current={training ? "true" : undefined}>Training</a>
       <a href="/power-bi/" aria-current={consultancy ? "page" : undefined}>Consultancy</a>
-      <a href="/about/">About</a>
+      <a href="/about/" aria-current={about ? "page" : undefined}>About</a>
       <a href="/contact/">Contact</a>
     </nav>
   </div>
