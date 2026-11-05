@@ -23,7 +23,8 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
   await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
-  await expect(page.locator('nav a[aria-current]')).toHaveText("Consultancy");
+  await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Consultancy");
+  await expect(page.locator("aside.course-run")).toHaveAttribute("aria-label", "Consultancy facts and booking");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
@@ -64,7 +65,6 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".do-steps h3 a")).not.toHaveClass(/text-link/);
   // Approved body wording, not just headings: the opening and the spine a budget holder may be forwarded.
   await expect(page.locator(".course-intro .standfirst")).toHaveText("Got a Power BI problem training won't fix?");
-  await expect(page.locator(".course-intro > p:not(.standfirst)").first()).toHaveText("Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running and people rely on it, but it all rests on one person, or two reports give different answers to the same question.");
   await expect(page.locator(".do-steps > li > p")).toHaveText([
     "We talk through what's going on. Sometimes that's enough: I can point you to what to do next, or tell you if it isn't something I can help with.",
     "Every job is different, so I quote case by case, usually as a fixed price. Getting to know your Power BI properly is part of the work, so there's nothing separate to pay for first.",

@@ -1,12 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { pages } from "../config/compatibility.mjs";
+import { bespokeRoutes, pages } from "../config/compatibility.mjs";
 
 export function getStaticPaths() {
   return Object.entries(pages)
-    // Manifest routes that have a bespoke page in src/pages are skipped here; add a route to this list when its page is built.
-    // The bespoke page then keeps that route's reserved anchors itself, and check:seo fails if one goes missing.
-    .filter(([path]) => !["", "power-bi"].includes(path))
+    // Routes with a bespoke page (listed in compatibility.mjs) keep their own reserved anchors.
+    .filter(([path]) => !bespokeRoutes.includes(path))
     .map(([path, anchors]) => ({ params: { path }, props: { anchors } }));
 }
 const { anchors } = Astro.props;

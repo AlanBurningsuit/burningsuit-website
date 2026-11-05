@@ -6,7 +6,8 @@
 /* Ruled lists whose entries open with a bold lead: display face, weight and a small size step; line-height is inherited so a wrapping lead keeps the paragraph's leading. */
 .lead-list strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
 
-/* The work I take on and After the work: heading and introduction beside a ruled list. */
+/* The work I take on and After the work: heading and introduction beside a ruled list. Same proportions as .course-need,
+   but the whole lead column (heading plus introduction) is sticky, where .course-need sticks only its h2. */
 .consult-split { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
 @media (min-width: 901px) { .split-lead { position: sticky; top: 24px; } }
 .split-lead h2 { margin-bottom: 16px; }

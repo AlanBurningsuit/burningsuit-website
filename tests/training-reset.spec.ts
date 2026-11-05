@@ -244,6 +244,9 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   await expect(page.locator(".proof, .exercise, blockquote")).toHaveCount(0);
   for (const id of ["training", "teaching", "consultancy", "contact"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+  // The consultancy band stays raised above the page background (shared .raised-band in app.css).
+  const bg = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(await bg("#consultancy")).not.toBe(await bg("body"));
 
   const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   let intro = await box(".introduction"), list = await box(".courses"), photo = await box(".alan-photo");

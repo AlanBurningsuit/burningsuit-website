@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { pages } from "../src/config/compatibility.mjs";
+import { bespokeRoutes, pages } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
 
 for (const [path, anchors] of Object.entries(pages)) {
@@ -21,8 +21,8 @@ for (const [path, anchors] of Object.entries(pages)) {
     const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
     for (const directive of ["default-src 'none'", "script-src", "style-src", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
     await expect(page.locator('link[rel="canonical"], script')).toHaveCount(0);
-    // Only the homepage and the consultancy page carry the enquiry form.
-    await expect(page.locator("form")).toHaveCount(["", "power-bi"].includes(path) ? 1 : 0);
+    // Only the bespoke pages (homepage and consultancy) carry the enquiry form.
+    await expect(page.locator("form")).toHaveCount(bespokeRoutes.includes(path) ? 1 : 0);
     for (const id of anchors) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
     expect(errors).toEqual([]);
     expect(external).toEqual([]);

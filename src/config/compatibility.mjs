@@ -52,6 +52,9 @@ export const redirects = {
   "/about-us/our-trainers": "/about/"
 };
 
+// Manifest routes that have their own page in src/pages; the catch-all placeholder skips them, and each keeps its reserved anchors (check:seo).
+export const bespokeRoutes = ["", "power-bi"];
+
 export const pages = {
   "about": [
     "capable",

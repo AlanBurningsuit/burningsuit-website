@@ -1,4 +1,5 @@
 ---
+// Training marks a section ("true": its pages sit under /training/); Consultancy marks the page itself.
 const training = Astro.url.pathname.startsWith("/training/");
 const consultancy = Astro.url.pathname.startsWith("/power-bi/");
 ---
