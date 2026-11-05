@@ -301,25 +301,23 @@ for (const outcome of ["success", "error"] as const) {
     await expect(form).toBeInViewport();
     await expect(form).toHaveAttribute("method", "post");
     await expect(form).toHaveAttribute("action", ENQUIRY.action!);
-    const topics = form.getByRole("radio");
-    await expect(topics).toHaveCount(ENQUIRY.topics.length);
-    for (const topic of await topics.all()) await expect(topic).not.toBeChecked();
+    await expect(form.getByRole("textbox")).toHaveCount(3);
+    await expect(form.getByRole("radio")).toHaveCount(0);
 
     // Native validation holds an incomplete enquiry on the page.
     await form.getByRole("button", { name: "Send", exact: true }).click();
-    await expect(page.locator("#enquiry-name")).toBeFocused();
+    await expect(page.locator("#enquiry-email")).toBeFocused();
     expect(requests).toBe(0);
 
-    await form.getByLabel("Name", { exact: true }).fill("Test Person");
+    await form.getByLabel("Name (optional)", { exact: true }).fill("Test Person");
     await form.getByLabel("Email", { exact: true }).fill("test@example.com");
-    await form.getByLabel("Another course", { exact: true }).check();
     await form.getByLabel("Your message", { exact: true }).fill("DAX deep dive for a team of five.");
     await form.getByRole("button", { name: "Send", exact: true }).click();
     const path = outcome === "success" ? ENQUIRY.successPath : ENQUIRY.errorPath;
     await expect(page).toHaveURL(new URL(path, baseURL).href);
     expect(new URL(page.url()).search).toBe("");
     expect(requests).toBe(1);
-    expect(payload!.get("about")).toBe("Another course");
+    expect(payload!.has("about")).toBe(false);
     expect(payload!.get("message")).toBe("DAX deep dive for a team of five.");
     expect(payload!.get("_append")).toBe("false");
     expect(payload!.has("_gotcha")).toBe(false);

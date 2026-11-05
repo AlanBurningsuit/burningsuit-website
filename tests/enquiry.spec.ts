@@ -19,14 +19,15 @@ for (const outcome of ["success", "error"] as const) {
     });
     await page.goto("/#contact");
     const form = page.getByRole("form");
-    await form.getByLabel("Name", { exact: true }).fill("Test Person");
+    await form.getByLabel("Name (optional)", { exact: true }).fill("Test Person");
     await form.getByLabel("Email", { exact: true }).fill("test@example.com");
-    await form.getByLabel("Not sure yet", { exact: true }).check();
     await form.getByLabel("Your message", { exact: true }).fill("A sample enquiry with spaces & punctuation.");
     await form.getByRole("button", { name: "Send", exact: true }).click();
     const path = outcome === "success" ? ENQUIRY.successPath : ENQUIRY.errorPath;
     await expect(page).toHaveURL(new URL(path, baseURL).href);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(outcome === "success" ? "Your message has been sent" : "Your message could not be sent");
+    expect([...payload!.keys()].filter((key) => !key.startsWith("_")).sort()).toEqual(["email", "message", "name"]);
+    expect(payload!.get("name")).toBe("Test Person");
     expect(payload!.get("email")).toBe("test@example.com");
     expect(payload!.get("message")).toBe("A sample enquiry with spaces & punctuation.");
     expect(payload!.get("_append")).toBe("false");
@@ -36,7 +37,7 @@ for (const outcome of ["success", "error"] as const) {
     if (outcome === "error") {
       await expect(page.getByRole("link", { name: ENQUIRY.email }).first()).toHaveAttribute("href", `mailto:${ENQUIRY.email}`);
       await page.getByRole("link", { name: "Back to the enquiry form" }).click();
-      await expect(page).toHaveURL(new URL("/#contact", baseURL).href);
+      await expect(page).toHaveURL(new URL("/contact/", baseURL).href);
     }
     await context.close();
   });
@@ -49,7 +50,8 @@ test("incomplete enquiries cannot leave the page without JavaScript", async ({ b
   const page = await context.newPage();
   await page.goto("/#contact");
   await page.getByRole("button", { name: "Send", exact: true }).click();
-  await expect(page.locator("#enquiry-name")).toBeFocused();
+  // The name is optional, so the first field the browser holds is the email.
+  await expect(page.locator("#enquiry-email")).toBeFocused();
   expect(requests).toBe(0);
   await expect(page).toHaveURL(new URL("/#contact", baseURL).href);
   await expect(page.locator("#enquiry-privacy a")).toHaveAttribute("href", ENQUIRY.privacyPath);

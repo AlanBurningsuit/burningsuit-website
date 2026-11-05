@@ -104,14 +104,14 @@ test("About links: courses first, consultancy second, then email, the form and L
   await expect(page.locator("main").getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", linkedin);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   expect(mainLinks).toEqual(["/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
-  // Contact aliases keep landing here.
-  for (const alias of ["/contact", "/get-in-touch", "/get-touch", "/team-member/alan-harman-box", "/about-us/our-trainers"]) expect(redirects[alias as keyof typeof redirects]).toBe("/about/");
+  // Profile aliases keep landing here; contact aliases now lead to the Contact page.
+  for (const alias of ["/team-member/alan-harman-box", "/about-us/our-trainers"]) expect(redirects[alias as keyof typeof redirects]).toBe("/about/");
 });
 
-test("About works without JavaScript, from the keyboard and from a contact alias", async ({ browser, baseURL }) => {
+test("About works without JavaScript, from the keyboard and from a legacy alias", async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
-  await page.goto("/contact/");
+  await page.goto("/team-member/alan-harman-box/");
   await expect(page).toHaveURL(baseURL! + route);
   await expect(page.locator("h1")).toBeVisible();
   // Old anchors still land on their chapter.

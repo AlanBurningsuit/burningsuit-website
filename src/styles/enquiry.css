@@ -1,15 +1,14 @@
 .contact-inner.enquiry { align-items: start; padding-block: 64px 70px; }
-.contact .enquiry-intro h2 { margin: 0 0 20px; }
+.contact .enquiry-intro :is(h1, h2) { margin: 0 0 20px; }
 .enquiry-intro p { max-width: 40ch; }
 /* On wide screens the introduction stays beside the form rather than leaving an empty column. */
 @media (min-width: 901px) { .enquiry-intro { position: sticky; top: 24px; } }
 .enquiry-form { display: grid; gap: 20px; max-width: 620px; }
-.enquiry-form .field { display: grid; gap: 7px; margin: 0; padding: 0; border: 0; min-width: 0; }
-.enquiry-form label, .enquiry-form legend { font: 600 1rem / var(--lh-snug) var(--ff-display); }
-.enquiry-form legend { padding: 0; margin-bottom: 10px; }
+.enquiry-form .field { display: grid; gap: 7px; min-width: 0; }
+.enquiry-form label { font: 600 1rem / var(--lh-snug) var(--ff-display); }
 .enquiry-form .optional { font: 400 .8rem / 1 var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--fg-dim); }
 .enquiry-form .hint { font-size: .9rem; color: var(--fg-dim); max-width: 56ch; }
-.enquiry-form input:not([type="radio"]), .enquiry-form textarea {
+.enquiry-form input, .enquiry-form textarea {
   width: 100%;
   font: 400 1rem / var(--lh-body) var(--ff-body);
   color: var(--fg);
@@ -20,13 +19,6 @@
 }
 .enquiry-form textarea { resize: vertical; min-height: 9rem; }
 .enquiry-form input:focus-visible, .enquiry-form textarea:focus-visible { outline-offset: 2px; border-color: var(--amber); }
-.topic-options { display: flex; flex-wrap: wrap; gap: 10px; }
-.enquiry-form .topic { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 9px 14px; border: var(--bw-hair) solid var(--fg-dim); border-radius: var(--r-sm); background: var(--bg); font: 400 .98rem / var(--lh-snug) var(--ff-body); cursor: pointer; }
-.enquiry-form .topic:hover { border-color: var(--fg); }
-.enquiry-form .topic:has(input:checked) { border-color: var(--amber); background: var(--bg-2); }
-.enquiry-form .topic:has(input:focus-visible) { outline: var(--px) solid var(--amber); outline-offset: 2px; }
-.enquiry-form .topic input { margin: 0; width: 1.05rem; height: 1.05rem; accent-color: var(--amber); }
-.enquiry-form .topic input:focus-visible { outline: none; }
 .send {
   justify-self: start;
   font: 600 1.05rem / 1 var(--ff-display);
@@ -45,5 +37,4 @@
 
 @media (max-width: 680px) {
   .contact-inner.enquiry { padding-block: 44px 50px; row-gap: 28px; }
-  .enquiry-form .topic { flex: 1 1 auto; }
 }

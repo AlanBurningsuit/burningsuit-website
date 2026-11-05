@@ -275,14 +275,13 @@ test("enquiry form is a labelled plain POST with nothing preselected that valida
   await expect(form).toHaveAttribute("method", "post");
   if (ENQUIRY.action) await expect(form).toHaveAttribute("action", ENQUIRY.action);
   else await expect(form).not.toHaveAttribute("action", /./);
-  const topics = form.getByRole("group", { name: "What's it about?" }).getByRole("radio");
-  await expect(topics).toHaveCount(ENQUIRY.topics.length);
-  for (const [index, topic] of ENQUIRY.topics.entries()) {
-    await expect(topics.nth(index)).toHaveAccessibleName(topic);
-    await expect(topics.nth(index)).not.toBeChecked();
-  }
-  await expect(form.getByLabel("Organisation (optional)")).not.toHaveAttribute("required", "");
-  await expect(form.getByLabel("Your message")).toHaveAccessibleDescription(/^Tell me as much or as little as you know/);
+  // Three fields: an optional name, then the required email and message; no topic or organisation.
+  await expect(form.getByRole("textbox")).toHaveCount(3);
+  await expect(form.locator("fieldset, [type=radio]")).toHaveCount(0);
+  await expect(form.getByLabel("Name (optional)", { exact: true })).not.toHaveAttribute("required", "");
+  await expect(form.getByLabel("Email", { exact: true })).toHaveAttribute("required", "");
+  await expect(form.getByLabel("Your message")).toHaveAttribute("required", "");
+  await expect(form.getByLabel("Your message")).toHaveAccessibleDescription("A line or two is enough: a course name, or what's going on with your reports.");
   const send = form.getByRole("button");
   await expect(send).toHaveText("Send");
   await expect(send).toHaveAttribute("type", "submit");
@@ -293,14 +292,9 @@ test("enquiry form is a labelled plain POST with nothing preselected that valida
 
   // Browser validation marks an incomplete enquiry, then accepts one completed from the keyboard.
   await expect(form.locator(":invalid")).not.toHaveCount(0);
-  await form.getByLabel("Name").fill("Test Person");
+  await form.getByLabel("Name (optional)").fill("Test Person");
   await page.keyboard.press("Tab");
   await page.keyboard.type("test@example.com");
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
-  await expect(topics.first()).toBeFocused();
-  await page.keyboard.press("Space");
-  await expect(topics.first()).toBeChecked();
   await page.keyboard.press("Tab");
   await expect(form.getByLabel("Your message")).toBeFocused();
   await page.keyboard.type("A team of four.");

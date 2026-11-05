@@ -135,9 +135,8 @@ test("consultancy enquiry form is labelled, plain and has nothing preselected", 
   const form = page.getByRole("form", { name: "Prefer to write?" });
   await expect(form).toHaveAttribute("method", "post");
   await expect(page.locator(".enquiry-intro p")).toHaveText("A few lines on where you are and what you need is plenty.");
-  const topics = form.getByRole("radio");
-  await expect(topics).toHaveCount(ENQUIRY.topics.length);
-  for (const topic of await topics.all()) await expect(topic).not.toBeChecked();
+  await expect(form.getByRole("textbox")).toHaveCount(3);
+  await expect(form.getByRole("radio")).toHaveCount(0);
   await expect(page.locator('#contact .fallback a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
 });
 
@@ -255,9 +254,8 @@ test("consultancy enquiry posts plainly from this page without JavaScript", asyn
   });
   await page.goto(route + "#contact");
   const form = page.getByRole("form", { name: "Prefer to write?" });
-  await form.getByLabel("Name", { exact: true }).fill("Test Person");
+  await form.getByLabel("Name (optional)", { exact: true }).fill("Test Person");
   await form.getByLabel("Email", { exact: true }).fill("test@example.com");
-  await form.getByLabel("Consultancy", { exact: true }).check();
   await form.getByLabel("Your message", { exact: true }).fill("A sample consultancy enquiry.");
   await form.getByRole("button", { name: "Send", exact: true }).click();
   await expect(page).toHaveURL(new URL(ENQUIRY.successPath, baseURL).href);

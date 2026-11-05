@@ -1,0 +1,20 @@
+---
+// Page wording: private ops site/contact-page-copy.md. The shared enquiry form carries the page
+// heading; the email address sits above the form, so the fallback below it is omitted.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import EnquiryForm from "../components/EnquiryForm.astro";
+import { ENQUIRY } from "../config/enquiry.mjs";
+---
+<BaseLayout
+  title="Contact Alan | burningsuit"
+  description="Ask Alan Harman-Box about a course, help with your own reports, or where to start. A short message is enough."
+  placeholder={false}
+>
+  <EnquiryForm headingLevel={1} fallback={false}>
+    <Fragment slot="heading">Contact Alan</Fragment>
+    <Fragment slot="intro">
+      <p>I'm Alan Harman-Box. Send me a question about a course or your reports, or tell me what you're working on if you're unsure where to start. I'll reply by email.</p>
+      <p>Email me at <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>, or use the form.</p>
+    </Fragment>
+  </EnquiryForm>
+</BaseLayout>

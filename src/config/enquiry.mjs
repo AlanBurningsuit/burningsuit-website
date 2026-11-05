@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * Shared by the homepage form, Astro's CSP form-action and the release check.
+ * Shared by the enquiry forms, Astro's CSP form-action and the release check.
  *
  * Formspark accepts a plain POST and redirects to static pages on this site.
  * This form ID is a public submission address, not a credential.
@@ -13,13 +13,6 @@ export const ENQUIRY = Object.freeze({
   errorPath: "/enquiry-error/",
   privacyPath: "/privacy/enquiries/",
   email: "alan@burningsuit.co.uk",
-  topics: Object.freeze([
-    "Power BI fundamentals",
-    "Power BI with AI agents 101",
-    "Another course",
-    "Consultancy",
-    "Not sure yet",
-  ]),
 });
 
 /**
