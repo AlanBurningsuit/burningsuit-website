@@ -9,7 +9,7 @@ const consultancy = Astro.url.pathname.startsWith("/power-bi/");
     </a>
     <nav aria-label="Main navigation">
       <a href="/training/" aria-current={training ? "true" : undefined}>Training</a>
-      <a href="/power-bi/" aria-current={consultancy ? "true" : undefined}>Consultancy</a>
+      <a href="/power-bi/" aria-current={consultancy ? "page" : undefined}>Consultancy</a>
       <a href="/about/">About</a>
       <a href="/contact/">Contact</a>
     </nav>

@@ -3,15 +3,13 @@
 /* The opening panel's action is a text link, not the 101's booking button. */
 .run-action { margin-top: 18px; }
 
-/* Ruled lists whose entries open with a bold lead. */
-/* Weight and face only, so a wrapping lead keeps the paragraph's leading. */
+/* Ruled lists whose entries open with a bold lead: display face, weight and a small size step; line-height is inherited so a wrapping lead keeps the paragraph's leading. */
 .lead-list strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
 
-/* The work I take on: heading and one-line introduction beside the ruled list. */
+/* The work I take on and After the work: heading and introduction beside a ruled list. */
 .consult-split { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
 @media (min-width: 901px) { .split-lead { position: sticky; top: 24px; } }
 .split-lead h2 { margin-bottom: 16px; }
-.split-lead p { max-width: 30ch; }
 .build-line { margin-top: 22px; max-width: 64ch; }
 .courses-line { margin-top: 26px; max-width: 64ch; }
 
@@ -21,11 +19,9 @@
 .work-runs .do-inner { padding-block: 76px 56px; }
 .do-steps h3 a { color: inherit; text-decoration-color: var(--amber); }
 .do-steps h3 a:hover { color: var(--amber); }
-#pricing { scroll-margin-top: 1.5rem; }
+/* #pricing lands clear of the top edge through the global scroll-padding-top in app.css. */
 
 /* After the work: the principle beside the support options, which follow their own introduction. */
-.ongoing { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 76px; align-items: start; }
-.ongoing-lead h2 { margin-bottom: 20px; }
 .ongoing-lead p { max-width: 46ch; }
 .ongoing-intro { margin-bottom: 16px; max-width: 64ch; }
 .ongoing-price { margin-top: 18px; max-width: 64ch; }
@@ -43,10 +39,8 @@
 .start-link { font-size: 1.3rem; line-height: var(--lh-snug); }
 
 @media (max-width: 900px) {
-  .consult-split, .ongoing { grid-template-columns: minmax(0, 1fr); row-gap: 22px; }
-  .consult-split { padding-block: 24px 56px; }
+  .consult-split { grid-template-columns: minmax(0, 1fr); row-gap: 22px; padding-block: 24px 56px; }
   .work-runs .do-inner { padding-block: 54px 40px; }
-  .ongoing { padding-block: 24px 56px; }
   .who-does { padding-block: 16px 60px; }
   .start .book-inner { align-items: start; }
 }

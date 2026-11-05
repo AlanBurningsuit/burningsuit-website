@@ -4,7 +4,8 @@ import { pages } from "../config/compatibility.mjs";
 
 export function getStaticPaths() {
   return Object.entries(pages)
-    // Bespoke pages own their routes and keep the reserved anchors themselves; check:seo fails if one goes missing.
+    // Manifest routes that have a bespoke page in src/pages are skipped here; add a route to this list when its page is built.
+    // The bespoke page then keeps that route's reserved anchors itself, and check:seo fails if one goes missing.
     .filter(([path]) => !["", "power-bi"].includes(path))
     .map(([path, anchors]) => ({ params: { path }, props: { anchors } }));
 }

@@ -73,7 +73,15 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   ]);
   // After the work: the support options follow their own introduction.
   await expect(page.locator("#ongoing .ongoing-body > *").first()).toHaveClass(/ongoing-intro/);
-  // The rest of the approved body wording.
+  // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
+  await expect(page.locator(".course-intro > p:not(.standfirst)")).toHaveText([
+    "Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running and people rely on it, but it all rests on one person, or two reports give different answers to the same question.",
+    "That's what my consultancy is for. I work with your team on your own Power BI: how the data gets in, the models, the reports and how they reach the people who use them. I explain as I go, in your words rather than mine. The aim is a team that understands what was built and can change it, not one that relies on yet another contractor.",
+    "Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free hour on a call.",
+  ]);
+  await expect(page.locator("#situations .split-lead p")).toHaveText("Ideally, the work is done with you, not for you.");
+  await expect(page.locator(".courses-line")).toHaveText("Just need your team to understand Power BI? That's what the courses are for.");
+  await expect(page.locator(".start-ask")).toHaveText("Tell me what's happening with your Power BI, and we'll work out what would help.");
   await expect(page.locator("#situations .lead-list > li")).toHaveText(["Thinking through your reporting as a whole. We look at what it's for, what it takes to run it and which skills your team needs. Then we agree what to do first.", "Owning the Power BI you've already got. It all rests on one person, or your experienced Power BI person has already left, or the reports have limped on for years and nobody is quite sure how they work. Or two reports disagree, and you can't tell which to trust. I go through the reports and models with you, find where the risks are and help your team take charge of the reporting.", "Building or moving something, together. That might be a new model or report your team can't build yet, or moving your reporting into Power BI. Either way, your team knows how it works before they rely on it. If you're moving to Microsoft Fabric (the wider data platform that Power BI is part of), I coach your team through its own migration. I don't do the Fabric migration work myself.", "Getting started with AI agents. I coach your team to use them on the Power BI you've got. More on that below"]);
   await expect(page.locator(".build-line")).toHaveText("If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.");
   await expect(page.locator('[aria-labelledby="method-title"] .lead-list > li')).toHaveText(["Coaching your team to do it. I take your team through each part of the work and, wherever I can, have them do it themselves while I help and check.", "In your own setup. We work with your data, models and reports, and the deadlines you actually have."]);
