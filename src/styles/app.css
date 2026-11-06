@@ -16,8 +16,8 @@ h1, h2, h3, p, figure, blockquote, dl { margin: 0; }
 /* Display weight steps down the outline: 800 for the page title, 700 for sections, 600 for items, so long pages read at a conversational volume. */
 h1, h2, h3 { font-family: var(--ff-display); }
 h1 { margin: 18px 0 26px; font-size: var(--title-size); font-weight: 800; line-height: var(--lh-display); letter-spacing: var(--ls-display-loose); }
-h2 { font-size: clamp(1.75rem, 2.7vw, 2.5rem); font-weight: 700; line-height: var(--lh-snug); letter-spacing: var(--ls-display); }
-h3 { font-weight: 600; line-height: var(--lh-snug); letter-spacing: var(--ls-display-tight); }
+h2 { font-size: var(--h2-size); font-weight: 700; line-height: var(--lh-snug); letter-spacing: var(--ls-display); }
+h3 { font-size: var(--h3-size); font-weight: 600; line-height: var(--lh-snug); letter-spacing: var(--ls-display-tight); }
 p + p { margin-top: 1rem; }
 a { color: var(--link); text-decoration-color: color-mix(in srgb, currentColor 50%, transparent); text-decoration-thickness: 1px; text-underline-offset: .2em; transition: text-decoration-color .2s; }
 a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
@@ -30,8 +30,25 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .standfirst { font: 400 clamp(1.45rem, 2.1vw, 1.8rem) / 1.3 var(--ff-note); margin-bottom: 20px; }
 /* Each page opens on a title band: the title and its lede on the dark stage; everything after opens the daylight sheet. */
 .title-band { padding-block: clamp(40px, 5vw, 72px) clamp(64px, 7vw, 104px); }
-.title-band h1 { margin: 0; font-size: clamp(2.5rem, 4.8vw, 4.2rem); text-wrap: balance; }
+.title-band h1 { margin: 0; font-size: var(--title-band-size); text-wrap: balance; }
 .title-band .standfirst { margin: clamp(18px, 2vw, 28px) 0 0; max-width: 34ch; text-wrap: balance; }
+/* The one button, for every action that isn't a text link: it takes its colours from the ground it sits on (tokens.css). */
+.button {
+  display: inline-block;
+  max-width: 100%;
+  font: 600 1.05rem / var(--lh-snug) var(--ff-display);
+  text-align: center;
+  text-decoration: none;
+  color: var(--button-text);
+  background: var(--button);
+  border: 0;
+  border-radius: var(--r-sm);
+  padding: 15px 32px;
+  cursor: pointer;
+}
+.button:is(:hover, :focus-visible):not(:disabled) { color: var(--button-hover-text); background: var(--button-hover); }
+.button:focus-visible { outline-offset: 4px; }
+.button:disabled { color: var(--text-dim); background: var(--surface-raised); cursor: not-allowed; }
 .text-link { display: inline-block; font-weight: 600; padding-block: 7px; }
 /* A text link leads on with a warm arrow (an external one points out), which steps forward on hover. */
 .text-link::after { content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); }
@@ -64,9 +81,10 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .nav-menu summary::after { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; rotate: 45deg; translate: 0 -2px; }
 .nav-menu[open] summary::after { rotate: -135deg; translate: 0 2px; }
 .nav-menu summary:hover { color: var(--link); background: var(--bg-3); }
-.nav-menu ul { position: absolute; z-index: 20; top: calc(100% + 8px); left: -14px; min-width: 17rem; margin: 0; padding: 8px; list-style: none; background: var(--bg-2); border-radius: var(--r); box-shadow: 0 18px 40px -16px rgb(0 0 0 / .7); }
+.nav-menu ul { position: absolute; z-index: 20; top: calc(100% + 8px); left: -14px; min-width: min(17rem, calc(100vw - 2 * var(--page-gutter))); max-width: calc(100vw - 2 * var(--page-gutter)); margin: 0; padding: 8px; list-style: none; background: var(--bg-2); border-radius: var(--r); box-shadow: 0 18px 40px -16px rgb(0 0 0 / .7); }
 .masthead .nav-menu ul a { display: block; padding: 10px 12px; border-radius: var(--r-sm); font-size: .98rem; }
 .masthead .nav-menu ul a:hover { background: var(--bg-3); }
+.masthead .nav-menu ul a[aria-current] { color: var(--link); }
 
 /* A candid photo, matted like a print: a card-coloured mount, the frame radius and the soft lift. */
 .framed-photo img { display: block; width: 100%; height: auto; border: 6px solid var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
@@ -81,7 +99,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 :is(section, div, article):not(.dark) + .dark::before { top: 0; background: var(--sheet-end, var(--mist)); border-radius: 0 0 var(--sheet-r) var(--sheet-r); box-shadow: 0 18px 36px -18px var(--sheet-shadow); }
 .raised-band + .dark { --sheet-end: var(--sage); }
 /* A daylight card answers the pointer and the keyboard: its edge warms and its shadow deepens (it also lifts, with motion). */
-.course:is(:hover, :focus-within) { box-shadow: var(--lift-raised); }
+.course:is(:hover, :focus-within), .work-entries li:is(:hover, :focus-within) { box-shadow: var(--lift-raised); }
 
 /* Motion, only when the visitor hasn't asked for less: as the sheet rises, the opening drifts down beneath it;
    daylight cards and margin notes settle into place as they arrive; a card lifts and a link's arrow steps on hover. */
@@ -90,32 +108,44 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
     .stage > * { animation: stage-recede linear both; animation-timeline: --stage; animation-range: exit 0% exit 100%; }
     :is(.course, .teacher-origin, .trust-teacher, .hit-pair-item) { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
   }
-  .course { transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out); }
-  .course:is(:hover, :focus-within) { transform: translateY(-3px); }
+  :is(.course, .work-entries li) { transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out); }
+  :is(.course, .work-entries li):is(:hover, :focus-within) { transform: translateY(-3px); }
   a { transition: text-decoration-color .2s, text-underline-offset .2s var(--ease-out), scale var(--dur-base) var(--ease-out); }
-  button:not(:disabled) { transition: background-color .2s, scale var(--dur-base) var(--ease-out); }
+  .button:not(:disabled) { transition: background-color .2s, color .2s, scale var(--dur-base) var(--ease-out); }
   .text-link::after { transition: translate .25s var(--ease-out); }
   a:hover { text-underline-offset: .26em; }
   .text-link:is(:hover, :focus-visible)::after { translate: .25em 0; }
   .text-link[href^="http"]:is(:hover, :focus-visible)::after { translate: .15em -.15em; }
   /* A press answers with a brief give. */
-  :is(.text-link, .links a, .masthead nav a, button:not(:disabled)):active { scale: .98; transition-duration: var(--dur-micro); }
+  :is(.text-link, .links a, .masthead nav a, .button:not(:disabled)):active { scale: .98; transition-duration: var(--dur-micro); }
 }
 /* The drift stays inside each opening's own bottom padding, so no line of it ever slides under the sheet while still in view. */
 @keyframes stage-recede { to { translate: 0 var(--recede, 28px); } }
 @media (min-width: 901px) { .stage { --recede: 44px; } }
 @keyframes settle { from { translate: 0 28px; } }
 
+/* A closing band: the dark bookend that ends a page without the enquiry form. Heading beside the copy in the
+   notebook's .7 / 1.3 proportions; a band with a single block lets it run the full width. */
+.closing-band { background: var(--bg-band); }
+.closing-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); row-gap: 18px; padding-block: 52px 60px; align-items: baseline; }
+.closing-inner > :only-child { grid-column: 1 / -1; }
+.closing-inner h2 { margin: 0; }
+.closing-inner h2 + * { margin-top: 16px; }
+
 /* A raised band with its heading beside the copy: the homepage consultancy band and the consultancy page's AI band. */
 .raised-band { background: var(--surface-raised); }
 .raised-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: start; }
-.raised-band h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); }
 .raised-copy p { max-width: 58ch; }
 .raised-copy .text-link { margin-top: 14px; }
 
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }
 .contact h2 { margin-top: 14px; }
+/* The footer: the recessed dark ground every page ends on. A page whose body ends on daylight rounds its sheet onto it,
+   as onto a closing band. */
+.footer-band { background: var(--bg-band); }
+main:not(:has(> .dark:last-child, > :last-child > .dark:last-child)) + .footer-band { position: relative; padding-top: var(--sheet-r); }
+main:not(:has(> .dark:last-child, > :last-child > .dark:last-child)) + .footer-band::before { content: ""; position: absolute; inset: 0 0 auto; height: var(--sheet-r); background: var(--mist); border-radius: 0 0 var(--sheet-r) var(--sheet-r); box-shadow: 0 18px 36px -18px var(--sheet-shadow); pointer-events: none; }
 .footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; padding-block: 26px; font-size: .78rem; color: var(--text-dim); }
 .footer a { color: var(--text-dim); }
 .foot-links { display: flex; flex-wrap: wrap; gap: 4px 18px; }
@@ -125,10 +155,11 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
   :root { --page-gutter: 28px; --column-gap: 36px; --title-size: 3.2rem; --home-columns: minmax(0, 1fr); }
   .contact-inner { row-gap: 24px; }
   .raised-inner { row-gap: 20px; padding-block: 40px; }
+  .closing-inner { grid-template-columns: minmax(0, 1fr); padding-block: 40px 48px; }
   .masthead { gap: 24px; }
 }
 @media (max-width: 680px) {
-  :root { --page-gutter: 22px; --title-size: clamp(2.5rem, 11vw, 3.2rem); }
+  :root { --page-gutter: 22px; --title-size: clamp(2.5rem, 11vw, 3.2rem); --lead-size: 1.1rem; }
   h1 { margin-top: 16px; margin-bottom: 22px; }
   .standfirst { font-size: 1.35rem; }
   /* On phones the logo keeps the left and the links run right-aligned on the line beneath it. */

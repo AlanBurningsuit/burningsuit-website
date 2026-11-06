@@ -266,11 +266,12 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
   expect(Math.abs(titleA.top - titleB.top)).toBeLessThanOrEqual(1);
   const decidings = await rects(".starting-points .deciding"), actions = await rects(".starting-points .course-actions");
   for (const [index, block] of decidings.entries()) expect(actions[index].top - block.bottom).toBeLessThanOrEqual(40);
-  // Specialists stay lighter than the starting points; the cards open on the daylight warm accent (the ochre tick
+  // The cards open on the daylight warm accent (the ochre tick
   // before each card's fit line), which the teacher note's rule does not carry.
   const size = (selector: string) => page.locator(selector).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-  expect(await size("#specialists-title")).toBeLessThan(await size("#start-points-title"));
-  expect(await size("#coaching-title")).toBeLessThan(await size("#start-points-title"));
+  // One heading scale: every section heading is the same size; the starting points carry their weight through the cards.
+  expect(await size("#specialists-title")).toBe(await size("#start-points-title"));
+  expect(await size("#coaching-title")).toBe(await size("#start-points-title"));
   // Coaching stays quieter than the starting points: no spine, card or article.
   expect(await page.locator("#coaching").evaluate((el) => getComputedStyle(el).borderTopStyle)).toBe("none");
   await expect(page.locator("#coaching article, #coaching .deciding, #coaching .course-fit")).toHaveCount(0);

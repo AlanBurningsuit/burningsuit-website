@@ -1,5 +1,7 @@
 .contact-inner.enquiry { align-items: start; padding-block: 44px 48px; }
 .contact .enquiry-intro :is(h1, h2) { margin: 0 0 20px; }
+/* Contact's form heading is the page title: the same size as every title band. */
+.contact .enquiry-intro h1 { font-size: var(--title-band-size); text-wrap: balance; }
 .enquiry-intro p { max-width: 40ch; }
 /* On wide screens the introduction stays beside the form, with the email fallback beneath it rather than under the form,
    so the closing band stays a compact bookend. */
@@ -31,19 +33,7 @@
 }
 .enquiry-form textarea { resize: vertical; height: 6.5rem; min-height: 5rem; }
 .enquiry-form input:focus-visible, .enquiry-form textarea:focus-visible { outline-offset: 2px; border-color: var(--amber); }
-.send {
-  justify-self: start;
-  font: 600 1.05rem / 1 var(--ff-display);
-  color: var(--deep);
-  background: var(--amber);
-  border: 0;
-  border-radius: var(--r-sm);
-  padding: 15px 32px;
-  cursor: pointer;
-}
-.send:hover:enabled { background: var(--fg); }
-.send:disabled { color: var(--fg-dim); background: var(--bg-3); cursor: not-allowed; }
-.send:focus-visible { outline-offset: 4px; }
+.send { justify-self: start; }
 .fallback { margin-top: 16px; font-size: .95rem; color: var(--text-dim); }
 
 @media (max-width: 680px) {

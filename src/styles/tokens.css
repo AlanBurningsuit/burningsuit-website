@@ -11,6 +11,15 @@
   --home-columns: minmax(0, .88fr) minmax(0, 1.12fr);
   --body-size: 1.125rem;
   --title-size: clamp(2.6rem, 4.2vw, 3.7rem);
+  /* One heading scale for the whole site: the page title in its band, a section heading, a note heading (a short
+     block's label, such as a facts card), an item heading, and a card title. Pages never set their own sizes. */
+  --title-band-size: clamp(2.5rem, 4.8vw, 4.2rem);
+  --h2-size: clamp(1.75rem, 2.7vw, 2.5rem);
+  --h2-note-size: 1.25rem;
+  --h3-size: 1.3rem;
+  --h3-card-size: clamp(1.55rem, 2.2vw, 1.8rem);
+  /* The opening paragraph that starts a page's daylight body: one size everywhere (smaller on phones, app.css). */
+  --lead-size: 1.2rem;
   --masthead-h: 84px;
   /* A daylight card: a crisp pine edge, a contact shadow and a soft lift; raised is its hover and focus state, its edge warmed to ochre. */
   --lift: 0 0 0 1px color-mix(in srgb, var(--pine) 14%, transparent), 0 1px 2px color-mix(in srgb, var(--pine) 10%, transparent), 0 14px 32px -22px color-mix(in srgb, var(--pine) 45%, transparent);
@@ -38,6 +47,11 @@
   --link: var(--amber);
   --accent: var(--amber);
   --accent-ink: var(--amber);
+  /* The one button: amber with deep text on dark grounds; cream on hover. */
+  --button: var(--amber);
+  --button-text: var(--deep);
+  --button-hover: var(--fg);
+  --button-hover-text: var(--deep);
 }
 main {
   --surface: var(--mist);
@@ -49,4 +63,9 @@ main {
   --link: var(--fern);
   --accent: var(--ochre);
   --accent-ink: var(--ochre-ink);
+  /* On daylight amber washes out, so the button takes its counterpart, deep ochre with leaf text (6.5:1), and pine on hover. */
+  --button: var(--ochre-ink);
+  --button-text: var(--leaf);
+  --button-hover: var(--pine);
+  --button-hover-text: var(--leaf);
 }

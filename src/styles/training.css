@@ -2,27 +2,26 @@
 
 /* Opening: the settled course-page title and introduction, compact, without a facts column. */
 .training-intro { padding-block: clamp(40px, 5vw, 64px) 0; }
-.training-intro > p { max-width: 60ch; font-size: 1.15rem; line-height: var(--lh-relaxed); text-wrap: pretty; }
+.training-intro > p { max-width: 60ch; font-size: var(--lead-size); line-height: var(--lh-relaxed); text-wrap: pretty; }
 
 /* Two places to start: the page's main choice, as two equal daylight cards that open on a warm spine;
    each one's deciding facts and prerequisite sit together beneath its description. */
 .starting-points { padding-block: 72px 56px; }
-.starting-points h2 { font-size: clamp(2.1rem, 3.4vw, 2.9rem); padding-bottom: 26px; }
+.starting-points h2 { padding-bottom: 26px; }
 .start-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); align-items: start; }
-.starting-points .course { border-top: var(--bw-spine) solid var(--accent); padding: 24px 30px 26px; }
+.starting-points .course { padding: 24px 30px 26px; }
 /* Side by side, each entry takes its natural height (as on the homepage). */
-.starting-points .course h3 { font-size: clamp(1.7rem, 2.5vw, 2.05rem); }
 .course > p.private-ask { margin-top: 10px; font-size: .96rem; }
 .private-ask a { font-weight: 600; }
 /* The public group size stays in one piece when the date line wraps. */
 
 /* Specialists: a quieter recessed block of rows, name beside its facts on wide screens; no cards, fit questions or per-row links. */
 .specialist-courses { padding-block: 56px 88px; }
-.specialists-head h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); padding-bottom: 14px; }
+.specialists-head h2 { padding-bottom: 14px; }
 .specialists-head p { max-width: 60ch; margin-bottom: 22px; }
 .specialist-rows { list-style: none; margin: 0 0 18px; padding: 12px 30px; background: var(--surface-raised); border-radius: var(--r); }
 .specialist-rows > li { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: baseline; padding-block: 13px; }
-.specialist-rows h3 { font-size: 1.2rem; font-weight: 600; letter-spacing: var(--ls-display-tight); }
+.specialist-rows h3 { font-weight: 600; letter-spacing: var(--ls-display-tight); }
 .specialist-rows .facts { margin: 0; }
 .specialist-courses .text-link { font-size: .96rem; }
 .name-course { font-size: .96rem; color: var(--text-dim); }
@@ -49,13 +48,10 @@
 }
 @media (max-width: 680px) {
   .training-intro { padding-top: 32px; }
-  .training-intro > p { font-size: 1.05rem; }
-  .starting-points h2 { font-size: 1.9rem; padding-bottom: 18px; }
-  .specialists-head h2 { font-size: 1.7rem; }
+  .starting-points h2 { padding-bottom: 18px; }
   /* With enlarged text a long course name hyphenates rather than breaking at its last letter. */
-  .starting-points .course h3 { font-size: 1.65rem; hyphens: auto; }
+  .starting-points .course h3 { hyphens: auto; }
   .starting-points .course { padding: 22px 20px 22px; }
   .specialist-rows { padding: 10px 20px; }
   .specialist-rows > li { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }
-  .specialist-rows h3 { font-size: 1.1rem; }
 }

@@ -6,6 +6,7 @@ const consultancy = Astro.url.pathname.startsWith("/power-bi/");
 const consultancySection = Astro.url.pathname.startsWith("/call/");
 const work = Astro.url.pathname === "/work/" ? "page" : Astro.url.pathname.startsWith("/work/") ? "true" : undefined;
 const about = Astro.url.pathname.startsWith("/about/");
+const here = (path: string) => Astro.url.pathname === path ? "page" : undefined;
 const contact = Astro.url.pathname.startsWith("/contact/");
 ---
 <header class="masthead-band">
@@ -20,9 +21,9 @@ const contact = Astro.url.pathname.startsWith("/contact/");
         <details class="nav-menu">
           <summary aria-label="Training courses"></summary>
           <ul>
-            <li><a href="/training/power-bi-fundamentals/">Power BI fundamentals</a></li>
-            <li><a href="/training/agentic-development-for-power-bi/">Power BI with AI agents 101</a></li>
-            <li><a href="/training/how-i-train/">How I train</a></li>
+            <li><a href="/training/power-bi-fundamentals/" aria-current={here("/training/power-bi-fundamentals/")}>Power BI fundamentals</a></li>
+            <li><a href="/training/agentic-development-for-power-bi/" aria-current={here("/training/agentic-development-for-power-bi/")}>Power BI with AI agents 101</a></li>
+            <li><a href="/training/how-i-train/" aria-current={here("/training/how-i-train/")}>How I train</a></li>
           </ul>
         </details>
       </div>

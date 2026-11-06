@@ -1,19 +1,6 @@
 /* Free call page: reuses the consultancy opening and numbered spine (course.css, consultancy.css); only the differences live here. */
 
-/* The booking action: the 101's .book-button as an enabled link, amber with the carved edge and hard shadow of the enquiry form's Send.
-   Scoped to anchors on this page, so the 101's disabled button keeps its own state. */
-a.book-link {
-  display: inline-block;
-  max-width: 100%;
-  line-height: var(--lh-snug);
-  text-align: center;
-  text-decoration: none;
-  color: var(--deep);
-  background: var(--amber);
-  box-shadow: 4px 4px 0 var(--deep);
-}
-a.book-link:hover { background: var(--fg); }
-a.book-link:focus-visible { outline-offset: 4px; }
+/* The booking action is the shared .button (app.css): ochre on the facts card, amber in the dark booking band. */
 .course-run .book-link { margin-top: 24px; }
 
 /* The opening holds everything before the booking band: the introduction, then "What happens" under it, with the
@@ -37,7 +24,6 @@ a.book-link:focus-visible { outline-offset: 4px; }
 .call-alt { margin-top: 22px; font-size: 1rem; }
 .call-alt + .call-alt { margin-top: 10px; }
 
-.call-book .book-inner { padding-block: 44px 52px; }
 @media (max-width: 680px) {
   .call-steps .do-steps { grid-template-columns: minmax(0, 1fr); row-gap: 28px; }
 }

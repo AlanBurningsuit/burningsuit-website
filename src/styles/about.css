@@ -4,7 +4,7 @@
    chapter share the first photo, on the right. */
 .about-section > :not(.about-photo) { max-width: 46rem; }
 .about-intro { padding-block: clamp(32px, 5vw, 64px) 8px; }
-.about-lead { font-size: 1.25rem; line-height: var(--lh-relaxed); max-width: 58ch; }
+.about-lead { font-size: var(--lead-size); line-height: var(--lh-relaxed); max-width: 58ch; }
 @media (min-width: 901px) {
   .about-intro:has(> .about-photo), .about-section:has(> .about-photo) {
     display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); grid-template-rows: auto 1fr; column-gap: var(--column-gap); align-items: start;
@@ -52,7 +52,6 @@
   .about-start-inner { padding-block: 44px 50px; }
 }
 @media (max-width: 680px) {
-  .about-lead { font-size: 1.12rem; }
   .about-photo { margin-top: 28px; }
   .about-start p { font-size: 1.1rem; }
 }

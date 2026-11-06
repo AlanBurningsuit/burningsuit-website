@@ -66,8 +66,8 @@ test("the enquiry action and the route back to Training are ordinary links to ex
   await expect(ask).toHaveAttribute("href", "/training/#contact");
   await expect(ask).toHaveClass(/text-link/);
   await expect(ask).toHaveAccessibleDescription("Name the course in your message.");
-  // On the daylight sheet the link takes the daylight link colour (fern), not amber.
-  expect(await ask.evaluate((el) => getComputedStyle(el).color)).toBe("rgb(42, 93, 77)");
+  // The ask closes the study on the shared dark closing band, so the link is amber.
+  expect(await ask.evaluate((el) => getComputedStyle(el).color)).toBe("rgb(230, 152, 117)");
   await expect(page.locator("#name-course")).toHaveText("Name the course in your message.");
   await expect(page.getByRole("link", { name: secondary, exact: true })).toHaveAttribute("href", "/training/#specialists-title");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));

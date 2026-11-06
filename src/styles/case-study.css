@@ -6,12 +6,12 @@
 
 :where(.case-chapters) .case-opening { padding-block: clamp(28px, 4vw, 48px) 52px; }
 :where(.case-chapters) .case-kicker { margin: 0 0 14px; }
-:where(.case-chapters) .case-lead { font-size: 1.25rem; line-height: var(--lh-relaxed); max-width: 60ch; }
+:where(.case-chapters) .case-lead { font-size: var(--lead-size); line-height: var(--lh-relaxed); max-width: 60ch; }
 
 /* Each beat: heading and prose under one unbroken rule, in the consultancy page's .7 / 1.3 proportions. */
 :where(.case-chapters) .case-chapter { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; padding-block: 0 44px; }
 :where(.case-chapters) .case-chapter::before { content: ""; grid-column: 1 / -1; border-top: var(--bw-hair) solid var(--rule); margin-bottom: 20px; }
-:where(.case-chapters) .case-chapter h2 { font-size: clamp(1.45rem, 2.1vw, 1.85rem); text-wrap: balance; }
+:where(.case-chapters) .case-chapter h2 { text-wrap: balance; }
 :where(.case-chapters) .case-prose p { max-width: 62ch; }
 
 /* Return: the approach in one paragraph on the warm spine, beside the two onward links. */
@@ -22,8 +22,7 @@
 :where(.case-chapters) .case-return-links li + li { margin-top: 6px; }
 
 /* The footer invitation, with its call as a real link. */
-:where(.case-chapters) .case-invite { background: var(--bg-band); }
-:where(.case-chapters) .case-invite p { padding-block: 46px 50px; font-size: 1.15rem; max-width: 62ch; }
+:where(.case-chapters) .case-invite p { font-size: 1.15rem; max-width: 62ch; }
 :where(.case-chapters) .case-invite a { font-weight: 600; }
 
 @media (max-width: 900px) {
@@ -34,9 +33,8 @@
 }
 @media (max-width: 680px) {
   :where(.case-chapters) .case-opening { padding-block: 24px 32px; }
-  :where(.case-chapters) .case-lead { font-size: 1.15rem; }
   :where(.case-chapters) .case-return-copy p { font-size: 1.1rem; }
-  :where(.case-chapters) .case-invite p { padding-block: 38px 42px; font-size: 1.05rem; }
+  :where(.case-chapters) .case-invite p { font-size: 1.05rem; }
 }
 
 /* story */
@@ -44,7 +42,7 @@
 
 /* Opening: the heading, the lead at reading width, then a quiet strip of facts. */
 :where(.case-story) .study-opening { padding-block: clamp(28px, 4vw, 48px) 56px; }
-:where(.case-story) .study-lead { max-width: 52ch; font-size: 1.25rem; line-height: var(--lh-relaxed); text-wrap: pretty; }
+:where(.case-story) .study-lead { max-width: 52ch; font-size: var(--lead-size); line-height: var(--lh-relaxed); text-wrap: pretty; }
 
 /* Facts strip: ruled label/value pairs, quieter than the story. */
 :where(.case-story) .study-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--column-gap); margin-top: 40px; border-top: var(--bw-spine) solid var(--text); }
@@ -54,15 +52,13 @@
 
 /* The story: each heading beside its prose on the ruled page. Headings sit in the first column and paragraphs in the second, in source order; a heading spans two rows so a tall one never pushes its second paragraph down. */
 :where(.case-story) .study-story { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; padding-block: 8px 72px; }
-:where(.case-story) .study-story > h2 { grid-column: 1; grid-row: span 2; font-size: clamp(1.7rem, 2.6vw, 2.3rem); padding-top: 22px; border-top: var(--bw-spine) solid var(--text); text-wrap: balance; }
+:where(.case-story) .study-story > h2 { grid-column: 1; grid-row: span 2; padding-top: 22px; border-top: var(--bw-spine) solid var(--text); text-wrap: balance; }
 :where(.case-story) .study-story > p { grid-column: 2; max-width: 62ch; }
 :where(.case-story) .study-story > h2 + p { padding-top: 22px; border-top: var(--bw-hair) solid var(--rule); }
 :where(.case-story) .study-story > p + p { margin-top: 0; padding-top: 1rem; }
 :where(.case-story) .study-story > h2:not(:first-child), :where(.case-story) .study-story > h2:not(:first-child) + p { margin-top: 56px; }
 
 /* Where next: the closing band, as on How I train, with the main link and a quieter alternative. */
-:where(.case-story) .study-next { background: var(--bg-band); }
-:where(.case-story) .study-next-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 56px 62px; align-items: baseline; }
 :where(.case-story) .study-next-copy > p:first-child { font-size: 1.15rem; line-height: var(--lh-relaxed); max-width: 52ch; }
 :where(.case-story) .study-next-copy .text-link { margin-top: 14px; font-size: 1.1rem; }
 :where(.case-story) .study-then { margin-top: 10px; }
@@ -71,17 +67,15 @@
 
 @media (max-width: 900px) {
   :where(.case-story) .study-opening { padding-block: 24px 44px; }
-  :where(.case-story) .study-story, :where(.case-story) .study-next-inner { grid-template-columns: minmax(0, 1fr); }
+  :where(.case-story) .study-story { grid-template-columns: minmax(0, 1fr); }
   :where(.case-story) .study-story > h2, :where(.case-story) .study-story > p { grid-column: 1; grid-row: auto; }
   :where(.case-story) .study-story > h2 + p { padding-top: 18px; border-top: 0; }
   :where(.case-story) .study-story > h2:not(:first-child) + p { margin-top: 0; }
   :where(.case-story) .study-story > h2:not(:first-child) { margin-top: 48px; }
   :where(.case-story) .study-story { padding-block: 0 56px; }
-  :where(.case-story) .study-next-inner { row-gap: 18px; padding-block: 44px 50px; }
 }
 @media (max-width: 680px) {
   :where(.case-story) .study-opening { padding-block: 24px 36px; }
-  :where(.case-story) .study-lead { font-size: 1.12rem; }
   :where(.case-story) .study-facts { grid-template-columns: minmax(0, 1fr); margin-top: 30px; }
   :where(.case-story) .study-facts > div { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: baseline; padding-block: 11px; }
   :where(.case-story) .study-facts dd { margin-top: 0; }
@@ -96,11 +90,11 @@
 :where(.case-coaching) .cs-opening { padding-block: clamp(28px, 4vw, 48px) 56px; }
 :where(.case-coaching) .cs-descriptor { margin: 0 0 14px; }
 :where(.case-coaching) .cs-opening-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); column-gap: var(--column-gap); align-items: start; }
-:where(.case-coaching) .cs-lead { max-width: 54ch; font-size: 1.25rem; line-height: var(--lh-relaxed); text-wrap: pretty; }
+:where(.case-coaching) .cs-lead { max-width: 54ch; font-size: var(--lead-size); line-height: var(--lh-relaxed); text-wrap: pretty; }
 
 /* The short version: a ruled block of deciding facts on a warm spine. */
 :where(.case-coaching) .cs-facts { border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; }
-:where(.case-coaching) .cs-facts h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: var(--ls-display-tight); }
+:where(.case-coaching) .cs-facts h2 { font-size: var(--h2-note-size); font-weight: 600; letter-spacing: var(--ls-display-tight); }
 :where(.case-coaching) .cs-facts dl { margin-top: 10px; font-size: .95rem; }
 :where(.case-coaching) .cs-facts dl > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 14px; padding-block: 9px; border-top: var(--bw-hair) solid var(--rule); }
 :where(.case-coaching) .cs-facts dt { color: var(--text-dim); }
@@ -108,7 +102,7 @@
 
 /* An answer: heading beside its prose on the ruled page. */
 :where(.case-coaching) .cs-answer { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; padding-block: 0 56px; }
-:where(.case-coaching) .cs-answer > h2 { padding-top: 22px; border-top: var(--bw-spine) solid var(--text); font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
+:where(.case-coaching) .cs-answer > h2 { padding-top: 22px; border-top: var(--bw-spine) solid var(--text); }
 :where(.case-coaching) .cs-prose { padding-top: 22px; border-top: var(--bw-hair) solid var(--rule); }
 :where(.case-coaching) .cs-prose > p { max-width: 62ch; }
 
@@ -121,8 +115,6 @@
 :where(.case-coaching) .cs-line { display: inline-block; width: 100%; padding-left: 6ch; text-indent: -6ch; }
 
 /* Back to the offer: the closing band, as on How I train. */
-:where(.case-coaching) .cs-return { background: var(--bg-band); }
-:where(.case-coaching) .cs-return-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 56px 62px; align-items: baseline; }
 :where(.case-coaching) .cs-return p { font-size: 1.15rem; line-height: var(--lh-relaxed); max-width: 56ch; }
 :where(.case-coaching) .cs-links { list-style: none; margin: 22px 0 0; padding: 0; }
 :where(.case-coaching) .cs-links li { border-top: var(--bw-hair) solid var(--rule); }
@@ -131,15 +123,13 @@
 
 @media (max-width: 900px) {
   :where(.case-coaching) .cs-opening { padding-block: 24px 44px; }
-  :where(.case-coaching) .cs-opening-grid, :where(.case-coaching) .cs-answer, :where(.case-coaching) .cs-return-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
+  :where(.case-coaching) .cs-opening-grid, :where(.case-coaching) .cs-answer { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
   :where(.case-coaching) .cs-opening-grid { row-gap: 30px; }
   :where(.case-coaching) .cs-prose { padding-top: 0; border-top: 0; }
   :where(.case-coaching) .cs-answer { padding-block: 0 44px; }
-  :where(.case-coaching) .cs-return-inner { padding-block: 44px 50px; }
 }
 @media (max-width: 680px) {
   :where(.case-coaching) .cs-opening { padding-block: 24px 36px; }
-  :where(.case-coaching) .cs-lead { font-size: 1.12rem; }
   :where(.case-coaching) .cs-facts dl > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   :where(.case-coaching) .cs-teaching { margin-inline: calc(var(--page-gutter) * -0.5); padding: 22px 18px; }
   :where(.case-coaching) .cs-code { margin-inline: -8px; padding: 14px 12px; font-size: .8rem; }
@@ -160,7 +150,7 @@
 
 /* A beat: heading beside its prose on the ruled page. */
 :where(.case-course) .case-beat { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; padding-block: 0 44px; }
-:where(.case-course) .case-beat > h2 { font-size: clamp(1.7rem, 2.6vw, 2.3rem); padding-top: 22px; border-top: var(--bw-spine) solid var(--text); }
+:where(.case-course) .case-beat > h2 { padding-top: 22px; border-top: var(--bw-spine) solid var(--text); }
 :where(.case-course) .case-prose { padding-top: 22px; border-top: var(--bw-hair) solid var(--rule); }
 :where(.case-course) .case-prose p { max-width: 62ch; }
 :where(.case-course) .case-after { padding-bottom: 64px; }
@@ -217,7 +207,7 @@
 /* Import-free kit for future entries: plain notebook type, rules and evidence. */
 .mdx-opening { padding-block: 46px 52px; }
 .mdx-opening h1 { max-width: 22ch; }
-.mdx-lead { max-width: 60ch; font-size: 1.25rem; line-height: var(--lh-relaxed); }
+.mdx-lead { max-width: 60ch; font-size: var(--lead-size); line-height: var(--lh-relaxed); }
 .mdx-snapshot { padding-block: 28px 44px; }
 .mdx-snapshot ul { padding-left: 1.2em; }
 .mdx-offer { margin-block: 24px; }

@@ -11,7 +11,7 @@ import { ENQUIRY } from "../config/enquiry.mjs";
   placeholder={false}
 >
   <EnquiryForm headingLevel={1} fallback={false}>
-    <Fragment slot="heading">Contact Alan</Fragment>
+    <Fragment slot="heading">Contact <span class="em">Alan</span></Fragment>
     <Fragment slot="intro">
       <p>I'm Alan Harman-Box. Send me a question about a course or your reports, or tell me what you're working on if you're unsure where to start. I'll reply by email.</p>
       <p>Email me at <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>, or use the form.</p>

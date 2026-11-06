@@ -70,18 +70,19 @@ test("free call page answers the visitor's questions in order, in the approved w
   for (const absent of [/free hour/i, /\bhour\b/i, /\[|\]/, /—/, /[£$€]\s*\d/, /record/i, /audit/i, /diagnos/i, /proposal/i, /training/i, /case stud/i, /no obligation/i]) expect(text).not.toMatch(absent);
 });
 
-test("both booking actions are the same ordinary same-tab link, styled as the enabled amber button", async ({ page }) => {
+test("both booking actions are the same ordinary same-tab link, styled as the shared button for their ground", async ({ page }) => {
   await page.goto(route);
   const actions = page.getByRole("link", { name: label, exact: true });
   await expect(actions).toHaveCount(2);
-  for (const action of await actions.all()) {
+  // On the daylight facts card the button is ochre with leaf text; in the dark booking band it is amber with deep text.
+  const grounds = [{ bg: "rgb(127, 83, 10)", color: "rgb(251, 252, 249)" }, { bg: "rgb(230, 152, 117)", color: "rgb(28, 34, 38)" }];
+  for (const [index, action] of (await actions.all()).entries()) {
     await expect(action).toHaveAttribute("href", booking);
     await expect(action).not.toHaveAttribute("target", /./);
-    await expect(action).toHaveClass(/book-button/);
-    const style = await action.evaluate((el) => { const s = getComputedStyle(el); return { bg: s.backgroundColor, color: s.color, shadow: s.boxShadow, cursor: s.cursor }; });
-    expect(style.bg).toBe("rgb(230, 152, 117)");
-    expect(style.color).toBe("rgb(28, 34, 38)");
-    expect(style.shadow).not.toBe("none");
+    await expect(action).toHaveClass(/\bbutton\b/);
+    const style = await action.evaluate((el) => { const s = getComputedStyle(el); return { bg: s.backgroundColor, color: s.color, cursor: s.cursor }; });
+    expect(style.bg).toBe(grounds[index].bg);
+    expect(style.color).toBe(grounds[index].color);
     expect(style.cursor).toBe("pointer");
     await action.focus();
     expect(await action.evaluate((el) => parseFloat(getComputedStyle(el).outlineWidth))).toBeGreaterThanOrEqual(3);
@@ -163,7 +164,7 @@ test("free call layout: facts beside the introduction on wide screens, after it 
   expect(steps.y).toBeGreaterThanOrEqual(lead.y + lead.height);
   const [first, second] = await page.locator(".do-steps > li").all();
   expect((await second.boundingBox())!.x).toBeGreaterThan((await first.boundingBox())!.x);
-  const [copy, action] = [await box(".call-book .book-inner > div:first-child"), await box(".call-book .book-link")];
+  const [copy, action] = [await box(".call-book .closing-inner > div:first-child"), await box(".call-book .book-link")];
   expect(action.x).toBeGreaterThanOrEqual(copy.x + copy.width);
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });

@@ -3,8 +3,8 @@
 interface Props { heading: string; links: { text: string; href: string }[] }
 const { heading, links } = Astro.props;
 ---
-<section class="cs-return dark" aria-labelledby="next-title">
-  <div class="wrap cs-return-inner">
+<section class="cs-return closing-band dark" aria-labelledby="next-title">
+  <div class="wrap closing-inner">
     <h2 id="next-title">{heading}</h2>
     <div>
       <slot />

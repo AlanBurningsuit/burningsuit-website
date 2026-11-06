@@ -1,9 +1,8 @@
-/* Privacy notice: the /privacy/enquiries/ service layout (service.css) plus the visit-counting switch, which uses the enquiry form's Send button (enquiry.css). */
+/* Privacy notice: the /privacy/enquiries/ service layout (service.css) plus the visit-counting switch, a shared .button (app.css). */
 /* The switch and its fallback line stack in one grid cell, so swapping them when the script is ready moves nothing else on the page. */
 .optout { display: grid; margin-top: 22px; }
 .optout > * { grid-area: 1 / 1; align-self: center; }
 .optout-control { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
-.optout-control .send { line-height: var(--lh-snug); text-align: center; }
 .optout-status { margin: 0; color: var(--text-dim); }
 .optout-nojs { align-self: start; } /* Read straight after the paragraph above; the switch's reserved space falls below it. */
 /* Fallback first: the switch stays hidden (and out of the tab order and accessibility tree) until the opt-out script marks it ready. */

@@ -21,7 +21,7 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
       </header>
       <slot />
     </article>}
-    {study.presentation === "chapters" && <div class="case-invite dark"><div class="wrap">
+    {study.presentation === "chapters" && <div class="case-invite closing-band dark"><div class="wrap closing-inner">
       <p>{invite[0]}<a href={study.footerLink.href}>{study.footerLink.text}</a>{invite[1]}</p>
     </div></div>}
 
@@ -34,8 +34,8 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
         <dl class="study-facts">{study.facts.map(({ label, value }) => <div><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
       </div>
       <div class="study-story wrap"><slot /></div>
-      <section class="study-next dark" aria-labelledby="next-title">
-        <div class="wrap study-next-inner">
+      <section class="study-next closing-band dark" aria-labelledby="next-title">
+        <div class="wrap closing-inner">
           <h2 id="next-title">{study.next.heading}</h2>
           <div class="study-next-copy">
             <p>{study.next.body}</p>

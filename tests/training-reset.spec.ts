@@ -73,7 +73,8 @@ for (const route of ["/", course]) {
 
 test("the 101 follows the visitor questions, keeps booking closed and open setup facts visible", async ({ page }) => {
   await page.goto(course);
-  await expect(page.locator('nav a[aria-current]')).toHaveText("Training");
+  await expect(page.locator('nav a[aria-current]:not(.nav-menu a)')).toHaveText("Training");
+  await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("Power BI with AI agents 101");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll do", "How you'll check its answers", "What you'll need", "Book a seat"]);
   await expect(page.locator(".do-steps > li")).toHaveCount(4);
   await expect(page.locator(".do-steps h3")).toHaveText(["Get your bearings.", "Understand a report you didn't build.", "Document its calculations.", "Build one new calculation and check it."]);
@@ -365,5 +366,23 @@ test("every page but home and contact opens on the title band, and its body open
     const cream = await page.evaluate(() => { const probe = document.createElement("span"); probe.style.color = "var(--fg)"; document.body.append(probe); const c = getComputedStyle(probe).color; probe.remove(); return c; });
     const stray = await page.locator("main :is(h2, h3, p, li, dt, dd, a)").evaluateAll((els, c) => els.filter((el) => !el.closest(".dark") && getComputedStyle(el).color === c && (el as HTMLElement).offsetParent).map((el) => el.textContent!.trim().slice(0, 40)), cream);
     expect(stray, route).toEqual([]);
+  }
+});
+
+test("one heading scale across the site: a title size, a section size, a note size, an item size and a card size", async ({ page }) => {
+  const routes = ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/contact/", "/privacy/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/"];
+  for (const width of [1366, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    const sizes: Record<string, Set<number>> = { h1: new Set(), h2: new Set(), h3: new Set() };
+    for (const route of routes) {
+      await page.goto(route);
+      const found = await page.locator("main :is(h1, h2, h3)").evaluateAll((els) => els.filter((el) => (el as HTMLElement).offsetParent && !el.closest(".home-title")).map((el) => [el.tagName.toLowerCase(), Math.round(parseFloat(getComputedStyle(el).fontSize) * 10) / 10] as const));
+      for (const [tag, size] of found) sizes[tag].add(size);
+    }
+    // Home's title is deliberately larger; every other title shares one size.
+    expect([...sizes.h1], `h1 at ${width}`).toHaveLength(1);
+    // Section headings plus the note heading; item headings plus the card title.
+    expect(sizes.h2.size, `h2 sizes at ${width}: ${[...sizes.h2]}`).toBeLessThanOrEqual(2);
+    expect(sizes.h3.size, `h3 sizes at ${width}: ${[...sizes.h3]}`).toBeLessThanOrEqual(2);
   }
 });

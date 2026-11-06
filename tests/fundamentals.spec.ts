@@ -35,7 +35,8 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   for (const directive of ["default-src 'none'", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator("form")).toHaveCount(1);
-  await expect(page.locator("nav a[aria-current]")).toHaveText("Training");
+  await expect(page.locator("nav a[aria-current]:not(.nav-menu a)")).toHaveText("Training");
+  await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("Power BI fundamentals");
   // Private only: price on request everywhere, no public run, booking or payment route.
   const body = await page.locator("body").innerText();
   expect(body).not.toMatch(/[£$€]\s*\d|\d\s*(GBP|ex VAT)/i);

@@ -27,7 +27,7 @@ import "../../styles/privacy.css";
       {/* The switch and the fallback line share one space. The fallback shows until the opt-out script below has wired the button, then the switch replaces it (privacy.css), so a page without scripting, or whose script failed, never shows a dead button. The two labels and three status lines stay here as data attributes. */}
       <div class="optout" data-optout-root>
         <div class="optout-control">
-          <button class="send" type="button" data-optout data-label-counted="Stop counting my visits" data-label-excluded="Count my visits again">Stop counting my visits</button>
+          <button class="button" type="button" data-optout data-label-counted="Stop counting my visits" data-label-excluded="Count my visits again">Stop counting my visits</button>
           <p class="optout-status" role="status" data-optout-status data-counted="Your visits from this browser can be counted." data-excluded="Your visits from this browser aren't being counted." data-failed="This browser didn't let the site save the setting, so your visits may still be counted.">Your visits from this browser can be counted.</p>
         </div>
         <p class="optout-nojs">With JavaScript off, the analytics don't run, so your visits aren't counted.</p>
