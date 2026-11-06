@@ -3,7 +3,7 @@ import { bespokeRoutes, pages, reserved404Routes } from "../src/config/compatibi
 import { formActionSource } from "../src/config/enquiry.mjs";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 
-const formRoutes = bespokeRoutes.filter((route) => !["about", "hour", "privacy", "work"].includes(route));
+const formRoutes = bespokeRoutes.filter((route) => !["about", "privacy", "work"].includes(route));
 
 for (const [path, anchors] of Object.entries(pages)) {
   if (reserved404Routes.includes(path)) continue;

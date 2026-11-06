@@ -24,7 +24,9 @@ test("carbon-footprint study stays static, private and CSP-clean, with no form, 
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", "https://burningsuit.co.uk/og-image.png");
   await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], script[type="application/ld+json"], [data-rebuild-placeholder], form, iframe, embed, object, main img`)).toHaveCount(0);
   expect(pages["work/carbon-footprint"]).toEqual([]);
-  await expect(page.locator("nav a[aria-current]")).toHaveCount(0);
+  // A study marks Work as its section, not as the current page.
+  await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Work");
+  await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -60,8 +62,8 @@ test("carbon-footprint study reads in the approved words and order", async ({ pa
 test("carbon-footprint study returns to consultancy and the free call as real links", async ({ page }) => {
   await page.goto(route);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => [link.textContent, link.getAttribute("href")]));
-  expect(mainLinks).toEqual([["More about Power BI consultancy", "/power-bi/"], ["Book a free 30-minute call", "/hour/"], ["a free 30-minute call", "/hour/"]]);
-  await expect(page.locator(".case-invite a")).toHaveAttribute("href", "/hour/");
+  expect(mainLinks).toEqual([["More about Power BI consultancy", "/power-bi/"], ["Book a free 30-minute call", "/call/"], ["a free 30-minute call", "/call/"]]);
+  await expect(page.locator(".case-invite a")).toHaveAttribute("href", "/call/");
   for (const link of await page.locator("main a").all()) await expect(link).not.toHaveAttribute("target", /./);
 });
 
@@ -94,7 +96,7 @@ test("carbon-footprint study works without JavaScript and from the keyboard", as
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
   }
-  expect(reached).toEqual(["/power-bi/", "/hour/", "/hour/"]);
+  expect(reached).toEqual(["/power-bi/", "/call/", "/call/"]);
   for (const [name, title] of [["More about Power BI consultancy", "Power BI consultancy that leaves your team independent"], ["Book a free 30-minute call", "A free 30-minute call about your Power BI"], ["a free 30-minute call", "A free 30-minute call about your Power BI"]]) {
     await page.goto(route);
     await page.getByRole("link", { name, exact: true }).click();

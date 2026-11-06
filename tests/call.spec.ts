@@ -1,7 +1,7 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
-import { pages } from "../src/config/compatibility.mjs";
+import { pages, redirects } from "../src/config/compatibility.mjs";
 
-const route = "/hour/";
+const route = "/call/";
 const booking = "https://cal.com/alan-burningsuit/hour";
 const label = "Book a free 30-minute call";
 
@@ -25,8 +25,9 @@ test("free call page stays static, private and CSP-clean, with no form, embed or
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Book a free 30-minute call with me, Alan Harman-Box, about your own Power BI. Talk through what's happening and whether I can help.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
   await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder], form, iframe, embed, object, main img`)).toHaveCount(0);
-  // No reserved anchors for this route.
-  expect(pages.hour).toEqual([]);
+  // The old /hour/ address, live on the current site, now redirects here.
+  expect(redirects["/hour"]).toBe("/call/");
+  expect(pages).not.toHaveProperty("hour");
   // Consultancy's page: the nav marks Consultancy as the section, not as this page.
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Consultancy");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
@@ -154,7 +155,11 @@ test("free call layout: facts beside the introduction on wide screens, after it 
   expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
   expect(facts.y).toBeLessThan(intro.y + intro.height);
   // The steps run left to right under their heading, as on Consultancy; the booking copy sits beside its action.
-  const [lead, steps] = [await box(".do-lead"), await box(".do-steps")];
+  const [lead, steps] = [await box("#happens-title"), await box(".do-steps")];
+  // "What happens" sits under the introduction, beside the facts card.
+  const happens = await box(".call-steps");
+  expect(happens.y).toBeGreaterThanOrEqual(intro.y + intro.height);
+  expect(happens.x + happens.width).toBeLessThanOrEqual(facts.x);
   expect(steps.y).toBeGreaterThanOrEqual(lead.y + lead.height);
   const [first, second] = await page.locator(".do-steps > li").all();
   expect((await second.boundingBox())!.x).toBeGreaterThan((await first.boundingBox())!.x);

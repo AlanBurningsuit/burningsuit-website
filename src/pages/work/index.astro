@@ -3,10 +3,11 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/work.css";
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
+// Group lines reuse approved wording: the individual coaching study (courses), Training's coaching entry and the homepage's consultancy introduction.
 const groups = [
-  { category: "courses", heading: "Courses", href: "/training/" },
-  { category: "coaching", heading: "Power BI coaching", href: "/training/#coaching" },
-  { category: "consultancy", heading: "Consultancy", href: "/power-bi/" },
+  { category: "courses", heading: "Courses", href: "/training/", lead: "A course teaches a group from prepared teaching files." },
+  { category: "coaching", heading: "Power BI coaching", href: "/training/#coaching", lead: "For 1 to 3 people from the same organisation, learning Power BI on the work they actually do." },
+  { category: "consultancy", heading: "Consultancy", href: "/power-bi/", lead: "I work alongside your team on your own reports and models, so they understand what we build." },
 ];
 const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => typeof heading === "string" ? heading : [heading.before, heading.em, heading.after].filter(Boolean).join("");
 const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() + descriptor.slice(1);
@@ -15,11 +16,16 @@ const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() 
   <div class="dark stage">
   <div class="title-band wrap">
     <h1>Work</h1>
+    <p class="standfirst">What the courses, coaching and consultancy look like in practice.</p>
   </div>
   </div>
   <div id="cases" class="work-index wrap">
+    <p class="work-intro">Every example here is anonymous.</p>
     {groups.map((group) => <section class="work-group" aria-labelledby={`${group.category}-title`}>
-      <h2 id={`${group.category}-title`}><a href={group.href}>{group.heading}</a></h2>
+      <div class="work-group-lead">
+        <h2 id={`${group.category}-title`}><a href={group.href}>{group.heading}</a></h2>
+        <p>{group.lead}</p>
+      </div>
       <ul class="work-entries" role="list">
         {studies.filter(({ data }) => data.category === group.category).map(({ id, data }) => <li>
           <h3><a href={`/work/${id}/`}>{headingText(data.heading)}</a></h3>
@@ -28,4 +34,10 @@ const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() 
       </ul>
     </section>)}
   </div>
+  <section class="work-next dark" aria-labelledby="work-next-title">
+    <div class="wrap work-next-inner">
+      <h2 id="work-next-title">Not sure which fits?</h2>
+      <a class="text-link" href="/contact/">Tell me what you use Power BI for now, and I'll suggest where to start.</a>
+    </div>
+  </section>
 </BaseLayout>

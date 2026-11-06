@@ -88,7 +88,7 @@ test("Individual coaching study returns to Training's coaching entry and the Con
     ["Tell me who it's for and what they're building", "/contact/"],
   ]) await expect(page.locator("main").getByRole("link", { name, exact: true })).toHaveAttribute("href", href);
   expect(await page.locator("main a").evaluateAll((all) => all.map((link) => link.getAttribute("href")))).toEqual(links);
-  expect(await page.locator("main a").evaluateAll((all) => all.some((link) => /\/hour\/|#contact$/.test(link.getAttribute("href") ?? "")))).toBe(false);
+  expect(await page.locator("main a").evaluateAll((all) => all.some((link) => /\/(hour|call)\/|#contact$/.test(link.getAttribute("href") ?? "")))).toBe(false);
 });
 
 test("Individual coaching study works without JavaScript and from the keyboard", async ({ browser, baseURL }) => {

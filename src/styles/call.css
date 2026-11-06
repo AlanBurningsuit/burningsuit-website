@@ -1,0 +1,43 @@
+/* Free call page: reuses the consultancy opening and numbered spine (course.css, consultancy.css); only the differences live here. */
+
+/* The booking action: the 101's .book-button as an enabled link, amber with the carved edge and hard shadow of the enquiry form's Send.
+   Scoped to anchors on this page, so the 101's disabled button keeps its own state. */
+a.book-link {
+  display: inline-block;
+  max-width: 100%;
+  line-height: var(--lh-snug);
+  text-align: center;
+  text-decoration: none;
+  color: var(--deep);
+  background: var(--amber);
+  box-shadow: 4px 4px 0 var(--deep);
+}
+a.book-link:hover { background: var(--fg); }
+a.book-link:focus-visible { outline-offset: 4px; }
+.course-run .book-link { margin-top: 24px; }
+
+/* The opening holds everything before the booking band: the introduction, then "What happens" under it, with the
+   facts card beside both on wide screens; on narrow ones the three stack in source order. */
+.call-opening { padding-bottom: clamp(36px, 4vw, 52px); }
+@media (min-width: 901px) {
+  .call-opening { grid-template-rows: auto 1fr; }
+  .call-opening .course-run { grid-column: 2; grid-row: 1 / span 2; }
+  .call-steps { grid-column: 1; margin-top: 36px; }
+}
+.call-steps h2 { margin-bottom: 22px; }
+/* The two steps side by side, each opening on the warm rule, as on Consultancy's "How the work runs". */
+.call-steps .do-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+.call-steps .do-steps li { border-left: 0; border-top: var(--bw-spine) solid var(--accent); padding: 36px 0 0; }
+.call-steps .do-steps li::before { left: 0; top: 12px; }
+
+/* Book your call: copy beside the action and its alternatives. */
+.call-book .book-facts + .book-facts { margin-top: 1rem; }
+.call-book .book-facts a, .call-alt a { font-weight: 600; }
+.call-book .book-link { margin-top: 8px; }
+.call-alt { margin-top: 22px; font-size: 1rem; }
+.call-alt + .call-alt { margin-top: 10px; }
+
+.call-book .book-inner { padding-block: 44px 52px; }
+@media (max-width: 680px) {
+  .call-steps .do-steps { grid-template-columns: minmax(0, 1fr); row-gap: 28px; }
+}

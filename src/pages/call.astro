@@ -1,10 +1,10 @@
 ---
-// Wording: ops site/hour-page-copy.md. Bracketed items there are layout notes, not copy.
+// Wording: ops site/hour-page-copy.md (the page moved from /hour/ to /call/ once the call became 30 minutes). Bracketed items there are layout notes, not copy.
 // No reserved anchors (see src/config/compatibility.mjs). No form, embed or script: plain links to booking, Contact, About and consultancy.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/course.css";
 import "../styles/consultancy.css";
-import "../styles/hour.css";
+import "../styles/call.css";
 
 const booking = "https://cal.com/alan-burningsuit/hour";
 ---
@@ -19,7 +19,7 @@ const booking = "https://cal.com/alan-burningsuit/hour";
     <p class="standfirst">Got a problem with your own Power BI, and not sure whether I can help?</p>
   </div>
   </div>
-  <div class="course-opening wrap">
+  <div class="course-opening call-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p>I'm Alan Harman-Box. Tell me about it on a call. Maybe your reporting all rests on one person, or two reports give different answers to the same question, or it's something you can't quite put a name to yet. You don't need a polished brief to book.</p>
     </section>
@@ -33,19 +33,15 @@ const booking = "https://cal.com/alan-burningsuit/hour";
       </ul>
       <a class="book-button book-link" href={booking}>Book a free 30-minute call</a>
     </aside>
-  </div>
 
-  <section class="work-runs call-steps" aria-labelledby="happens-title">
-    <div class="wrap do-inner">
-      <div class="do-lead">
-        <h2 id="happens-title">What happens</h2>
-      </div>
+    <section class="call-steps" aria-labelledby="happens-title">
+      <h2 id="happens-title">What happens</h2>
       <ol class="do-steps" role="list">
         <li><h3>On the call.</h3><p>You tell me what's going on, and I ask questions to understand it better. We stay on what matters most to you. Sometimes that's enough: I can point you to what to do next, or tell you if it isn't something I can help with.</p></li>
         <li><h3>Afterwards.</h3><p>If I need more time to think about it, I'll follow up after the call. If there's work I can help with, I'll quote for it separately, usually as a fixed price.</p></li>
       </ol>
-    </div>
-  </section>
+    </section>
+  </div>
 
   <section class="course-book call-book dark" aria-labelledby="book-title">
     <div class="wrap book-inner">

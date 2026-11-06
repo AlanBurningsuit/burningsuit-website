@@ -1,13 +1,18 @@
+/* Work: the title band and its line, then one ruled group per offer (heading and the offer in a line beside its studies), closing on a dark band back to Contact. */
 .work-index { padding-block: clamp(28px, 4vw, 48px) 72px; }
-.work-group { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: var(--column-gap); align-items: start; padding-block: 24px 52px; border-top: var(--bw-hair) solid var(--rule); }
+.work-intro { margin: 0 0 clamp(28px, 3vw, 40px); font: 400 1.05rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
+.work-group { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: var(--column-gap); align-items: start; padding-block: 28px 52px; border-top: var(--bw-spine) solid var(--text); }
+.work-group-lead p { margin-top: 12px; max-width: 34ch; color: var(--text-dim); }
 .work-group h2 { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
 .work-group h2 a { color: var(--text); }
 .work-group h2 a:hover { color: var(--link); }
 .work-entries { list-style: none; margin: 0; padding: 0; }
-.work-entries li + li { margin-top: 32px; padding-top: 28px; border-top: var(--bw-hair) solid var(--rule); }
+.work-entries li { padding: 22px 26px 24px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
+.work-entries li + li { margin-top: 20px; }
 .work-entries h3 { font-size: clamp(1.25rem, 1.8vw, 1.55rem); line-height: var(--lh-snug); }
-.work-entries p { color: var(--text-dim); margin-top: 12px; }
+.work-entries p { color: var(--text-dim); margin-top: 10px; font-family: var(--ff-note); }
+.work-next-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: var(--column-gap); padding-block: 48px 56px; align-items: baseline; }
+.work-next .text-link { font-size: 1.1rem; }
 @media (max-width: 900px) {
-  .work-group { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-bottom: 40px; }
+  .work-group, .work-next-inner { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-bottom: 40px; }
 }
-.work-group:first-child { border-top: 0; padding-top: 0; }

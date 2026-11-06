@@ -27,7 +27,9 @@ test("case study stays static, private and CSP-clean, with no form, embed, image
   expect(Object.keys(pages)).not.toContain("work/dax-deep-dive");
   expect(bespokeRoutes).not.toContain("work/dax-deep-dive");
   expect(Object.values(redirects)).not.toContain(route);
-  await expect(page.locator('nav a[aria-current]')).toHaveCount(0);
+  // A study marks Work as its section, not as the current page.
+  await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Work");
+  await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -85,7 +87,7 @@ test("the relevant course entry and Work index link to the study", async ({ page
   await expect(page.locator(".specialist-courses").getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
   await page.goto("/work/");
   await expect(page.locator('[aria-labelledby="courses-title"]').getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
-  for (const from of ["/", "/training/agentic-development-for-power-bi/", "/power-bi/", "/about/", "/contact/", "/hour/"]) {
+  for (const from of ["/", "/training/agentic-development-for-power-bi/", "/power-bi/", "/about/", "/contact/", "/call/"]) {
     await page.goto(from);
     await expect(page.locator(`a[href*="dax-deep-dive"]`)).toHaveCount(0);
   }

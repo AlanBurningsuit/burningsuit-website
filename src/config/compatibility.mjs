@@ -48,11 +48,12 @@ export const redirects = {
   "/our-book-introducing-charticulator-for-power-bi": "/power-bi/",
   "/power-bi-training/power-bi-fundamentals": "/training/power-bi-fundamentals/",
   "/power-bi-training/power-bi-advanced": "/training/",
-  "/about-us/our-trainers": "/about/"
+  "/about-us/our-trainers": "/about/",
+  "/hour": "/call/"
 };
 
 // Manifest routes that have their own page in src/pages; the catch-all placeholder skips them, and each keeps its reserved anchors (check:seo).
-export const bespokeRoutes = ["", "power-bi", "training", "about", "contact", "hour", "privacy", "work"];
+export const bespokeRoutes = ["", "power-bi", "training", "about", "contact", "privacy", "work"];
 
 // Reserved for possible future entries; no document or redirect is generated.
 export const reserved404Routes = ["work/law-firm", "work/museum"];
@@ -64,7 +65,6 @@ export const pages = {
     "origin",
     "dog"
   ],
-  "hour": [],
   "contact": [],
   "privacy": [
     "who",

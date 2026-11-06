@@ -24,7 +24,7 @@ for (const route of ["/", course]) {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
     await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder]`)).toHaveCount(0);
     await expect(page.locator("form")).toHaveCount(route === "/" ? 1 : 0);
-    await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "About", "Contact"]);
+    await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Work", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");
     expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
     expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
@@ -249,7 +249,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.getByRole("link", { name: "Compare all courses" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: /^Tell me what you use Power BI for now/ })).toHaveAttribute("href", "#contact");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Find your starting point", "Understanding that lasts", "Help with your own reporting", "Tell me what you're looking for."]);
-  await expect(page.getByRole("link", { name: "Book a free 30-minute call" })).toHaveAttribute("href", "/hour/");
+  await expect(page.getByRole("link", { name: "Book a free 30-minute call" })).toHaveAttribute("href", "/call/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   await expect(page.locator(".proof, .exercise, blockquote")).toHaveCount(0);
   for (const id of ["training", "teaching", "consultancy", "contact"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
@@ -336,7 +336,7 @@ for (const route of pendingRoutes) {
 
 // Every standing page's title carries one emphasised word, in the dark band's amber.
 test("each standing page's title has one amber emphasis", async ({ page }) => {
-  for (const route of ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/hour/"]) {
+  for (const route of ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/"]) {
     await page.goto(route);
     const em = page.locator("h1 .em");
     await expect(em).toHaveCount(1);
@@ -346,7 +346,7 @@ test("each standing page's title has one amber emphasis", async ({ page }) => {
 });
 
 test("every page but home and contact opens on the title band, and its body opens the daylight sheet", async ({ page }) => {
-  const routes = ["/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/hour/", "/privacy/", "/privacy/enquiries/", "/enquiry-received/", "/enquiry-error/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
+  const routes = ["/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/privacy/", "/privacy/enquiries/", "/enquiry-received/", "/enquiry-error/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
   await page.setViewportSize({ width: 1366, height: 900 });
   let edge: number | undefined;
   for (const route of routes) {

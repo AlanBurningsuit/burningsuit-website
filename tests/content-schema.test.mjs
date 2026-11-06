@@ -33,7 +33,7 @@ test('headings and strict fields fail closed for every study composition', () =>
 
 test('the carbon invitation link occurs exactly once and OG images use the supported path', () => {
   const study = studies.find((study) => study.presentation === 'chapters');
-  assert.equal(workSchema.safeParse({ ...study, footerLink: { text: 'absent', href: '/hour/' } }).success, false);
+  assert.equal(workSchema.safeParse({ ...study, footerLink: { text: 'absent', href: '/call/' } }).success, false);
   assert.equal(workSchema.safeParse({ ...study, ogImage: 'https://example.com/image.png' }).success, false);
   assert.equal(workSchema.safeParse({ ...study, ogImage: '/social/linkedin-work-example.png' }).success, true);
 });

@@ -8,7 +8,7 @@ module.exports = [
   "/about/",
   "/contact/",
   "/training/how-i-train/",
-  "/hour/",
+  "/call/",
   "/privacy/",
   "/work/carbon-footprint/",
   "/work/contact-centre/",

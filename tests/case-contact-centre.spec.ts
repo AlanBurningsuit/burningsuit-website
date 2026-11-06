@@ -23,7 +23,9 @@ test("The contact-centre study stays static, private and CSP-clean, with no form
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
   await expect(page.locator(`${otherScripts}, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form, input, button, main img, main picture, main svg, main figure, main blockquote`)).toHaveCount(0);
   // The study sits outside the navigation's sections.
-  await expect(page.locator("nav a[aria-current]")).toHaveCount(0);
+  // A study marks Work as its section, not as the current page.
+  await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Work");
+  await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(pendingRoutes).not.toContain(route);
   expect(errors).toEqual([]);
@@ -65,8 +67,8 @@ test("The contact-centre study links to Training's coaching entry and the Contac
   await expect(contact).toHaveAttribute("href", "/contact/");
   await expect(contact).toHaveAccessibleDescription("Mention coaching in your message.");
   expect(await main.locator("a").evaluateAll((all) => all.map((link) => link.getAttribute("href")))).toEqual(links);
-  expect(await page.locator("a").evaluateAll((all) => all.some((link) => /\/hour\/?|#contact|calendly|mailto:/i.test(link.getAttribute("href") ?? "") && !!link.closest("main")))).toBe(false);
-  expect(await page.content()).not.toMatch(/href="\/hour\//);
+  expect(await page.locator("a").evaluateAll((all) => all.some((link) => /\/(hour|call)\/?|#contact|calendly|mailto:/i.test(link.getAttribute("href") ?? "") && !!link.closest("main")))).toBe(false);
+  expect(await page.content()).not.toMatch(/href="\/(hour|call)\//);
   // Training is a built page; its coaching anchor arrives separately, so only the page itself is required here.
   expect((await page.request.get("/training/"))?.status()).toBe(200);
 });

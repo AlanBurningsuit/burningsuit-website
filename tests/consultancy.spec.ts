@@ -3,7 +3,7 @@ import { pages } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
 const route = "/power-bi/";
-const call = "/hour/";
+const call = "/call/";
 
 test("consultancy page stays static, private and CSP-clean", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -99,7 +99,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator("#ongoing .lead-list > li")).toHaveText(["Retained support for your team.", "Strategic advice as your reporting changes.", "Regular office hours, such as a monthly call in a fixed window, where your team brings whatever has come up."]);
   await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to on the free call is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.");
 
-  // The AI band and the free hour are raised off the daylight body; the sequence and lists sit on it.
+  // The AI band and the free call are raised off the daylight body; the sequence and lists sit on it.
   const background = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
   const ground = await background("main");
   expect(await background("#ai")).not.toBe(ground);
