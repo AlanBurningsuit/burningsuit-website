@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import "../styles/case-study.css";
+interface Props { essay: CollectionEntry<"writing">["data"] }
+const { essay } = Astro.props;
+const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(date);
+---
+<BaseLayout title={essay.title} description={essay.description} placeholder={false}>
+  <article class="mdx-essay">
+    <header class="mdx-opening wrap">
+      <p class="eyebrow">{essay.kicker}</p>
+      <h1>{essay.heading.before}<em class="em">{essay.heading.em}</em>{essay.heading.after}</h1>
+      <p class="mdx-lead">{essay.lead}</p>
+      {essay.givenAt?.map(({ event, date }) => <p>Given at {event}, <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>.</p>)}
+    </header>
+    <slot />
+  </article>
+  <div class="mdx-invite"><div class="wrap"><p>{essay.footerInvitation}</p></div></div>
+</BaseLayout>

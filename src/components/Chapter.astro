@@ -1,0 +1,9 @@
+---
+// One case-study beat: its kicker is the section heading, beside the prose on wide screens.
+interface Props { id: string; kicker: string }
+const { id, kicker } = Astro.props;
+---
+<section class="case-chapter wrap" aria-labelledby={id}>
+  <h2 id={id}>{kicker}</h2>
+  <div class="case-prose"><slot /></div>
+</section>

@@ -3,7 +3,7 @@ module.exports = {
   ci: {
     collect: {
       staticDistDir: "./dist",
-      url: ["http://localhost/index.html", "http://localhost/training/agentic-development-for-power-bi/", "http://localhost/training/power-bi-fundamentals/", "http://localhost/power-bi/", "http://localhost/training/", "http://localhost/about/", "http://localhost/contact/", "http://localhost/training/how-i-train/", "http://localhost/hour/", "http://localhost/privacy/"],
+      url: require("./scripts/lighthouse-routes.cjs").map((path) => `http://localhost${path}`),
       numberOfRuns: 3,
       settings: { formFactor: "mobile" },
     },

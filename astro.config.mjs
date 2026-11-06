@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
+import mdx from "@astrojs/mdx";
 import { ANALYTICS } from "./src/config/analytics.mjs";
 import { redirects } from "./src/config/compatibility.mjs";
 import { formActionSource } from "./src/config/enquiry.mjs";
@@ -7,6 +8,8 @@ import { formActionSource } from "./src/config/enquiry.mjs";
 export default defineConfig({
   site: "https://burningsuit.co.uk",
   output: "static",
+  // Preserve approved punctuation; unhighlighted code needs no inline CSP styles.
+  integrations: [mdx({ smartypants: false, syntaxHighlight: false })],
   trailingSlash: "ignore",
   redirects,
   build: { inlineStylesheets: "never" },

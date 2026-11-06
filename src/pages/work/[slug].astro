@@ -1,0 +1,14 @@
+---
+import { getCollection, render } from "astro:content";
+import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+import { components } from "../../components/mdx-components";
+
+export async function getStaticPaths() {
+  return (await getCollection("work")).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<CaseStudyLayout entry={entry}>
+  <Content components={components} />
+</CaseStudyLayout>
