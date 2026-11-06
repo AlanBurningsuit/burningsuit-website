@@ -86,7 +86,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
     "Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free 30-minute call.",
   ]);
   await expect(page.locator("#situations .split-lead p")).toHaveText("Ideally, the work is done with you, not for you.");
-  await expect(page.locator(".courses-line")).toHaveText("Just need your team to understand Power BI? That's what the courses are for.");
+  await expect(page.locator(".courses-line")).toHaveText("Just need your team to understand Power BI? That's what the courses are for. Want 1 to 3 people to learn on your own work? That's what Power BI coaching is for.");
   await expect(page.locator(".start-ask")).toHaveText("Tell me what's happening with your Power BI, and we'll work out what would help.");
   await expect(page.locator("#situations .lead-list > li")).toHaveText(["Thinking through your reporting as a whole. We look at what it's for, what it takes to run it and which skills your team needs. Then we agree what to do first.", "Owning the Power BI you've already got. It all rests on one person, or your experienced Power BI person has already left, or the reports have limped on for years and nobody is quite sure how they work. Or two reports disagree, and you can't tell which to trust. I go through the reports and models with you, find where the risks are and help your team take charge of the reporting.", "Building or moving something, together. That might be a new model or report your team can't build yet, or moving your reporting into Power BI. Either way, your team knows how it works before they rely on it. If you're moving to Microsoft Fabric (the wider data platform that Power BI is part of), I coach your team through its own migration. I don't do the Fabric migration work myself.", "Getting started with AI agents. I coach your team to use them on the Power BI you've got. More on that below"]);
   await expect(page.locator(".build-line")).toHaveText("If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.");
@@ -124,9 +124,10 @@ test("consultancy links go to the free call page, the AI band, the courses and A
   await expect(page.getByRole("link", { name: "The free call" })).toHaveAttribute("href", call);
   await expect(page.getByRole("link", { name: "More on that below", exact: true })).toHaveAttribute("href", "#ai");
   await expect(page.getByRole("link", { name: "That's what the courses are for." })).toHaveAttribute("href", "/training/");
+  await expect(page.getByRole("link", { name: "That's what Power BI coaching is for." })).toHaveAttribute("href", "/training/#coaching");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([call, "#ai", "/training/", call, call, "/about/", call, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
+  expect(mainLinks).toEqual([call, "#ai", "/training/", "/training/#coaching", call, call, "/about/", call, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
 });
 
 test("consultancy enquiry form is labelled, plain and has nothing preselected", async ({ page }) => {
@@ -161,16 +162,20 @@ test("consultancy page works without JavaScript, from keyboard and from a legacy
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 8; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
   }
-  expect(reached).toEqual([call, "#ai", "/training/", call, call, "/about/", call]);
+  expect(reached).toEqual([call, "#ai", "/training/", "/training/#coaching", call, call, "/about/", call]);
   // The step heading link shows a visible focus ring.
   await page.locator(".do-steps h3 a").focus();
   expect(await page.locator(".do-steps h3 a").evaluate((el) => parseFloat(getComputedStyle(el).outlineWidth))).toBeGreaterThanOrEqual(2);
   await page.getByRole("link", { name: "More on that below", exact: true }).click();
   await expect(page).toHaveURL(baseURL! + route + "#ai");
+  // The coaching pointer lands on the Training page's coaching section.
+  await page.getByRole("link", { name: "That's what Power BI coaching is for." }).click();
+  await expect(page).toHaveURL(baseURL! + "/training/#coaching");
+  await expect(page.locator("#coaching-title")).toBeInViewport();
   await context.close();
 });
 

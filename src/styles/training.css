@@ -39,6 +39,10 @@
 .specialist-courses .not-sure { margin-top: 30px; padding-top: 20px; border-top: var(--bw-hair) solid var(--line); }
 .not-sure a { font-weight: 600; }
 
+/* Coaching: a quieter section after the specialists, reusing their heading and ruled-row pattern; the specialists' bottom padding already separates the two. */
+.coaching { padding-block: 0 80px; }
+.coaching .text-link { font-size: .96rem; }
+
 /* Who's teaching: heading beside a quietly ruled note (amber spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */
 .training-teacher { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 24px 80px; align-items: start; }
 .teacher-note { border-left: var(--bw-spine) solid var(--line); padding-left: 22px; }
@@ -51,6 +55,7 @@
   .start-list { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
   .starting-points { padding-block: 40px 48px; }
   .specialist-courses { padding-block: 48px 60px; }
+  .coaching { padding-block: 0 60px; }
   .training-teacher { grid-template-columns: minmax(0, 1fr); row-gap: 22px; padding-block: 16px 60px; }
 }
 @media (max-width: 680px) {
