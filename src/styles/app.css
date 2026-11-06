@@ -39,7 +39,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 14px; }
 .links a { font-weight: 600; padding-block: 6px; }
 .study-evidence { margin-top: 28px; padding-top: 18px; border-top: var(--bw-hair) solid var(--rule); }
-.study-evidence-label { color: var(--text-dim); font-size: .9rem; font-weight: 600; }
+.study-evidence-label { color: var(--text-dim); font: 400 .92rem / var(--lh-relaxed) var(--ff-note); }
 .study-links { list-style: none; margin: 12px 0 0; padding: 0; font-size: .98rem; }
 .study-links li + li { margin-top: 10px; }
 .study-links a { font-weight: 600; }
@@ -75,10 +75,10 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
    opening (.stage), and its rounded bottom edge rests on the closing band that follows daylight, each casting a
    soft shadow onto the dark. A stage followed by a sage band sets --sheet; a closing band after one, --sheet-end. */
 .stage { position: relative; padding-bottom: var(--sheet-r); overflow: clip; view-timeline: --stage block; }
-:is(section, div):not(.dark) + .dark { position: relative; padding-top: var(--sheet-r); }
-.stage::after, :is(section, div):not(.dark) + .dark::before { content: ""; position: absolute; z-index: 1; inset-inline: 0; height: var(--sheet-r); pointer-events: none; }
+:is(section, div, article):not(.dark) + .dark { position: relative; padding-top: var(--sheet-r); }
+.stage::after, :is(section, div, article):not(.dark) + .dark::before { content: ""; position: absolute; z-index: 1; inset-inline: 0; height: var(--sheet-r); pointer-events: none; }
 .stage::after { bottom: 0; background: var(--sheet, var(--mist)); border-radius: var(--sheet-r) var(--sheet-r) 0 0; box-shadow: 0 -18px 36px -18px var(--sheet-shadow); }
-:is(section, div):not(.dark) + .dark::before { top: 0; background: var(--sheet-end, var(--mist)); border-radius: 0 0 var(--sheet-r) var(--sheet-r); box-shadow: 0 18px 36px -18px var(--sheet-shadow); }
+:is(section, div, article):not(.dark) + .dark::before { top: 0; background: var(--sheet-end, var(--mist)); border-radius: 0 0 var(--sheet-r) var(--sheet-r); box-shadow: 0 18px 36px -18px var(--sheet-shadow); }
 .raised-band + .dark { --sheet-end: var(--sage); }
 /* A daylight card answers the pointer and the keyboard: its edge warms and its shadow deepens (it also lifts, with motion). */
 .course:is(:hover, :focus-within) { box-shadow: var(--lift-raised); }

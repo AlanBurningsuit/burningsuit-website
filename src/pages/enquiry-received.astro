@@ -3,9 +3,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/service.css";
 ---
 <BaseLayout title="Message sent | burningsuit" description="Your enquiry has been sent to Alan." placeholder={false}>
+  <div class="dark stage">
+  <div class="title-band wrap">
+    <h1 id="result-title">Your message has been sent</h1>
+  </div>
+  </div>
   <section class="wrap service-page" aria-labelledby="result-title">
     <div class="service-copy">
-      <h1 id="result-title">Your message has been sent</h1>
       <p>Thanks for your enquiry. I'll reply by email.</p>
       <p class="links"><a href="/">Back to the homepage</a></p>
     </div>

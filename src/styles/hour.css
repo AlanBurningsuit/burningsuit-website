@@ -30,15 +30,3 @@ a.book-link:focus-visible { outline-offset: 4px; }
 @media (max-width: 900px) {
   .call-steps .do-inner { padding-block: 8px 44px; }
 }
-
-/* Layout stability: reserve the lines Mona Sans needs only below its measured wrap points.
-   The narrower fallback can otherwise remove a line until the web font arrives. */
-@media (max-width: 423px) {
-  .course-intro h1 { min-height: 3lh; }
-}
-@media (max-width: 412px) {
-  .run-facts li:nth-child(3) { min-height: calc(2lh + 26px); } /* two lines plus the 13px block padding */
-}
-@media (max-width: 352px) {
-  .course-intro h1 { min-height: 4lh; }
-}

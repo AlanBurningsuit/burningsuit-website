@@ -12,25 +12,29 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
 <BaseLayout title={study.title} description={study.description} ogImage={study.ogImage} placeholder={false}>
   <div class={`case-${study.presentation}`}>
     {study.presentation === "chapters" && <article class="case-study">
-      <header class="case-opening wrap">
+      <div class="dark stage"><div class="title-band wrap">
         <p class="eyebrow case-kicker">{study.kicker}</p>
         <h1 id="page-title">{heading.before}{heading.em && <span class="em">{heading.em}</span>}{heading.after}</h1>
+      </div></div>
+      <header class="case-opening wrap">
         <p class="case-lead">{study.lead}</p>
       </header>
       <slot />
     </article>}
-    {study.presentation === "chapters" && <div class="case-invite"><div class="wrap">
+    {study.presentation === "chapters" && <div class="case-invite dark"><div class="wrap">
       <p>{invite[0]}<a href={study.footerLink.href}>{study.footerLink.text}</a>{invite[1]}</p>
     </div></div>}
 
     {study.presentation === "story" && <>
-      <section class="study-opening wrap" aria-labelledby="page-title">
+      <div class="dark stage"><div class="title-band wrap">
         <h1 id="page-title">{heading.before}{heading.em && <span class="em">{heading.em}</span>}{heading.after}</h1>
+      </div></div>
+      <div class="study-opening wrap">
         <p class="study-lead">{study.lead}</p>
         <dl class="study-facts">{study.facts.map(({ label, value }) => <div><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
-      </section>
+      </div>
       <div class="study-story wrap"><slot /></div>
-      <section class="study-next" aria-labelledby="next-title">
+      <section class="study-next dark" aria-labelledby="next-title">
         <div class="wrap study-next-inner">
           <h2 id="next-title">{study.next.heading}</h2>
           <div class="study-next-copy">
@@ -46,9 +50,11 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
     </>}
 
     {study.presentation === "coaching" && <>
-      <section class="cs-opening wrap" aria-labelledby="page-title">
-        <p class="cs-descriptor">{study.descriptor}</p>
+      <div class="dark stage"><div class="title-band wrap">
+        <p class="eyebrow cs-descriptor">{study.descriptor}</p>
         <h1 id="page-title">{heading.before}{heading.em && <span class="em">{heading.em}</span>}{heading.after}</h1>
+      </div></div>
+      <div class="cs-opening wrap">
         <div class="cs-opening-grid">
           <p class="cs-lead">{study.lead}</p>
           <section class="cs-facts" aria-labelledby="facts-title">
@@ -56,15 +62,17 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
             <dl>{study.facts.rows.map((row) => <div><dt>{row.term}</dt><dd>{row.detail}</dd></div>)}</dl>
           </section>
         </div>
-      </section>
+      </div>
       <slot />
     </>}
 
     {study.presentation === "course" && <>
-      <section class="case-opening wrap" aria-labelledby="page-title">
+      <div class="dark stage"><div class="title-band wrap">
         <h1 id="page-title">{heading.before}{heading.em && <span class="em">{heading.em}</span>}{heading.after}</h1>
+      </div></div>
+      <div class="case-opening wrap">
         <ul class="facts dot-list case-facts">{study.facts.map((fact) => <li>{fact}</li>)}</ul>
-      </section>
+      </div>
       <slot />
     </>}
     {study.namePublished && study.named && <section class="mdx-named wrap">

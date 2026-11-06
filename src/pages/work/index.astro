@@ -12,7 +12,11 @@ const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => ty
 const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() + descriptor.slice(1);
 ---
 <BaseLayout title="Work | burningsuit" description="Courses · Power BI coaching · Consultancy" placeholder={false}>
-  <header class="work-opening wrap"><h1>Work</h1></header>
+  <div class="dark stage">
+  <div class="title-band wrap">
+    <h1>Work</h1>
+  </div>
+  </div>
   <div id="cases" class="work-index wrap">
     {groups.map((group) => <section class="work-group" aria-labelledby={`${group.category}-title`}>
       <h2 id={`${group.category}-title`}><a href={group.href}>{group.heading}</a></h2>

@@ -38,7 +38,7 @@ test("free call page answers the visitor's questions in order, in the approved w
   await page.goto(route);
   await expect(page.locator("h1")).toHaveText("A free 30-minute call about your Power BI");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What happens", "Book your call"]);
-  await expect(page.locator(".course-intro .standfirst")).toHaveText("Got a problem with your own Power BI, and not sure whether I can help?");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("Got a problem with your own Power BI, and not sure whether I can help?");
   // Duration and lack of charge sit at the top, beside the introduction.
   await expect(page.locator("aside.course-run")).toHaveAttribute("aria-label", "Call facts and booking");
   await expect(page.locator(".run-facts > li")).toHaveText(["30 minutes, free", "You talk to me, Alan", "Follow-up afterwards if it needs more thought", "Any further work quoted separately"]);
@@ -153,10 +153,13 @@ test("free call layout: facts beside the introduction on wide screens, after it 
   let intro = await box(".course-intro"), facts = await box(".course-run");
   expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
   expect(facts.y).toBeLessThan(intro.y + intro.height);
-  for (const [lead, body] of [[".do-lead", ".do-steps"], [".call-book .book-inner > div:first-child", ".call-book .book-link"]]) {
-    const [l, b] = [await box(lead), await box(body)];
-    expect(b.x).toBeGreaterThanOrEqual(l.x + l.width);
-  }
+  // The steps run left to right under their heading, as on Consultancy; the booking copy sits beside its action.
+  const [lead, steps] = [await box(".do-lead"), await box(".do-steps")];
+  expect(steps.y).toBeGreaterThanOrEqual(lead.y + lead.height);
+  const [first, second] = await page.locator(".do-steps > li").all();
+  expect((await second.boundingBox())!.x).toBeGreaterThan((await first.boundingBox())!.x);
+  const [copy, action] = [await box(".call-book .book-inner > div:first-child"), await box(".call-book .book-link")];
+  expect(action.x).toBeGreaterThanOrEqual(copy.x + copy.width);
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
     intro = await box(".course-intro"); facts = await box(".course-run");
@@ -198,7 +201,7 @@ test("loaded fonts leave no empty reserved line at phone wrap boundaries", async
   await page.evaluate(() => document.fonts.ready);
   for (const width of [352, 353, 359, 390, 412, 413, 414, 423, 424, 428, 430]) {
     await page.setViewportSize({ width, height: 844 });
-    for (const selector of [".course-intro h1", ".run-facts li:nth-child(3)"]) {
+    for (const selector of [".title-band h1", ".run-facts li:nth-child(3)"]) {
       const extra = await page.locator(selector).evaluate((element) => {
         const el = element as HTMLElement;
         const actual = el.getBoundingClientRect().height;

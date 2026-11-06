@@ -336,11 +336,34 @@ for (const route of pendingRoutes) {
 
 // Every standing page's title carries one emphasised word, in the dark band's amber.
 test("each standing page's title has one amber emphasis", async ({ page }) => {
-  for (const route of ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/"]) {
+  for (const route of ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/hour/"]) {
     await page.goto(route);
     const em = page.locator("h1 .em");
     await expect(em).toHaveCount(1);
     const [color, amber] = await Promise.all([em.evaluate((el) => getComputedStyle(el).color), page.evaluate(() => { const probe = document.createElement("span"); probe.style.color = "var(--amber)"; document.body.append(probe); const c = getComputedStyle(probe).color; probe.remove(); return c; })]);
     expect(color).toBe(amber);
+  }
+});
+
+test("every page but home and contact opens on the title band, and its body opens the daylight sheet", async ({ page }) => {
+  const routes = ["/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/hour/", "/privacy/", "/privacy/enquiries/", "/enquiry-received/", "/enquiry-error/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
+  await page.setViewportSize({ width: 1366, height: 900 });
+  let edge: number | undefined;
+  for (const route of routes) {
+    await page.goto(route);
+    const h1 = page.locator(".title-band h1");
+    await expect(h1, route).toHaveCount(1);
+    await expect(page.locator("h1"), route).toHaveCount(1);
+    expect(await h1.evaluate((el) => !!el.closest(".dark.stage")), route).toBe(true);
+    // The band's next sibling stage is followed by daylight, not another dark band.
+    expect(await page.locator(".stage").first().evaluate((el) => el.nextElementSibling?.classList.contains("dark") ?? true), route).toBe(false);
+    // One left edge for every title.
+    const x = Math.round((await h1.boundingBox())!.x);
+    edge ??= x;
+    expect(Math.abs(x - edge), route).toBeLessThanOrEqual(1);
+    // Nothing on the daylight sheet keeps the dark grounds' cream text.
+    const cream = await page.evaluate(() => { const probe = document.createElement("span"); probe.style.color = "var(--fg)"; document.body.append(probe); const c = getComputedStyle(probe).color; probe.remove(); return c; });
+    const stray = await page.locator("main :is(h2, h3, p, li, dt, dd, a)").evaluateAll((els, c) => els.filter((el) => !el.closest(".dark") && getComputedStyle(el).color === c && (el as HTMLElement).offsetParent).map((el) => el.textContent!.trim().slice(0, 40)), cream);
+    expect(stray, route).toEqual([]);
   }
 });

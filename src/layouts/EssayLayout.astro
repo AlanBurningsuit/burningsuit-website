@@ -10,16 +10,18 @@ const archiveContext = essay.archiveMonth ? `${months[Number(essay.archiveMonth.
 ---
 <BaseLayout title={essay.title} description={essay.description} author={essay.author} ogType="article" placeholder={false}>
   <article class="reading-article" aria-labelledby="page-title">
-    <header class="article-opening wrap">
+    <div class="dark stage"><div class="title-band wrap">
       <p class="eyebrow">{essay.kicker}</p>
       <h1 id="page-title">{essay.heading.before}<span class="em">{essay.heading.em}</span>{essay.heading.after}</h1>
-      {essay.lead && <p class="article-lead">{essay.lead}</p>}
+      {essay.lead && <p class="standfirst article-lead">{essay.lead}</p>}
+    </div></div>
+    <header class="article-opening wrap">
       <p class="article-byline">{essay.author}{archiveContext && <> · <time datetime={essay.archiveMonth}>{archiveContext}</time></>}</p>
       {essay.givenAt && <div class="article-appearances">{essay.givenAt.map(({ event, date }) => <p>Given at {event}, <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>.</p>)}</div>}
     </header>
     <slot />
   </article>
-  <div class="article-related"><div class="wrap links">
+  <div class="article-related dark"><div class="wrap links">
     <a href="/about/">About</a>
     <a href="/training/">Training</a>
     <a href="/power-bi/">Consultancy</a>

@@ -3,9 +3,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/service.css";
 ---
 <BaseLayout title="Page not found | burningsuit" description="That page doesn't exist, or it has moved." placeholder={false}>
+  <div class="dark stage">
+  <div class="title-band wrap">
+    <h1 id="result-title">Page not found</h1>
+  </div>
+  </div>
   <section class="wrap service-page" aria-labelledby="result-title">
     <div class="service-copy">
-      <h1 id="result-title">Page not found</h1>
       <p>That page doesn't exist, or it has moved.</p>
       <p class="links"><a href="/training/">Training</a> <a href="/power-bi/">Consultancy</a> <a href="/contact/">Contact</a></p>
     </div>
