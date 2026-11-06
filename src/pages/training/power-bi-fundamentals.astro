@@ -6,6 +6,7 @@
 // this page's differences live in fundamentals.css.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import EnquiryForm from "../../components/EnquiryForm.astro";
+import CourseFigure from "../../components/CourseFigure.astro";
 import "../../styles/course.css";
 import "../../styles/fundamentals.css";
 
@@ -53,6 +54,7 @@ const price = "Price on request";
   </section>
 
   <section class="course-do agenda" aria-labelledby="do-title">
+    <div class="wrap"><CourseFigure kind="parts" /></div>
     <div class="wrap do-inner">
       <div class="do-lead">
         <h2 id="do-title">The two days</h2>

@@ -3,6 +3,7 @@
 // Paid booking stays closed until delivery, demo, payment and setup readiness are verified,
 // so "Book a seat" renders as an unavailable control with no destination.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import "../../styles/course.css";
 
@@ -60,6 +61,7 @@ const bookingStatus = "Booking isn't open yet.";
         {/* Reserved: one showcase line, held until that separately managed work supplies its wording and destination. */}
       </div>
     </div>
+    <div class="wrap"><CourseFigure kind="agent" /></div>
   </section>
 
   <section class="course-trust wrap" aria-labelledby="trust-title">

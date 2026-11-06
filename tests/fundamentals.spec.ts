@@ -23,7 +23,13 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   await expect(page).toHaveTitle("Power BI fundamentals | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "A two-day private course for teams new to Power BI: build an interactive report, prepare its data, and learn how it's shared and kept up to date. Price on request.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder], main img')).toHaveCount(0);
+  await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
+  // The only image is the parts-of-Power-BI diagram: described by its alt, captioned, with a text version a keyboard can open.
+  await expect(page.locator("main img")).toHaveCount(1);
+  const figure = page.locator("main figure.course-figure");
+  await expect(figure.locator("img")).toHaveAttribute("alt", /^A map of Power BI\./);
+  await expect(figure.locator("figcaption")).toContainText("you can tell where a problem sits");
+  await expect(figure.locator("details summary")).toHaveText("Read the diagram as text");
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
   for (const directive of ["default-src 'none'", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
   await expect(page.locator("h1")).toHaveCount(1);
@@ -212,12 +218,13 @@ test("Fundamentals page works from the keyboard without JavaScript", async ({ br
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 7; i++) {
     await page.keyboard.press("Tab");
-    reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
+    reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? document.activeElement?.tagName ?? ""));
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(2);
   }
-  expect(reached).toEqual(links.slice(0, 6));
+  // The diagram's text-version toggle sits between the opening's links and the agenda's.
+  expect(reached).toEqual([...links.slice(0, 2), "SUMMARY", ...links.slice(2, 6)]);
 
   // The agenda link lands on the arrangements heading; the panel action lands on the form.
   await page.locator('a[href="#need-title"]').click();

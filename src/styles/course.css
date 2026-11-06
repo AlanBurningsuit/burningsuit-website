@@ -46,6 +46,17 @@ p + p.course-fit { margin-top: 1.4rem; }
 .do-steps p { font-size: 1rem; max-width: 62ch; }
 .do-next { margin-top: 10px; max-width: 62ch; }
 
+/* An explanatory diagram on a daylight plate, full content width: the wide drawing from about 900px, the phone
+   drawing (redrawn, not shrunk) below that, kept to a readable width on tablets. Its text version opens below. */
+.course-figure { margin: 0 0 clamp(48px, 6vw, 72px); }
+.course-figure img { display: block; width: 100%; height: auto; border-radius: var(--r); }
+.course-figure figcaption { margin-top: 14px; max-width: 70ch; font: 400 1.05rem / 1.5 var(--ff-note); color: var(--text-dim); }
+.figure-text { margin-top: 10px; max-width: 70ch; }
+.figure-text summary { cursor: pointer; width: fit-content; font-weight: 600; font-size: .96rem; color: var(--link); text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 50%, transparent); text-underline-offset: .2em; }
+.figure-text p { margin-top: 10px; font-size: 1rem; }
+.course-do > .wrap:first-child .course-figure { margin-top: clamp(48px, 6vw, 72px); margin-bottom: 0; }
+@media (max-width: 895px) { .course-figure img { max-width: 460px; } }
+
 /* Why can I trust it: the checking, with who's teaching beside it as a margin note. */
 .course-trust { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: var(--column-gap); padding-block: 76px 64px; align-items: start; }
 .trust-check h2 { margin-bottom: 22px; }

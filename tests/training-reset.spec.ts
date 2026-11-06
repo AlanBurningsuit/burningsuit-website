@@ -193,16 +193,18 @@ test("course discovery, facts and email routes work without JavaScript", async (
   await expect(page.getByRole("button", { name: "Book a seat" }).first()).toBeDisabled();
   await expect(page.locator('.course-book a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
   await expect(page.locator(".do-steps li").first()).toBeVisible();
-  // Keyboard order skips the unavailable controls and reaches each live link.
+  // Keyboard order skips the unavailable controls and reaches each live link, and the agent diagram's text-version toggle.
   // Assumes the skip link is the first tab stop and moves focus to main.
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
   const reached: string[] = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 4; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? document.activeElement?.tagName ?? ""));
   }
-  expect(reached).toEqual(["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
+  expect(reached).toEqual(["mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
+  // The agent diagram is captioned, with an alt that leads with the main relationship.
+  await expect(page.locator("main figure.course-figure img")).toHaveAttribute("alt", /^An agent combines an AI model running elsewhere/);
   await context.close();
 });
 

@@ -39,6 +39,7 @@
   --mist-line: rgb(30 42 38 / 0.14); /* hairline divider on daylight grounds: pine at 14% */
   --ochre-ink: #7f530a; /* ochre deep enough for small text on daylight: the serif kickers (4.9:1 on sage, 6.5:1 on leaf) */
   --ochre: #9c6a12; /* burnished ochre: amber's counterpart on daylight, where amber washes out; spines, markers and arrows (3.4:1 on sage, 4.5:1 on leaf) */
+  --ochre-tint: #f3e3c2; /* a pale ochre wash behind a highlighted row or cell in a daylight diagram, with pine text on it */
 
   /* ---- accents: warmth in small doses, one spark ---- */
   --amber: #e69875; /* links, the one emphasised word on a dark ground, warm rules */

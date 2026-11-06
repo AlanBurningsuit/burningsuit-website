@@ -16,7 +16,7 @@ const fontCss=`@font-face{font-family:Albert Sans;src:url(data:font/woff2;base64
 const tmp=await mkdtemp(join(tmpdir(),'drawio-'));
 const sizes={};
 try{
-  for(const name of ['agent-system','visual-validation','delegation','domain-experience']){
+  for(const name of ['agent-system','visual-validation','delegation','domain-experience','agent-anatomy','power-bi-parts']){
     const source=`diagrams/${name}.drawio`;
     const pages=[...(await readFile(source,'utf8')).matchAll(/<diagram id="(wide|narrow)"/g)].map(m=>m[1]);
     if(pages.join()!=='wide,narrow')throw new Error(`${source}: expected uncompressed Wide then Narrow pages`);
