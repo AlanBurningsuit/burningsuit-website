@@ -10,6 +10,8 @@ export default defineConfig({
   output: "static",
   // Preserve approved punctuation; unhighlighted code needs no inline CSP styles.
   integrations: [mdx({ smartypants: false, syntaxHighlight: false })],
+  // No syntax highlighting anywhere: Shiki's inline styles would break the CSP.
+  markdown: { syntaxHighlight: false },
   trailingSlash: "ignore",
   redirects,
   build: { inlineStylesheets: "never" },

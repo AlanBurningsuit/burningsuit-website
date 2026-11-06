@@ -3,7 +3,7 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "description": "burningsuit website \u2014 minimal static rebuild shell",
+  "description": "burningsuit website — minimal static rebuild shell",
   "engines": {
     "node": ">=22.20.0"
   },
@@ -26,13 +26,13 @@
     "gate": "npm run check:brand && npm run check && npm run build && npm run test:links && npm run check:seo"
   },
   "dependencies": {
-    "astro": "^6.4.8",
-    "sharp": "^0.35.4",
-    "@astrojs/mdx": "^6.0.3"
+    "@astrojs/mdx": "^8.1.3",
+    "astro": "^7.4.7",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
-    "@lhci/cli": "^0.15.1",
+    "@astrojs/check": "^0.9.12",
+    "@lhci/cli": "^0.16.0",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.5.0",
     "linkinator": "^7.6.1",

@@ -30,7 +30,8 @@ export default defineConfig({
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    command: `npm run preview -- --host 127.0.0.1 --port ${port}`,
+    // --ignore-lock keeps Astro 7's preview in the foreground (it backgrounds itself when it detects an agent) and lets parallel runs coexist.
+    command: `npm run preview -- --host 127.0.0.1 --port ${port} --ignore-lock`,
     url: baseURL,
     reuseExistingServer: false,
     timeout: 30_000,

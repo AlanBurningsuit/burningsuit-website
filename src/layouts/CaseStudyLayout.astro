@@ -41,7 +41,7 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
             <p>{study.next.body}</p>
             <a class="text-link" href={study.next.link.href}>{study.next.link.text}</a>
             {study.next.then && <p class="study-then">
-              <a href={study.next.then.href} aria-describedby={study.next.then.hint ? "next-hint" : undefined}>{study.next.then.text}</a>
+              <a href={study.next.then.href} aria-describedby={study.next.then.hint ? "next-hint" : undefined}>{study.next.then.text}</a>{" "}
               {study.next.then.hint && <span class="study-hint" id="next-hint">{study.next.then.hint}</span>}
             </p>}
           </div>
