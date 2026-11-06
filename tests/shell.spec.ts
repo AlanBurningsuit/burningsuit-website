@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { bespokeRoutes, pages } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
 
-const formRoutes = bespokeRoutes.filter((route) => route !== "about");
+const formRoutes = bespokeRoutes.filter((route) => route !== "about" && route !== "hour");
 
 for (const [path, anchors] of Object.entries(pages)) {
   test(`static, noindex, CSP-clean compatibility shell: /${path}`, async ({ page }) => {
@@ -23,7 +23,7 @@ for (const [path, anchors] of Object.entries(pages)) {
     const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
     for (const directive of ["default-src 'none'", "script-src", "style-src", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
     await expect(page.locator('link[rel="canonical"], script')).toHaveCount(0);
-    // About links to the form; the other registered bespoke routes carry it, and placeholders have none.
+    // About and the free call page link onward instead; the other registered bespoke routes carry the form, and placeholders have none.
     await expect(page.locator("form")).toHaveCount(formRoutes.includes(path) ? 1 : 0);
     for (const id of anchors) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
     expect(errors).toEqual([]);

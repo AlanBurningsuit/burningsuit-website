@@ -1,0 +1,240 @@
+import { test, expect } from "@playwright/test";
+import { pages } from "../src/config/compatibility.mjs";
+
+const route = "/hour/";
+const booking = "https://cal.com/alan-burningsuit/hour";
+const label = "Book a free 30-minute call";
+
+// The booking provider is never contacted by these checks.
+test.beforeEach(async ({ context }) => { await context.route("https://cal.com/**", (request) => request.abort()); });
+
+test("free call page stays static, private and CSP-clean, with no form, embed or script", async ({ page, baseURL }) => {
+  const errors: string[] = [];
+  const external: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  page.on("request", (request) => {
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+  });
+  await page.addInitScript(() => {
+    document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
+  });
+  expect((await page.goto(route))?.status()).toBe(200);
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page).toHaveTitle("Free 30-minute Power BI call | burningsuit");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Book a free 30-minute call with me, Alan Harman-Box, about your own Power BI. Talk through what's happening and whether I can help.");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
+  await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder], form, iframe, embed, object, main img')).toHaveCount(0);
+  // No reserved anchors for this route.
+  expect(pages.hour).toEqual([]);
+  // Consultancy's page: the nav marks Consultancy as the section, not as this page.
+  await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Consultancy");
+  await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
+  expect(errors).toEqual([]);
+  expect(external).toEqual([]);
+});
+
+test("free call page answers the visitor's questions in order, in the approved words", async ({ page }) => {
+  await page.goto(route);
+  await expect(page.locator("h1")).toHaveText("A free 30-minute call about your Power BI");
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What happens", "Book your call"]);
+  await expect(page.locator(".course-intro .standfirst")).toHaveText("Got a problem with your own Power BI, and not sure whether I can help?");
+  // Duration and lack of charge sit at the top, beside the introduction.
+  await expect(page.locator("aside.course-run")).toHaveAttribute("aria-label", "Call facts and booking");
+  await expect(page.locator(".run-facts > li")).toHaveText(["30 minutes, free", "You talk to me, Alan", "Follow-up afterwards if it needs more thought", "Any further work quoted separately"]);
+  // Two unraised numbered steps; the counter is decorative, the list semantics carry the order.
+  await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`
+    - list:
+      - listitem:
+        - heading "On the call." [level=3]
+        - paragraph
+      - listitem:
+        - heading "Afterwards." [level=3]
+        - paragraph
+  `);
+  expect(await page.locator(".call-steps").evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgba(0, 0, 0, 0)");
+  // The opening sets no preparation requirement and promises no outcome; pinned wording changes only with Alan's approval.
+  await expect(page.locator(".course-intro > p:not(.standfirst)")).toHaveText("I'm Alan Harman-Box. Tell me about it on a call. Maybe your reporting all rests on one person, or two reports give different answers to the same question, or it's something you can't quite put a name to yet. You don't need a polished brief to book.");
+  await expect(page.locator(".do-steps > li > p")).toHaveText([
+    "You tell me what's going on, and I ask questions to understand it better. We stay on what matters most to you. Sometimes that's enough: I can point you to what to do next, or tell you if it isn't something I can help with.",
+    "If I need more time to think about it, I'll follow up after the call. If there's work I can help with, I'll quote for it separately, usually as a fixed price.",
+  ]);
+  await expect(page.locator(".call-book p")).toHaveText([
+    "You'll be talking to me, and if we go on to work together, I'm the one who does the work. More about me",
+    "Pick a time that suits you on my booking page.",
+    "Prefer to write? Send me a message",
+    "More about my consultancy",
+  ]);
+  const text = await page.locator("main").innerText();
+  for (const absent of [/free hour/i, /\bhour\b/i, /\[|\]/, /—/, /[£$€]\s*\d/, /record/i, /audit/i, /diagnos/i, /proposal/i, /training/i, /case stud/i, /no obligation/i]) expect(text).not.toMatch(absent);
+});
+
+test("both booking actions are the same ordinary same-tab link, styled as the enabled amber button", async ({ page }) => {
+  await page.goto(route);
+  const actions = page.getByRole("link", { name: label, exact: true });
+  await expect(actions).toHaveCount(2);
+  for (const action of await actions.all()) {
+    await expect(action).toHaveAttribute("href", booking);
+    await expect(action).not.toHaveAttribute("target", /./);
+    await expect(action).toHaveClass(/book-button/);
+    const style = await action.evaluate((el) => { const s = getComputedStyle(el); return { bg: s.backgroundColor, color: s.color, shadow: s.boxShadow, cursor: s.cursor }; });
+    expect(style.bg).toBe("rgb(230, 152, 117)");
+    expect(style.color).toBe("rgb(28, 34, 38)");
+    expect(style.shadow).not.toBe("none");
+    expect(style.cursor).toBe("pointer");
+    await action.focus();
+    expect(await action.evaluate((el) => parseFloat(getComputedStyle(el).outlineWidth))).toBeGreaterThanOrEqual(3);
+  }
+  const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+  expect(mainLinks).toEqual([booking, "/about/", booking, "/contact/", "/power-bi/"]);
+  await expect(page.getByRole("link", { name: "Send me a message" })).toHaveAttribute("href", "/contact/");
+  await expect(page.getByRole("link", { name: "More about my consultancy" })).toHaveAttribute("href", "/power-bi/");
+  await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
+});
+
+test("the 101's closed booking button keeps its disabled state", async ({ page }) => {
+  await page.goto("/training/agentic-development-for-power-bi/");
+  const closed = page.locator("button.book-button").first();
+  await expect(closed).toBeDisabled();
+  const style = await closed.evaluate((el) => { const s = getComputedStyle(el); return { bg: s.backgroundColor, border: s.borderTopStyle, shadow: s.boxShadow }; });
+  expect(style.bg).not.toBe("rgb(230, 152, 117)");
+  expect(style.border).toBe("dashed");
+  expect(style.shadow).toBe("none");
+});
+
+test("Home and Consultancy route their call invitations through this page, which alone links to booking", async ({ page }) => {
+  for (const [from, count] of [["/", 1], ["/power-bi/", 3]] as const) {
+    await page.goto(from);
+    const invites = page.getByRole("link", { name: label, exact: true });
+    await expect(invites).toHaveCount(count);
+    for (const invite of await invites.all()) await expect(invite).toHaveAttribute("href", route);
+    await expect(page.locator('a[href*="cal.com"]')).toHaveCount(0);
+    expect(await page.locator("main").innerText()).not.toMatch(/free hour/i);
+  }
+  await page.goto("/");
+  await page.getByRole("link", { name: label, exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`${route}$`));
+  await expect(page.locator("h1")).toHaveText("A free 30-minute call about your Power BI");
+});
+
+test("free call page works without JavaScript and from the keyboard", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+  await context.route("https://cal.com/**", (request) => request.abort());
+  const page = await context.newPage();
+  await page.goto("/power-bi/");
+  await page.getByRole("link", { name: "The free call", exact: true }).click();
+  await expect(page).toHaveURL(baseURL! + route);
+  await expect(page.getByRole("link", { name: label, exact: true }).first()).toBeVisible();
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("main")).toBeFocused();
+  const reached: string[] = [];
+  for (let i = 0; i < 5; i++) {
+    await page.keyboard.press("Tab");
+    reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
+  }
+  expect(reached).toEqual([booking, "/about/", booking, "/contact/", "/power-bi/"]);
+  // The writing alternative and the wider offer resolve without JavaScript. On this branch /contact/ is still the legacy redirect.
+  for (const name of ["Send me a message", "More about my consultancy", "More about me"]) {
+    await page.goto(route);
+    await page.getByRole("link", { name, exact: true }).click();
+    await expect(page.locator("h1")).toBeVisible();
+    expect(page.url()).not.toBe(baseURL! + route);
+  }
+  await context.close();
+});
+
+test("free call layout: facts beside the introduction on wide screens, after it on narrow ones", async ({ page }) => {
+  const box = async (selector: string) => (await page.locator(selector).first().boundingBox())!;
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto(route);
+  let intro = await box(".course-intro"), facts = await box(".course-run");
+  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
+  expect(facts.y).toBeLessThan(intro.y + intro.height);
+  for (const [lead, body] of [[".do-lead", ".do-steps"], [".call-book .book-inner > div:first-child", ".call-book .book-link"]]) {
+    const [l, b] = [await box(lead), await box(body)];
+    expect(b.x).toBeGreaterThanOrEqual(l.x + l.width);
+  }
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    intro = await box(".course-intro"); facts = await box(".course-run");
+    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
+    expect((await box(".call-steps")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    // Each booking action, its hard shadow and its focus ring stay on screen.
+    for (const action of await page.locator("a.book-link").all()) {
+      const edges = await action.evaluate((el) => {
+        (el as HTMLElement).focus();
+        const r = el.getBoundingClientRect(), s = getComputedStyle(el);
+        const out = parseFloat(s.outlineOffset) + parseFloat(s.outlineWidth);
+        return { left: r.left - out, right: Math.max(r.right + out, r.right + 4) };
+      });
+      expect(edges.left).toBeGreaterThanOrEqual(0);
+      expect(edges.right).toBeLessThanOrEqual(width);
+    }
+  }
+});
+
+test("loading the shared logo does not move the page", async ({ page }) => {
+  await page.setViewportSize({ width: 412, height: 823 });
+  let releaseLogo!: () => void;
+  const pendingLogo = new Promise<void>((resolve) => { releaseLogo = resolve; });
+  await page.route("**/logos/burningsuit-on-green.svg", async (request) => {
+    await pendingLogo;
+    await request.continue();
+  });
+  await page.goto(route, { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => document.fonts.ready);
+  const before = (await page.locator("main").boundingBox())!.y;
+  releaseLogo();
+  await page.locator(".brand img").evaluate((image) => (image as HTMLImageElement).decode());
+  const after = (await page.locator("main").boundingBox())!.y;
+  expect(Math.abs(after - before)).toBeLessThan(1);
+});
+
+test("loaded fonts leave no empty reserved line at phone wrap boundaries", async ({ page }) => {
+  await page.goto(route);
+  await page.evaluate(() => document.fonts.ready);
+  for (const width of [352, 353, 359, 390, 412, 413, 414, 423, 424, 428, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    for (const selector of [".course-intro h1", ".run-facts li:nth-child(3)"]) {
+      const extra = await page.locator(selector).evaluate((element) => {
+        const el = element as HTMLElement;
+        const actual = el.getBoundingClientRect().height;
+        const previous = el.style.minHeight;
+        el.style.minHeight = "0";
+        const natural = el.getBoundingClientRect().height;
+        el.style.minHeight = previous;
+        return actual - natural;
+      });
+      expect(extra, `${selector} has an empty reserved line at ${width}px`).toBeLessThan(1);
+    }
+  }
+});
+
+for (const width of [320, 390, 414, 428, 768, 1366]) {
+  test(`free call page reflows at ${width}px with enlarged text`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 768 });
+    await page.goto(route);
+    for (const size of ["100%", "200%"]) {
+      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      for (const action of await page.locator("a.book-link").all()) {
+        const b = (await action.boundingBox())!;
+        expect(b.x + b.width).toBeLessThanOrEqual(width);
+      }
+    }
+  });
+}
+
+for (const width of [1366, 390]) {
+  test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    const capture = info.outputPath("page.png");
+    await page.screenshot({ path: capture, fullPage: true });
+    await info.attach("page", { path: capture, contentType: "image/png" });
+  });
+}
