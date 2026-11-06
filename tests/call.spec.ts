@@ -2,7 +2,7 @@ import { test, expect, isTracker, otherScripts } from "./analytics";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 
 const route = "/call/";
-const booking = "https://cal.com/alan-burningsuit/hour";
+const booking = "https://cal.com/alan-burningsuit/call";
 const label = "Book a free 30-minute call";
 
 // The booking provider is never contacted by these checks.
