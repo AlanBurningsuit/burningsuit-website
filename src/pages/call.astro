@@ -2,6 +2,7 @@
 // Wording: ops site/hour-page-copy.md (the page moved from /hour/ to /call/ once the call became 30 minutes). Bracketed items there are layout notes, not copy.
 // No reserved anchors (see src/config/compatibility.mjs). No form, embed or script: plain links to booking, Contact, About and consultancy.
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
 import "../styles/course.css";
 import "../styles/consultancy.css";
 import "../styles/call.css";
@@ -13,12 +14,9 @@ const booking = "https://cal.com/alan-burningsuit/call";
   description="Book a free 30-minute call with me, Alan Harman-Box, about your own Power BI. Talk through what's happening and whether I can help."
   placeholder={false}
 >
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="page-title">A <span class="em">free</span> 30-minute call about your Power BI</h1>
-    <p class="standfirst">Got a problem with your own Power BI, and not sure whether I can help?</p>
-  </div>
-  </div>
+  <TitleBand heading={{ before: "A ", em: "free", after: " 30-minute call about your Power BI" }}>
+    <Fragment slot="standfirst">Got a problem with your own Power BI, and not sure whether I can help?</Fragment>
+  </TitleBand>
   <div class="course-opening call-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p>I'm Alan Harman-Box. Tell me about it on a call. Maybe your reporting all rests on one person, or two reports give different answers to the same question, or it's something you can't quite put a name to yet. You don't need a polished brief to book.</p>

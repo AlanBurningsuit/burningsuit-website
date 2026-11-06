@@ -3,6 +3,7 @@
 // Kept anchors: situations, how-the-work-runs, pricing (step 2), ai, ongoing, start; see src/config/compatibility.mjs.
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
 import StudyLinks from "../components/StudyLinks.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import "../styles/course.css";
@@ -16,12 +17,9 @@ const call = "/call/";
   description="Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards. Price on request."
   placeholder={false}
 >
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="page-title">Power BI consultancy that leaves your team <span class="em">independent</span></h1>
-    <p class="standfirst">Got a Power BI problem training won't fix?</p>
-  </div>
-  </div>
+  <TitleBand heading={{ before: "Power BI consultancy that leaves your team ", em: "independent" }}>
+    <Fragment slot="standfirst">Got a Power BI problem training won't fix?</Fragment>
+  </TitleBand>
   <div class="course-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p>Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running and people rely on it, but it all rests on one person, or two reports give different answers to the same question.</p>

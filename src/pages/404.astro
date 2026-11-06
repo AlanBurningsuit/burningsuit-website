@@ -1,13 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
 import "../styles/service.css";
 ---
 <BaseLayout title="Page not found | burningsuit" description="That page doesn't exist, or it has moved." placeholder={false}>
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="result-title">Page not found</h1>
-  </div>
-  </div>
+  <TitleBand heading="Page not found" id="result-title" />
   <section class="wrap service-page" aria-labelledby="result-title">
     <div class="service-copy">
       <p>That page doesn't exist, or it has moved.</p>

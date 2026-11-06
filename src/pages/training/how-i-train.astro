@@ -3,6 +3,7 @@
 // No enquiry form here: the closing links reach email and the Contact page.
 // Fundamentals is a pending route (src/config/pending-routes.mjs); 101 booking stays on its own page.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
 import StudyLinks from "../../components/StudyLinks.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import "../../styles/how-i-train.css";
@@ -14,12 +15,9 @@ const { email } = ENQUIRY;
   description="How I teach Power BI: practice on prepared examples, questions about your own work, help when you get stuck, and reasons behind recommendations."
   placeholder={false}
 >
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="page-title">How I <span class="em">train</span></h1>
-    <p class="standfirst">My courses are about understanding how Power BI works and putting it to use.</p>
-  </div>
-  </div>
+  <TitleBand heading={{ before: "How I ", em: "train" }}>
+    <Fragment slot="standfirst">My courses are about understanding how Power BI works and putting it to use.</Fragment>
+  </TitleBand>
 
   <section class="hit-answer hit-do wrap" aria-labelledby="do-title">
     <h2 id="do-title">What you'll do</h2>

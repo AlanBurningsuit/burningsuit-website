@@ -3,6 +3,7 @@
 // The two starting points reuse the homepage's course entries (home.css); training.css holds this page's composition.
 // Fundamentals and How I train are pending routes (src/config/pending-routes.mjs); 101 booking stays on its own page.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
 import EnquiryForm from "../../components/EnquiryForm.astro";
 import StudyLinks from "../../components/StudyLinks.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
@@ -23,11 +24,7 @@ const specialists = [
   description="Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each. Price on request."
   placeholder={false}
 >
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="page-title">Power BI <span class="em">courses</span></h1>
-  </div>
-  </div>
+  <TitleBand heading={{ before: "Power BI ", em: "courses" }} />
   <div class="training-intro wrap">
     <p>If you're new to Power BI, start with Power BI fundamentals. If you've already built a report, Power BI with AI agents 101 shows you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.</p>
   </div>

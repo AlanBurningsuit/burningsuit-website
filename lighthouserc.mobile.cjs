@@ -5,7 +5,8 @@ module.exports = {
       staticDistDir: "./dist",
       url: require("./scripts/lighthouse-routes.cjs").map((path) => `http://localhost${path}`),
       numberOfRuns: 3,
-      settings: { formFactor: "mobile" },
+      // Audits never contact Umami, as on desktop.
+      settings: { formFactor: "mobile", blockedUrlPatterns: ["*umami.is*"] },
     },
     assert: {
       assertions: {

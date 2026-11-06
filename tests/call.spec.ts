@@ -1,4 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
+import { reportCspViolations, visualReview } from "./helpers";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 
 const route = "/call/";
@@ -16,9 +17,7 @@ test("free call page stays static, private and CSP-clean, with no form, embed or
   page.on("request", (request) => {
     if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
-  await page.addInitScript(() => {
-    document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
-  });
+  await reportCspViolations(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Free 30-minute Power BI call | burningsuit");
@@ -237,13 +236,4 @@ for (const width of [320, 390, 414, 428, 768, 1366]) {
   });
 }
 
-for (const width of [1366, 390]) {
-  test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto(route);
-    await page.evaluate(() => document.fonts.ready);
-    const capture = info.outputPath("page.png");
-    await page.screenshot({ path: capture, fullPage: true });
-    await info.attach("page", { path: capture, contentType: "image/png" });
-  });
-}
+visualReview(route);

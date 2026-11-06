@@ -1,16 +1,13 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import "../../styles/service.css";
 import "../../styles/enquiry.css";
 import "../../styles/privacy.css";
 ---
 <BaseLayout title="Privacy | burningsuit" description="What happens to your information when you visit this site, book a call or email me, and how to turn off visit counting." placeholder={false}>
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="privacy-title">This site and your information</h1>
-  </div>
-  </div>
+  <TitleBand heading="This site and your information" id="privacy-title" />
   <article class="wrap service-page" aria-labelledby="privacy-title">
     <div class="service-copy">
       <p>I'm Alan Harman-Box. This notice covers visiting this site, booking a free 30-minute call and emailing me. The enquiry form has <a href={ENQUIRY.privacyPath}>its own notice</a>.</p>

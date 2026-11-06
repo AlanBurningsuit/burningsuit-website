@@ -1,4 +1,5 @@
 import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
+import { reportCspViolations } from "./helpers";
 import { bespokeRoutes, pages, reserved404Routes } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
 import { ANALYTICS } from "../src/config/analytics.mjs";
@@ -14,9 +15,7 @@ for (const [path, anchors] of Object.entries(pages)) {
     page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
     const origin = new URL(test.info().project.use.baseURL!).origin;
     page.on("request", (request) => { if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== origin && !isTracker(request.url())) external.push(request.url()); });
-    await page.addInitScript(() => {
-      document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
-    });
+    await reportCspViolations(page);
     const response = await page.goto(`/${path}${path ? "/" : ""}`);
     expect(response?.status()).toBe(200);
     await page.evaluate(() => document.fonts.ready);

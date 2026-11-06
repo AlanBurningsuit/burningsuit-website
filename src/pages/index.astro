@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import { Image } from "astro:assets";
 import portrait from "../assets/photos/DSC08683-Edit.jpg";
@@ -12,12 +13,9 @@ import "../styles/home.css";
   placeholder={false}
 >
   {pages[""].map((id) => <span id={id} aria-hidden="true" />)}
-  <div class="dark stage">
-  <div class="title-band home-title wrap">
-    <h1 id="page-title">Power BI training for people whose job <span class="em">isn't</span> Power BI.</h1>
-    <p class="standfirst">Learn how Power BI works, and how to start handing the work to AI.</p>
-  </div>
-  </div>
+  <TitleBand heading={{ before: "Power BI training for people whose job ", em: "isn't", after: " Power BI." }} class="home-title">
+    <Fragment slot="standfirst">Learn how Power BI works, and how to start handing the work to AI.</Fragment>
+  </TitleBand>
   <div class="wrap">
     <section class="introduction home-opening" aria-labelledby="page-title">
       <div class="intro-copy">

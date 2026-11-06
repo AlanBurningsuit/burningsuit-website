@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
 import "../../styles/work.css";
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
 // Group lines reuse approved wording: the individual coaching study (courses), Training's coaching entry and the homepage's consultancy introduction.
@@ -13,12 +14,9 @@ const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => ty
 const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() + descriptor.slice(1);
 ---
 <BaseLayout title="Work | burningsuit" description="Courses · Power BI coaching · Consultancy" placeholder={false}>
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1>Work</h1>
-    <p class="standfirst">What the courses, coaching and consultancy look like in practice.</p>
-  </div>
-  </div>
+  <TitleBand heading="Work">
+    <Fragment slot="standfirst">What the courses, coaching and consultancy look like in practice.</Fragment>
+  </TitleBand>
   <div id="cases" class="work-index wrap">
     <p class="work-intro">Every example here is anonymous.</p>
     {groups.map((group) => <section class="work-group" aria-labelledby={`${group.category}-title`}>

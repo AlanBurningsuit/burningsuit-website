@@ -1,5 +1,6 @@
 import { type BrowserContext, type Page } from "@playwright/test";
 import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
+import { reportCspViolations } from "./helpers";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 import { pages } from "../src/config/compatibility.mjs";
@@ -48,9 +49,7 @@ test("privacy notice stays static, private and CSP-clean, with only the tracker 
   page.on("request", (request) => {
     if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
-  await page.addInitScript(() => {
-    document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
-  });
+  await reportCspViolations(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Privacy | burningsuit");
@@ -217,8 +216,9 @@ test("on the production domain the tag counts a visit until the switch turns it 
   await expect(status(page)).toHaveText(excluded.status);
   beacons.length = 0;
   await page.goto("https://burningsuit.co.uk/");
+  // The tag has run (it defines window.umami whether or not it counts) and the network has settled, so any beacon would have gone.
+  await page.waitForFunction(() => "umami" in window);
   await page.waitForLoadState("networkidle");
-  await page.waitForTimeout(1500);
   expect(beacons).toEqual([]);
   expect(errors).toEqual([]);
   await context.close();

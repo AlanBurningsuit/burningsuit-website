@@ -1,14 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
 import { ENQUIRY } from "../config/enquiry.mjs";
 import "../styles/service.css";
 ---
 <BaseLayout title="Message could not be sent | burningsuit" description="Try your enquiry again or email Alan directly." placeholder={false}>
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="result-title">Your message could not be sent</h1>
-  </div>
-  </div>
+  <TitleBand heading="Your message could not be sent" id="result-title" />
   <section class="wrap service-page" aria-labelledby="result-title">
     <div class="service-copy">
       <p>Please try again, or email <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>

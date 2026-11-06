@@ -1,7 +1,7 @@
 ---
 import CarbonReturn from "./CarbonReturn.astro";
 import CoachingReturn from "./CoachingReturn.astro";
-type Props = { heading: string; links: { text: string; href: string }[] } | { heading?: never; links: { label: string; href: string }[] };
+type Props = { heading?: string; links: { text: string; href: string }[] };
 const props = Astro.props;
 ---
 {props.heading !== undefined

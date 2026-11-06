@@ -4,6 +4,7 @@
 // the closing links reach email, the homepage form and LinkedIn.
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
 import { ENQUIRY } from "../config/enquiry.mjs";
 import "../styles/about.css";
 import talk from "../assets/photos/mmn-talk.jpg";
@@ -18,11 +19,7 @@ const linkedin = "https://www.linkedin.com/in/alan-harman-box";
   description="I'm Alan Harman-Box, and burningsuit is me. I write and teach Power BI and AI courses for people whose job isn't Power BI, and help teams with their own reporting."
   placeholder={false}
 >
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="page-title">Power BI and AI for everyone <span class="em">else</span>.</h1>
-  </div>
-  </div>
+  <TitleBand heading={{ before: "Power BI and AI for everyone ", em: "else", after: "." }} />
   <div class="about-intro wrap">
     <div class="about-intro-text">
       <p class="about-lead">I'm Alan Harman-Box, and burningsuit is me. There's a lot of noise about AI and Power BI at the moment, and most of it feels aimed at people who already spend their days talking about agents. I'm interested in everyone else: the people who just want to get their job done well, and would rather not turn into a nerd to do it. Which is fine by me. I'm more than happy to be the nerd in the room, and to explain things so that you don't have to become one.</p>

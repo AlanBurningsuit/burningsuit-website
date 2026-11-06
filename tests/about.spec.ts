@@ -1,4 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
+import { reportCspViolations, visualReview } from "./helpers";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
@@ -13,9 +14,7 @@ test("About stays static, private and CSP-clean, with no form or third-party req
   page.on("request", (request) => {
     if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
-  await page.addInitScript(() => {
-    document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
-  });
+  await reportCspViolations(page);
   expect((await page.goto(route))?.status()).toBe(200);
   // Load every lazy photo so their requests are counted too.
   for (const img of await page.locator("main img").all()) {
@@ -195,18 +194,4 @@ for (const width of [320, 390, 768, 1366]) {
   });
 }
 
-for (const width of [1366, 390]) {
-  test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto(route);
-    // Load the lazy photos before the full-page capture so review artifacts include them.
-    for (const img of await page.locator("main img").all()) {
-      await img.scrollIntoViewIfNeeded();
-      await img.evaluate((el: HTMLImageElement) => el.decode());
-    }
-    await page.evaluate(() => { window.scrollTo(0, 0); return document.fonts.ready; });
-    const capture = info.outputPath("page.png");
-    await page.screenshot({ path: capture, fullPage: true });
-    await info.attach("page", { path: capture, contentType: "image/png" });
-  });
-}
+visualReview(route);

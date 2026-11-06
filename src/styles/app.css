@@ -61,10 +61,6 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .study-links li + li { margin-top: 10px; }
 .study-links a { font-weight: 600; }
 .aside { font-size: .92rem; color: var(--text-dim); }
-.course-facts { margin: 18px 0 12px; font-size: .86rem; }
-.course-facts > div { display: grid; grid-template-columns: 98px minmax(0, 1fr); gap: 12px; padding-block: 4px; }
-.course-facts dt { color: var(--text-dim); }
-.course-facts dd { margin: 0; }
 
 .skip { position: absolute; top: 12px; left: 16px; z-index: 10; padding: 12px; background: var(--bg-band); transform: translateY(-200%); }
 .skip:focus { transform: none; }
@@ -172,7 +168,6 @@ main:not(:has(> .dark:last-child, > :last-child > .dark:last-child)) + .footer-b
   .nav-menu ul { left: auto; right: 0; }
   .masthead nav a { font-size: .86rem; }
   .nav-menu summary { width: 22px; }
-  .course-facts > div { grid-template-columns: 80px minmax(0, 1fr); gap: 8px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }
   .footer { font-size: .7rem; gap: 12px; }
   .foot-legal { font-size: .75rem; } /* The company line stays at least 12px; only the links shrink. */

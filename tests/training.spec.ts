@@ -1,5 +1,6 @@
 import { type Page } from "@playwright/test";
 import { test, expect, isTracker, otherScripts } from "./analytics";
+import { reportCspViolations, visualReview } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
 const route = "/training/";
@@ -18,9 +19,7 @@ test("training chooser stays static, private and CSP-clean", async ({ page, base
   page.on("request", (request) => {
     if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
-  await page.addInitScript(() => {
-    document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
-  });
+  await reportCspViolations(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI courses | burningsuit");
@@ -391,13 +390,4 @@ for (const outcome of ["success", "error"] as const) {
   });
 }
 
-for (const width of [1366, 390]) {
-  test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
-    await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
-    await page.goto(route);
-    await page.evaluate(() => document.fonts.ready);
-    const capture = info.outputPath("page.png");
-    await page.screenshot({ path: capture, fullPage: true });
-    await info.attach("page", { path: capture, contentType: "image/png" });
-  });
-}
+visualReview(route, [[1366, 900], [390, 844]]);

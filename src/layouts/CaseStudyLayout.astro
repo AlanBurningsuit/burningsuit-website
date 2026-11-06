@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
 import "../styles/case-study.css";
 
 interface Props { entry: CollectionEntry<"work"> }
@@ -12,10 +13,9 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
 <BaseLayout title={study.title} description={study.description} ogImage={study.ogImage} placeholder={false}>
   <div class={`case-${study.presentation}`}>
     {study.presentation === "chapters" && <article class="case-study">
-      <div class="dark stage"><div class="title-band wrap">
-        <p class="eyebrow case-kicker">{study.kicker}</p>
-        <h1 id="page-title">{heading.before}{heading.em && <span class="em">{heading.em}</span>}{heading.after}</h1>
-      </div></div>
+      <TitleBand heading={heading} eyebrowClass="case-kicker">
+        <Fragment slot="eyebrow">{study.kicker}</Fragment>
+      </TitleBand>
       <header class="case-opening wrap">
         <p class="case-lead">{study.lead}</p>
       </header>
@@ -26,9 +26,7 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
     </div></div>}
 
     {study.presentation === "story" && <>
-      <div class="dark stage"><div class="title-band wrap">
-        <h1 id="page-title">{heading.before}{heading.em && <span class="em">{heading.em}</span>}{heading.after}</h1>
-      </div></div>
+      <TitleBand heading={heading} />
       <div class="study-opening wrap">
         <p class="study-lead">{study.lead}</p>
         <dl class="study-facts">{study.facts.map(({ label, value }) => <div><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
@@ -50,10 +48,9 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
     </>}
 
     {study.presentation === "coaching" && <>
-      <div class="dark stage"><div class="title-band wrap">
-        <p class="eyebrow cs-descriptor">{study.descriptor}</p>
-        <h1 id="page-title">{heading.before}{heading.em && <span class="em">{heading.em}</span>}{heading.after}</h1>
-      </div></div>
+      <TitleBand heading={heading} eyebrowClass="cs-descriptor">
+        <Fragment slot="eyebrow">{study.descriptor}</Fragment>
+      </TitleBand>
       <div class="cs-opening wrap">
         <div class="cs-opening-grid">
           <p class="cs-lead">{study.lead}</p>
@@ -67,9 +64,7 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
     </>}
 
     {study.presentation === "course" && <>
-      <div class="dark stage"><div class="title-band wrap">
-        <h1 id="page-title">{heading.before}{heading.em && <span class="em">{heading.em}</span>}{heading.after}</h1>
-      </div></div>
+      <TitleBand heading={heading} />
       <div class="case-opening wrap">
         <ul class="facts dot-list case-facts">{study.facts.map((fact) => <li>{fact}</li>)}</ul>
       </div>

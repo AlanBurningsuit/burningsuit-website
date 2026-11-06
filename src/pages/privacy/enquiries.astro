@@ -1,14 +1,11 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import "../../styles/service.css";
 ---
 <BaseLayout title="Enquiry privacy | burningsuit" description="How Alan handles the information you send in an enquiry." placeholder={false}>
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="privacy-title">Your enquiry and your information</h1>
-  </div>
-  </div>
+  <TitleBand heading="Your enquiry and your information" id="privacy-title" />
   <article class="wrap service-page" aria-labelledby="privacy-title">
     <div class="service-copy">
       <p>I'm Alan Harman-Box. Burningsuit Limited is responsible for your personal information when you enquire. You can contact me at <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>

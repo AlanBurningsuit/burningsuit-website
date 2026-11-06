@@ -1,4 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
+import { reportCspViolations, visualReview } from "./helpers";
 import { pages } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
@@ -13,9 +14,7 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   page.on("request", (request) => {
     if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
-  await page.addInitScript(() => {
-    document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
-  });
+  await reportCspViolations(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI consultancy | burningsuit");
@@ -240,19 +239,7 @@ for (const width of [320, 390, 768, 1366]) {
   });
 }
 
-for (const width of [1366, 390]) {
-  test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto(route);
-    // Load the lazy photo before the full-page capture so review artifacts include it.
-    await page.locator(".who-photo img").scrollIntoViewIfNeeded();
-    await page.locator(".who-photo img").evaluate((img: HTMLImageElement) => img.decode());
-    await page.evaluate(() => { window.scrollTo(0, 0); return document.fonts.ready; });
-    const capture = info.outputPath("page.png");
-    await page.screenshot({ path: capture, fullPage: true });
-    await info.attach("page", { path: capture, contentType: "image/png" });
-  });
-}
+visualReview(route);
 
 test("consultancy enquiry posts plainly from this page without JavaScript", async ({ browser, baseURL }) => {
   // The provider is stubbed: no sample enquiry is ever sent.

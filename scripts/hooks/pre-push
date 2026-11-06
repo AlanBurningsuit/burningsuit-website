@@ -1,0 +1,15 @@
+#!/bin/sh
+# Push readiness: every push must pass the gate and the functional tests; a push to main must also pass the release check.
+# Enabled with `git config core.hooksPath scripts/hooks` (see README). `git push --no-verify` skips it; don't.
+set -e
+to_main=no
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$remote_ref" = "refs/heads/main" ] && to_main=yes
+done
+echo "pre-push: gate and functional tests"
+npm run --silent gate
+npm run --silent test:functional
+if [ "$to_main" = yes ]; then
+  echo "pre-push: release check (pushing main)"
+  npm run --silent check:release
+fi

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
 import "../styles/articles.css";
 interface Props { essay: CollectionEntry<"writing">["data"] }
 const { essay } = Astro.props;
@@ -10,11 +11,10 @@ const archiveContext = essay.archiveMonth ? `${months[Number(essay.archiveMonth.
 ---
 <BaseLayout title={essay.title} description={essay.description} author={essay.author} ogType="article" placeholder={false}>
   <article class="reading-article" aria-labelledby="page-title">
-    <div class="dark stage"><div class="title-band wrap">
-      <p class="eyebrow">{essay.kicker}</p>
-      <h1 id="page-title">{essay.heading.before}<span class="em">{essay.heading.em}</span>{essay.heading.after}</h1>
-      {essay.lead && <p class="standfirst article-lead">{essay.lead}</p>}
-    </div></div>
+    <TitleBand heading={essay.heading} standfirstClass="article-lead">
+      <Fragment slot="eyebrow">{essay.kicker}</Fragment>
+      {essay.lead && <Fragment slot="standfirst">{essay.lead}</Fragment>}
+    </TitleBand>
     <header class="article-opening wrap">
       <p class="article-byline">{essay.author}{archiveContext && <> · <time datetime={essay.archiveMonth}>{archiveContext}</time></>}</p>
       {essay.givenAt && <div class="article-appearances">{essay.givenAt.map(({ event, date }) => <p>Given at {event}, <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>.</p>)}</div>}

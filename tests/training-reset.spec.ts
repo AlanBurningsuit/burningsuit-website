@@ -1,4 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
+import { reportCspViolations, visualReview } from "./helpers";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
@@ -13,9 +14,7 @@ for (const route of ["/", course]) {
     page.on("request", (request) => {
       if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
     });
-    await page.addInitScript(() => {
-      document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
-    });
+    await reportCspViolations(page);
     expect((await page.goto(route))?.status()).toBe(200);
     await page.evaluate(() => document.fonts.ready);
     const loadedFonts = await page.evaluate(() => Array.from(document.fonts).filter((font) => font.status === "loaded").map((font) => font.family));
@@ -54,21 +53,7 @@ for (const route of ["/", course]) {
     });
   }
 
-  for (const width of [1366, 390]) {
-    test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.goto(route);
-      await page.evaluate(async () => {
-        await document.fonts.ready;
-        const images = Array.from(document.images);
-        for (const image of images) image.loading = "eager";
-        await Promise.all(images.map((image) => image.decode()));
-      });
-      const capture = info.outputPath("page.png");
-      await page.screenshot({ path: capture, fullPage: true });
-      await info.attach("page", { path: capture, contentType: "image/png" });
-    });
-  }
+  visualReview(route);
 }
 
 test("the 101 follows the visitor questions, keeps booking closed and open setup facts visible", async ({ page }) => {

@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test, expect, otherScripts } from "./analytics";
+import { visualReview } from "./helpers";
 import { pages, reserved404Routes } from "../src/config/compatibility.mjs";
 
 const essay = "/writing/we-are-all-middle-management-now/";
@@ -137,19 +138,5 @@ for (const route of ["/work/", essay, archive]) {
       }
     });
   }
-  for (const width of [1366, 390]) {
-    test(`visual review at ${width}px: ${route}`, async ({ page }, info) => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.goto(route);
-      await page.evaluate(() => document.fonts.ready);
-      for (const img of await page.locator("main img").all()) {
-        await img.scrollIntoViewIfNeeded();
-        await expect.poll(() => img.evaluate(el => (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
-      }
-      await page.evaluate(() => scrollTo(0, 0));
-      const capture = info.outputPath("page.png");
-      await page.screenshot({ path: capture, fullPage: true });
-      await info.attach("page", { path: capture, contentType: "image/png" });
-    });
-  }
+  visualReview(route);
 }

@@ -1,9 +1,0 @@
----
-interface Props { id?: string; title: string; lead?: boolean; meta?: string }
-const { id, title, lead = false, meta } = Astro.props;
----
-<div id={id} class:list={["mdx-offer", lead && "mdx-offer-lead"]}>
-  <h3>{title}</h3>
-  {meta && <p class="eyebrow">{meta}</p>}
-  <slot />
-</div>

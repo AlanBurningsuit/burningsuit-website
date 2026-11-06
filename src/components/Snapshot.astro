@@ -1,9 +1,0 @@
----
-interface Props { outcome: string; id?: string; kicker?: string }
-const { outcome, id = "snapshot", kicker = "The short version" } = Astro.props;
----
-<section class="mdx-snapshot wrap" aria-labelledby={id}>
-  <h2 id={id}>{kicker}</h2>
-  <p class="mdx-lead">{outcome}</p>
-  <ul><slot /></ul>
-</section>

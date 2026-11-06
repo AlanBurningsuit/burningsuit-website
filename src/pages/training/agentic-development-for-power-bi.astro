@@ -3,6 +3,7 @@
 // Paid booking stays closed until delivery, demo, payment and setup readiness are verified,
 // so "Book a seat" renders as an unavailable control with no destination.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import "../../styles/course.css";
@@ -16,12 +17,9 @@ const bookingStatus = "Booking isn't open yet.";
   description="Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations."
   placeholder={false}
 >
-  <div class="dark stage">
-  <div class="title-band wrap">
-    <h1 id="page-title">Power BI with AI <span class="em">agents</span> 101</h1>
-    <p class="standfirst">Want to be ready for where Power BI is going?</p>
-  </div>
-  </div>
+  <TitleBand heading={{ before: "Power BI with AI ", em: "agents", after: " 101" }}>
+    <Fragment slot="standfirst">Want to be ready for where Power BI is going?</Fragment>
+  </TitleBand>
   <div class="course-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p>You've probably heard that AI agents are changing how Power BI reports get built. Join me for a morning to take your first steps in agentic development. You get an agent to explain a prepared report you've never seen and write notes on its calculations. Then you have it build one new calculation, and you check its answers yourself.</p>

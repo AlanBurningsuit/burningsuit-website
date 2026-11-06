@@ -204,22 +204,5 @@
 }
 
 
-/* Import-free kit for future entries: plain notebook type, rules and evidence. */
-.mdx-opening { padding-block: 46px 52px; }
-.mdx-opening h1 { max-width: 22ch; }
-.mdx-lead { max-width: 60ch; font-size: var(--lead-size); line-height: var(--lh-relaxed); }
-.mdx-snapshot { padding-block: 28px 44px; }
-.mdx-snapshot ul { padding-left: 1.2em; }
-.mdx-offer { margin-block: 24px; }
-.mdx-offer-lead { border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; }
-.mdx-exhibit { margin-block: 30px; padding: 28px; background: var(--paper); color: var(--ink); border: var(--px) solid var(--deep); border-radius: var(--r); outline: var(--bw-hair) solid var(--paper-edge); box-shadow: 5px 5px 0 var(--deep); }
-.mdx-exhibit-tab, .mdx-exhibit figcaption { font: 400 .95rem / var(--lh-relaxed) var(--ff-note); }
-.mdx-exhibit-tab { margin-bottom: 18px; }
-.mdx-exhibit figcaption { margin-top: 18px; }
-.mdx-invite { background: var(--bg-band); padding-block: 38px; }
-.mdx-essay .case-chapter { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: var(--column-gap); padding-block: 24px 44px; border-top: var(--bw-hair) solid var(--rule); }
-.mdx-essay .case-prose p { max-width: 62ch; }
+/* A named study's quote block, shown only once a client is cleared for naming. */
 .mdx-named { padding-block: 32px; }
-@media (max-width: 900px) {
-  .mdx-essay .case-chapter { grid-template-columns: minmax(0, 1fr); gap: 18px; }
-}
