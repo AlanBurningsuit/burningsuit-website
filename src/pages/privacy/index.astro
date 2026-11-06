@@ -20,12 +20,14 @@ import "../../styles/privacy.css";
 
       <h2 id="optout">Turn off visit counting</h2>
       <p>This switch stops Umami counting your visits from this browser. It's free, works straight away and can be switched back. It's saved in this browser, so clearing the site's data undoes it.</p>
-      {/* The button and status show only when scripting is available (privacy.css); the two labels and three status lines stay here as data attributes for the opt-out script below. */}
-      <div class="optout-control">
-        <button class="send" type="button" data-optout data-label-counted="Stop counting my visits" data-label-excluded="Count my visits again">Stop counting my visits</button>
-        <p class="optout-status" role="status" data-optout-status data-counted="Your visits from this browser can be counted." data-excluded="Your visits from this browser aren't being counted." data-failed="This browser didn't let the site save the setting, so your visits may still be counted.">Your visits from this browser can be counted.</p>
+      {/* The switch and the fallback line share one space. The fallback shows until the opt-out script below has wired the button, then the switch replaces it (privacy.css), so a page without scripting, or whose script failed, never shows a dead button. The two labels and three status lines stay here as data attributes. */}
+      <div class="optout" data-optout-root>
+        <div class="optout-control">
+          <button class="send" type="button" data-optout data-label-counted="Stop counting my visits" data-label-excluded="Count my visits again">Stop counting my visits</button>
+          <p class="optout-status" role="status" data-optout-status data-counted="Your visits from this browser can be counted." data-excluded="Your visits from this browser aren't being counted." data-failed="This browser didn't let the site save the setting, so your visits may still be counted.">Your visits from this browser can be counted.</p>
+        </div>
+        <p class="optout-nojs">With JavaScript off, the analytics don't run, so your visits aren't counted.</p>
       </div>
-      <p class="optout-nojs">With JavaScript off, the analytics don't run, so your visits aren't counted.</p>
 
       <h2 id="hosting">Where the site is hosted</h2>
       <p>The site is hosted on GitHub Pages. GitHub, Inc., a US company, logs visitors' IP addresses for its own security purposes, under <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">its privacy statement</a>.</p>
@@ -45,34 +47,37 @@ import "../../styles/privacy.css";
       <p>Last updated: <time datetime="2026-11-06">6 November 2026</time></p>
     </div>
   </article>
+  <script>
+    // Umami skips tracking while localStorage["umami.disabled"] is "1". Storage can throw in locked-down browsers, so every access is guarded.
+    const KEY = "umami.disabled";
+    const button = document.querySelector<HTMLButtonElement>("[data-optout]");
+    const status = document.querySelector<HTMLElement>("[data-optout-status]");
+    const root = document.querySelector<HTMLElement>("[data-optout-root]");
+    if (button && status && root) {
+      const excluded = () => {
+        try { return localStorage.getItem(KEY) === "1"; } catch { return false; }
+      };
+      // Only changed text is written, so the polite live region announces state changes, not a repeat of the current state.
+      const say = (element: HTMLElement, text = "") => { if (element.textContent !== text) element.textContent = text; };
+      const render = () => {
+        const off = excluded();
+        say(button, off ? button.dataset.labelExcluded : button.dataset.labelCounted);
+        say(status, off ? status.dataset.excluded : status.dataset.counted);
+      };
+      button.addEventListener("click", () => {
+        try {
+          if (excluded()) localStorage.removeItem(KEY);
+          else localStorage.setItem(KEY, "1");
+        } catch {
+          say(status, status.dataset.failed);
+          return;
+        }
+        render();
+      });
+      render();
+      // Only now is the switch usable, so only now does it replace the fallback line.
+      root.dataset.ready = "";
+    }
+  </script>
 </BaseLayout>
 
-<script>
-  // Umami skips tracking while localStorage["umami.disabled"] is "1". Storage can throw in locked-down browsers, so every access is guarded.
-  const KEY = "umami.disabled";
-  const button = document.querySelector<HTMLButtonElement>("[data-optout]");
-  const status = document.querySelector<HTMLElement>("[data-optout-status]");
-  if (button && status) {
-    const excluded = () => {
-      try { return localStorage.getItem(KEY) === "1"; } catch { return false; }
-    };
-    // Only changed text is written, so the polite live region announces state changes, not a repeat of the current state.
-    const say = (element: HTMLElement, text = "") => { if (element.textContent !== text) element.textContent = text; };
-    const render = () => {
-      const off = excluded();
-      say(button, off ? button.dataset.labelExcluded : button.dataset.labelCounted);
-      say(status, off ? status.dataset.excluded : status.dataset.counted);
-    };
-    button.addEventListener("click", () => {
-      try {
-        if (excluded()) localStorage.removeItem(KEY);
-        else localStorage.setItem(KEY, "1");
-      } catch {
-        say(status, status.dataset.failed);
-        return;
-      }
-      render();
-    });
-    render();
-  }
-</script>

@@ -1,5 +1,4 @@
-import { test, expect } from "@playwright/test";
-import { otherScripts } from "./analytics";
+import { test, expect, otherScripts } from "./analytics";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
 // The normal suite stubs the provider: it never emails sample enquiries.

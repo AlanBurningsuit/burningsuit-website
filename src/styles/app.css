@@ -79,6 +79,7 @@ a:hover { text-decoration-thickness: 2px; }
   .course-facts > div { grid-template-columns: 80px minmax(0, 1fr); gap: 8px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }
   .footer { font-size: .7rem; gap: 12px; }
+  .foot-legal { font-size: .75rem; } /* The company line stays at least 12px; only the links shrink. */
 }
 @media (max-width: 360px) {
   .masthead nav a { font-size: .84rem; }

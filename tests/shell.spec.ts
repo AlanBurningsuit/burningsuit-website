@@ -1,8 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
 import { bespokeRoutes, pages } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
 import { ANALYTICS } from "../src/config/analytics.mjs";
-import { isTracker, otherScripts, tracker } from "./analytics";
 
 const formRoutes = bespokeRoutes.filter((route) => route !== "about" && route !== "hour" && route !== "privacy");
 

@@ -1,5 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
-import { isTracker, otherScripts } from "./analytics";
+import { type Page } from "@playwright/test";
+import { test, expect, isTracker, otherScripts } from "./analytics";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
 const route = "/training/power-bi-fundamentals/";

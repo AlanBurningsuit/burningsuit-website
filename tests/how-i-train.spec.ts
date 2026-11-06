@@ -1,5 +1,4 @@
-import { test, expect } from "@playwright/test";
-import { isTracker, otherScripts } from "./analytics";
+import { test, expect, isTracker, otherScripts } from "./analytics";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 

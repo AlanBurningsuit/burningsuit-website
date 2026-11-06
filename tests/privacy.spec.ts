@@ -1,8 +1,8 @@
-import { test, expect, type BrowserContext, type Page } from "@playwright/test";
+import { type BrowserContext, type Page } from "@playwright/test";
+import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 import { pages } from "../src/config/compatibility.mjs";
-import { isTracker, otherScripts, tracker } from "./analytics";
 
 const route = "/privacy/";
 const email = `mailto:${ENQUIRY.email}`;
@@ -82,6 +82,7 @@ test("privacy notice carries the approved words, headings and links in order", a
 
 test("the switch turns visit counting off and on, persists, and announces each state", async ({ page }) => {
   await page.goto(route);
+  await expect(page.locator("[data-optout-root]")).toHaveAttribute("data-ready", "");
   await expect(page.getByText(noScript)).toBeHidden();
   await expect(control(page)).toHaveText(counted.label);
   await expect(control(page)).not.toHaveAttribute("aria-pressed", /.*/);
@@ -142,6 +143,17 @@ test("without JavaScript the switch is replaced by its fallback line", async ({ 
   await context.close();
 });
 
+test("if the opt-out script fails to load, the fallback line stays and no dead button appears", async ({ page }) => {
+  await page.route(/\/_astro\/[^/]+\.js$/, (request) => request.abort());
+  await page.goto(route);
+  await page.waitForLoadState("networkidle");
+  await expect(page.getByText(noScript)).toBeVisible();
+  await expect(page.getByRole("button")).toHaveCount(0);
+  await expect(page.locator("[data-optout]")).toBeHidden();
+  await page.locator("#optout").scrollIntoViewIfNeeded();
+  await test.info().attach("privacy-module-failed", { body: await page.screenshot(), contentType: "image/png" });
+});
+
 for (const path of footerRoutes) {
   test(`footer carries the company line on its own row: ${path}`, async ({ page }) => {
     await page.goto(path);
@@ -162,6 +174,11 @@ for (const width of [320, 390, 1366]) {
       await page.evaluate((value) => { document.documentElement.style.fontSize = value; }, size);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       const footer = await page.locator("footer").boundingBox();
+      if (size === "100%") {
+        const [legalSize, linkSize] = await page.evaluate(() => [".foot-legal", ".foot-links a"].map((selector) => parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize)));
+        expect(legalSize).toBeGreaterThanOrEqual(12);
+        expect(linkSize).toBe(width < 900 ? 11.2 : 12.48);
+      }
       const legalBox = await page.locator("footer .foot-legal").boundingBox();
       const linksBox = await page.locator("footer .foot-links").boundingBox();
       // The company line spans the footer's content row and the links sit beneath it, not squeezed beside it.
@@ -175,7 +192,8 @@ for (const width of [320, 390, 1366]) {
 async function servedAsProduction(context: BrowserContext, baseURL: string) {
   const beacons: string[] = [];
   await context.route(/^https:\/\/([a-z0-9-]+\.)*umami\.is\//, (request) => {
-    if (isTracker(request.request().url())) return request.continue();
+    // The tag itself falls through to the shared guard, which serves the committed copy.
+    if (isTracker(request.request().url())) return request.fallback();
     beacons.push(request.request().url());
     return request.fulfill({ status: 200, contentType: "application/json", body: "{}" });
   });

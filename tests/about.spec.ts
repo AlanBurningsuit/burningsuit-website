@@ -1,5 +1,4 @@
-import { test, expect } from "@playwright/test";
-import { isTracker, otherScripts } from "./analytics";
+import { test, expect, isTracker, otherScripts } from "./analytics";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
