@@ -19,15 +19,18 @@ h1 { margin: 18px 0 26px; font-size: var(--title-size); font-weight: 800; line-h
 h2 { font-size: clamp(1.75rem, 2.7vw, 2.5rem); font-weight: 700; line-height: var(--lh-snug); letter-spacing: var(--ls-display); }
 h3 { font-weight: 600; line-height: var(--lh-snug); letter-spacing: var(--ls-display-tight); }
 p + p { margin-top: 1rem; }
-a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: .2em; }
-a:hover { text-decoration-thickness: 2px; }
+a { color: var(--link); text-decoration-color: color-mix(in srgb, currentColor 50%, transparent); text-decoration-thickness: 1px; text-underline-offset: .2em; transition: text-decoration-color .2s, text-underline-offset .2s var(--ease-out); }
+a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; text-underline-offset: .26em; }
 :focus-visible { outline: var(--px) solid var(--link); outline-offset: 5px; border-radius: var(--r-xs); }
 .wrap { max-width: var(--content-width); margin-inline: auto; padding-inline: var(--page-gutter); }
 .placeholder { max-width: 65ch; margin-inline: auto; padding: var(--page-gutter); }
 .eyebrow { font: 400 .72rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono-wide); color: var(--text-dim); }
 .em { color: var(--amber); }
 .standfirst { font-size: 1.3rem; line-height: var(--lh-relaxed); font-weight: 600; margin-bottom: 18px; }
-.text-link { display: inline-flex; align-items: baseline; gap: 16px; font-weight: 600; padding-block: 7px; }
+.text-link { display: inline-block; font-weight: 600; padding-block: 7px; }
+/* A text link leads on with a warm arrow (an external one points out), which steps forward on hover. */
+.text-link::after { content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); transition: translate .25s var(--ease-out); }
+.text-link[href^="http"]::after { content: "↗" / ""; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 14px; }
 .links a { font-weight: 600; padding-block: 6px; }
 .aside { font-size: .92rem; color: var(--text-dim); }
@@ -38,7 +41,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 .skip { position: absolute; top: 12px; left: 16px; z-index: 10; padding: 12px; background: var(--bg-band); transform: translateY(-200%); }
 .skip:focus { transform: none; }
-.masthead { display: flex; align-items: center; justify-content: space-between; min-height: 84px; gap: 40px; }
+.masthead { display: flex; align-items: center; justify-content: space-between; min-height: var(--masthead-h); gap: 40px; }
 .brand { padding-block: 20px; flex-shrink: 0; }
 .brand img { width: 200px; height: auto; }
 .masthead nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 30px; }
@@ -47,6 +50,37 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* A candid photo, matted like a print: a card-coloured mount, the frame radius and the soft lift. */
 .framed-photo img { display: block; width: 100%; height: auto; border: 6px solid var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
+
+/* Thresholds: the daylight body is a sheet laid on the dark ground. Its rounded top edge rises over each page's
+   opening (.stage), and its rounded bottom edge rests on the closing band that follows daylight, each casting a
+   soft shadow onto the dark. A stage followed by a raised band sets --sheet; a closing band after one, --sheet-end. */
+.stage { position: relative; padding-bottom: var(--sheet-r); overflow: clip; view-timeline: --stage block; }
+:is(section, div):not(.dark) + .dark { position: relative; padding-top: var(--sheet-r); }
+.stage::after, :is(section, div):not(.dark) + .dark::before { content: ""; position: absolute; z-index: 1; inset-inline: 0; height: var(--sheet-r); pointer-events: none; }
+.stage::after { bottom: 0; background: var(--sheet, var(--mist)); border-radius: var(--sheet-r) var(--sheet-r) 0 0; box-shadow: 0 -16px 32px -20px var(--sheet-shadow); }
+:is(section, div):not(.dark) + .dark::before { top: 0; background: var(--sheet-end, var(--mist)); border-radius: 0 0 var(--sheet-r) var(--sheet-r); box-shadow: 0 16px 32px -20px var(--sheet-shadow); }
+.raised-band + .dark { --sheet-end: var(--sage); }
+/* A page that ends on daylight rounds the sheet's foot onto the footer. */
+main:has(> :not(.dark):last-child) { overflow: clip; border-end-start-radius: var(--sheet-r); border-end-end-radius: var(--sheet-r); box-shadow: 0 16px 32px -20px var(--sheet-shadow); }
+/* A daylight card answers the pointer and the keyboard: its edge warms and its shadow deepens (it also lifts, with motion). */
+.course:is(:hover, :focus-within) { box-shadow: var(--lift-raised); }
+
+/* Motion, only when the visitor hasn't asked for less: as the sheet rises, the opening drifts down beneath it;
+   daylight cards and margin notes settle into place as they arrive; a card lifts and a link's arrow steps on hover. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .stage > * { animation: stage-recede linear both; animation-timeline: --stage; animation-range: exit 0% exit 100%; }
+    :is(.course, .teacher-origin, .trust-teacher, .hit-pair-item) { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+  }
+  .course { transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out); }
+  .course:is(:hover, :focus-within) { transform: translateY(-3px); }
+  .text-link:hover::after { translate: .25em 0; }
+  .text-link[href^="http"]:hover::after { translate: .15em -.15em; }
+}
+/* The drift stays inside each opening's own bottom padding, so no line of it ever slides under the sheet while still in view. */
+@keyframes stage-recede { to { translate: 0 var(--recede, 28px); } }
+@media (min-width: 901px) { .stage { --recede: 44px; } }
+@keyframes settle { from { translate: 0 28px; } }
 
 /* A raised band with its heading beside the copy: the homepage consultancy band and the consultancy page's AI band. */
 .raised-band { background: var(--surface-raised); }

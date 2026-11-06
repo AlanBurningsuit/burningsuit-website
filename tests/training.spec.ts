@@ -216,12 +216,15 @@ test("the starting points carry the page's weight: lifted, spined cards with rec
     const [first, second] = await tops(selector);
     expect(Math.abs(first - second)).toBeLessThanOrEqual(1);
   }
-  // Specialists stay lighter than the starting points; the teacher note is not amber-ruled.
+  // Specialists stay lighter than the starting points; the cards open on the daylight warm accent (the ochre tick
+  // before each card's fit line), which the teacher note's rule does not carry.
   const size = (selector: string) => page.locator(selector).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
   expect(await size("#specialists-title")).toBeLessThan(await size("#start-points-title"));
+  const warm = await page.locator(".starting-points .course-fit").first().evaluate((el) => getComputedStyle(el, "::before").backgroundColor);
   const amber = await page.locator("h1 .em").evaluate((el) => getComputedStyle(el).color);
-  expect(await page.locator(".teacher-note").evaluate((el) => getComputedStyle(el).borderLeftColor)).not.toBe(amber);
-  expect(await page.getByRole("article").first().evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(amber);
+  expect(warm).not.toBe(amber);
+  expect(await page.locator(".teacher-note").evaluate((el) => getComputedStyle(el).borderLeftColor)).not.toBe(warm);
+  expect(await page.getByRole("article").first().evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(warm);
 });
 
 test("fact separators never start or end a wrapped line", async ({ page }) => {

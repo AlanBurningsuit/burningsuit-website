@@ -11,7 +11,15 @@
   --home-columns: minmax(0, .88fr) minmax(0, 1.12fr);
   --body-size: 1.125rem;
   --title-size: clamp(2.6rem, 4.2vw, 3.7rem);
-  --lift: 0 1px 2px color-mix(in srgb, var(--pine) 8%, transparent), 0 14px 32px -22px color-mix(in srgb, var(--pine) 45%, transparent);
+  --masthead-h: 84px;
+  /* A daylight card: a crisp pine edge, a contact shadow and a soft lift; raised is its hover and focus state, its edge warmed to ochre. */
+  --lift: 0 0 0 1px color-mix(in srgb, var(--pine) 8%, transparent), 0 1px 2px color-mix(in srgb, var(--pine) 10%, transparent), 0 14px 32px -22px color-mix(in srgb, var(--pine) 45%, transparent);
+  --lift-raised: 0 0 0 1px color-mix(in srgb, var(--ochre) 45%, transparent), 0 2px 4px color-mix(in srgb, var(--pine) 10%, transparent), 0 22px 40px -24px color-mix(in srgb, var(--pine) 55%, transparent);
+  /* The daylight sheet's corner radius where it meets a dark bookend, and the shadow it casts on the dark. */
+  --sheet-r: clamp(20px, 2.6vw, 36px);
+  --sheet-shadow: rgb(0 0 0 / 0.7);
+  /* Motion: one easing for every settle and response; movement is switched off under prefers-reduced-motion. */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
 }
 
 /* Surface roles. Components colour themselves through these rather than a raw ground, so a band reads as a
@@ -26,6 +34,7 @@
   --text-dim: var(--fg-dim);
   --rule: var(--line);
   --link: var(--amber);
+  --accent: var(--amber);
 }
 main {
   --surface: var(--mist);
@@ -35,4 +44,5 @@ main {
   --text-dim: var(--pine-soft);
   --rule: var(--mist-line);
   --link: var(--fern);
+  --accent: var(--ochre);
 }

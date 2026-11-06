@@ -1,4 +1,5 @@
-/* Opening: the dark bookend introduces Alan, beside his portrait; the starting points follow on daylight. */
+/* Opening: the dark stage introduces Alan, beside his portrait; on a wide screen it fills the first view but for the
+   edge of the daylight sheet, so the starting points rise into view as you scroll. */
 .home-opening {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
@@ -6,6 +7,9 @@
   column-gap: var(--column-gap);
   padding-block: 28px 52px;
   align-items: center;
+}
+@media (min-width: 901px) and (min-height: 600px) {
+  .home-opening { min-height: min(calc(100svh - var(--masthead-h) - var(--sheet-r) - 96px), 860px); padding-block: 32px 64px; }
 }
 .introduction { grid-area: intro; }
 .introduction h1 { margin-top: 0; }
@@ -15,7 +19,7 @@
 .alan-photo img { aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; }
 
 /* Find your starting point: the two primary entries as equal cards, the specialists in a quieter block beneath. */
-.courses { padding-block: 72px 76px; }
+.courses { padding-block: 48px 76px; }
 .courses > h2 { padding-bottom: 28px; }
 .course-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
 .course { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
@@ -24,13 +28,15 @@
   .course-list { grid-template-rows: repeat(5, auto); }
   .course-list > .course { display: grid; grid-template-rows: subgrid; grid-row: span 5; row-gap: 0; align-content: start; }
 }
-.course-fit, .specialists-lead { font: 600 1rem / var(--lh-snug) var(--ff-display); color: var(--text-dim); margin-bottom: 8px; }
+/* Who each entry is for, in the mono margin voice, led by a short ochre tick. */
+.course .course-fit, .specialists-lead { font: 400 .84rem / var(--lh-label) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); margin-bottom: 12px; }
+.course .course-fit::before, .specialists-lead::before { content: ""; display: inline-block; width: 1.25em; height: var(--bw-spine); margin-right: .6em; vertical-align: .3em; background: var(--accent); }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
 .course > p:not(.course-fit) { font-size: 1rem; }
 /* Each entry's deciding facts and prerequisite sit together in one block, recessed to the daylight ground;
    it keeps its own height when the neighbouring entry's block is taller. */
 .deciding { align-self: start; margin: 16px 0 14px; padding: 14px 18px 16px; background: var(--surface); border-radius: var(--r-sm); }
-.facts { margin: 0 0 8px; padding: 0; font-size: .95rem; row-gap: 2px; }
+.facts { margin: 0 0 8px; padding: 0; font: 400 .86rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); row-gap: 2px; }
 .fact-label { color: var(--text-dim); }
 .prereq { font-size: .95rem; }
 .course-actions { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 10px; }
@@ -52,7 +58,7 @@
 .teacher { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); column-gap: var(--column-gap); padding-block: 24px 88px; align-items: start; }
 .teacher-teaching h2 { margin-bottom: 26px; }
 .teacher-teaching p { max-width: 58ch; }
-.teacher-origin { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--amber); padding: 24px 28px; margin-top: 78px; max-width: 44ch; }
+.teacher-origin { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 24px 28px; margin-top: 78px; max-width: 44ch; }
 .teacher-origin p { font-size: 1.1rem; line-height: var(--lh-relaxed); }
 .teacher-origin .text-link { margin-top: 12px; }
 

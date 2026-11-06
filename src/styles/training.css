@@ -5,12 +5,12 @@
 .training-intro h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
 .training-intro > p { max-width: 60ch; font-size: 1.15rem; line-height: var(--lh-relaxed); text-wrap: pretty; }
 
-/* Two places to start: the page's main choice, as two equal daylight cards that open on an amber spine;
+/* Two places to start: the page's main choice, as two equal daylight cards that open on a warm spine;
    each one's deciding facts and prerequisite sit together in a recessed block. */
 .starting-points { padding-block: 64px 40px; }
 .starting-points h2 { font-size: clamp(2.1rem, 3.4vw, 2.9rem); padding-bottom: 26px; }
 .start-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); align-items: start; }
-.starting-points .course { border-top: var(--bw-spine) solid var(--amber); padding: 24px 30px 26px; }
+.starting-points .course { border-top: var(--bw-spine) solid var(--accent); padding: 24px 30px 26px; }
 /* Side by side, the entries share rows, so the two fact blocks and outline links line up whatever the description length. */
 @media (min-width: 901px) {
   .start-list { grid-template-rows: repeat(6, auto); }
@@ -35,7 +35,7 @@
 .specialist-courses .not-sure { margin-top: 30px; }
 .not-sure a { font-weight: 600; }
 
-/* Who's teaching: heading beside a quietly ruled note (amber spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */
+/* Who's teaching: heading beside a quietly ruled note (warm spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */
 .training-teacher { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 24px 80px; align-items: start; }
 .teacher-note { border-left: var(--bw-spine) solid var(--rule); padding-left: 22px; }
 .teacher-note p { max-width: 64ch; }

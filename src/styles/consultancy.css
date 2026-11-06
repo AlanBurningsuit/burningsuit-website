@@ -33,7 +33,7 @@
   .work-runs .do-inner { grid-template-columns: minmax(0, 1fr); row-gap: 30px; }
   .work-runs .do-lead { position: static; }
   .work-runs .do-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 28px; }
-  .work-runs .do-steps li { border-left: 0; border-top: var(--bw-spine) solid var(--amber); padding: 40px 0 0; }
+  .work-runs .do-steps li { border-left: 0; border-top: var(--bw-spine) solid var(--accent); padding: 40px 0 0; }
   .work-runs .do-steps li::before { left: 0; top: 16px; }
 }
 .do-steps h3 a { color: inherit; }
@@ -45,7 +45,7 @@
 /* Alan's line in display type: the section's one bold thing. */
 /* On wide screens the second clause starts its own line; on phones the line balances naturally. */
 @media (min-width: 681px) { .pull-line .clause { display: block; } }
-.pull-line { margin-bottom: 26px; padding-left: 20px; border-left: var(--bw-spine) solid var(--amber); max-width: 30ch; text-wrap: balance; font: 700 clamp(1.6rem, 2.4vw, 2rem) / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display); color: var(--text); }
+.pull-line { margin-bottom: 26px; padding-left: 20px; border-left: var(--bw-spine) solid var(--accent); max-width: 30ch; text-wrap: balance; font: 700 clamp(1.6rem, 2.4vw, 2rem) / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display); color: var(--text); }
 .ongoing-intro { margin-bottom: 16px; max-width: 64ch; }
 .ongoing-price { margin-top: 18px; max-width: 64ch; }
 
@@ -56,7 +56,7 @@
 .who-photo { max-width: 420px; }
 .who-photo img { aspect-ratio: 3 / 2; object-fit: cover; } /* guard: the derivative is already 3:2 */
 .who-does { padding-block: 24px 80px; }
-.who-note { border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; }
+.who-note { border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; }
 .who-note p { max-width: 64ch; }
 .who-note .text-link { margin-top: 12px; }
 

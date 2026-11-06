@@ -11,12 +11,12 @@
 .course-intro h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
 .course-intro > p { max-width: 60ch; }
 .course-intro .standfirst { max-width: 34ch; text-wrap: balance; }
-.course-fit { border-left: var(--bw-spine) solid var(--amber); padding-left: 18px; }
+.course-fit { border-left: var(--bw-spine) solid var(--accent); padding-left: 18px; }
 p + p.course-fit { margin-top: 1.4rem; }
 
 .course-run { background: var(--surface-card); border-radius: var(--r); padding: 18px 26px 24px; margin-top: 10px; }
-.run-facts { list-style: none; margin: 0; padding: 0; font: 600 1.05rem / var(--lh-snug) var(--ff-display); }
-.run-facts li { padding-block: 8px; }
+.run-facts { list-style: none; margin: 0; padding: 0; font: 400 .92rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); }
+.run-facts li { padding-block: 6px; }
 
 .booking { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-top: 24px; }
 .book-button {
@@ -31,7 +31,8 @@ p + p.course-fit { margin-top: 1.4rem; }
 .private-ask { margin-top: 22px; font-size: 1rem; }
 .private-ask a { font-weight: 600; }
 
-/* What you'll do: a raised band with the four steps on a numbered spine. */
+/* What you'll do: a raised band with the four steps on a numbered spine; the daylight sheet rises over the opening in its sage. */
+.stage:has(+ .course-do) { --sheet: var(--sage); }
 .course-do { background: var(--surface-raised); }
 .do-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 64px 70px; align-items: start; }
 @media (min-width: 901px) { .do-lead, .course-need > h2 { position: sticky; top: 24px; } }
@@ -48,7 +49,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 .course-trust { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: var(--column-gap); padding-block: 76px 64px; align-items: start; }
 .trust-check h2 { margin-bottom: 22px; }
 .trust-check p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
-.trust-teacher { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--amber); padding: 22px 26px; margin-top: 10px; max-width: 42ch; }
+.trust-teacher { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 22px 26px; margin-top: 10px; max-width: 42ch; }
 .trust-teacher h3 { font-size: 1.3rem; margin-bottom: 10px; }
 .trust-teacher .text-link { margin-top: 12px; }
 
@@ -56,7 +57,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 .course-need { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 80px; align-items: start; }
 .need-list { margin: 0; padding: 14px 30px; list-style: none; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
 .need-list li { position: relative; padding: 10px 0 10px 22px; max-width: 64ch; }
-.need-list li::before { content: ""; position: absolute; left: 0; top: calc(10px + .62em); width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
+.need-list li::before { content: ""; position: absolute; left: 0; top: calc(10px + .62em); width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
 .need-note { margin-top: 18px; font-size: 1rem; color: var(--text-dim); max-width: 64ch; }
 /* A need section with a body (the 101's "What you'll need", fundamentals' "What to arrange") stacks its heading above
    the card on wide screens, so it doesn't repeat the side-by-side sections before it. */
@@ -65,7 +66,7 @@ p + p.course-fit { margin-top: 1.4rem; }
   .course-need:has(> .need-body) > h2 { position: static; }
   .need-body { max-width: 76ch; }
 }
-.keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--amber); padding-left: 22px; max-width: 52ch; }
+.keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; max-width: 52ch; }
 .to-confirm { font: 400 .82rem / 1.4 var(--ff-mono); vertical-align: baseline; color: var(--text-dim); background: var(--surface-raised); padding: 2px 6px; border-radius: var(--r-xs); display: inline-block; }
 
 /* Book a seat: the closing band. */

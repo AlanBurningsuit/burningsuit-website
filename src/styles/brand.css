@@ -32,11 +32,12 @@
   /* ---- daylight: the cool botanical reading surface between the dark bookends ---- */
   --mist: #e5ebe6; /* eucalyptus mist: the reading ground of a web page's body */
   --sage: #d5dfd8; /* one step down from mist: a raised band or recessed block on daylight */
-  --leaf: #f6f9f6; /* a lifted daylight card on mist */
+  --leaf: #fbfcf9; /* a lifted daylight card on mist: lit paper, a breath warmer than the ground */
   --pine: #1e2a26; /* body and headlines on daylight grounds */
   --pine-soft: #4a5a53; /* captions and secondary lines on daylight grounds (AA-safe on sage) */
   --fern: #2a5d4d; /* links and the focus ring on daylight grounds; amber stays the warm rule */
   --mist-line: rgb(30 42 38 / 0.14); /* hairline divider on daylight grounds: pine at 14% */
+  --ochre: #9c6a12; /* burnished ochre: amber's counterpart on daylight, where amber washes out; spines, markers and arrows (3.4:1 on sage, 4.5:1 on leaf) */
 
   /* ---- accents: warmth in small doses, one spark ---- */
   --amber: #e69875; /* links, the one emphasised word on a dark ground, warm rules */

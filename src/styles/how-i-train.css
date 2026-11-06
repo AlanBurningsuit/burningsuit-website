@@ -13,7 +13,7 @@
 
 /* If you get stuck: the personal answer, on the raised band in a lifted card with the warm spine and larger prose. */
 .hit-stuck .hit-answer { padding-block: 52px 58px; }
-.hit-stuck .hit-prose { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--amber); padding: 26px 32px 28px; }
+.hit-stuck .hit-prose { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 26px 32px 28px; }
 .hit-stuck .hit-prose p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 56ch; }
 
 /* Own work and using it afterwards: two related answers side by side, each on its own card. */
