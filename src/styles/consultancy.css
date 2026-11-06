@@ -62,6 +62,8 @@
 
 /* How to start: the free hour on a raised band, heading above the ask and link, ahead of the shared enquiry band. */
 .start { background: var(--surface-raised); }
+/* The enquiry band after it rounds the sheet's foot in the band's sage. */
+.start + .dark { --sheet-end: var(--sage); }
 .start .book-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
 .start-ask { font-size: 1.1rem; max-width: 40ch; }
 .start-link { font-size: 1.3rem; line-height: var(--lh-snug); }

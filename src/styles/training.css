@@ -7,7 +7,7 @@
 
 /* Two places to start: the page's main choice, as two equal daylight cards that open on a warm spine;
    each one's deciding facts and prerequisite sit together in a recessed block. */
-.starting-points { padding-block: 64px 40px; }
+.starting-points { padding-block: 72px 56px; }
 .starting-points h2 { font-size: clamp(2.1rem, 3.4vw, 2.9rem); padding-bottom: 26px; }
 .start-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); align-items: start; }
 .starting-points .course { border-top: var(--bw-spine) solid var(--accent); padding: 24px 30px 26px; }
@@ -23,11 +23,11 @@
 .facts .together { white-space: nowrap; }
 
 /* Specialists: a quieter recessed block of rows, name beside its facts on wide screens; no cards, fit questions or per-row links. */
-.specialist-courses { padding-block: 48px 72px; }
+.specialist-courses { padding-block: 56px 88px; }
 .specialists-head h2 { font-size: clamp(1.8rem, 2.8vw, 2.45rem); padding-bottom: 14px; }
 .specialists-head p { max-width: 60ch; margin-bottom: 22px; }
 .specialist-rows { list-style: none; margin: 0 0 18px; padding: 12px 30px; background: var(--surface-raised); border-radius: var(--r); }
-.specialist-rows > li { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: baseline; padding-block: 10px; }
+.specialist-rows > li { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: baseline; padding-block: 13px; }
 .specialist-rows h3 { font-size: 1.2rem; font-weight: 600; letter-spacing: var(--ls-display-tight); }
 .specialist-rows .facts { margin: 0; }
 .specialist-courses .text-link { font-size: .96rem; }
@@ -36,7 +36,7 @@
 .not-sure a { font-weight: 600; }
 
 /* Who's teaching: heading beside a quietly ruled note (warm spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */
-.training-teacher { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 24px 80px; align-items: start; }
+.training-teacher { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 32px 96px; align-items: start; }
 .teacher-note { border-left: var(--bw-spine) solid var(--rule); padding-left: 22px; }
 .teacher-note p { max-width: 64ch; }
 .teacher-note .course-actions { margin-top: 12px; }

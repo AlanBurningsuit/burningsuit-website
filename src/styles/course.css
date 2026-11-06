@@ -5,7 +5,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr);
   column-gap: var(--column-gap);
-  padding-block: 36px 48px;
+  padding-block: 36px 56px;
   align-items: start;
 }
 .course-intro h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }

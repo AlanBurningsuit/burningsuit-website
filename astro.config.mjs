@@ -13,7 +13,7 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.fontsource(), name: "Mona Sans",
-      cssVariable: "--font-mona", weights: [600, 800], styles: ["normal"],
+      cssVariable: "--font-mona", weights: [600, 700, 800], styles: ["normal"],
       subsets: ["latin"], fallbacks: ["Trebuchet MS", "Arial", "sans-serif"],
     },
     {

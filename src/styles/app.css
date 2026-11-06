@@ -26,7 +26,8 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .placeholder { max-width: 65ch; margin-inline: auto; padding: var(--page-gutter); }
 .eyebrow { font: 400 .72rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono-wide); color: var(--text-dim); }
 .em { color: var(--amber); }
-.standfirst { font-size: 1.3rem; line-height: var(--lh-relaxed); font-weight: 600; margin-bottom: 18px; }
+/* The lede: the question or promise under a title, in a larger, lighter body voice, so the display face keeps the weight. */
+.standfirst { font: 400 clamp(1.3rem, 1.9vw, 1.6rem) / 1.35 var(--ff-body); letter-spacing: -0.005em; margin-bottom: 20px; }
 .text-link { display: inline-block; font-weight: 600; padding-block: 7px; }
 /* A text link leads on with a warm arrow (an external one points out), which steps forward on hover. */
 .text-link::after { content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); transition: translate .25s var(--ease-out); }
@@ -59,7 +60,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .stage::after, :is(section, div):not(.dark) + .dark::before { content: ""; position: absolute; z-index: 1; inset-inline: 0; height: var(--sheet-r); pointer-events: none; }
 .stage::after { bottom: 0; background: var(--sheet, var(--mist)); border-radius: var(--sheet-r) var(--sheet-r) 0 0; box-shadow: 0 -18px 36px -18px var(--sheet-shadow); }
 :is(section, div):not(.dark) + .dark::before { top: 0; background: var(--sheet-end, var(--mist)); border-radius: 0 0 var(--sheet-r) var(--sheet-r); box-shadow: 0 18px 36px -18px var(--sheet-shadow); }
-:is(.raised-band, .start) + .dark { --sheet-end: var(--sage); }
+.raised-band + .dark { --sheet-end: var(--sage); }
 /* A daylight card answers the pointer and the keyboard: its edge warms and its shadow deepens (it also lifts, with motion). */
 .course:is(:hover, :focus-within) { box-shadow: var(--lift-raised); }
 
@@ -74,8 +75,13 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
   .course:is(:hover, :focus-within) { transform: translateY(-3px); }
   a { transition: text-decoration-color .2s, text-underline-offset .2s var(--ease-out); }
   a:hover { text-underline-offset: .26em; }
-  .text-link:hover::after { translate: .25em 0; }
-  .text-link[href^="http"]:hover::after { translate: .15em -.15em; }
+  .text-link:is(:hover, :focus-visible)::after { translate: .25em 0; }
+  .text-link[href^="http"]:is(:hover, :focus-visible)::after { translate: .15em -.15em; }
+  /* A press answers with a brief give; page to page, the masthead holds still while the page beneath it cross-fades. */
+  :is(.text-link, .links a, .masthead nav a, button:not(:disabled)):active { scale: .98; transition: scale var(--dur-micro); }
+  @view-transition { navigation: auto; }
+  .masthead { view-transition-name: masthead; }
+  ::view-transition-group(root) { animation-duration: var(--dur-base); }
 }
 /* The drift stays inside each opening's own bottom padding, so no line of it ever slides under the sheet while still in view. */
 @keyframes stage-recede { to { translate: 0 var(--recede, 28px); } }
@@ -105,7 +111,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 @media (max-width: 680px) {
   :root { --page-gutter: 22px; --title-size: clamp(2.5rem, 11vw, 3.2rem); }
   h1 { margin-top: 16px; margin-bottom: 22px; }
-  .standfirst { font-size: 1.2rem; }
+  .standfirst { font-size: 1.22rem; }
   .masthead { flex-direction: column; justify-content: center; gap: 0; min-height: 0; padding-block: 10px; }
   .brand { padding: 16px 0 12px; }
   .brand img { width: 174px; }

@@ -12,7 +12,7 @@
   .home-opening { min-height: min(calc(100svh - var(--masthead-h) - var(--sheet-r) - 96px), 860px); padding-block: 32px 64px; }
 }
 .introduction { grid-area: intro; }
-.introduction h1 { margin-top: 0; }
+.introduction h1 { margin-top: 0; font-size: clamp(2.6rem, 5vw, 4.6rem); text-wrap: balance; }
 .introduction > p { max-width: 62ch; }
 .introduction strong { font-weight: 600; }
 .alan-photo { grid-area: photo; justify-self: end; width: 100%; max-width: 520px; }
@@ -33,10 +33,14 @@
 .course .course-fit::before, .specialists-lead::before { content: ""; display: inline-block; width: 1.75em; height: var(--bw-spine); margin-right: .6em; vertical-align: .3em; background: var(--accent); }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
 .course > p:not(.course-fit) { font-size: 1rem; }
-/* Each entry's deciding facts and prerequisite sit together in one block, recessed to the daylight ground;
-   it keeps its own height when the neighbouring entry's block is taller. */
-.deciding { align-self: start; margin: 16px 0 14px; padding: 14px 18px 16px; background: var(--surface); border-radius: var(--r-sm); }
-.facts { margin: 0 0 8px; padding: 0; font: 400 .86rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); row-gap: 2px; }
+/* Each entry's deciding facts and prerequisite sit together: the facts as a field-guide metadata line in small tracked
+   mono capitals, warm middots between them, then the prerequisite in the body voice. It keeps its own height when
+   the neighbouring entry's block is taller. */
+.deciding { align-self: start; margin: 20px 0 16px; }
+.facts { margin: 0 0 10px; padding: 0; font: 400 .76rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono-wide); text-transform: uppercase; color: var(--text); row-gap: 2px; }
+/* Mono middots need a wider seat than the proportional default to sit centred in the gap. */
+.facts.dot-list { column-gap: 1.3em; }
+.facts.dot-list > li::before { left: -.92em; color: var(--accent); }
 .fact-label { color: var(--text-dim); }
 .prereq { font-size: .95rem; }
 .course-actions { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 10px; }

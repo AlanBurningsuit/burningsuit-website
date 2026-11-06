@@ -182,7 +182,7 @@ test("training chooser layout: equal entries side by side on wide screens, stack
   }
 });
 
-test("the starting points carry the page's weight: lifted, spined cards with recessed deciding facts on the daylight body", async ({ page }) => {
+test("the starting points carry the page's weight: lifted, spined cards with field-guide deciding facts on the daylight body", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
   const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
@@ -196,16 +196,19 @@ test("the starting points carry the page's weight: lifted, spined cards with rec
   expect(await bg(".specialist-rows")).not.toBe(ground);
   expect(await bg(".specialist-rows")).not.toBe(band);
   expect(await bg("#contact")).not.toBe(ground);
-  // Each entry keeps its facts and prerequisite together in one recessed block, set back from its card.
+  // Each entry keeps its facts and prerequisite together in one block on the card itself: the facts in the mono
+  // metadata voice (small tracked capitals), the prerequisite in the body voice.
+  const bodyFont = await page.locator("main p").first().evaluate((el) => getComputedStyle(el).fontFamily);
   for (const entry of await page.getByRole("article").all()) {
     const deciding = entry.locator(".deciding");
     await expect(deciding).toHaveCount(1);
     await expect(deciding.locator(".facts")).toHaveCount(1);
     await expect(deciding.locator(".prereq")).toHaveCount(1);
-    const tone = await deciding.evaluate((el) => getComputedStyle(el).backgroundColor);
-    // Recessed: cut back from its card to the daylight ground.
-    expect(tone).not.toBe(band);
-    expect(tone).toBe(ground);
+    expect(await deciding.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgba(0, 0, 0, 0)");
+    const facts = await deciding.locator(".facts").evaluate((el) => { const c = getComputedStyle(el); return { font: c.fontFamily, transform: c.textTransform }; });
+    expect(facts.font).toMatch(/Commit Mono/);
+    expect(facts.transform).toBe("uppercase");
+    expect(await deciding.locator(".prereq").evaluate((el) => getComputedStyle(el).fontFamily)).toBe(bodyFont);
     const spine = await entry.evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth));
     // A spine, heavier than the specialists' hairline rows.
     expect(spine).toBeGreaterThan(await page.locator(".specialist-rows > li").first().evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth)));

@@ -20,6 +20,8 @@
   --sheet-shadow: rgb(0 0 0 / 0.85);
   /* Motion: one easing for every settle and response; movement is switched off under prefers-reduced-motion. */
   --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur-micro: .1s;
+  --dur-base: .3s;
 }
 
 /* Surface roles. Components colour themselves through these rather than a raw ground, so a band reads as a
