@@ -4,7 +4,11 @@ import EnquiryForm from "../components/EnquiryForm.astro";
 import { Image } from "astro:assets";
 import portrait from "../assets/photos/DSC08683-Edit.jpg";
 import { pages } from "../config/compatibility.mjs";
+import { loadTrainingPrices, trainingPriceCopy } from "../lib/training-prices.mjs";
 import "../styles/home.css";
+
+// Priced only when SHOW_TRAINING_PRICES=true; otherwise every price stays "Price on request".
+const priced = trainingPriceCopy(loadTrainingPrices());
 ---
 <BaseLayout
   title="Power BI and AI training with Alan | burningsuit"
@@ -29,8 +33,7 @@ import "../styles/home.css";
           <ul class="facts dot-list">
             <li>2 days</li>
             <li>Private, for your team</li>
-            <li>On site or online</li>
-            <li>Price on request</li>
+            {priced ? <li>{priced.homeFundamentals}</li> : <><li>On site or online</li><li>Price on request</li></>}
           </ul>
           <p class="prereq">No Power BI experience needed.</p>
           <div class="course-actions">
@@ -45,6 +48,7 @@ import "../styles/home.css";
           <ul class="facts dot-list">
             <li>Half a day, online</li>
             <li><span class="fact-label">Public course:</span> <time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
+            {priced && <li>{priced.publicSeat}</li>}
             <li>Also private, for your team</li>
             <li>Price on request</li>
           </ul>
