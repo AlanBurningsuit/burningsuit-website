@@ -65,7 +65,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   `);
   await expect(page.locator(".do-steps h3 a")).not.toHaveClass(/text-link/);
   // Approved body wording, not just headings: the opening and the spine a budget holder may be forwarded.
-  await expect(page.locator(".course-intro .standfirst")).toHaveText("Got a Power BI problem training won't fix?");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("Got a Power BI problem training won't fix?");
   await expect(page.locator(".do-steps > li > p")).toHaveText([
     "We talk through what's going on. Sometimes that's enough: I can point you to what to do next, or tell you if it isn't something I can help with.",
     "Every job is different, so I quote case by case, usually as a fixed price. Getting to know your Power BI properly is part of the work, so there's nothing separate to pay for first.",

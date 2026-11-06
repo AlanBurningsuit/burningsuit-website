@@ -43,7 +43,7 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await page.goto(route);
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
   await expect(page.locator("h1")).toHaveText("Power BI fundamentals");
-  await expect(page.locator(".course-intro .standfirst")).toHaveText("New to Power BI?");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("New to Power BI?");
   await expect(page.locator(".course-intro > p:not(.standfirst):not(.course-fit)")).toHaveText("This two-day course takes your team from preparing data to sharing reports and keeping them up to date. No Power BI experience, DAX or coding needed.");
   await expect(page.locator(".course-fit")).toHaveText("Already building reports and looking for a day on calculations or table design? Compare DAX fundamentals and Data modelling.");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll be able to do", "The two days", "What to arrange", "Ask about dates"]);
@@ -138,12 +138,15 @@ test("Fundamentals layout: facts beside the introduction on wide screens, direct
   const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(await bg(".agenda")).not.toBe(await bg("body"));
   for (const selector of [".outcomes", "section[aria-labelledby='need-title']"]) expect(await bg(selector)).toBe("rgba(0, 0, 0, 0)");
-  // The opening's specialist pointer keeps the 101's amber course-fit spine (amber is the dark opening's link colour).
-  const amber = await page.locator(".course-run a").first().evaluate((el) => getComputedStyle(el).color);
-  expect(await page.locator(".course-fit").evaluate((el) => getComputedStyle(el).borderLeftColor)).toBe(amber);
+  // The introduction now opens the daylight sheet, so its specialist pointer carries the daylight warm accent (the
+  // same ochre as the need-list markers), not the link colour; amber stays on the dark title band.
+  const amber = await page.locator(".title-band").evaluate((el) => getComputedStyle(el).getPropertyValue("--accent").trim());
+  const ochre = await page.locator(".need-list > li").first().evaluate((el) => getComputedStyle(el, "::before").backgroundColor);
+  expect(await page.locator(".course-fit").evaluate((el) => getComputedStyle(el).borderLeftColor)).toBe(ochre);
   // On the daylight agenda band the step numbers take the daylight link colour, not amber (1.9:1 there).
   const daylightLink = await page.locator(".teacher-links a").first().evaluate((el) => getComputedStyle(el).color);
-  expect(daylightLink).not.toBe(amber);
+  expect(daylightLink).not.toBe(ochre);
+  expect(amber).not.toBe("");
   expect(await page.locator(".agenda-steps > li").first().evaluate((el) => getComputedStyle(el, "::before").color)).toBe(daylightLink);
   // On wide screens the two days run side by side.
   const [day1, day2] = [await box(page, "#day-1-title"), await box(page, "#day-2-title")];

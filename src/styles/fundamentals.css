@@ -40,5 +40,5 @@
   .course-need.outcomes { padding-block: 36px 48px; }
   .agenda .day-title { font-size: 1.2rem; }
   /* With enlarged text the long title hyphenates rather than breaking at an arbitrary letter (the training chooser's treatment). */
-  .course-intro h1 { hyphens: auto; }
+  .title-band h1 { hyphens: auto; }
 }

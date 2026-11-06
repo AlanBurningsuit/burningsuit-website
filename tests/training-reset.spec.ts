@@ -111,7 +111,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(needs.nth(1)).toContainText("One of three agent tools, on a paid plan: GitHub Copilot, Claude or ChatGPT/Codex");
 
   // The deciding opening and trust sentences, and the step sequence as a list for assistive technology.
-  await expect(page.locator(".course-intro .standfirst")).toHaveText("Want to be ready for where Power BI is going?");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("Want to be ready for where Power BI is going?");
   await expect(page.locator(".course-fit")).toHaveText("If you've built a report in Power BI Desktop, even a simple one, you're ready. No coding or AI experience needed. If you already use coding agents on Power BI work every day, this covers ground you know.");
   await expect(page.locator(".trust-check p")).toHaveText("An agent can sound sure of itself and still be wrong. You learn to check its work against numbers you can confirm, correct it with evidence and go back to a clean copy when you need to. Deciding whether an answer is right stays with you.");
   await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI.");
@@ -256,15 +256,16 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect(await bg("#consultancy")).not.toBe(await bg("body"));
 
   const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
-  // Wide screens: the dark opening holds only the introduction: the title across the full width, then the lede and
-  // introduction beside the portrait; the starting points follow below it.
-  let intro = await box(".introduction"), title = await box(".introduction h1"), copy = await box(".intro-copy"), list = await box(".courses"), photo = await box(".alan-photo");
+  // Wide screens: the dark title band holds only the title, across the full width, and the lede; the introduction then
+  // opens the daylight sheet beside the portrait, and the starting points follow below it.
+  let intro = await box(".introduction"), title = await box(".title-band h1"), copy = await box(".intro-copy"), list = await box(".courses"), photo = await box(".alan-photo");
   expect(title.width).toBeGreaterThan(copy.width + photo.width);
-  expect(Math.min(copy.y, photo.y)).toBeGreaterThanOrEqual(title.y + title.height);
+  expect(Math.min(copy.y, photo.y)).toBeGreaterThanOrEqual((await box(".title-band")).y + (await box(".title-band")).height);
   expect(photo.x).toBeGreaterThanOrEqual(copy.x + copy.width);
   expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-  expect(await bg(".home-opening")).toBe("rgba(0, 0, 0, 0)");
-  expect(await page.locator(".home-opening").evaluate((el) => getComputedStyle(el.closest(".dark")!).backgroundColor)).toBe(await bg("body"));
+  expect(await page.locator(".title-band").evaluate((el) => getComputedStyle(el.closest(".dark")!).backgroundColor)).toBe(await bg("body"));
+  expect(await page.locator(".introduction").evaluate((el) => el.closest(".dark"))).toBeNull();
+  await expect(page.locator(".title-band > *")).toHaveCount(2);
   expect(await bg("main")).not.toBe(await bg("body"));
   // The two primary entries sit side by side at equal width; the specialists follow beneath them.
   const [fundamentals, agents] = [await box('article[aria-labelledby="fundamentals-title"]'), await box('article[aria-labelledby="agents-101-title"]')];
@@ -273,8 +274,8 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect((await box(".specialists")).y).toBeGreaterThanOrEqual(Math.max(fundamentals.y + fundamentals.height, agents.y + agents.height));
 
   await page.setViewportSize({ width: 390, height: 844 });
-  title = await box(".introduction h1"); copy = await box(".intro-copy"); list = await box(".courses"); photo = await box(".alan-photo");
-  // Narrow screens: the title, the portrait, then the lede and introduction, then the courses.
+  title = await box(".title-band"); copy = await box(".intro-copy"); list = await box(".courses"); photo = await box(".alan-photo");
+  // Narrow screens: the title band, the portrait, then the introduction, then the courses.
   expect(photo.y).toBeGreaterThanOrEqual(title.y + title.height);
   expect(copy.y).toBeGreaterThanOrEqual(photo.y + photo.height);
   expect(list.y).toBeGreaterThanOrEqual(copy.y + copy.height);

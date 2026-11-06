@@ -1,24 +1,24 @@
-/* Opening: the dark stage introduces Alan. The title runs the full width; beneath it, the lede and introduction sit
-   beside a large portrait, with generous room around all three. */
+/* Title band: the dark stage carries only the title, full width, and the lede. */
+.title-band h1 { font-size: clamp(2.6rem, 6.2vw, 5.6rem); }
+.title-band .standfirst { max-width: 30ch; }
+
+/* The introduction opens the daylight sheet: the copy beside a large portrait. */
 .home-opening {
   display: grid;
   grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
-  grid-template-areas: "title title" "copy photo";
+  grid-template-areas: "copy photo";
   column-gap: var(--column-gap);
-  row-gap: clamp(36px, 4.5vw, 64px);
-  padding-block: clamp(40px, 5vw, 72px) clamp(72px, 8vw, 120px);
+  padding-block: clamp(40px, 5vw, 72px) 0;
   align-items: start;
 }
-.introduction h1 { grid-area: title; margin: 0; font-size: clamp(2.6rem, 6.2vw, 5.6rem); text-wrap: balance; }
-.intro-copy { grid-area: copy; padding-top: 4px; }
-.intro-copy > p { max-width: 50ch; }
-.intro-copy .standfirst { max-width: 24ch; margin-bottom: 28px; }
+.intro-copy { grid-area: copy; }
+.intro-copy > p { max-width: 46ch; font-size: 1.2rem; line-height: 1.65; }
 .introduction strong { font-weight: 600; }
 .alan-photo { grid-area: photo; width: 100%; }
 .alan-photo img { aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; }
 
 /* Find your starting point: the two primary entries as equal cards, the specialists in a quieter block beneath. */
-.courses { padding-block: 48px 76px; }
+.courses { padding-block: clamp(56px, 6vw, 88px) 76px; }
 .courses > h2 { padding-bottom: 28px; }
 .course-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
 .course { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
@@ -65,7 +65,7 @@
 .teacher-origin .text-link { margin-top: 12px; }
 
 @media (max-width: 900px) {
-  .home-opening { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "photo" "copy"; row-gap: 28px; padding-block: 28px 64px; }
+  .home-opening { grid-template-columns: minmax(0, 1fr); grid-template-areas: "photo" "copy"; row-gap: 28px; padding-block: 32px 0; }
   .alan-photo { max-width: 640px; }
   .intro-copy > p { max-width: 60ch; }
   .courses { padding-block: 52px 56px; }
@@ -75,7 +75,8 @@
   .teacher-origin { margin-top: 0; }
 }
 @media (max-width: 680px) {
-  .home-opening { padding-block: 20px 52px; row-gap: 24px; }
+  .home-opening { padding-block: 24px 0; row-gap: 24px; }
+  .intro-copy > p { font-size: 1.1rem; }
   .alan-photo img { aspect-ratio: 16 / 10; }
   .courses > h2 { font-size: 1.9rem; padding-bottom: 18px; }
   .course { padding: 22px 20px 20px; }

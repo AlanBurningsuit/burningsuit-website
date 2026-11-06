@@ -13,18 +13,20 @@ import "../styles/home.css";
 >
   {pages[""].map((id) => <span id={id} aria-hidden="true" />)}
   <div class="dark stage">
+  <div class="title-band wrap">
+    <h1 id="page-title">Power BI training for people whose job <span class="em">isn't</span> Power BI.</h1>
+    <p class="standfirst">Learn how Power BI works, and how to start handing the work to AI.</p>
+  </div>
+  </div>
   <div class="wrap">
     <section class="introduction home-opening" aria-labelledby="page-title">
-      <h1 id="page-title">Power BI training for people whose job <span class="em">isn't</span> Power BI.</h1>
       <div class="intro-copy">
-      <p class="standfirst">Learn how Power BI works, and how to start handing the work to AI.</p>
       <p>If you build the reports because <strong>someone</strong> has to, you're who I teach. I explain how Power BI fits together and why it works the way it does, so you can get back to your actual job and worry about Power BI less. If you've already built a report, I can also show you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.</p>
       </div>
       <figure class="alan-photo framed-photo">
         <Image src={portrait} alt="Alan Harman-Box smiling, outdoors under trees" widths={[400, 640, 960, 1600]} sizes="(max-width: 900px) calc(100vw - 44px), 640px" format="webp" loading="eager" />
       </figure>
     </section>
-  </div>
   </div>
 
   <section class="courses wrap" id="training" aria-labelledby="training-title">

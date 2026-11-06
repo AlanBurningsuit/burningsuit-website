@@ -1,20 +1,22 @@
 /* Power BI with AI agents 101: the course page composition. Shared furniture lives in app.css. */
 
-/* Opening: the dark bookend, with the deciding facts on a raised card beside it on wide screens and after it on narrow ones. */
+/* Opening: the title band on the dark stage; the introduction opens the daylight sheet with the deciding facts on a
+   lifted card beside it on wide screens and after it on narrow ones. */
+.title-band h1 { font-size: clamp(2.5rem, 4.8vw, 4.2rem); }
+.title-band .standfirst { max-width: 34ch; }
 .course-opening {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr);
   column-gap: var(--column-gap);
-  padding-block: 36px 56px;
+  padding-block: clamp(40px, 5vw, 64px) clamp(48px, 5vw, 72px);
   align-items: start;
 }
-.course-intro h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
 .course-intro > p { max-width: 60ch; }
-.course-intro .standfirst { max-width: 34ch; text-wrap: balance; }
+.course-intro > p:not(.course-fit) { font-size: 1.15rem; line-height: 1.65; }
 .course-fit { border-left: var(--bw-spine) solid var(--accent); padding-left: 18px; }
 p + p.course-fit { margin-top: 1.4rem; }
 
-.course-run { background: var(--surface-card); border-radius: var(--r); padding: 18px 26px 24px; margin-top: 10px; }
+.course-run { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 18px 26px 24px; margin-top: 4px; }
 .run-facts { list-style: none; margin: 0; padding: 0; font: 400 1.05rem / var(--lh-relaxed) var(--ff-note); }
 .run-facts li { padding-block: 6px; }
 
@@ -26,13 +28,12 @@ p + p.course-fit { margin-top: 1.4rem; }
   padding: 14px 30px;
 }
 /* The only state today: paid booking is closed, so the control is visibly unavailable. */
-.book-button:disabled { color: var(--text); background: var(--bg-3); border: 0; padding: 17px 33px; cursor: not-allowed; }
+.book-button:disabled { color: var(--text); background: var(--surface-raised); border: 0; padding: 17px 33px; cursor: not-allowed; }
 .booking-status { font: 400 .98rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 .private-ask { margin-top: 22px; font-size: 1rem; }
 .private-ask a { font-weight: 600; }
 
-/* What you'll do: a raised band with the four steps on a numbered spine; the daylight sheet rises over the opening in its sage. */
-.stage:has(+ .course-do) { --sheet: var(--sage); }
+/* What you'll do: a raised band with the four steps on a numbered spine. */
 .course-do { background: var(--surface-raised); }
 .do-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 64px 70px; align-items: start; }
 @media (min-width: 901px) { .do-lead, .course-need > h2 { position: sticky; top: 24px; } }
@@ -81,7 +82,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 
 @media (max-width: 900px) {
   .course-opening, .do-inner, .course-trust, .course-need, .book-inner { grid-template-columns: minmax(0, 1fr); row-gap: 30px; }
-  .course-opening { padding-block: 34px 56px; row-gap: 40px; }
+  .course-opening { padding-block: 36px 52px; row-gap: 32px; }
   .course-run { margin-top: 0; }
   .do-inner { padding-block: 50px 54px; }
   .course-trust { padding-block: 56px 40px; }
@@ -90,7 +91,7 @@ p + p.course-fit { margin-top: 1.4rem; }
   .book-inner { padding-block: 46px 52px; row-gap: 20px; }
 }
 @media (max-width: 680px) {
-  .course-opening { padding-block: 30px 48px; }
+  .course-opening { padding-block: 28px 44px; }
   .do-steps li { padding-left: 46px; }
   .need-list { padding: 10px 20px; }
   .do-steps li::before { left: 14px; }
