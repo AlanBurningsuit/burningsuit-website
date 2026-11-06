@@ -74,7 +74,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   const rows = page.locator(".specialist-courses .specialist-rows > li");
   await expect(rows.getByRole("heading", { level: 3 })).toHaveText(["DAX fundamentals", "Data modelling", "DAX deep dive"]);
   for (const [index, length] of ["1 day", "1 day", "2 days"].entries()) await expect(rows.nth(index).locator(".facts > li")).toHaveText([length, ...privateFacts]);
-  await expect(rows.locator("p")).toHaveCount(0);
+  await expect(rows.locator("p:not(.study-evidence-label)")).toHaveCount(0);
   await expect(rows.locator("a")).toHaveText(["DAX deep dive for a local-authority team"]);
   await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams on calculations and table design.");
   const ask = page.getByRole("link", { name: "Ask about one of these" });
@@ -97,7 +97,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");
   await expect(askCoaching).toHaveAccessibleDescription("Mention coaching in your message.");
-  await expect(coaching.locator("p")).toHaveText([/^Coaching is for/, "Mention coaching in your message."]);
+  await expect(coaching.locator("p:not(.study-evidence-label)")).toHaveText([/^Coaching is for/, "Mention coaching in your message."]);
   expect(await page.locator("main > section").evaluateAll((all) => all.map((el) => el.className.split(" ")[0]))).toEqual(["training-intro", "starting-points", "specialist-courses", "coaching", "training-teacher", "contact"]);
 
   await expect(page.locator(".teacher-note p")).toHaveText("I'm Alan Harman-Box. I write and teach every course myself, and I've spent about five years working with organisations as they adopt Power BI. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course.");

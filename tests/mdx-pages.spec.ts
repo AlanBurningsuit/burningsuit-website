@@ -14,13 +14,16 @@ test("Work groups only the four active studies in the approved offer order", asy
   await expect(page.locator("#cases")).toHaveCount(1);
   await expect(page.locator("h2")).toHaveText(["Courses", "Power BI coaching", "Consultancy"]);
   expect(await page.locator(".work-entries a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual(studyPaths);
-  await expect(page.locator(".work-entries p")).toHaveText(["A local-authority team", "A contact-centre team lead", "an individual learner developing Power BI reporting", "a UK university's sustainability team"]);
+  await expect(page.locator(".work-entries p")).toHaveText(["A local-authority team", "A contact-centre team lead", "An individual learner developing Power BI reporting", "A UK university's sustainability team"]);
   await expect(page.locator(".work-entries h3")).toHaveText(["DAX deep dive for a local-authority team", "Coaching a contact-centre team lead", "He already built the reports. Coaching was about what's underneath them.", "Their own method, in a model they can check."]);
   await expect(page.locator("nav a")).toHaveText(["Training", "Consultancy", "About", "Contact"]);
   for (const path of reserved404Routes) await expect(page.locator(`a[href="/${path}/"]`)).toHaveCount(0);
+  for (const link of await page.locator(".work-group h2 a").all()) expect(await link.evaluate(el => getComputedStyle(el).textDecorationLine)).toContain("underline");
 });
 
 test("contextual and footer links lead to the matching evidence and restored essay", async ({ page }) => {
+  await page.goto("/work/");
+  const headings = await page.locator(".work-entries h3 a").evaluateAll(all => Object.fromEntries(all.map(a => [a.getAttribute("href"), a.textContent])));
   const assertions: [string, string, string[]][] = [
     ["/training/", ".specialist-courses", [studyPaths[0]]],
     ["/training/", "#coaching", [studyPaths[1], studyPaths[2]]],
@@ -30,6 +33,8 @@ test("contextual and footer links lead to the matching evidence and restored ess
   for (const [route, selector, expected] of assertions) {
     await page.goto(route);
     expect(await page.locator(`${selector} .study-links a`).evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual(expected);
+    await expect(page.locator(`${selector} .study-evidence-label`)).toHaveText(expected.length === 1 ? "Case study" : "Case studies");
+    await expect(page.locator(`${selector} .study-links a`)).toHaveText(expected.map(href => headings[href] ?? ""));
     await expect(page.locator("main").getByRole("link", { name: "Work", exact: true })).toHaveAttribute("href", "/work/");
   }
   await page.goto("/about/");
@@ -38,6 +43,13 @@ test("contextual and footer links lead to the matching evidence and restored ess
     await page.goto(route);
     await expect(page.locator("footer").getByRole("link", { name: "Work", exact: true })).toHaveAttribute("href", "/work/");
     await expect(page.locator("footer").getByRole("link", { name: "We're all middle management now", exact: true })).toHaveAttribute("href", essay);
+  }
+});
+
+test("reserved study social cards are unavailable", async ({ request }) => {
+  for (const route of reserved404Routes) {
+    const response = await request.get(`/social/linkedin-${route.replaceAll("/", "-")}.png`);
+    expect(response.status()).toBe(404);
   }
 });
 

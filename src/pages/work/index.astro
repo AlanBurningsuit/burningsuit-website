@@ -9,6 +9,7 @@ const groups = [
   { category: "consultancy", heading: "Consultancy", href: "/power-bi/" },
 ];
 const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => typeof heading === "string" ? heading : [heading.before, heading.em, heading.after].filter(Boolean).join("");
+const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() + descriptor.slice(1);
 ---
 <BaseLayout title="Work | burningsuit" description="Courses · Power BI coaching · Consultancy" placeholder={false}>
   <header class="work-opening wrap"><h1>Work</h1></header>
@@ -18,7 +19,7 @@ const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => ty
       <ul class="work-entries" role="list">
         {studies.filter(({ data }) => data.category === group.category).map(({ id, data }) => <li>
           <h3><a href={`/work/${id}/`}>{headingText(data.heading)}</a></h3>
-          <p>{data.descriptor}</p>
+          <p>{sentenceCase(data.descriptor)}</p>
         </li>)}
       </ul>
     </section>)}

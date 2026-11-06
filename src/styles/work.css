@@ -3,7 +3,7 @@
 .work-index { padding-bottom: 72px; }
 .work-group { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: var(--column-gap); align-items: start; padding-block: 24px 52px; border-top: var(--bw-hair) solid var(--line); }
 .work-group h2 { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
-.work-group h2 a { color: var(--fg); text-decoration: none; }
+.work-group h2 a { color: var(--fg); }
 .work-group h2 a:hover { color: var(--amber); }
 .work-entries { list-style: none; margin: 0; padding: 0; }
 .work-entries li + li { margin-top: 32px; padding-top: 28px; border-top: var(--bw-hair) solid var(--line); }

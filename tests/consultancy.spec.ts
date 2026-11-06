@@ -106,7 +106,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   expect(await page.locator("#start + #contact").count()).toBe(1);
 
   const text = await page.locator("main").innerText();
-  for (const absent of [/\[|\]/, /second opinion/i, /discovery/i, /case stud/i]) expect(text).not.toMatch(absent);
+  for (const absent of [/\[|\]/, /second opinion/i, /discovery/i]) expect(text).not.toMatch(absent);
   await expect(page.locator("blockquote, .to-confirm")).toHaveCount(0);
   // One candid photo, in Who does the work, in the brand's carved frame.
   await expect(page.locator("main img")).toHaveCount(1);

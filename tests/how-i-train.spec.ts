@@ -39,7 +39,7 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
   await expect(page.locator("h1")).toHaveText("How I train");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll do", "If you get stuck", "Questions about your own work", "Helping you use it afterwards", "On every course", "Where next"]);
   await expect(page.locator("h3, h4")).toHaveCount(0);
-  await expect(page.locator("main p")).toHaveText([
+  await expect(page.locator("main p:not(.study-evidence-label)")).toHaveText([
     "My courses are about understanding how Power BI works and putting it to use.",
     "Mostly, I explain and show you how something works, then you do it yourself on examples I've prepared for teaching. I want you to ask questions as we go. My aim is to make clear what each part is for before we get into how it works.",
     "I've made almost every mistake in Power BI worth making. If something isn't making sense, say so. I'll help you work out where it went wrong and build back up from there. I keep groups small so there's time to work through questions and help everyone follow what's happening.",
