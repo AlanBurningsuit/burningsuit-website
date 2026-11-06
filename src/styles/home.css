@@ -23,25 +23,21 @@
 .courses > h2 { padding-bottom: 28px; }
 .course-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
 .course { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
-/* Side by side, the cards share rows, so the fact blocks and actions line up whatever the description length. */
-@media (min-width: 901px) {
-  .course-list { grid-template-rows: repeat(5, auto); }
-  .course-list > .course { display: grid; grid-template-rows: subgrid; grid-row: span 5; row-gap: 0; align-content: start; }
-}
+/* Side by side, each card takes its own natural height, so its links follow straight on from its facts. */
 /* Who each entry is for, in the mono margin voice, led by a short ochre tick. */
 .course .course-fit, .specialists-lead { font: 400 .84rem / var(--lh-label) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); margin-bottom: 12px; }
 .course .course-fit::before, .specialists-lead::before { content: ""; display: inline-block; width: 1.75em; height: var(--bw-spine); margin-right: .6em; vertical-align: .3em; background: var(--accent); }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
 .course > p:not(.course-fit) { font-size: 1rem; }
-/* Each entry's deciding facts and prerequisite sit together: the facts as a field-guide metadata line in small tracked
-   mono capitals, warm middots between them, then the prerequisite in the body voice. It keeps its own height when
-   the neighbouring entry's block is taller. */
-.deciding { align-self: start; margin: 20px 0 16px; }
-.facts { margin: 0 0 10px; padding: 0; font: 400 .76rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono-wide); text-transform: uppercase; color: var(--text); row-gap: 2px; }
-/* Mono middots need a wider seat than the proportional default to sit centred in the gap. */
+/* Each entry's deciding facts and prerequisite sit together: the facts as a field-guide metadata line in mono, warm
+   middots between them, a short label in small tracked capitals, then the prerequisite in the body voice. */
+.deciding { margin: 20px 0 16px; }
+.facts { margin: 0 0 10px; padding: 0; font: 400 .82rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text); row-gap: 2px; }
+/* Between facts, a small drawn ochre dot centred in the gap (a mono middot glyph is too faint to read as a mark). */
 .facts.dot-list { column-gap: 1.3em; }
-.facts.dot-list > li::before { left: -.92em; color: var(--accent); }
-.fact-label { color: var(--text-dim); }
+.facts.dot-list > li::before { content: ""; top: calc(.78em - 2px); left: calc(-.65em - 2px); width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+.fact-label { font-size: .88em; letter-spacing: var(--ls-mono-xwide); text-transform: uppercase; color: var(--text-dim); }
+.facts .together { white-space: nowrap; }
 .prereq { font-size: .95rem; }
 .course-actions { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 10px; }
 .course .text-link { font-size: .96rem; }

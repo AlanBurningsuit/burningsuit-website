@@ -197,7 +197,7 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
   expect(await bg(".specialist-rows")).not.toBe(band);
   expect(await bg("#contact")).not.toBe(ground);
   // Each entry keeps its facts and prerequisite together in one block on the card itself: the facts in the mono
-  // metadata voice (small tracked capitals), the prerequisite in the body voice.
+  // metadata voice with its label in small tracked capitals, the prerequisite in the body voice.
   const bodyFont = await page.locator("main p").first().evaluate((el) => getComputedStyle(el).fontFamily);
   for (const entry of await page.getByRole("article").all()) {
     const deciding = entry.locator(".deciding");
@@ -207,18 +207,22 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
     expect(await deciding.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgba(0, 0, 0, 0)");
     const facts = await deciding.locator(".facts").evaluate((el) => { const c = getComputedStyle(el); return { font: c.fontFamily, transform: c.textTransform }; });
     expect(facts.font).toMatch(/Commit Mono/);
-    expect(facts.transform).toBe("uppercase");
+    expect(facts.transform).toBe("none");
+    for (const label of await deciding.locator(".fact-label").all()) expect(await label.evaluate((el) => getComputedStyle(el).textTransform)).toBe("uppercase");
     expect(await deciding.locator(".prereq").evaluate((el) => getComputedStyle(el).fontFamily)).toBe(bodyFont);
     const spine = await entry.evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth));
     // A spine, heavier than the specialists' hairline rows.
     expect(spine).toBeGreaterThan(await page.locator(".specialist-rows > li").first().evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth)));
   }
-  // Side by side, the deciding blocks and outline links line up across the two entries.
-  const tops = async (selector: string) => (await page.locator(selector).evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top))));
-  for (const selector of [".starting-points .deciding", ".starting-points .course-actions"]) {
-    const [first, second] = await tops(selector);
-    expect(Math.abs(first - second)).toBeLessThanOrEqual(1);
-  }
+  // Side by side, the two entries start level and their titles line up; each takes its natural height, so inside
+  // each card the links follow straight on from the deciding facts and no hole opens between them.
+  const rects = async (selector: string) => page.locator(selector).evaluateAll((els) => els.map((el) => { const r = el.getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom) }; }));
+  const [cardA, cardB] = await rects(".starting-points .course");
+  expect(Math.abs(cardA.top - cardB.top)).toBeLessThanOrEqual(1);
+  const [titleA, titleB] = await rects(".starting-points .course h3");
+  expect(Math.abs(titleA.top - titleB.top)).toBeLessThanOrEqual(1);
+  const decidings = await rects(".starting-points .deciding"), actions = await rects(".starting-points .course-actions");
+  for (const [index, block] of decidings.entries()) expect(actions[index].top - block.bottom).toBeLessThanOrEqual(40);
   // Specialists stay lighter than the starting points; the cards open on the daylight warm accent (the ochre tick
   // before each card's fit line), which the teacher note's rule does not carry.
   const size = (selector: string) => page.locator(selector).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));

@@ -67,7 +67,8 @@ p + p.course-fit { margin-top: 1.4rem; }
   .need-body { max-width: 76ch; }
 }
 .keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; max-width: 52ch; }
-.to-confirm { font: 400 .82rem / 1.4 var(--ff-mono); vertical-align: baseline; color: var(--text-dim); background: var(--surface-raised); padding: 2px 6px; border-radius: var(--r-xs); display: inline-block; }
+/* A detail still to confirm: a quiet mono aside in the line, not a chip. */
+.to-confirm { font: 400 .82rem / 1.4 var(--ff-mono); vertical-align: baseline; color: var(--text-dim); display: inline-block; }
 
 /* Book a seat: the closing band. */
 .course-book { background: var(--bg-band); }

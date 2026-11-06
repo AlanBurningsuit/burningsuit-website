@@ -30,7 +30,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .standfirst { font: 400 clamp(1.3rem, 1.9vw, 1.6rem) / 1.35 var(--ff-body); letter-spacing: -0.005em; margin-bottom: 20px; }
 .text-link { display: inline-block; font-weight: 600; padding-block: 7px; }
 /* A text link leads on with a warm arrow (an external one points out), which steps forward on hover. */
-.text-link::after { content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); transition: translate .25s var(--ease-out); }
+.text-link::after { content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); }
 .text-link[href^="http"]::after { content: "↗" / ""; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 14px; }
 .links a { font-weight: 600; padding-block: 6px; }
@@ -73,15 +73,14 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
   }
   .course { transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out); }
   .course:is(:hover, :focus-within) { transform: translateY(-3px); }
-  a { transition: text-decoration-color .2s, text-underline-offset .2s var(--ease-out); }
+  a { transition: text-decoration-color .2s, text-underline-offset .2s var(--ease-out), scale var(--dur-base) var(--ease-out); }
+  button:not(:disabled) { transition: background-color .2s, scale var(--dur-base) var(--ease-out); }
+  .text-link::after { transition: translate .25s var(--ease-out); }
   a:hover { text-underline-offset: .26em; }
   .text-link:is(:hover, :focus-visible)::after { translate: .25em 0; }
   .text-link[href^="http"]:is(:hover, :focus-visible)::after { translate: .15em -.15em; }
-  /* A press answers with a brief give; page to page, the masthead holds still while the page beneath it cross-fades. */
-  :is(.text-link, .links a, .masthead nav a, button:not(:disabled)):active { scale: .98; transition: scale var(--dur-micro); }
-  @view-transition { navigation: auto; }
-  .masthead { view-transition-name: masthead; }
-  ::view-transition-group(root) { animation-duration: var(--dur-base); }
+  /* A press answers with a brief give. */
+  :is(.text-link, .links a, .masthead nav a, button:not(:disabled)):active { scale: .98; transition-duration: var(--dur-micro); }
 }
 /* The drift stays inside each opening's own bottom padding, so no line of it ever slides under the sheet while still in view. */
 @keyframes stage-recede { to { translate: 0 var(--recede, 28px); } }
