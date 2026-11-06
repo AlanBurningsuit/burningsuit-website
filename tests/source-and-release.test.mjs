@@ -32,26 +32,55 @@ test("anonymised source passes", () => {
 test("explicitly open permission gate accepts a named block", () => {
   assert.equal(runFixture("check-content.mjs", "fixture.mdx", "---\nnamePublished: true\nnamed:\n  client: Synthetic example\n  quote: Example text\n  cite: Example author\n---\n").status, 0);
 });
-test("rebuild marker blocks release even without a robots tag", () => {
-  assert.equal(runFixture("check-release.mjs", "index.html", "<body data-rebuild-placeholder></body>").status, 1);
+// A minimal released build: an indexable homepage, robots allowing crawlers and a sitemap listing the homepage.
+const page = (head = "") => `<head>${head || '<link rel="canonical" href="https://burningsuit.co.uk/">'}</head><body></body>`;
+const released = (extra = {}) => ({
+  "robots.txt": "User-agent: *\nAllow: /\n\nSitemap: https://burningsuit.co.uk/sitemap-index.xml\n",
+  "sitemap-index.xml": "<sitemapindex><sitemap><loc>https://burningsuit.co.uk/sitemap-0.xml</loc></sitemap></sitemapindex>",
+  "sitemap-0.xml": "<urlset><url><loc>https://burningsuit.co.uk/</loc></url></urlset>",
+  ...extra,
 });
-test("noindex homepage blocks release even without a rebuild marker", () => {
-  assert.equal(runFixture("check-release.mjs", "index.html", '<meta content="noindex, nofollow" name="robots">').status, 1);
+const release = (home, extra) => runFixture("check-release.mjs", "index.html", home, released(extra)).status;
+test("a fully released build passes the release check", () => {
+  assert.equal(release(page()), 0);
 });
-test("normal indexable homepage passes the rebuild release check", () => {
-  assert.equal(runFixture("check-release.mjs", "index.html", '<meta name="robots" content="index, follow">').status, 0);
+test("a rebuild marker blocks release even without a robots tag", () => {
+  assert.equal(release("<body data-rebuild-placeholder></body>"), 1);
 });
-test("remaining placeholder blocks release even when the homepage is finished", () => {
-  assert.equal(runFixture("check-release.mjs", "index.html", "<h1>Example</h1>", { "unfinished.html": "<body data-rebuild-placeholder></body>" }).status, 1);
+test("a noindex homepage blocks release", () => {
+  assert.equal(release(page('<meta content="noindex, nofollow" name="robots">')), 1);
+});
+test("a page without a canonical link blocks release", () => {
+  assert.equal(release("<head></head>"), 1);
+});
+test("a remaining placeholder blocks release even when the homepage is finished", () => {
+  assert.equal(release(page(), { "unfinished.html": "<body data-rebuild-placeholder></body>" }), 1);
+});
+test("a noindex page outside the deliberate few blocks release", () => {
+  assert.equal(release(page(), { "other.html": '<meta name="robots" content="noindex">' }), 1);
+});
+test("the 404 page must stay noindex", () => {
+  assert.equal(release(page(), { "404.html": '<link rel="canonical" href="https://burningsuit.co.uk/404">' }), 1);
+  assert.equal(release(page(), { "404.html": '<meta name="robots" content="noindex, nofollow">' }), 0);
+});
+test("robots.txt disallowing the site blocks release", () => {
+  assert.equal(release(page(), { "robots.txt": "User-agent: *\nDisallow: /\n\nSitemap: https://burningsuit.co.uk/sitemap-index.xml\n" }), 1);
+});
+test("a missing robots.txt or sitemap blocks release", () => {
+  assert.equal(runFixture("check-release.mjs", "index.html", page(), { "sitemap-index.xml": "<sitemapindex></sitemapindex>" }).status, 1);
+  assert.equal(release(page(), { "sitemap-index.xml": "<sitemapindex><sitemap><loc>https://burningsuit.co.uk/sitemap-9.xml</loc></sitemap></sitemapindex>" }), 1);
+});
+test("a sitemap that lists a noindex page blocks release", () => {
+  assert.equal(release(page(), { "404.html": '<meta name="robots" content="noindex">', "sitemap-0.xml": "<urlset><url><loc>https://burningsuit.co.uk/</loc></url><url><loc>https://burningsuit.co.uk/404.html</loc></url></urlset>" }), 1);
 });
 test("a form without a delivery endpoint blocks release", () => {
-  assert.equal(runFixture("check-release.mjs", "index.html", '<meta name="robots" content="index, follow"><form method="post"></form>').status, 1);
+  assert.equal(release(page() + '<form method="post"></form>'), 1);
 });
 test("a form posting to an HTTPS endpoint does not block release", () => {
-  assert.equal(runFixture("check-release.mjs", "index.html", '<meta name="robots" content="index, follow"><form method="post" action="https://forms.example/submit"></form>').status, 0);
+  assert.equal(release(page() + '<form method="post" action="https://forms.example/submit"></form>'), 0);
 });
 test("a data-action attribute is not a delivery endpoint", () => {
-  assert.equal(runFixture("check-release.mjs", "index.html", '<meta name="robots" content="index, follow"><form method="post" data-action="https://forms.example/submit"></form>').status, 1);
+  assert.equal(release(page() + '<form method="post" data-action="https://forms.example/submit"></form>'), 1);
 });
 test("CSP form-action follows the configured endpoint", () => {
   assert.equal(formActionFor(null), "'none'");

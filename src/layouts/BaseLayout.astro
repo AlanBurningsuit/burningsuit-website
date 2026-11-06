@@ -1,6 +1,8 @@
 ---
 import { Font } from "astro:assets";
 import { SITE_NAME } from "../config/site";
+import Schema from "../components/seo/Schema.astro";
+import { siteGraph, articleNode } from "../lib/schema";
 import { ANALYTICS } from "../config/analytics.mjs";
 import Masthead from "../components/Masthead.astro";
 import Footer from "../components/Footer.astro";
@@ -13,6 +15,8 @@ interface Props {
   ogImage?: string;
   author?: string;
   ogType?: "website" | "article";
+  /** Keeps a page out of search: the 404 and the enquiry results. Every other page is indexed. */
+  noindex?: boolean;
 }
 const {
   title = SITE_NAME,
@@ -21,7 +25,13 @@ const {
   ogImage = "/og-image.png",
   author,
   ogType = "website",
+  noindex: noindexProp = false,
 } = Astro.props;
+// Placeholder pages never reach search either.
+const noindex = noindexProp || placeholder;
+const siteUrl = Astro.site!.href;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const graph = [...siteGraph(siteUrl), ...(ogType === "article" ? [articleNode({ siteUrl, pageUrl: canonical, headline: title.replace(/\s+[|–-]\s+burningsuit$/, ""), description, author })] : [])];
 ---
 <!doctype html>
 <html lang="en-GB">
@@ -30,7 +40,7 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="noindex, nofollow" />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
     {author && <meta name="author" content={author} />}
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
@@ -39,7 +49,11 @@ const {
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="The burningsuit flame mark and wordmark" />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Schema schema={graph} noindex={noindex} />
     <Font cssVariable="--font-mona" preload />
     <Font cssVariable="--font-albert" preload />
     <Font cssVariable="--font-reader" preload />

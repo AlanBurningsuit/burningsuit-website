@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview } from "./helpers";
+import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { pages } from "../src/config/compatibility.mjs";
 
 const route = "/work/carbon-footprint/";
@@ -18,10 +18,10 @@ test("carbon-footprint study stays static, private and CSP-clean, with no form, 
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("A university's carbon reporting, in a model the team can check - a Power BI case study - burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How I worked with a UK university's sustainability team: their own carbon reporting method built into one model, checked together against their totals, then handed over.");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
+  await expectIndexable(page, { article: true });
   // The superseded social card is not used; the page keeps the site-wide card.
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", "https://burningsuit.co.uk/og-image.png");
-  await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], script[type="application/ld+json"], [data-rebuild-placeholder], form, iframe, embed, object, main img`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], form, iframe, embed, object, main img`)).toHaveCount(0);
   expect(pages["work/carbon-footprint"]).toEqual([]);
   // A study marks Work as its section, not as the current page.
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Work");

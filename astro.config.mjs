@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
 import { ANALYTICS } from "./src/config/analytics.mjs";
 import { redirects } from "./src/config/compatibility.mjs";
 import { formActionSource } from "./src/config/enquiry.mjs";
@@ -9,7 +10,11 @@ export default defineConfig({
   site: "https://burningsuit.co.uk",
   output: "static",
   // Preserve approved punctuation; unhighlighted code needs no inline CSP styles.
-  integrations: [mdx({ smartypants: false, syntaxHighlight: false })],
+  integrations: [
+    mdx({ smartypants: false, syntaxHighlight: false }),
+    // Indexable pages only: the 404 and the enquiry results stay out, as do legacy redirect stubs.
+    sitemap({ filter: (page) => !/\/(404|enquiry-received|enquiry-error)\/?$/.test(new URL(page).pathname) && !Object.keys(redirects).some((from) => new URL(page).pathname.replace(/\/$/, "") === from) }),
+  ],
   // No syntax highlighting anywhere: Shiki's inline styles would break the CSP.
   markdown: { syntaxHighlight: false },
   trailingSlash: "ignore",

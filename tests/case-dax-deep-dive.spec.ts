@@ -1,5 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview } from "./helpers";
+import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { bespokeRoutes, pages, redirects } from "../src/config/compatibility.mjs";
 
 const route = "/work/dax-deep-dive/";
@@ -20,8 +20,8 @@ test("case study stays static, private and CSP-clean, with no form, embed, image
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("DAX deep dive for a local-authority team | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How a two-day DAX deep dive ran for a local-authority team in 2025: exercises in the room, a worked example afterwards, and what the organiser's feedback summary said.");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder], form, iframe, embed, object, main img, main svg`)).toHaveCount(0);
+  await expectIndexable(page, { article: true });
+  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], form, iframe, embed, object, main img, main svg`)).toHaveCount(0);
   // A bespoke page outside the compatibility manifest: the catch-all placeholder never generates it, and it adds no redirect.
   expect(Object.keys(pages)).not.toContain("work/dax-deep-dive");
   expect(bespokeRoutes).not.toContain("work/dax-deep-dive");

@@ -1,5 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview } from "./helpers";
+import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 
 const route = "/work/individual-power-bi-coaching/";
@@ -19,9 +19,9 @@ test("Individual coaching study stays static, private and CSP-clean, with no for
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Individual Power BI coaching | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Coaching for someone already building Power BI reports: modelling and DAX, taught on example data shaped around his reporting, with homework between sessions and materials to keep.");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
+  await expectIndexable(page, { article: true });
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
-  await expect(page.locator(`${otherScripts}, astro-island, iframe, link[rel="canonical"], script[type="application/ld+json"], [data-rebuild-placeholder], form, input, button, main img, main picture, [style]`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, [data-rebuild-placeholder], form, input, button, main img, main picture, [style]`)).toHaveCount(0);
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(pendingRoutes).not.toContain(route);
   expect(errors).toEqual([]);

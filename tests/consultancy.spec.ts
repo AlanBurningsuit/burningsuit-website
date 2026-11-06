@@ -1,5 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview } from "./helpers";
+import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { pages } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
@@ -19,8 +19,8 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI consultancy | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards. Price on request.");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder]`)).toHaveCount(0);
+  await expectIndexable(page);
+  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Consultancy");
   await expect(page.locator("aside.course-run")).toHaveAttribute("aria-label", "Consultancy facts and booking");

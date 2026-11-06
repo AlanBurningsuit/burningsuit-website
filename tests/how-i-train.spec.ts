@@ -1,5 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview } from "./helpers";
+import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 
@@ -22,9 +22,9 @@ test("How I train stays static, private and CSP-clean, with no form or third-par
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("How I train | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How I teach Power BI: practice on prepared examples, questions about your own work, help when you get stuck, and reasons behind recommendations.");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
+  await expectIndexable(page);
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
-  await expect(page.locator(`${otherScripts}, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form, input, button, main img, main picture`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, [data-rebuild-placeholder], form, input, button, main img, main picture`)).toHaveCount(0);
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Training");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(pendingRoutes).not.toContain(route);

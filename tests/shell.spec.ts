@@ -1,5 +1,5 @@
 import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
-import { reportCspViolations } from "./helpers";
+import { expectIndexable, reportCspViolations } from "./helpers";
 import { bespokeRoutes, pages, reserved404Routes } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
 import { ANALYTICS } from "../src/config/analytics.mjs";
@@ -8,7 +8,7 @@ const formRoutes = bespokeRoutes.filter((route) => !["about", "privacy", "work"]
 
 for (const [path, anchors] of Object.entries(pages)) {
   if (reserved404Routes.includes(path)) continue;
-  test(`static, noindex, CSP-clean compatibility shell: /${path}`, async ({ page }) => {
+  test(`static, indexable, CSP-clean page: /${path}`, async ({ page }) => {
     const errors: string[] = [];
     const external: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
@@ -20,10 +20,10 @@ for (const [path, anchors] of Object.entries(pages)) {
     expect(response?.status()).toBe(200);
     await page.evaluate(() => document.fonts.ready);
     await expect(page.locator("h1")).toHaveCount(1);
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+    // Case studies and essays add an Article node to the identity graph.
+    await expectIndexable(page, { article: /^(work|writing|blog)\/./.test(path) });
     const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
     for (const directive of ["default-src 'none'", "script-src", "style-src", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
-    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
     // Every page carries the Umami tag, limited to the production domains; only /privacy/ adds its same-origin opt-out module.
     await expect(page.locator(tracker)).toHaveCount(1);
     await expect(page.locator(tracker)).toHaveAttribute("data-website-id", ANALYTICS.websiteId);

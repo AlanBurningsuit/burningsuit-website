@@ -59,11 +59,13 @@ test("incomplete enquiries cannot leave the page without JavaScript", async ({ b
 });
 
 for (const path of [ENQUIRY.successPath, ENQUIRY.errorPath, ENQUIRY.privacyPath]) {
-  test(`enquiry supporting page is accessible, noindex and reflows: ${path}`, async ({ browser, baseURL }) => {
+  test(`enquiry supporting page is accessible, kept out of search only if it is a result, and reflows: ${path}`, async ({ browser, baseURL }) => {
     const context = await browser.newContext({ baseURL, javaScriptEnabled: false });
     const page = await context.newPage();
     await page.goto(path);
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
+    // The two results stay out of search; the enquiry privacy notice is an ordinary indexed page.
+    if (path === ENQUIRY.privacyPath) await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+    else await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(page.locator(otherScripts)).toHaveCount(0);
     await page.keyboard.press("Tab");

@@ -1,6 +1,6 @@
 import { type BrowserContext, type Page } from "@playwright/test";
 import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
-import { reportCspViolations } from "./helpers";
+import { reportCspViolations, expectIndexable } from "./helpers";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 import { pages } from "../src/config/compatibility.mjs";
@@ -54,8 +54,8 @@ test("privacy notice stays static, private and CSP-clean, with only the tracker 
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Privacy | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "What happens to your information when you visit this site, book a call or email me, and how to turn off visit counting.");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator(`link[rel="canonical"], [data-rebuild-placeholder], astro-island, form, iframe, embed, object, main img`)).toHaveCount(0);
+  await expectIndexable(page);
+  await expect(page.locator(`[data-rebuild-placeholder], astro-island, form, iframe, embed, object, main img`)).toHaveCount(0);
   await expect(page.locator(tracker)).toHaveCount(1);
   await expect(page.locator(otherScripts)).toHaveCount(1);
   await expect(page.locator(otherScripts)).toHaveAttribute("type", "module");

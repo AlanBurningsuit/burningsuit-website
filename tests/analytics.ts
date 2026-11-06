@@ -4,7 +4,8 @@ import { ANALYTICS } from "../src/config/analytics.mjs";
 
 // The site-wide Umami tag is the only permitted third-party script and request; it reports only from the production domains, never from test hosts.
 export const tracker = `script[src="${ANALYTICS.scriptSrc}"]`;
-export const otherScripts = `script:not([src="${ANALYTICS.scriptSrc}"])`;
+// JSON-LD is inert data, not a script that runs, so it is not counted.
+export const otherScripts = `script:not([src="${ANALYTICS.scriptSrc}"]):not([type="application/ld+json"])`;
 export const isTracker = (url: string) => url === ANALYTICS.scriptSrc;
 
 // Routine runs serve the committed copy of the tag and never contact Umami. UMAMI_LIVE=1 fetches the real tag instead (still never a beacon).

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test, expect, otherScripts } from "./analytics";
-import { visualReview } from "./helpers";
+import { visualReview, expectIndexable } from "./helpers";
 import { pages, reserved404Routes } from "../src/config/compatibility.mjs";
 
 const essay = "/writing/we-are-all-middle-management-now/";
@@ -68,9 +68,9 @@ for (const [route, kind, author] of [[essay, "essay", "Alan Harman-Box"], [archi
     expect(paras).toHaveLength(prose[kind].paragraphCount);
     expect(createHash("sha256").update(normalized).digest("hex")).toBe(prose[kind].sha256);
     await expect(page.locator('meta[name="author"]')).toHaveAttribute("content", author);
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
+    await expectIndexable(page, { article: true });
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "article");
-    await expect(page.locator('meta[property="article:published_time"], meta[property="article:modified_time"], script[type="application/ld+json"], form, iframe, astro-island, [style], link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
+    await expect(page.locator('meta[property="article:published_time"], meta[property="article:modified_time"], form, iframe, astro-island, [style], [data-rebuild-placeholder]')).toHaveCount(0);
     await expect(page.locator(otherScripts)).toHaveCount(0);
     expect(await page.locator(".article-related a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual(["/about/", "/training/", "/power-bi/"]);
   });

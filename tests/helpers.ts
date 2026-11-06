@@ -32,3 +32,16 @@ export function visualReview(route: string, viewports: readonly (readonly [numbe
     });
   }
 }
+
+/** An indexed page: no robots exclusion, a canonical link to its own production URL and the identity graph as JSON-LD. */
+export async function expectIndexable(page: Page, { article = false } = {}) {
+  const { expect } = await import("@playwright/test");
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
+  const path = new URL(page.url()).pathname;
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", new URL(path, "https://burningsuit.co.uk").href);
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute("content", new URL(path, "https://burningsuit.co.uk").href);
+  const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+  expect(blocks).toHaveLength(1);
+  const types = (JSON.parse(blocks[0])["@graph"] as { "@type": string }[]).map((node) => node["@type"]);
+  expect(types).toEqual(["Organization", "Person", "WebSite", ...(article ? ["Article"] : [])]);
+}

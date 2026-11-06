@@ -1,5 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview } from "./helpers";
+import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { bespokeRoutes, pages, redirects } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
@@ -25,8 +25,8 @@ test("Contact is a real static page: private, CSP-clean, with Contact current", 
   await expect(page.locator('meta[http-equiv="refresh" i]')).toHaveCount(0);
   await expect(page).toHaveTitle("Contact Alan | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Ask Alan Harman-Box about a course, help with your own reports, or where to start. A short message is enough.");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder], main img`)).toHaveCount(0);
+  await expectIndexable(page);
+  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], main img`)).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
   await expect(page.locator("nav a[aria-current]")).toHaveCount(1);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Contact");

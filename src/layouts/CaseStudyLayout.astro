@@ -10,7 +10,7 @@ const study = entry.data;
 const heading = typeof study.heading === "string" ? { before: study.heading } : study.heading;
 const invite = study.presentation === "chapters" ? study.footerInvitation.split(study.footerLink.text) : [];
 ---
-<BaseLayout title={study.title} description={study.description} ogImage={study.ogImage} placeholder={false}>
+<BaseLayout title={study.title} description={study.description} ogImage={study.ogImage} ogType="article" placeholder={false}>
   <div class={`case-${study.presentation}`}>
     {study.presentation === "chapters" && <article class="case-study">
       <TitleBand heading={heading} eyebrowClass="case-kicker">
