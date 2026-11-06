@@ -22,6 +22,7 @@ const archiveContext = essay.archiveMonth ? `${months[Number(essay.archiveMonth.
     <slot />
   </article>
   <div class="article-related closing-band dark"><div class="wrap closing-inner"><div class="links">
+    {essay.kind === "essay" && <a href="/training/agentic-development-for-power-bi/">Power BI with AI agents 101</a>}
     <a href="/about/">About</a>
     <a href="/training/">Training</a>
     <a href="/power-bi/">Consultancy</a>

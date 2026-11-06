@@ -16,8 +16,8 @@ test("carbon-footprint study stays static, private and CSP-clean, with no form, 
   await reportCspViolations(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
-  await expect(page).toHaveTitle("A university's carbon reporting, in a model the team can check - a Power BI case study - burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How I worked with a UK university's sustainability team: their own carbon reporting method built into one model, checked together against their totals, then handed over.");
+  await expect(page).toHaveTitle("Carbon reporting in a model the team can check | burningsuit");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How I worked with a UK university's sustainability team: their carbon reporting method built into one model, checked against their totals, then handed over.");
   await expectIndexable(page, { article: true });
   // The superseded social card is not used; the page keeps the site-wide card.
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", "https://burningsuit.co.uk/og-image.png");

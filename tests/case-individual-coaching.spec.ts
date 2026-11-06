@@ -18,7 +18,7 @@ test("Individual coaching study stays static, private and CSP-clean, with no for
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Individual Power BI coaching | burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Coaching for someone already building Power BI reports: modelling and DAX, taught on example data shaped around his reporting, with homework between sessions and materials to keep.");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Coaching for someone already building Power BI reports: modelling and DAX on example data shaped around his reporting, with homework between sessions.");
   await expectIndexable(page, { article: true });
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
   await expect(page.locator(`${otherScripts}, astro-island, iframe, [data-rebuild-placeholder], form, input, button, main img, main picture, [style]`)).toHaveCount(0);

@@ -19,7 +19,7 @@ test("case study stays static, private and CSP-clean, with no form, embed, image
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("DAX deep dive for a local-authority team | burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How a two-day DAX deep dive ran for a local-authority team in 2025: exercises in the room, a worked example afterwards, and what the organiser's feedback summary said.");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How a two-day DAX deep dive ran for a local-authority team in 2025: exercises in the room, a worked example afterwards and the organiser's feedback.");
   await expectIndexable(page, { article: true });
   await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], form, iframe, embed, object, main img, main svg`)).toHaveCount(0);
   // A bespoke page outside the compatibility manifest: the catch-all placeholder never generates it, and it adds no redirect.
