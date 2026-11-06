@@ -1,17 +1,12 @@
-// Decode browser-visible character references before privacy scans or log masking.
-// Numeric references include digits and punctuation as well as currency symbols,
-// so encoding the whole amount cannot evade the same checks as literal text.
-const named = {
-  pound: "£", euro: "€", dollar: "$", nbsp: " ",
-  comma: ",", period: ".", tab: "\t", newline: "\n",
-};
+// Canonicalise browser-visible text before privacy scans or log masking.
+// Use the complete HTML entity table, including named whitespace and format
+// references. Formatting characters and spacing cannot disguise an amount.
+import { decodeHTML } from "entities";
+
+const INVISIBLE = /[\p{Cf}\p{Default_Ignorable_Code_Point}]/gu;
+const SPACED_AMOUNT = /[£€$](?:\p{White_Space}*[\p{Nd},.])+/gu;
 
 export function decodePriceEntities(text) {
-  return text.replace(/&#(?:x([\da-f]+)|(\d+));?|&(pound|euro|dollar|nbsp|comma|period|tab|newline);?/gi,
-    (original, hex, decimal, name) => {
-      if (name) return named[name.toLowerCase()];
-      const code = Number.parseInt(hex ?? decimal, hex ? 16 : 10);
-      return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff)
-        ? String.fromCodePoint(code) : original;
-    });
+  const decoded = decodeHTML(text).normalize("NFKC").replace(INVISIBLE, "");
+  return decoded.replace(SPACED_AMOUNT, (amount) => amount.replace(/\p{White_Space}+/gu, ""));
 }

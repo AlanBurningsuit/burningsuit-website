@@ -26,7 +26,7 @@ if (existsSync(file)) {
 }
 exact.sort((a, b) => b.length - a.length);
 
-const AMOUNT = /[£€$]\s*\d[\d,]*(?:\.\d+)?/g;
+const AMOUNT = /[£€$]\p{White_Space}*\p{Nd}[\p{Nd},]*(?:\.\p{Nd}+)?/gu;
 const mask = (text) => {
   let out = decodePriceEntities(text);
   for (const value of exact) out = out.split(value).join("[amount]");
@@ -40,6 +40,9 @@ function relay(stream, target) {
     pending += chunk;
     const cut = pending.lastIndexOf("\n");
     if (cut < 0) return;
+    // A currency prefix may be followed by whitespace/newlines in a later chunk.
+    // Keep it until its number or other text arrives, rather than relaying it raw.
+    if (/[£€$]\p{White_Space}*$/u.test(decodePriceEntities(pending.slice(0, cut + 1)))) return;
     target.write(mask(pending.slice(0, cut + 1)));
     pending = pending.slice(cut + 1);
   });

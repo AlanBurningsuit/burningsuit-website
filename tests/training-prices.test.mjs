@@ -7,6 +7,7 @@ import { spawnSync, execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
 import { loadTrainingPrices, trainingPriceCopy, TrainingPricesError, PRICE_SLOTS, PRICES_FILE, validatePrices } from "../src/lib/training-prices.mjs";
+import { decodePriceEntities } from "../scripts/price-text.mjs";
 
 // Every amount below is generated at run time from a counter. No monetary literal is committed, and no assertion message can carry a value.
 const here = dirname(fileURLToPath(import.meta.url));
@@ -374,6 +375,55 @@ test("the masking runner redacts character references, including fully encoded a
     assert.ok(output(result).includes("[amount]") && !output(result).includes(encoded) && !output(result).includes(sample.slice(1)), "no encoded or decoded amount survives masking");
   }
   rmSync(dir, { recursive: true, force: true });
+});
+
+const separatorNames = [
+  "thinsp", "NegativeThinSpace", "ZeroWidthSpace", "NegativeVeryThinSpace", "NegativeMediumSpace", "NegativeThickSpace",
+  "nbsp", "NonBreakingSpace", "ensp", "emsp", "emsp13", "emsp14", "numsp", "puncsp", "ThinSpace", "MediumSpace", "ThickSpace", "hairsp", "VeryThinSpace",
+  "Tab", "NewLine", "NoBreak", "ApplyFunction", "af", "InvisibleTimes", "it", "InvisibleComma", "ic", "lrm", "rlm", "shy", "zwj", "zwnj",
+];
+
+test("complete entity decoding and Unicode formatting canonicalise price separators", () => {
+  const sample = amount();
+  for (const name of separatorNames) {
+    assert.ok(decodePriceEntities(`&pound;&${name};${sample.slice(1)}`) === sample, "named separator must not disguise the amount");
+  }
+  for (let code = 0; code <= 0x10ffff; code++) {
+    const character = String.fromCodePoint(code);
+    if (/[\p{White_Space}\p{Cf}\p{Default_Ignorable_Code_Point}]/u.test(character)) {
+      assert.ok(decodePriceEntities(`${sample[0]}${character}${sample.slice(1)}`) === sample, "Unicode separator must not disguise the amount");
+    }
+  }
+});
+
+test("named spacing and invisible formats fail source, dist and exact-value scans and are masked across chunks", () => {
+  const data = fixture();
+  const sample = valuesOf(data)[0];
+  const separators = [...separatorNames.map((name) => `&${name};`), String.fromCodePoint(0x200b), String.fromCodePoint(0x2060), String.fromCodePoint(0xfe0f), "\n"];
+  for (const separator of separators) {
+    const encoded = `&pound;${separator}${sample.slice(1)}`;
+    const dir = tracked({ "src/page.astro": `<p>${encoded} a seat</p>` });
+    const source = gate(dir);
+    assert.equal(source.status, 1, "source must reject named and invisible separators without private input");
+    assert.match(output(source), /monetary-literal/);
+    writeJson(join(dir, "dist/index.html"), `<p>${encoded} a seat</p>`);
+    const dist = distRun(dir, {});
+    assert.equal(dist.status, 1, "unpriced dist must reject named and invisible separators without private input");
+    assert.match(output(dist), /monetary-literal/);
+
+    // Split immediately after the currency/separator; literal newlines must not flush an unmasked prefix.
+    const prefix = `&pound;${separator}`;
+    const program = `process.stdout.write(${JSON.stringify(prefix)}); setTimeout(() => { console.log(${JSON.stringify(sample.slice(1))}); process.exitCode = 3; }, 5);`;
+    const masked = spawnSync(process.execPath, [join(scripts, "run-masked.mjs"), process.execPath, "-e", program], { encoding: "utf8", cwd: dir });
+    assert.equal(masked.status, 3);
+    assert.ok(output(masked).includes("[amount]") && !output(masked).includes(sample.slice(1)), "separator or chunk boundaries must not expose digits");
+
+    writeJson(join(dir, PRICES_FILE), data);
+    assert.match(output(gate(dir)), /private-value\s+src\/page\.astro/, "exact private comparisons use canonical text");
+    assert.match(output(distRun(dir, {})), /price-outside-scope\s+dist\/index\.html/, "dist private comparisons use canonical text");
+    assert.ok(!leaks(source, valuesOf(data)) && !leaks(dist, valuesOf(data)), "diagnostics never echo values");
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test("the secret writer validates, writes with owner-only access, and enables pricing for later steps", () => {

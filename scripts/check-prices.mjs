@@ -19,9 +19,9 @@ const failures = [];
 const fail = (rule, path) => failures.push(`${rule}  ${path}`);
 
 // A currency symbol before a number, or a number before a currency word. Money in prose or code, however small.
-const MONETARY = /[£€$]\s*\d|\d\s*(?:GBP|pounds|quid)\b|\bGBP\s*\d/i;
+const MONETARY = /[£€$]\p{White_Space}*\p{Nd}|\p{Nd}\p{White_Space}*(?:GBP|pounds|quid)\b|\bGBP\p{White_Space}*\p{Nd}/iu;
 // A price-like name assigned a number, with or without quotes or a currency symbol.
-const ASSIGNMENT = /\b(?:price|prices|rate|rates|fee|fees|cost|costs|seatFoundingRate|onSite|online|seat)["']?\s*[:=]\s*["'`]?\s?[£€$]?\s?\d/i;
+const ASSIGNMENT = /\b(?:price|prices|rate|rates|fee|fees|cost|costs|seatFoundingRate|onSite|online|seat)["']?\s*[:=]\s*["'`]?\s?[£€$]?\s?\p{Nd}/iu;
 // Existing approved public text and vendor code that legitimately hold a currency-like token. Exact private values are still checked everywhere.
 // Pin existing exceptions to reviewed bytes: editing an exempt file must never create a blind spot for a new price.
 const digest = (text) => createHash("sha256").update(text).digest("hex");
