@@ -333,3 +333,14 @@ for (const route of pendingRoutes) {
     await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
   });
 }
+
+// Every standing page's title carries one emphasised word, in the dark band's amber.
+test("each standing page's title has one amber emphasis", async ({ page }) => {
+  for (const route of ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/"]) {
+    await page.goto(route);
+    const em = page.locator("h1 .em");
+    await expect(em).toHaveCount(1);
+    const [color, amber] = await Promise.all([em.evaluate((el) => getComputedStyle(el).color), page.evaluate(() => { const probe = document.createElement("span"); probe.style.color = "var(--amber)"; document.body.append(probe); const c = getComputedStyle(probe).color; probe.remove(); return c; })]);
+    expect(color).toBe(amber);
+  }
+});
