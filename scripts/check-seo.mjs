@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { pages as reserved, redirects } from "../src/config/compatibility.mjs";
+import { pages as reserved, redirects, reserved404Routes } from "../src/config/compatibility.mjs";
 
 const dist = "dist";
 const site = "https://burningsuit.co.uk";
@@ -16,6 +16,11 @@ const check = (condition, message) => { if (!condition) errors.push(message); };
 
 for (const [path, anchors] of Object.entries(reserved)) {
   const file = fileAt("/" + path);
+  if (reserved404Routes.includes(path)) {
+    check(!files.includes(file), "Reserved 404 route generated HTML: /" + path);
+    check(!Object.keys(redirects).includes("/" + path), "Reserved 404 route became a redirect: /" + path);
+    continue;
+  }
   check(files.includes(file), "Missing reserved route: /" + path);
   if (!files.includes(file)) continue;
   for (const id of anchors) check(htmlAt(file).includes('id="' + id + '"'), "Missing reserved anchor: /" + path + "#" + id);

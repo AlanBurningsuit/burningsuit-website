@@ -74,7 +74,8 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   const rows = page.locator(".specialist-courses .specialist-rows > li");
   await expect(rows.getByRole("heading", { level: 3 })).toHaveText(["DAX fundamentals", "Data modelling", "DAX deep dive"]);
   for (const [index, length] of ["1 day", "1 day", "2 days"].entries()) await expect(rows.nth(index).locator(".facts > li")).toHaveText([length, ...privateFacts]);
-  await expect(rows.locator("a, p")).toHaveCount(0);
+  await expect(rows.locator("p")).toHaveCount(0);
+  await expect(rows.locator("a")).toHaveText(["DAX deep dive for a local-authority team"]);
   await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams on calculations and table design.");
   const ask = page.getByRole("link", { name: "Ask about one of these" });
   await expect(ask).toHaveAttribute("href", "#contact");
@@ -92,7 +93,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(coaching.locator(".specialist-rows > li h3")).toHaveText(["Power BI coaching"]);
   await expect(coaching.locator(".specialist-rows").locator("a, p")).toHaveCount(0);
   await expect(coaching.locator(".specialist-rows .facts > li")).toHaveText(["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", "Price on request"]);
-  const askCoaching = coaching.getByRole("link");
+  const askCoaching = coaching.getByRole("link", { name: "Ask about coaching", exact: true });
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");
   await expect(askCoaching).toHaveAccessibleDescription("Mention coaching in your message.");
@@ -106,7 +107,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
 
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([fundamentals, "#contact", course101, email, "#contact", "#contact", "#contact", "/training/how-i-train/", "/about/", ENQUIRY.privacyPath, email]);
+  expect(mainLinks).toEqual([fundamentals, "#contact", course101, email, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
   const text = await page.locator("main").innerText();
   // Developing and Claude courses stay off; no arrows, seats, booking or promises the copy doesn't make.
   for (const absent of [/Not sure where to start/i, /hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, /seat/i, /book/i, /\[|\]/, /to confirm/i, /coming soon/i]) expect(text).not.toMatch(absent);
@@ -141,6 +142,10 @@ test("training chooser structure reads in order for assistive technology", async
           - listitem: On site or online
           - listitem: Up to 8 people
           - listitem: Price on request
+        - list:
+          - listitem:
+            - link "DAX deep dive for a local-authority team":
+              - /url: /work/dax-deep-dive/
   `);
   await expect(page.locator("#coaching .specialist-rows")).toMatchAriaSnapshot(`
     - list:
@@ -302,12 +307,12 @@ test("training chooser works from the keyboard without JavaScript", async ({ bro
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 13; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(2);
   }
-  expect(reached).toEqual([fundamentals, "#contact", course101, email, "#contact", "#contact", "#contact", "/training/how-i-train/", "/about/"]);
+  expect(reached).toEqual([fundamentals, "#contact", course101, email, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
 
   // An inbound coaching link lands on its section without JavaScript; its ask reaches the shared form.
   await page.goto(route + "#coaching");

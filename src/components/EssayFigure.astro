@@ -1,0 +1,41 @@
+---
+/** Static, accessible adaptations of the diagrams in Alan's supplied talk. */
+import agentWide from "../assets/diagrams/agent-system-wide.svg?url";
+import agentNarrow from "../assets/diagrams/agent-system-narrow.svg?url";
+import validationWide from "../assets/diagrams/visual-validation-wide.svg?url";
+import validationNarrow from "../assets/diagrams/visual-validation-narrow.svg?url";
+import delegationWide from "../assets/diagrams/delegation-wide.svg?url";
+import delegationNarrow from "../assets/diagrams/delegation-narrow.svg?url";
+import experienceWide from "../assets/diagrams/domain-experience-wide.svg?url";
+import experienceNarrow from "../assets/diagrams/domain-experience-narrow.svg?url";
+interface Props {
+  kind: "agent" | "validation" | "delegation" | "experience";
+}
+const { kind } = Astro.props;
+const figures = {
+  agent: { number: 1, title: "The agentic system", caption: "The harness runs the requested tool and returns its result to the model's context." },
+  validation: { number: 2, title: "The visual validation loop", caption: "The screenshot returns to the agent, which checks the result and can revise the report." },
+  delegation: { number: 3, title: "The vibe zone", caption: "The shaded area is the vibe zone. As consequences grow, specify more of the decisions yourself." },
+  experience: { number: 4, title: "Domain experience", caption: "With less domain experience, the vibe zone shrinks. Delegate fewer decisions at the same level of consequence." },
+};
+const figure = figures[kind];
+const id = `essay-figure-${kind}`;
+const diagrams = {
+  agent: { wide: agentWide, narrow: agentNarrow, wideWidth: 936, wideHeight: 892, width: 584, height: 1233, alt: "Context is shown as a chat transcript: system prompt, user message, agent message, then tool result. The model reads this context and either replies to you or requests a tool. The harness runs the tool, and its result returns into context for the next response." },
+  validation: { wide: validationWide, narrow: validationNarrow, wideWidth: 943, wideHeight: 538, width: 588, height: 1163, alt: "A loop: the agent updates the report files, commits and pushes them, and syncs the Fabric workspace. The report pages are requested through the API. Playwright saves a screenshot, which returns to the agent's context. The agent checks the image and can revise the report, starting the loop again." },
+  delegation: { wide: delegationWide, narrow: delegationNarrow, wideWidth: 960, wideHeight: 923, width: 600, height: 923, alt: "A conceptual chart with consequence of failure increasing to the right and decisions delegated increasing upwards. The entire area beneath a descending line is shaded and labelled Vibe zone. Above it is the region of risk, where too much has been delegated for the consequences. The left is more vibey: let the agent choose more. The right is less vibey: specify more decisions up front. The line is illustrative, not a measured threshold." },
+  experience: { wide: experienceWide, narrow: experienceNarrow, wideWidth: 960, wideHeight: 881, width: 600, height: 881, alt: "The same conceptual chart compares two vibe zones. A dashed cream line bounds the larger zone for more domain experience. A solid amber line falls more steeply and bounds a smaller shaded zone for less experience. A downward arrow at a fixed level of consequence shows the reduction in decisions to delegate. The slopes are illustrative, not measured thresholds." },
+};
+const diagram = diagrams[kind];
+---
+
+<figure class="essay-figure" aria-labelledby={`${id}-caption`}>
+  <div class="essay-figure-heading" aria-hidden="true"><span>Figure {figure.number}</span><strong>{figure.title}</strong></div>
+
+  <picture class="essay-diagram">
+    <source media="(min-width: 48rem)" srcset={diagram.wide} width={diagram.wideWidth} height={diagram.wideHeight} />
+    <img src={diagram.narrow} width={diagram.width} height={diagram.height} loading="lazy" decoding="async" alt={diagram.alt} />
+  </picture>
+
+  <figcaption id={`${id}-caption`}><span class="sr-only">Figure {figure.number}: {figure.title}. </span>{figure.caption}</figcaption>
+</figure>

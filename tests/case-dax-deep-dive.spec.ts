@@ -79,8 +79,12 @@ test("the enquiry action and the route back to Training are ordinary links to ex
   await expect(page.locator("#specialists-title")).toHaveText("Want to dive deeper into Power BI?");
 });
 
-test("no page links to the case study yet", async ({ page }) => {
-  for (const from of ["/", "/training/", "/power-bi/", "/about/", "/contact/", "/hour/", "/work/"]) {
+test("the relevant course entry and Work index link to the study", async ({ page }) => {
+  await page.goto("/training/");
+  await expect(page.locator(".specialist-courses").getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
+  await page.goto("/work/");
+  await expect(page.locator('[aria-labelledby="courses-title"]').getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
+  for (const from of ["/", "/training/agentic-development-for-power-bi/", "/power-bi/", "/about/", "/contact/", "/hour/"]) {
     await page.goto(from);
     await expect(page.locator(`a[href*="dax-deep-dive"]`)).toHaveCount(0);
   }

@@ -3,6 +3,7 @@
 // Kept anchors: situations, how-the-work-runs, pricing (step 2), ai, ongoing, start; see src/config/compatibility.mjs.
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import StudyLinks from "../components/StudyLinks.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import "../styles/course.css";
 import "../styles/consultancy.css";
@@ -49,6 +50,8 @@ const call = "/hour/";
       </ul>
       <p class="build-line">If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.</p>
       <p class="aside courses-line">Just need your team to understand Power BI? <a href="/training/">That's what the courses are for.</a> Want 1 to 3 people to learn on your own work? <a href="/training/#coaching">That's what Power BI coaching is for.</a></p>
+      <StudyLinks studies={["carbon-footprint"]} />
+      <a class="text-link" href="/work/">Work</a>
     </div>
   </section>
 

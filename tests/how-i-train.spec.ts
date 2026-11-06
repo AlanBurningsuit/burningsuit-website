@@ -6,7 +6,7 @@ const route = "/training/how-i-train/";
 const email = `mailto:${ENQUIRY.email}`;
 // The enquiry link targets the Contact page. That page is built on its own branch; until it is
 // integrated, /contact/ here is still the legacy redirect, so only the href itself is checked.
-const links = ["/training/#coaching", "/power-bi/", "/training/", "/training/power-bi-fundamentals/", "/training/agentic-development-for-power-bi/", email, "/contact/", "/about/"];
+const links = ["/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/", "/training/power-bi-fundamentals/", "/training/agentic-development-for-power-bi/", email, "/contact/", "/about/", "/work/"];
 
 test("How I train stays static, private and CSP-clean, with no form or third-party request", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -53,7 +53,7 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
     const id = await section.getAttribute("aria-labelledby");
     await expect(section.locator(`[id="${id}"]`)).toHaveCount(1);
   }
-  await expect(page.locator("main li, main figure, main blockquote, main dl")).toHaveCount(0);
+  await expect(page.locator("main li:not(.study-links li), main figure, main blockquote, main dl")).toHaveCount(0);
   const text = await page.locator("main").innerText();
   for (const absent of [/\[|\]/, /—/, /price/i, /book/i, /organisation/i]) expect(text).not.toMatch(absent);
 });

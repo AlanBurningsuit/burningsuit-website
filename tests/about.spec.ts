@@ -103,7 +103,7 @@ test("About links: courses first, consultancy second, then email, the form and L
   await expect(page.getByRole("link", { name: "the enquiry form" })).toHaveAttribute("href", "/#contact");
   await expect(page.locator("main").getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", linkedin);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual(["/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  expect(mainLinks).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
   // Profile aliases keep landing here; contact aliases now lead to the Contact page.
   for (const alias of ["/team-member/alan-harman-box", "/about-us/our-trainers"]) expect(redirects[alias as keyof typeof redirects]).toBe("/about/");
 });
@@ -127,14 +127,14 @@ test("About works without JavaScript, from the keyboard and from a legacy alias"
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     const ring = await page.evaluate(() => { const el = document.activeElement as HTMLElement; const s = getComputedStyle(el); const r = el.getBoundingClientRect(); return { width: parseFloat(s.outlineWidth), visible: r.width > 0 && r.height > 0 }; });
     expect(ring.width).toBeGreaterThanOrEqual(3);
     expect(ring.visible).toBe(true);
   }
-  expect(reached).toEqual(["/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  expect(reached).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
   await context.close();
 });
 

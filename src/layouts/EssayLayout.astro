@@ -1,20 +1,27 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
-import "../styles/case-study.css";
+import "../styles/articles.css";
 interface Props { essay: CollectionEntry<"writing">["data"] }
 const { essay } = Astro.props;
 const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(date);
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const archiveContext = essay.archiveMonth ? `${months[Number(essay.archiveMonth.slice(5)) - 1]} ${essay.archiveMonth.slice(0, 4)}` : undefined;
 ---
-<BaseLayout title={essay.title} description={essay.description} placeholder={false}>
-  <article class="mdx-essay">
-    <header class="mdx-opening wrap">
+<BaseLayout title={essay.title} description={essay.description} author={essay.author} ogType="article" placeholder={false}>
+  <article class="reading-article" aria-labelledby="page-title">
+    <header class="article-opening wrap">
       <p class="eyebrow">{essay.kicker}</p>
-      <h1>{essay.heading.before}<em class="em">{essay.heading.em}</em>{essay.heading.after}</h1>
-      <p class="mdx-lead">{essay.lead}</p>
-      {essay.givenAt?.map(({ event, date }) => <p>Given at {event}, <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>.</p>)}
+      <h1 id="page-title">{essay.heading.before}<span class="em">{essay.heading.em}</span>{essay.heading.after}</h1>
+      {essay.lead && <p class="article-lead">{essay.lead}</p>}
+      <p class="article-byline">{essay.author}{archiveContext && <> · <time datetime={essay.archiveMonth}>{archiveContext}</time></>}</p>
+      {essay.givenAt && <div class="article-appearances">{essay.givenAt.map(({ event, date }) => <p>Given at {event}, <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>.</p>)}</div>}
     </header>
     <slot />
   </article>
-  <div class="mdx-invite"><div class="wrap"><p>{essay.footerInvitation}</p></div></div>
+  <div class="article-related"><div class="wrap links">
+    <a href="/about/">About</a>
+    <a href="/training/">Training</a>
+    <a href="/power-bi/">Consultancy</a>
+  </div></div>
 </BaseLayout>

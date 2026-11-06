@@ -71,11 +71,12 @@ test("The contact-centre study links to Training's coaching entry and the Contac
   expect((await page.request.get("/training/"))?.status()).toBe(200);
 });
 
-test("The index and unmigrated archived studies keep their existing placeholders", async ({ page }) => {
-  for (const path of ["/work/", "/work/law-firm/", "/work/museum/"]) {
-    await page.goto(path);
-    await expect(page.locator("body")).toHaveAttribute("data-rebuild-placeholder");
-    await expect(page.locator("h1")).toHaveText("burningsuit");
+test("The shared index is built and reserved studies remain 404s", async ({ page }) => {
+  expect((await page.goto("/work/"))?.status()).toBe(200);
+  await expect(page.locator("h1")).toHaveText("Work");
+  for (const path of ["/work/law-firm/", "/work/museum/"]) {
+    expect((await page.goto(path))?.status()).toBe(404);
+    await expect(page.locator("h1")).toHaveText("Page not found");
   }
 });
 

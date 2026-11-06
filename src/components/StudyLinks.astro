@@ -1,0 +1,15 @@
+---
+import { getEntry } from "astro:content";
+interface Props { studies: string[] }
+const entries = await Promise.all(Astro.props.studies.map(async (id) => {
+  const entry = await getEntry("work", id);
+  if (!entry) throw new Error(`Missing study link destination: ${id}`);
+  const { heading, presentation, title } = entry.data;
+  const label = presentation === "coaching" ? title.replace(/ \| burningsuit$/, "")
+    : typeof heading === "string" ? heading : [heading.before, heading.em, heading.after].filter(Boolean).join("");
+  return { id, label };
+}));
+---
+<ul class="study-links" role="list">
+  {entries.map(({ id, label }) => <li><a href={`/work/${id}/`}>{label}</a></li>)}
+</ul>

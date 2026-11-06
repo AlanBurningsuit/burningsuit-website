@@ -8,5 +8,6 @@ import Section from "./case-study/Section.astro";
 import Teaching from "./case-study/Teaching.astro";
 import Return from "./case-study/Return.astro";
 import Code from "./case-study/Code.astro";
+import EssayFigure from "./EssayFigure.astro";
 
-export const components = { Chapter, Snapshot, Offer, Aside, Exhibit, Section, Teaching, Return, pre: Code };
+export const components = { Chapter, Snapshot, Offer, Aside, Exhibit, EssayFigure, Section, Teaching, Return, pre: Code };

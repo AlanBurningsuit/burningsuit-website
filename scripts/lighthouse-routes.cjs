@@ -13,5 +13,8 @@ module.exports = [
   "/work/carbon-footprint/",
   "/work/contact-centre/",
   "/work/individual-power-bi-coaching/",
-  "/work/dax-deep-dive/"
+  "/work/dax-deep-dive/",
+  "/work/",
+  "/writing/we-are-all-middle-management-now/",
+  "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/"
 ];

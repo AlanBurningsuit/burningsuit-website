@@ -1,0 +1,9 @@
+---
+import { getEntry, render } from "astro:content";
+import EssayLayout from "../../../../layouts/EssayLayout.astro";
+import { components } from "../../../../components/mdx-components";
+const entry = await getEntry("writing", "roches-maxim");
+if (!entry) throw new Error("Missing archive article entry");
+const { Content } = await render(entry);
+---
+<EssayLayout essay={entry.data}><Content components={components} /></EssayLayout>

@@ -39,9 +39,17 @@ test('the carbon invitation link occurs exactly once and OG images use the suppo
 });
 
 test('essay dates remain optional, require an original date and preserve chronological order', () => {
-  const essay = { title: 'Example', description: 'Example', heading: { em: 'Example' }, lead: 'Example', contactSubject: 'Example', footerInvitation: 'Example' };
+  const essay = { kind: 'essay', author: 'Alan Harman-Box', title: 'Example', description: 'Example', heading: { em: 'Example' }, lead: 'Example' };
   assert.equal(writingSchema.safeParse(essay).success, true);
   assert.equal(writingSchema.safeParse({ ...essay, dateModified: '2026-11-06' }).success, false);
   assert.equal(writingSchema.safeParse({ ...essay, datePublished: '2026-11-06', dateModified: '2026-11-05' }).success, false);
   assert.equal(writingSchema.safeParse({ ...essay, datePublished: '2026-11-05', dateModified: '2026-11-06' }).success, true);
+});
+
+test('archive metadata preserves month precision and its original author', () => {
+  const article = frontmatter('src/content/writing/roches-maxim.mdx');
+  assert.equal(writingSchema.safeParse(article).success, true);
+  for (const extra of [{ archiveMonth: '2021-03-01' }, { author: 'Alan Harman-Box' }, { datePublished: '2021-03-01' }, { dateModified: '2026-11-06' }]) {
+    assert.equal(writingSchema.safeParse({ ...article, ...extra }).success, false);
+  }
 });

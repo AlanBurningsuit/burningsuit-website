@@ -9,6 +9,7 @@ const heading = z.union([
 ]);
 const link = z.object({ text, href: z.string().regex(/^\/[a-z0-9/-]*(#[a-z0-9-]+)?$/, "must be a site path") }).strict();
 const common = z.object({
+  category: z.enum(["courses", "coaching", "consultancy"]),
   order: z.number(),
   title: text,
   description: text,
@@ -49,15 +50,23 @@ export const workSchema = z.discriminatedUnion("presentation", [
     }
   });
 
-// No old essay body is restored. Entries will follow a separate copy approval.
+// Fixed public paths are selected from the entry ID in writing-routes.mjs.
 export const writingSchema = z.object({
+    kind: z.enum(["essay", "archive"]),
+    author: z.enum(["Alan Harman-Box", "Stuart Box"]),
     title: text, description: text,
     heading: z.object({ before: z.string().optional(), em: text, after: z.string().optional() }).strict(),
-    lead: text, kicker: text.default("Essay"),
+    lead: text.optional(), kicker: text.default("Essay"),
+    archiveMonth: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).optional(),
     datePublished: z.coerce.date().optional(), dateModified: z.coerce.date().optional(),
-    contactSubject: text, footerInvitation: text,
     givenAt: z.array(z.object({ event: text, date: z.coerce.date() }).strict()).optional(),
   }).strict().superRefine((essay, ctx) => {
+    if (essay.kind === "archive" && (!essay.archiveMonth || essay.author !== "Stuart Box" || essay.datePublished || essay.dateModified || essay.givenAt)) {
+      ctx.addIssue({ code: "custom", message: "archive entries require their author and month-only context, without day-level metadata or appearances" });
+    }
+    if (essay.kind === "essay" && (essay.author !== "Alan Harman-Box" || !essay.lead || essay.archiveMonth)) {
+      ctx.addIssue({ code: "custom", message: "essays require their author and lead, without archive context" });
+    }
     if (essay.dateModified && !essay.datePublished) {
       ctx.addIssue({ code: "custom", path: ["dateModified"], message: "dateModified requires the original datePublished" });
     }

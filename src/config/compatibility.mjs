@@ -52,7 +52,10 @@ export const redirects = {
 };
 
 // Manifest routes that have their own page in src/pages; the catch-all placeholder skips them, and each keeps its reserved anchors (check:seo).
-export const bespokeRoutes = ["", "power-bi", "training", "about", "contact", "hour", "privacy"];
+export const bespokeRoutes = ["", "power-bi", "training", "about", "contact", "hour", "privacy", "work"];
+
+// Reserved for possible future entries; no document or redirect is generated.
+export const reserved404Routes = ["work/law-firm", "work/museum"];
 
 export const pages = {
   "about": [

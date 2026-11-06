@@ -1,11 +1,12 @@
 import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
-import { bespokeRoutes, pages } from "../src/config/compatibility.mjs";
+import { bespokeRoutes, pages, reserved404Routes } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 
-const formRoutes = bespokeRoutes.filter((route) => route !== "about" && route !== "hour" && route !== "privacy");
+const formRoutes = bespokeRoutes.filter((route) => !["about", "hour", "privacy", "work"].includes(route));
 
 for (const [path, anchors] of Object.entries(pages)) {
+  if (reserved404Routes.includes(path)) continue;
   test(`static, noindex, CSP-clean compatibility shell: /${path}`, async ({ page }) => {
     const errors: string[] = [];
     const external: string[] = [];
@@ -35,6 +36,15 @@ for (const [path, anchors] of Object.entries(pages)) {
     for (const id of anchors) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
     expect(errors).toEqual([]);
     expect(external).toEqual([]);
+  });
+}
+
+for (const path of reserved404Routes) {
+  test(`reserved route remains a genuine 404: /${path}`, async ({ page }) => {
+    expect((await page.goto(`/${path}/`))?.status()).toBe(404);
+    await expect(page.locator("h1")).toHaveText("Page not found");
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+    await expect(page.locator('meta[http-equiv="refresh"]')).toHaveCount(0);
   });
 }
 
