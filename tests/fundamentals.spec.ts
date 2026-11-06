@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
+import { type Page } from "@playwright/test";
+import { test, expect, isTracker, otherScripts } from "./analytics";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
 const route = "/training/power-bi-fundamentals/";
@@ -13,7 +14,7 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
   await page.addInitScript(() => {
     document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -23,7 +24,7 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   await expect(page).toHaveTitle("Power BI fundamentals | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "A two-day private course for teams new to Power BI: build an interactive report, prepare its data, and learn how it's shared and kept up to date. Price on request.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder]`)).toHaveCount(0);
   // The only image is the parts-of-Power-BI diagram: described by its alt, captioned, with a text version a keyboard can open.
   await expect(page.locator("main img")).toHaveCount(1);
   const figure = page.locator("main figure.course-figure");

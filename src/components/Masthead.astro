@@ -1,7 +1,9 @@
 ---
 // Training marks a section ("true": its pages sit under /training/); Consultancy, About and Contact mark the page itself.
+// The free call page belongs to consultancy, so it marks Consultancy as its section ("true"), not as the current page.
 const training = Astro.url.pathname.startsWith("/training/");
 const consultancy = Astro.url.pathname.startsWith("/power-bi/");
+const consultancySection = Astro.url.pathname.startsWith("/hour/");
 const about = Astro.url.pathname.startsWith("/about/");
 const contact = Astro.url.pathname.startsWith("/contact/");
 ---
@@ -23,7 +25,7 @@ const contact = Astro.url.pathname.startsWith("/contact/");
           </ul>
         </details>
       </div>
-      <a href="/power-bi/" aria-current={consultancy ? "page" : undefined}>Consultancy</a>
+      <a href="/power-bi/" aria-current={consultancy ? "page" : consultancySection ? "true" : undefined}>Consultancy</a>
       <a href="/about/" aria-current={about ? "page" : undefined}>About</a>
       <a href="/contact/" aria-current={contact ? "page" : undefined}>Contact</a>
     </nav>

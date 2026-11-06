@@ -1,0 +1,9 @@
+---
+// One answer in a case study: its heading beside the prose on the ruled page (the How I train and About pattern).
+interface Props { id: string; heading: string }
+const { id, heading } = Astro.props;
+---
+<section class="cs-answer wrap" aria-labelledby={`${id}-title`}>
+  <h2 id={`${id}-title`}>{heading}</h2>
+  <div class="cs-prose"><slot /></div>
+</section>

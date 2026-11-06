@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, isTracker, otherScripts } from "./analytics";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 
@@ -6,7 +6,7 @@ const route = "/training/how-i-train/";
 const email = `mailto:${ENQUIRY.email}`;
 // The enquiry link targets the Contact page. That page is built on its own branch; until it is
 // integrated, /contact/ here is still the legacy redirect, so only the href itself is checked.
-const links = ["/power-bi/", "/training/", "/training/power-bi-fundamentals/", "/training/agentic-development-for-power-bi/", email, "/contact/", "/about/"];
+const links = ["/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/", "/training/power-bi-fundamentals/", "/training/agentic-development-for-power-bi/", email, "/contact/", "/about/", "/work/"];
 
 test("How I train stays static, private and CSP-clean, with no form or third-party request", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -14,7 +14,7 @@ test("How I train stays static, private and CSP-clean, with no form or third-par
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
   await page.addInitScript(() => {
     document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -25,7 +25,7 @@ test("How I train stays static, private and CSP-clean, with no form or third-par
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How I teach Power BI: practice on prepared examples, questions about your own work, help when you get stuck, and reasons behind recommendations.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
-  await expect(page.locator('script, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form, input, button, main img, main picture')).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form, input, button, main img, main picture`)).toHaveCount(0);
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Training");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(pendingRoutes).not.toContain(route);
@@ -39,11 +39,11 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
   await expect(page.locator("h1")).toHaveText("How I train");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll do", "If you get stuck", "Questions about your own work", "Helping you use it afterwards", "On every course", "Where next"]);
   await expect(page.locator("h3, h4")).toHaveCount(0);
-  await expect(page.locator("main p")).toHaveText([
+  await expect(page.locator("main p:not(.study-evidence-label)")).toHaveText([
     "My courses are about understanding how Power BI works and putting it to use.",
     "Mostly, I explain and show you how something works, then you do it yourself on examples I've prepared for teaching. I want you to ask questions as we go. My aim is to make clear what each part is for before we get into how it works.",
     "I've made almost every mistake in Power BI worth making. If something isn't making sense, say so. I'll help you work out where it went wrong and build back up from there. I keep groups small so there's time to work through questions and help everyone follow what's happening.",
-    "Yes. Ask how an idea applies where you work, and I'll follow the question within what the course covers. If there's something specific you'd like to get working with your own data, we can work together.",
+    "Yes. Ask how an idea applies where you work, and I'll follow the question within what the course covers. If you'd like to learn on your own work over several weeks, that's what Power BI coaching is for. If there's something specific you'd like to get working with your own data, we can work together.",
     "I aim for explanations you can use again. When I recommend a way of doing something, I tell you what it helps with and when it matters, so you can make your own choice when a similar problem turns up. I also name things as we meet them, because knowing what something's called helps you ask better questions.",
     "I write and teach every course myself, for groups of up to 8 people. Dates, setup and what's included vary from course to course.",
     "Compare all the courses, or start with Power BI fundamentals or Power BI with AI agents 101. If you've got a question about how I teach, email me or use the enquiry form. There's more about me too.",
@@ -53,14 +53,15 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
     const id = await section.getAttribute("aria-labelledby");
     await expect(section.locator(`[id="${id}"]`)).toHaveCount(1);
   }
-  await expect(page.locator("main li, main figure, main blockquote, main dl")).toHaveCount(0);
+  await expect(page.locator("main li:not(.study-links li), main figure, main blockquote, main dl")).toHaveCount(0);
   const text = await page.locator("main").innerText();
   for (const absent of [/\[|\]/, /—/, /price/i, /book/i, /organisation/i]) expect(text).not.toMatch(absent);
 });
 
-test("How I train links: consultancy, the courses, email, the Contact page and About", async ({ page }) => {
+test("How I train links: coaching, consultancy, the courses, email, the Contact page and About", async ({ page }) => {
   await page.goto(route);
   for (const [name, href] of [
+    ["Power BI coaching", "/training/#coaching"],
     ["we can work together", "/power-bi/"],
     ["all the courses", "/training/"],
     ["Power BI fundamentals", "/training/power-bi-fundamentals/"],

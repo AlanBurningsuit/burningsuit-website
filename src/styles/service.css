@@ -4,4 +4,4 @@
 .service-copy h2 { margin-block: 32px 14px; font-size: clamp(1.45rem, 3vw, 2rem); }
 .service-copy ul { padding-left: 1.3em; }
 .service-copy li + li { margin-top: .5rem; }
-.service-copy .links { margin-top: 24px; }
+.service-copy .links { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px 24px; }

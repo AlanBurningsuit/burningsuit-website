@@ -1,0 +1,34 @@
+.article-opening { padding-block: 46px 52px; }
+.article-opening h1 { max-width: 22ch; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
+.article-lead { max-width: 60ch; font-size: 1.25rem; line-height: var(--lh-relaxed); }
+.article-byline { margin-top: 20px; color: var(--fg-dim); font-size: .9rem; }
+.article-appearances { margin-top: 24px; color: var(--fg-dim); font-size: .9rem; }
+.article-appearances p + p { margin-top: 4px; }
+.article-intro { padding-bottom: 36px; }
+.article-intro p { max-width: 66ch; font-size: 1.15rem; }
+.reading-article { padding-bottom: 36px; }
+.reading-article .case-chapter { display: grid; grid-template-columns: minmax(0, .55fr) minmax(0, 1.45fr); gap: var(--column-gap); align-items: start; padding-block: 26px 52px; }
+.reading-article .case-chapter h2 { font-size: clamp(1.4rem, 2.2vw, 1.9rem); padding-top: 20px; border-top: var(--bw-spine) solid var(--fg); }
+.reading-article .case-prose { min-width: 0; padding-top: 20px; border-top: var(--bw-hair) solid var(--line); }
+.reading-article .case-prose > p { max-width: 66ch; }
+.reading-article blockquote { margin-block: 24px; padding-left: 22px; border-left: var(--bw-spine) solid var(--amber); font-size: 1.15rem; }
+.reading-article code { font: .88em var(--ff-mono); overflow-wrap: anywhere; }
+.article-related { background: var(--bg-band); padding-block: 28px; }
+.article-related .links { margin-top: 0; }
+.essay-figure { margin-block: 34px; padding: 22px; background: var(--bg-2); border: var(--bw-hair) solid var(--line); border-radius: var(--r); }
+.essay-figure-heading { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; margin-bottom: 20px; }
+.essay-figure-heading span { color: var(--fg-dim); font-size: .8rem; }
+.essay-figure-heading strong { font: 600 1.1rem / var(--lh-snug) var(--ff-display); }
+.essay-diagram img { width: 100%; height: auto; }
+.essay-figure figcaption { margin-top: 18px; font-size: .88rem; color: var(--fg-dim); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 900px) {
+  .article-opening { padding-block: 34px 40px; }
+  .reading-article .case-chapter { grid-template-columns: minmax(0, 1fr); gap: 18px; padding-block: 16px 36px; }
+  .reading-article .case-prose { padding-top: 0; border-top: 0; }
+}
+@media (max-width: 680px) {
+  .article-opening { padding-block: 30px 32px; }
+  .article-lead, .article-intro p { font-size: 1.1rem; }
+  .essay-figure { padding: 12px; margin-inline: -6px; }
+}

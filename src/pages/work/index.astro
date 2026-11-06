@@ -1,0 +1,27 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/work.css";
+const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
+const groups = [
+  { category: "courses", heading: "Courses", href: "/training/" },
+  { category: "coaching", heading: "Power BI coaching", href: "/training/#coaching" },
+  { category: "consultancy", heading: "Consultancy", href: "/power-bi/" },
+];
+const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => typeof heading === "string" ? heading : [heading.before, heading.em, heading.after].filter(Boolean).join("");
+const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() + descriptor.slice(1);
+---
+<BaseLayout title="Work | burningsuit" description="Courses · Power BI coaching · Consultancy" placeholder={false}>
+  <header class="work-opening wrap"><h1>Work</h1></header>
+  <div id="cases" class="work-index wrap">
+    {groups.map((group) => <section class="work-group" aria-labelledby={`${group.category}-title`}>
+      <h2 id={`${group.category}-title`}><a href={group.href}>{group.heading}</a></h2>
+      <ul class="work-entries" role="list">
+        {studies.filter(({ data }) => data.category === group.category).map(({ id, data }) => <li>
+          <h3><a href={`/work/${id}/`}>{headingText(data.heading)}</a></h3>
+          <p>{sentenceCase(data.descriptor)}</p>
+        </li>)}
+      </ul>
+    </section>)}
+  </div>
+</BaseLayout>

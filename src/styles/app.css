@@ -38,6 +38,11 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .text-link[href^="http"]::after { content: "↗" / ""; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 14px; }
 .links a { font-weight: 600; padding-block: 6px; }
+.study-evidence { margin-top: 28px; padding-top: 18px; border-top: var(--bw-hair) solid var(--rule); }
+.study-evidence-label { color: var(--text-dim); font-size: .9rem; font-weight: 600; }
+.study-links { list-style: none; margin: 12px 0 0; padding: 0; font-size: .98rem; }
+.study-links li + li { margin-top: 10px; }
+.study-links a { font-weight: 600; }
 .aside { font-size: .92rem; color: var(--text-dim); }
 .course-facts { margin: 18px 0 12px; font-size: .86rem; }
 .course-facts > div { display: grid; grid-template-columns: 98px minmax(0, 1fr); gap: 12px; padding-block: 4px; }
@@ -48,7 +53,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .skip:focus { transform: none; }
 .masthead { display: flex; align-items: center; justify-content: space-between; min-height: var(--masthead-h); gap: 40px; }
 .brand { padding-block: 20px; flex-shrink: 0; }
-.brand img { width: 200px; height: auto; }
+.brand img { width: 200px; height: auto; aspect-ratio: 285.1 / 51.57; } /* Reserve the SVG viewBox ratio before it loads. */
 .masthead nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 30px; }
 .masthead nav a { color: var(--text); text-decoration: none; font: 600 1rem / var(--lh-snug) var(--ff-display); padding-block: 10px; }
 .masthead nav a:hover, .masthead nav a[aria-current] { color: var(--link); }
@@ -111,9 +116,10 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }
 .contact h2 { margin-top: 14px; }
-.footer { display: flex; justify-content: space-between; gap: 20px; padding-block: 26px; font-size: .78rem; color: var(--text-dim); }
+.footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; padding-block: 26px; font-size: .78rem; color: var(--text-dim); }
 .footer a { color: var(--text-dim); }
 .foot-links { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.foot-legal { flex-basis: 100%; margin: 0; } /* The company line takes its own row so it never squeezes the links. */
 
 @media (max-width: 900px) {
   :root { --page-gutter: 28px; --column-gap: 36px; --title-size: 3.2rem; --home-columns: minmax(0, 1fr); }
@@ -137,6 +143,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
   .course-facts > div { grid-template-columns: 80px minmax(0, 1fr); gap: 8px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }
   .footer { font-size: .7rem; gap: 12px; }
+  .foot-legal { font-size: .75rem; } /* The company line stays at least 12px; only the links shrink. */
 }
 @media (max-width: 360px) {
   .masthead nav a { font-size: .84rem; }

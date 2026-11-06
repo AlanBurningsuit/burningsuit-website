@@ -1,0 +1,9 @@
+---
+interface Props { tab: string; caption?: string }
+const { tab, caption } = Astro.props;
+---
+<figure class="mdx-exhibit">
+  <p class="mdx-exhibit-tab">{tab}</p>
+  <div><slot /></div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

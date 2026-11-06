@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, isTracker, otherScripts } from "./analytics";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
@@ -11,7 +11,7 @@ test("About stays static, private and CSP-clean, with no form or third-party req
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
   await page.addInitScript(() => {
     document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -26,7 +26,7 @@ test("About stays static, private and CSP-clean, with no form or third-party req
   await expect(page).toHaveTitle("About Alan Harman-Box | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "I'm Alan Harman-Box, and burningsuit is me. I write and teach Power BI and AI courses for people whose job isn't Power BI, and help teams with their own reporting.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator('script, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form')).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form`)).toHaveCount(0);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("About");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(errors).toEqual([]);
@@ -110,7 +110,7 @@ test("About links: courses first, consultancy second, then email, the form and L
   await expect(page.getByRole("link", { name: "the enquiry form" })).toHaveAttribute("href", "/#contact");
   await expect(page.locator("main").getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", linkedin);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual(["/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  expect(mainLinks).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
   // Profile aliases keep landing here; contact aliases now lead to the Contact page.
   for (const alias of ["/team-member/alan-harman-box", "/about-us/our-trainers"]) expect(redirects[alias as keyof typeof redirects]).toBe("/about/");
 });
@@ -134,14 +134,14 @@ test("About works without JavaScript, from the keyboard and from a legacy alias"
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     const ring = await page.evaluate(() => { const el = document.activeElement as HTMLElement; const s = getComputedStyle(el); const r = el.getBoundingClientRect(); return { width: parseFloat(s.outlineWidth), visible: r.width > 0 && r.height > 0 }; });
     expect(ring.width).toBeGreaterThanOrEqual(3);
     expect(ring.visible).toBe(true);
   }
-  expect(reached).toEqual(["/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  expect(reached).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
   await context.close();
 });
 

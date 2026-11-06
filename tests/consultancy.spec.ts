@@ -1,9 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, isTracker, otherScripts } from "./analytics";
 import { pages } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
 const route = "/power-bi/";
-const hour = "https://cal.com/alan-burningsuit/hour";
+const call = "/hour/";
 
 test("consultancy page stays static, private and CSP-clean", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -11,7 +11,7 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
   await page.addInitScript(() => {
     document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -21,7 +21,7 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   await expect(page).toHaveTitle("Power BI consultancy | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards. Price on request.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder]`)).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Consultancy");
   await expect(page.locator("aside.course-run")).toHaveAttribute("aria-label", "Consultancy facts and booking");
@@ -47,13 +47,13 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".do-steps > li").nth(1)).toHaveAttribute("id", "pricing");
   for (const id of ["deliver", "skills", "handover", "backup", "second-opinion", "discovery"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(0);
 
-  await expect(page.locator(".run-facts > li")).toHaveText(["Price on request, usually a fixed price", "You get me, working with your team", "Built so your team can run it without me afterwards", "It starts with a free hour on a call"]);
+  await expect(page.locator(".run-facts > li")).toHaveText(["Price on request, usually a fixed price", "You get me, working with your team", "Built so your team can run it without me afterwards", "It starts with a free 30-minute call"]);
   await expect(page.locator("#situations .lead-list > li strong")).toHaveText(["Thinking through your reporting as a whole.", "Owning the Power BI you've already got.", "Building or moving something, together.", "Getting started with AI agents."]);
   await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`
     - list:
       - listitem:
-        - heading "The free hour." [level=3]:
-          - link "The free hour"
+        - heading "The free call." [level=3]:
+          - link "The free call"
         - paragraph
       - listitem:
         - heading "A price for the whole job." [level=3]
@@ -86,10 +86,10 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".course-intro > p:not(.standfirst)")).toHaveText([
     "Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running and people rely on it, but it all rests on one person, or two reports give different answers to the same question.",
     "That's what my consultancy is for. I work with your team on your own Power BI: how the data gets in, the models, the reports and how they reach the people who use them. I explain as I go, in your words rather than mine. The aim is a team that understands what was built and can change it, not one that relies on yet another contractor.",
-    "Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free hour on a call.",
+    "Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free 30-minute call.",
   ]);
   await expect(page.locator("#situations .split-lead p")).toHaveText("Ideally, the work is done with you, not for you.");
-  await expect(page.locator(".courses-line")).toHaveText("Just need your team to understand Power BI? That's what the courses are for.");
+  await expect(page.locator(".courses-line")).toHaveText("Just need your team to understand Power BI? That's what the courses are for. Want 1 to 3 people to learn on your own work? That's what Power BI coaching is for.");
   await expect(page.locator(".start-ask")).toHaveText("Tell me what's happening with your Power BI, and we'll work out what would help.");
   await expect(page.locator("#situations .lead-list > li")).toHaveText(["Thinking through your reporting as a whole. We look at what it's for, what it takes to run it and which skills your team needs. Then we agree what to do first.", "Owning the Power BI you've already got. It all rests on one person, or your experienced Power BI person has already left, or the reports have limped on for years and nobody is quite sure how they work. Or two reports disagree, and you can't tell which to trust. I go through the reports and models with you, find where the risks are and help your team take charge of the reporting.", "Building or moving something, together. That might be a new model or report your team can't build yet, or moving your reporting into Power BI. Either way, your team knows how it works before they rely on it. If you're moving to Microsoft Fabric (the wider data platform that Power BI is part of), I coach your team through its own migration. I don't do the Fabric migration work myself.", "Getting started with AI agents. I coach your team to use them on the Power BI you've got. More on that below"]);
   await expect(page.locator(".build-line")).toHaveText("If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.");
@@ -97,7 +97,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator("#ai .raised-copy p")).toHaveText("If your team wants to start using AI agents, we start from what you already have: your licences, tools, skills and setup. We work out what to hand to an agent, what to keep it away from, and how your team checks what it changed. Your team learns to use agents themselves, so you get work you can check, not new risks or a mess to clear up later.");
   await expect(page.locator("#ongoing p")).toHaveText(["The whole point is that you don't need me.", "I'll teach your team the tool; I won't teach them to wait for me.", "Some teams still want someone to call on. If you do, we shape the support to fit the work we've done, for example:", "It's priced on request, like the rest of the work."]);
   await expect(page.locator("#ongoing .lead-list > li")).toHaveText(["Retained support for your team.", "Strategic advice as your reporting changes.", "Regular office hours, such as a monthly call in a fixed window, where your team brings whatever has come up."]);
-  await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to in the free hour is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.");
+  await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to on the free call is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.");
 
   // The AI band and the free hour are raised off the daylight body; the sequence and lists sit on it.
   const background = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
@@ -105,12 +105,12 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   expect(await background("#ai")).not.toBe(ground);
   expect(await background("#start")).toBe(await background("#ai"));
   for (const selector of ["#how-the-work-runs", "#situations", "#ongoing"]) expect(await background(selector)).toBe("rgba(0, 0, 0, 0)");
-  // #start leads with the free hour, before the shared form's dark band.
+  // #start leads with the free call, before the shared form's dark band.
   expect(await background("#contact")).not.toBe(ground);
   expect(await page.locator("#start + #contact").count()).toBe(1);
 
   const text = await page.locator("main").innerText();
-  for (const absent of [/\[|\]/, /second opinion/i, /discovery/i, /case stud/i]) expect(text).not.toMatch(absent);
+  for (const absent of [/\[|\]/, /second opinion/i, /discovery/i]) expect(text).not.toMatch(absent);
   await expect(page.locator("blockquote, .to-confirm")).toHaveCount(0);
   // One candid photo, in Who does the work, in the brand's carved frame.
   await expect(page.locator("main img")).toHaveCount(1);
@@ -120,17 +120,18 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   expect(await photo.evaluate((el) => getComputedStyle(el).borderTopStyle)).toBe("solid");
 });
 
-test("consultancy links go to the free hour, the AI band, the courses and About", async ({ page }) => {
+test("consultancy links go to the free call page, the AI band, the courses and About", async ({ page }) => {
   await page.goto(route);
-  const free = page.getByRole("link", { name: "Book a free hour on a call" });
+  const free = page.getByRole("link", { name: "Book a free 30-minute call" });
   await expect(free).toHaveCount(3);
-  for (const link of await free.all()) await expect(link).toHaveAttribute("href", hour);
-  await expect(page.getByRole("link", { name: "The free hour" })).toHaveAttribute("href", hour);
+  for (const link of await free.all()) await expect(link).toHaveAttribute("href", call);
+  await expect(page.getByRole("link", { name: "The free call" })).toHaveAttribute("href", call);
   await expect(page.getByRole("link", { name: "More on that below", exact: true })).toHaveAttribute("href", "#ai");
   await expect(page.getByRole("link", { name: "That's what the courses are for." })).toHaveAttribute("href", "/training/");
+  await expect(page.getByRole("link", { name: "That's what Power BI coaching is for." })).toHaveAttribute("href", "/training/#coaching");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([hour, "#ai", "/training/", hour, hour, "/about/", hour, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
+  expect(mainLinks).toEqual([call, "#ai", "/training/", "/training/#coaching", "/work/carbon-footprint/", "/work/", call, call, "/about/", call, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
 });
 
 test("consultancy enquiry form is labelled, plain and has nothing preselected", async ({ page }) => {
@@ -165,16 +166,20 @@ test("consultancy page works without JavaScript, from keyboard and from a legacy
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 10; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
   }
-  expect(reached).toEqual([hour, "#ai", "/training/", hour, hour, "/about/", hour]);
+  expect(reached).toEqual([call, "#ai", "/training/", "/training/#coaching", "/work/carbon-footprint/", "/work/", call, call, "/about/", call]);
   // The step heading link shows a visible focus ring.
   await page.locator(".do-steps h3 a").focus();
   expect(await page.locator(".do-steps h3 a").evaluate((el) => parseFloat(getComputedStyle(el).outlineWidth))).toBeGreaterThanOrEqual(2);
   await page.getByRole("link", { name: "More on that below", exact: true }).click();
   await expect(page).toHaveURL(baseURL! + route + "#ai");
+  // The coaching pointer lands on the Training page's coaching section.
+  await page.getByRole("link", { name: "That's what Power BI coaching is for." }).click();
+  await expect(page).toHaveURL(baseURL! + "/training/#coaching");
+  await expect(page.locator("#coaching-title")).toBeInViewport();
   await context.close();
 });
 

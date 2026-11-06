@@ -1,0 +1,9 @@
+---
+// Replaces MDX's <pre>: unhighlighted (no inline styles under the CSP). Long lines wrap rather than scroll, so the block never
+// needs a tab stop; each source line gets its own box so a wrapped line hangs under its indent instead of restarting at the margin.
+const { class: className } = Astro.props;
+const html = await Astro.slots.render("default");
+const lined = html.replace(/(<code[^>]*>)([\s\S]*?)(<\/code>)/, (_: string, open: string, body: string, close: string) =>
+  open + body.replace(/\n$/, "").split("\n").map((line: string) => `<span class="cs-line">${line}</span>`).join("\n") + "\n" + close);
+---
+<pre class:list={["cs-code", className]} set:html={lined} />

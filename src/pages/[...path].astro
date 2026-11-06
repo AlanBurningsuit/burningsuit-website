@@ -1,11 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { bespokeRoutes, pages } from "../config/compatibility.mjs";
+import { getCollection } from "astro:content";
+import { bespokeRoutes, pages, reserved404Routes } from "../config/compatibility.mjs";
+import { writingRoutes } from "../config/writing-routes.mjs";
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const entries = new Set([
+    ...(await getCollection("work")).map(({ id }) => `work/${id}`),
+    ...(await getCollection("writing")).map(({ id }) => writingRoutes[id as keyof typeof writingRoutes]),
+  ]);
   return Object.entries(pages)
     // Routes with a bespoke page (listed in compatibility.mjs) keep their own reserved anchors.
-    .filter(([path]) => !bespokeRoutes.includes(path))
+    .filter(([path]) => !bespokeRoutes.includes(path) && !reserved404Routes.includes(path) && !entries.has(path))
     .map(([path, anchors]) => ({ params: { path }, props: { anchors } }));
 }
 const { anchors } = Astro.props;

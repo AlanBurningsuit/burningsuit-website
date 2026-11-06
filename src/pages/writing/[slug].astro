@@ -1,0 +1,17 @@
+---
+import { getCollection, render } from "astro:content";
+import EssayLayout from "../../layouts/EssayLayout.astro";
+import { components } from "../../components/mdx-components";
+import { writingRoutes } from "../../config/writing-routes.mjs";
+
+export async function getStaticPaths() {
+  return (await getCollection("writing"))
+    .filter((entry) => writingRoutes[entry.id as keyof typeof writingRoutes]?.startsWith("writing/"))
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<EssayLayout essay={entry.data}>
+  <Content components={components} />
+</EssayLayout>

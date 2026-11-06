@@ -1,0 +1,6 @@
+---
+interface Props { as?: "p" | "aside" | "span"; class?: string }
+const props: Props = Astro.props;
+const { as: Tag = "p", class: extra } = props;
+---
+<Tag class:list={["aside", extra]}><slot /></Tag>

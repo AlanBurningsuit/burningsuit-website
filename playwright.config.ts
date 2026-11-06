@@ -23,7 +23,11 @@ export default defineConfig({
   retries: 0,
   timeout: 30_000,
   reporter: "list",
-  use: { baseURL, contextOptions: { reducedMotion: "reduce" } },
+  // Belt and braces for tests/analytics.ts: Umami's hosts don't resolve, so nothing can reach Umami even past the route guard. UMAMI_LIVE=1 lets the tag itself load live.
+  use: {
+    baseURL, contextOptions: { reducedMotion: "reduce" },
+    launchOptions: { args: [`--host-resolver-rules=MAP gateway.umami.is ~NOTFOUND${process.env.UMAMI_LIVE === "1" ? "" : ", MAP cloud.umami.is ~NOTFOUND"}`] },
+  },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
     command: `npm run preview -- --host 127.0.0.1 --port ${port}`,

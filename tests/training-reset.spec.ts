@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, isTracker, otherScripts } from "./analytics";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
@@ -11,7 +11,7 @@ for (const route of ["/", course]) {
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
     page.on("request", (request) => {
-      if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+      if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
     });
     await page.addInitScript(() => {
       document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -22,7 +22,7 @@ for (const route of ["/", course]) {
     for (const family of ["Mona Sans", "Albert Sans", "Burningsuit Reader"]) expect(loadedFonts.some((font) => font.startsWith(family))).toBe(true);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-    await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
+    await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder]`)).toHaveCount(0);
     await expect(page.locator("form")).toHaveCount(route === "/" ? 1 : 0);
     await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");
@@ -249,7 +249,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.getByRole("link", { name: "Compare all courses" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: /^Tell me what you use Power BI for now/ })).toHaveAttribute("href", "#contact");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Find your starting point", "Understanding that lasts", "Help with your own reporting", "Tell me what you're looking for."]);
-  await expect(page.getByRole("link", { name: "Book a free hour on a call" })).toHaveAttribute("href", "https://cal.com/alan-burningsuit/hour");
+  await expect(page.getByRole("link", { name: "Book a free 30-minute call" })).toHaveAttribute("href", "/hour/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   await expect(page.locator(".proof, .exercise, blockquote")).toHaveCount(0);
   for (const id of ["training", "teaching", "consultancy", "contact"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
