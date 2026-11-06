@@ -98,7 +98,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(coaching.locator(".specialists-head p")).toHaveText("Coaching is for 1 to 3 people from the same organisation, ideally the same team, who want to learn Power BI on the work they actually do. I write a syllabus for the people taking part, and we work on your own data, or on example data I build to look like yours, with the problems you're stuck on.");
   await expect(coaching.locator(".specialist-rows > li h3")).toHaveText(["Power BI coaching"]);
   await expect(coaching.locator(".specialist-rows").locator("a, p")).toHaveCount(0);
-  await expect(coaching.locator(".specialist-rows .facts > li")).toHaveText(["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", "Price on request"]);
+  await expectItems(coaching.locator(".specialist-rows .facts > li"), ["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", "Price on request"], "coaching facts remain unpriced");
   const askCoaching = coaching.getByRole("link", { name: "Ask about coaching", exact: true });
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");

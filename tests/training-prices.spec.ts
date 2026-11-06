@@ -70,10 +70,10 @@ test("ten rate slots appear on their pages and nowhere else", async ({ request }
 test("unpriced and priced items keep the approved private-course wording", async ({ page }) => {
   await page.goto(routes.home);
   // The private 101 keeps Price on request on Home and Training in both variants; coaching keeps it on Training.
-  await expect(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last()).toHaveText("Price on request");
+  await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Price on request", "private 101 price remains on request");
   await page.goto(routes.training);
-  await expect(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last()).toHaveText("Price on request");
-  await expect(page.locator("#coaching .facts > li").last()).toHaveText("Price on request");
+  await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Price on request", "private 101 price remains on request");
+  await expectText(page.locator("#coaching .facts > li").last(), "Price on request", "coaching remains on request");
   // Priced: private 101 and coaching. Unpriced: Fundamentals, the 101, three specialists and coaching.
   await expect(page.getByText("Price on request", { exact: true })).toHaveCount(priced ? 2 : 6);
   if (priced) {
@@ -84,7 +84,7 @@ test("unpriced and priced items keep the approved private-course wording", async
   }
   // Consultancy and the free call keep their approved wording in both variants.
   await page.goto("/power-bi/");
-  await expect(page.locator(".run-facts > li").first()).toHaveText("Price on request, usually a fixed price");
+  await expectText(page.locator(".run-facts > li").first(), "Price on request, usually a fixed price", "consultancy remains on request");
   await page.goto("/hour/");
   await expectAmountsOnlyWhenPriced(page, "free call");
   expect(await page.locator("main").innerText()).not.toMatch(/ex VAT|founding rate/i);

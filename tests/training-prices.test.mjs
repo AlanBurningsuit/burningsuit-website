@@ -318,6 +318,64 @@ test("the masking runner hides currency amounts and exact private rates, and kee
   rmSync(dir, { recursive: true, force: true });
 });
 
+test("named, decimal and hexadecimal currency entities cannot bypass either privacy gate", () => {
+  const sample = amount();
+  const digits = sample.slice(1);
+  const forms = [
+    `&pound;${digits}`, `&#163;${digits}`, `&#xa3;${digits}`,
+    `&pound;&nbsp;${digits}`,
+    [...sample].map((character) => `&#${character.codePointAt(0)};`).join(""),
+    [...sample].map((character) => `&#x${character.codePointAt(0).toString(16)};`).join(""),
+  ];
+  for (const encoded of forms) {
+    const dir = tracked({ "src/page.astro": `<p>${encoded} a seat</p>` });
+    const source = gate(dir);
+    assert.equal(source.status, 1, "encoded source amounts must be rejected without private input");
+    assert.match(output(source), /monetary-literal/);
+    writeJson(join(dir, "dist/index.html"), `<p>${encoded} a seat</p>`);
+    const dist = distRun(dir, {});
+    assert.equal(dist.status, 1, "encoded unpriced HTML amounts must be rejected without private input");
+    assert.match(output(dist), /monetary-literal/);
+    assert.ok(!output(source).includes(encoded) && !output(dist).includes(encoded), "diagnostics never echo the encoded amount");
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("exact private-value scans decode character references before comparison", () => {
+  const data = fixture();
+  const sample = valuesOf(data)[0];
+  const encoded = [...sample].map((character) => `&#x${character.codePointAt(0).toString(16)};`).join("");
+  const dir = tracked({ [PRICES_FILE]: data, "src/page.astro": `<p>${encoded}</p>` });
+  const source = gate(dir);
+  assert.equal(source.status, 1);
+  assert.match(output(source), /private-value\s+src\/page\.astro/);
+  writeJson(join(dir, "dist/index.html"), `<p>${encoded}</p>`);
+  const dist = distRun(dir, {});
+  assert.equal(dist.status, 1);
+  assert.match(output(dist), /price-outside-scope\s+dist\/index\.html/);
+  assert.ok(!leaks(source, valuesOf(data)) && !leaks(dist, valuesOf(data)), "fixed diagnostics hold no private amount");
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("the masking runner redacts character references, including fully encoded amounts and split chunks", () => {
+  const sample = amount();
+  const forms = [
+    `&pound;${sample.slice(1)}`, `&#163;${sample.slice(1)}`, `&#xa3;${sample.slice(1)}`,
+    `&pound;&nbsp;${sample.slice(1)}`,
+    [...sample].map((character) => `&#${character.codePointAt(0)};`).join(""),
+    [...sample].map((character) => `&#x${character.codePointAt(0).toString(16)};`).join(""),
+  ];
+  const dir = workspace("bs-mask-entities-");
+  for (const encoded of forms) {
+    const half = Math.floor(encoded.length / 2);
+    const program = `process.stdout.write(${JSON.stringify(encoded.slice(0, half))}); setTimeout(() => { console.log(${JSON.stringify(encoded.slice(half))}); console.error(${JSON.stringify(encoded)}); process.exitCode = 3; }, 5);`;
+    const result = spawnSync(process.execPath, [join(scripts, "run-masked.mjs"), process.execPath, "-e", program], { encoding: "utf8", cwd: dir });
+    assert.equal(result.status, 3);
+    assert.ok(output(result).includes("[amount]") && !output(result).includes(encoded) && !output(result).includes(sample.slice(1)), "no encoded or decoded amount survives masking");
+  }
+  rmSync(dir, { recursive: true, force: true });
+});
+
 test("the secret writer validates, writes with owner-only access, and enables pricing for later steps", () => {
   const dir = workspace("bs-secret-");
   const data = fixture();

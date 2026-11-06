@@ -5,6 +5,7 @@ import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { PRICE_SLOTS, PRICES_FILE } from "../src/lib/training-prices.mjs";
+import { decodePriceEntities } from "./price-text.mjs";
 
 const [command, ...args] = process.argv.slice(2);
 if (!command) {
@@ -25,9 +26,9 @@ if (existsSync(file)) {
 }
 exact.sort((a, b) => b.length - a.length);
 
-const AMOUNT = /[£€$]\s?\d[\d,]*(?:\.\d+)?/g;
+const AMOUNT = /[£€$]\s*\d[\d,]*(?:\.\d+)?/g;
 const mask = (text) => {
-  let out = text;
+  let out = decodePriceEntities(text);
   for (const value of exact) out = out.split(value).join("[amount]");
   return out.replace(AMOUNT, "[amount]");
 };
