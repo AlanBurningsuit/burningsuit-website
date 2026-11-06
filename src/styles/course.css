@@ -5,7 +5,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr);
   column-gap: var(--column-gap);
-  padding-block: 46px 80px;
+  padding-block: 36px 48px;
   align-items: start;
 }
 .course-intro h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
@@ -57,7 +57,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 .course-need { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 40px 80px; align-items: start; }
 .need-list { margin: 0; padding: 14px 30px; list-style: none; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
 .need-list li { position: relative; padding: 10px 0 10px 22px; max-width: 64ch; }
-.need-list li::before { content: ""; position: absolute; left: 0; top: calc(10px + .62em); width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.need-list li::before { content: ""; position: absolute; left: 0; top: calc(10px + .62em); width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
 .need-note { margin-top: 18px; font-size: 1rem; color: var(--text-dim); max-width: 64ch; }
 /* A need section with a body (the 101's "What you'll need", fundamentals' "What to arrange") stacks its heading above
    the card on wide screens, so it doesn't repeat the side-by-side sections before it. */

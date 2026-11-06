@@ -30,7 +30,7 @@
 }
 /* Who each entry is for, in the mono margin voice, led by a short ochre tick. */
 .course .course-fit, .specialists-lead { font: 400 .84rem / var(--lh-label) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); margin-bottom: 12px; }
-.course .course-fit::before, .specialists-lead::before { content: ""; display: inline-block; width: 1.25em; height: var(--bw-spine); margin-right: .6em; vertical-align: .3em; background: var(--accent); }
+.course .course-fit::before, .specialists-lead::before { content: ""; display: inline-block; width: 1.75em; height: var(--bw-spine); margin-right: .6em; vertical-align: .3em; background: var(--accent); }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
 .course > p:not(.course-fit) { font-size: 1rem; }
 /* Each entry's deciding facts and prerequisite sit together in one block, recessed to the daylight ground;
