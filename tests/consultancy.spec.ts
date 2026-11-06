@@ -33,6 +33,8 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
 test("consultancy page follows the visitor questions with the kept anchors", async ({ page }) => {
   await page.goto(route);
   await expect(page.locator("h1")).toHaveText("Power BI consultancy that leaves your team independent");
+  // One emphasised word in the title, in amber like the other pages' titles.
+  await expect(page.locator("h1 .em")).toHaveText("independent");
   // The last heading is the shared form's slot text, so a change to the form's heading slot fails here too.
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["The work I take on", "How I work with your team", "AI agents on your own Power BI", "How the work runs", "After the work", "Who does the work", "How to start", "Prefer to write?"]);
 
