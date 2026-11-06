@@ -63,9 +63,14 @@ test("About keeps the approved wording, headings and anchors", async ({ page }) 
   for (const absent of [/case stud/i, /free hour/i, /since \d{4}/i, /\[|\]/, /—/]) expect(text).not.toMatch(absent);
 });
 
-test("each photo follows its prose, framed, at its own aspect ratio, with metadata captions", async ({ page }) => {
+test("each photo sits with its prose, framed, at its own aspect ratio, with metadata captions", async ({ page }) => {
   await page.goto(route);
-  await expect(page.locator("main img")).toHaveCount(3);
+  await expect(page.locator("main img")).toHaveCount(4);
+  // The introduction opens with Alan at a café table, beside its paragraph; it loads eagerly, being in the first view.
+  const cafe = page.locator(".about-intro figure.framed-photo img");
+  await expect(cafe).toHaveAttribute("alt", "Alan at an outdoor café table on a town street, writing on a tablet with a stylus beside a cup of coffee");
+  await expect(cafe).toHaveAttribute("src", /DSC09129/);
+  expect(await page.locator(".about-intro figure").evaluate((el) => el.previousElementSibling?.className)).toBe("about-lead");
   const photos = [
     ["#human", "mmn-talk", "Alan giving his talk 'We're all middle management now' at a user group, the title slide beside him", "We're all middle management now", 1400 / 933],
     ["#origin", "stuart-alison", "Alison and Stuart, who ran burningsuit before Alan, at a laptop together", "Alison and Stuart", 1400 / 1120],
@@ -74,8 +79,8 @@ test("each photo follows its prose, framed, at its own aspect ratio, with metada
   for (const [section, file, alt, caption, ratio] of photos) {
     const figure = page.locator(`${section} figure.framed-photo`);
     await expect(figure).toHaveCount(1);
-    // The figure comes after the section's prose.
-    expect(await figure.evaluate((el) => el.previousElementSibling?.tagName)).toBe("P");
+    // The figure is the section's own, after its prose (placed opposite it on wide screens).
+    expect(await figure.evaluate((el) => el.previousElementSibling?.className)).toBe("about-prose");
     expect(await figure.evaluate((el) => el.nextElementSibling)).toBeNull();
     const img = figure.locator("img");
     await expect(img).toHaveAttribute("alt", alt);
@@ -138,7 +143,7 @@ test("About works without JavaScript, from the keyboard and from a legacy alias"
   await context.close();
 });
 
-test("About layout: one essay column, each heading above its prose at every width", async ({ page }) => {
+test("About layout: one reading column, each heading above its prose, photos opposite and alternating on wide screens", async ({ page }) => {
   const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
@@ -146,9 +151,19 @@ test("About layout: one essay column, each heading above its prose at every widt
     const [h, p] = [await box(`#${id} h2`), await box(`#${id} .about-prose`)];
     expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     expect(Math.abs(p.x - h.x)).toBeLessThanOrEqual(1);
-    // A reading column, not the full content width, on the same left edge as the title band and every other page.
+    // A reading column, not the full content width.
     expect(p.width).toBeLessThanOrEqual(760);
-    expect(Math.abs(h.x - (await box(".title-band h1")).x)).toBeLessThanOrEqual(1);
+  }
+  // The text starts on the title band's left edge, except where a photo takes the left; photos alternate sides
+  // (introduction right, human left, origin right, dog left), each beside its own prose.
+  const edge = (await box(".title-band h1")).x;
+  expect(Math.abs((await box(".about-lead")).x - edge)).toBeLessThanOrEqual(1);
+  expect(Math.abs((await box("#capable h2")).x - edge)).toBeLessThanOrEqual(1);
+  for (const [section, side] of [[".about-intro", "right"], ["#human", "left"], ["#origin", "right"], ["#dog", "left"]] as const) {
+    const photo = await box(`${section} figure`), text = await box(`${section} :is(.about-lead, .about-prose)`);
+    if (side === "right") expect(photo.x).toBeGreaterThanOrEqual(text.x + text.width);
+    else { expect(text.x).toBeGreaterThanOrEqual(photo.x + photo.width); expect(Math.abs(photo.x - edge)).toBeLessThanOrEqual(1); }
+    expect(photo.y).toBeLessThan(text.y + text.height);
   }
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });

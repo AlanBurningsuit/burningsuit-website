@@ -9,6 +9,7 @@ import "../styles/about.css";
 import talk from "../assets/photos/mmn-talk.jpg";
 import parents from "../assets/photos/stuart-alison.jpg";
 import zelda from "../assets/photos/zelda.jpg";
+import cafe from "../assets/photos/DSC09129-2-Edit.jpg";
 
 const linkedin = "https://www.linkedin.com/in/alan-harman-box";
 ---
@@ -24,6 +25,9 @@ const linkedin = "https://www.linkedin.com/in/alan-harman-box";
   </div>
   <div class="about-intro wrap">
     <p class="about-lead">I'm Alan Harman-Box, and burningsuit is me. There's a lot of noise about AI and Power BI at the moment, and most of it feels aimed at people who already spend their days talking about agents. I'm interested in everyone else: the people who just want to get their job done well, and would rather not turn into a nerd to do it. Which is fine by me. I'm more than happy to be the nerd in the room, and to explain things so that you don't have to become one.</p>
+    <figure class="about-photo cafe-photo framed-photo">
+      <Image src={cafe} alt="Alan at an outdoor café table on a town street, writing on a tablet with a stylus beside a cup of coffee" widths={[400, 560, 840, 1100]} sizes="(max-width: 900px) calc(100vw - 44px), 380px" format="webp" loading="eager" />
+    </figure>
   </div>
 
   <section id="capable" class="about-section wrap" aria-labelledby="capable-title">
@@ -34,16 +38,16 @@ const linkedin = "https://www.linkedin.com/in/alan-harman-box";
     </div>
   </section>
 
-  <section id="human" class="about-section wrap" aria-labelledby="human-title">
+  <section id="human" class="about-section photo-left wrap" aria-labelledby="human-title">
     <h2 id="human-title">The part that isn't really technical</h2>
     <div class="about-prose">
       <p>I know the nuts and bolts of Power BI well, but that's honestly not usually the thing that makes the difference. It's much more about whether people who are busy, and a bit sceptical, actually feel like having a go. And whether, by the end, you reckon I get how you work, rather than feeling someone turned up to tell you you've been doing it wrong. That's really the part I care about getting right.</p>
       <p>I've spent about five years working with organisations as they adopt Power BI and Fabric, and before that about a decade in software delivery. I've also given a talk called "We're all middle management now" at the Bristol and Manchester Power BI user groups and at DataSwindon, about being responsible for work you've handed off to something that can't be held responsible for it. The thing that's stuck with me through all of it is that this work mostly succeeds or fails on the people side, well before the technology really comes into it.</p>
-      <figure class="about-photo talk-photo framed-photo">
-        <Image src={talk} alt="Alan giving his talk 'We're all middle management now' at a user group, the title slide beside him" widths={[400, 640, 960, 1280]} sizes="(max-width: 680px) calc(100vw - 44px), 640px" format="webp" loading="lazy" />
-        <figcaption>We're all middle management now</figcaption>
-      </figure>
     </div>
+    <figure class="about-photo talk-photo framed-photo">
+      <Image src={talk} alt="Alan giving his talk 'We're all middle management now' at a user group, the title slide beside him" widths={[400, 640, 960, 1280]} sizes="(max-width: 680px) calc(100vw - 44px), 640px" format="webp" loading="lazy" />
+      <figcaption>We're all middle management now</figcaption>
+    </figure>
   </section>
 
   <section id="origin" class="about-section wrap" aria-labelledby="origin-title">
@@ -51,22 +55,22 @@ const linkedin = "https://www.linkedin.com/in/alan-harman-box";
     <div class="about-prose">
       <p>burningsuit was my parents' Power BI training business. My mum and dad, Alison and Stuart, handed it over to me and they're properly retired now, so it's me. It's still a training business at heart. I teach Power BI and how to work with AI agents on it, with consultancy alongside, and the reason it exists hasn't really changed.</p>
       <p>As my mum said, burningsuit was for "everyone else". Normal people, basically. Not the nerds, and not the people who are always online performing their work: just someone trying to get a job done. That's still who it's for.</p>
-      <figure class="about-photo parents-photo framed-photo">
-        <Image src={parents} alt="Alison and Stuart, who ran burningsuit before Alan, at a laptop together" widths={[400, 560, 840, 1120]} sizes="(max-width: 680px) calc(100vw - 44px), 560px" format="webp" loading="lazy" />
-        <figcaption>Alison and Stuart</figcaption>
-      </figure>
     </div>
+    <figure class="about-photo parents-photo framed-photo">
+      <Image src={parents} alt="Alison and Stuart, who ran burningsuit before Alan, at a laptop together" widths={[400, 560, 840, 1120]} sizes="(max-width: 680px) calc(100vw - 44px), 560px" format="webp" loading="lazy" />
+      <figcaption>Alison and Stuart</figcaption>
+    </figure>
   </section>
 
-  <section id="dog" class="about-section wrap" aria-labelledby="dog-title">
+  <section id="dog" class="about-section photo-left wrap" aria-labelledby="dog-title">
     <h2 id="dog-title">And the dog</h2>
     <div class="about-prose">
       <p>Last thing: this is Zelda, who I'm told is Chief Morale Officer. She's no use at all with the DAX, but she's very good at making me get up and go outside now and then, which honestly does more for the work than you'd think.</p>
-      <figure class="about-photo zelda-photo framed-photo">
-        <Image src={zelda} alt="Zelda, a small black-and-tan dog, snuggled into a cream fleece blanket" widths={[400, 640, 960]} sizes="(max-width: 680px) calc(100vw - 44px), 460px" format="webp" loading="lazy" />
-        <figcaption>Zelda</figcaption>
-      </figure>
     </div>
+    <figure class="about-photo zelda-photo framed-photo">
+      <Image src={zelda} alt="Zelda, a small black-and-tan dog, snuggled into a cream fleece blanket" widths={[400, 640, 960]} sizes="(max-width: 680px) calc(100vw - 44px), 460px" format="webp" loading="lazy" />
+      <figcaption>Zelda</figcaption>
+    </figure>
   </section>
 
   <section class="about-start dark" aria-labelledby="start-title">
