@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { otherScripts } from "./analytics";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
 // The normal suite stubs the provider: it never emails sample enquiries.
@@ -65,7 +66,7 @@ for (const path of [ENQUIRY.successPath, ENQUIRY.errorPath, ENQUIRY.privacyPath]
     await page.goto(path);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-    await expect(page.locator("script")).toHaveCount(0);
+    await expect(page.locator(otherScripts)).toHaveCount(0);
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
     await page.keyboard.press("Enter");

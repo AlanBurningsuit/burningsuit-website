@@ -10,6 +10,8 @@ export default defineConfig({
   trailingSlash: "ignore",
   redirects,
   build: { inlineStylesheets: "never" },
+  // Keep bundled page scripts (the /privacy/ opt-out) as same-origin files under script-src 'self', never inlined; other assets keep Vite's default.
+  vite: { build: { assetsInlineLimit: (/** @type {string} */ file) => (file.endsWith(".js") ? false : undefined) } },
   fonts: [
     {
       provider: fontProviders.fontsource(), name: "Mona Sans",

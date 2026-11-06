@@ -1,0 +1,78 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ENQUIRY } from "../../config/enquiry.mjs";
+import "../../styles/service.css";
+import "../../styles/enquiry.css";
+import "../../styles/privacy.css";
+---
+<BaseLayout title="Privacy | burningsuit" description="What happens to your information when you visit this site, book a call or email me, and how to turn off visit counting." placeholder={false}>
+  <article class="wrap service-page" aria-labelledby="privacy-title">
+    <div class="service-copy">
+      <h1 id="privacy-title">This site and your information</h1>
+      <p>I'm Alan Harman-Box. This notice covers visiting this site, booking a free 30-minute call and emailing me. The enquiry form has <a href={ENQUIRY.privacyPath}>its own notice</a>.</p>
+
+      <h2 id="who">Who is responsible</h2>
+      <p>burningsuit is the trading name of Burningsuit Limited, registered in England and Wales, company number 05738130, registered office The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN. VAT number 770 3248 38. The company is the controller of your information and is registered with the Information Commissioner's Office. Contact me at <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>
+
+      <h2 id="analytics">Counting visits</h2>
+      <p>I use <a href="https://umami.is/privacy">Umami</a> to count which pages people read, so I can improve the site. It sets no cookies. For each page view it records the page, the page you came from, your browser and device, your approximate location, and how quickly and smoothly the page loaded. It uses your IP address briefly but doesn't keep it in the statistics, and it can't link your visits from one month to the next.</p>
+      <p>Umami Software, Inc., a US company, processes this for me in the US and the EU under its <a href="https://umami.is/dpa">data processing agreement</a>, which covers transfers from the UK. It keeps the statistics for 6 months. My lawful basis is legitimate interests. I don't profile anyone or sell the data. If you'd rather your visits weren't counted, <a href="#optout">turn counting off below</a>.</p>
+
+      <h2 id="optout">Turn off visit counting</h2>
+      <p>This switch stops Umami counting your visits from this browser. It's free, works straight away and can be switched back. It's saved in this browser, so clearing the site's data undoes it.</p>
+      {/* The button and status show only when scripting is available (privacy.css); the two labels and three status lines stay here as data attributes for the opt-out script below. */}
+      <div class="optout-control">
+        <button class="send" type="button" data-optout data-label-counted="Stop counting my visits" data-label-excluded="Count my visits again">Stop counting my visits</button>
+        <p class="optout-status" role="status" data-optout-status data-counted="Your visits from this browser can be counted." data-excluded="Your visits from this browser aren't being counted." data-failed="This browser didn't let the site save the setting, so your visits may still be counted.">Your visits from this browser can be counted.</p>
+      </div>
+      <p class="optout-nojs">With JavaScript off, the analytics don't run, so your visits aren't counted.</p>
+
+      <h2 id="hosting">Where the site is hosted</h2>
+      <p>The site is hosted on GitHub Pages. GitHub, Inc., a US company, logs visitors' IP addresses for its own security purposes, under <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">its privacy statement</a>.</p>
+
+      <h2 id="booking">Booking the free call</h2>
+      <p>You book the free call on <a href="https://cal.com/privacy">Cal.com</a>. Cal.com, Inc. processes the details you enter for me in the US, relying on the UK Extension to the EU-US Data Privacy Framework, and keeps bookings in my account while it's open. The call itself, and paid sessions, are covered by the terms you receive for them, including whether they're recorded. My lawful basis and how long I keep my copy are under <a href="#email">Emailing me</a>.</p>
+
+      <h2 id="email">Emailing me</h2>
+      <p>Email links open your own email program. I use Microsoft 365 for email, and <a href="https://privacy.microsoft.com/en-gb/privacystatement">Microsoft's privacy statement</a> covers its processing and transfers.</p>
+      <p>For bookings and emails, my lawful basis is legitimate interests: answering people who contact me about training or consultancy. If you ask me to take steps towards a contract with you, that processing is necessary for those steps. Apart from Cal.com's copy, I keep them for as long as the enquiry or any engagement that follows needs them, then delete them.</p>
+
+      <h2 id="rights">Your choices and rights</h2>
+      <p>You can ask for a copy of your information, or ask me to correct, delete or restrict it. You can object to anything based on legitimate interests, including the analytics, which <a href="#optout">the switch</a> stops. Where I'm using information for steps towards a contract you asked for, you can also ask for it in a reusable format, for you or another organisation. Email <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>, or <a href="https://ico.org.uk/make-a-complaint/">complain to the Information Commissioner's Office</a>.</p>
+
+      <h2 id="changes">Changes to this notice</h2>
+      <p>I update this notice when anything here changes.</p>
+      <p>Last updated: <time datetime="2026-11-06">6 November 2026</time></p>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  // Umami skips tracking while localStorage["umami.disabled"] is "1". Storage can throw in locked-down browsers, so every access is guarded.
+  const KEY = "umami.disabled";
+  const button = document.querySelector<HTMLButtonElement>("[data-optout]");
+  const status = document.querySelector<HTMLElement>("[data-optout-status]");
+  if (button && status) {
+    const excluded = () => {
+      try { return localStorage.getItem(KEY) === "1"; } catch { return false; }
+    };
+    // Only changed text is written, so the polite live region announces state changes, not a repeat of the current state.
+    const say = (element: HTMLElement, text = "") => { if (element.textContent !== text) element.textContent = text; };
+    const render = () => {
+      const off = excluded();
+      say(button, off ? button.dataset.labelExcluded : button.dataset.labelCounted);
+      say(status, off ? status.dataset.excluded : status.dataset.counted);
+    };
+    button.addEventListener("click", () => {
+      try {
+        if (excluded()) localStorage.removeItem(KEY);
+        else localStorage.setItem(KEY, "1");
+      } catch {
+        say(status, status.dataset.failed);
+        return;
+      }
+      render();
+    });
+    render();
+  }
+</script>

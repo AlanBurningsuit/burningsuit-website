@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { isTracker, otherScripts } from "./analytics";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
 const route = "/training/";
@@ -15,7 +16,7 @@ test("training chooser stays static, private and CSP-clean", async ({ page, base
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
   await page.addInitScript(() => {
     document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -25,7 +26,7 @@ test("training chooser stays static, private and CSP-clean", async ({ page, base
   await expect(page).toHaveTitle("Power BI courses | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each. Price on request.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder], main img')).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder], main img`)).toHaveCount(0);
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
   for (const directive of ["default-src 'none'", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
   await expect(page.locator("form")).toHaveCount(1);

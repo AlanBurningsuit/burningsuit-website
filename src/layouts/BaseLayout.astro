@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import { SITE_NAME } from "../config/site";
+import { ANALYTICS } from "../config/analytics.mjs";
 import Masthead from "../components/Masthead.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/app.css";
@@ -35,6 +36,10 @@ const {
     <Font cssVariable="--font-mona" preload />
     <Font cssVariable="--font-albert" preload />
     <Font cssVariable="--font-commit" />
+    {/* Cookieless Umami, allowed by its CSP hosts rather than a hash (is:inline keeps the external src as written). data-domains limits reporting to production; /privacy/#optout sets Umami's own opt-out flag. */}
+    {ANALYTICS.enabled && (
+      <script is:inline defer src={ANALYTICS.scriptSrc} data-website-id={ANALYTICS.websiteId} data-domains={ANALYTICS.domains} data-performance={ANALYTICS.performance ? "true" : undefined}></script>
+    )}
   </head>
   <body id="top" data-rebuild-placeholder={placeholder || undefined}>
     <a class="skip" href="#main">Skip to content</a>

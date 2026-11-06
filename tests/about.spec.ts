@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { isTracker, otherScripts } from "./analytics";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
@@ -11,7 +12,7 @@ test("About stays static, private and CSP-clean, with no form or third-party req
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
   await page.addInitScript(() => {
     document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -26,7 +27,7 @@ test("About stays static, private and CSP-clean, with no form or third-party req
   await expect(page).toHaveTitle("About Alan Harman-Box | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "I'm Alan Harman-Box, and burningsuit is me. I write and teach Power BI and AI courses for people whose job isn't Power BI, and help teams with their own reporting.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator('script, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form')).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form`)).toHaveCount(0);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("About");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(errors).toEqual([]);

@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { bespokeRoutes, pages } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
+import { ANALYTICS } from "../src/config/analytics.mjs";
+import { isTracker, otherScripts, tracker } from "./analytics";
 
-const formRoutes = bespokeRoutes.filter((route) => route !== "about" && route !== "hour");
+const formRoutes = bespokeRoutes.filter((route) => route !== "about" && route !== "hour" && route !== "privacy");
 
 for (const [path, anchors] of Object.entries(pages)) {
   test(`static, noindex, CSP-clean compatibility shell: /${path}`, async ({ page }) => {
@@ -11,7 +13,7 @@ for (const [path, anchors] of Object.entries(pages)) {
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
     const origin = new URL(test.info().project.use.baseURL!).origin;
-    page.on("request", (request) => { if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== origin) external.push(request.url()); });
+    page.on("request", (request) => { if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== origin && !isTracker(request.url())) external.push(request.url()); });
     await page.addInitScript(() => {
       document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
     });
@@ -22,8 +24,14 @@ for (const [path, anchors] of Object.entries(pages)) {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
     const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
     for (const directive of ["default-src 'none'", "script-src", "style-src", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
-    await expect(page.locator('link[rel="canonical"], script')).toHaveCount(0);
-    // About and the free call page link onward instead; the other registered bespoke routes carry the form, and placeholders have none.
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+    // Every page carries the Umami tag, limited to the production domains; only /privacy/ adds its same-origin opt-out module.
+    await expect(page.locator(tracker)).toHaveCount(1);
+    await expect(page.locator(tracker)).toHaveAttribute("data-website-id", ANALYTICS.websiteId);
+    await expect(page.locator(tracker)).toHaveAttribute("data-domains", ANALYTICS.domains);
+    await expect(page.locator(otherScripts)).toHaveCount(path === "privacy" ? 1 : 0);
+    if (path === "privacy") await expect(page.locator(otherScripts)).toHaveAttribute("src", /^\/_astro\/[^/]+\.js$/);
+    // About, the free call page and the privacy notice link onward instead; the other registered bespoke routes carry the form, and placeholders have none.
     await expect(page.locator("form")).toHaveCount(formRoutes.includes(path) ? 1 : 0);
     for (const id of anchors) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
     expect(errors).toEqual([]);

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { isTracker, otherScripts } from "./analytics";
 import { pages } from "../src/config/compatibility.mjs";
 
 const route = "/hour/";
@@ -14,7 +15,7 @@ test("free call page stays static, private and CSP-clean, with no form, embed or
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
   await page.addInitScript(() => {
     document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -24,7 +25,7 @@ test("free call page stays static, private and CSP-clean, with no form, embed or
   await expect(page).toHaveTitle("Free 30-minute Power BI call | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Book a free 30-minute call with me, Alan Harman-Box, about your own Power BI. Talk through what's happening and whether I can help.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder], form, iframe, embed, object, main img')).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder], form, iframe, embed, object, main img`)).toHaveCount(0);
   // No reserved anchors for this route.
   expect(pages.hour).toEqual([]);
   // Consultancy's page: the nav marks Consultancy as the section, not as this page.

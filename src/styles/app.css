@@ -56,9 +56,10 @@ a:hover { text-decoration-thickness: 2px; }
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }
 .contact h2 { margin-top: 14px; }
-.footer { display: flex; justify-content: space-between; gap: 20px; padding-block: 26px; font-size: .78rem; color: var(--fg-dim); }
+.footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; padding-block: 26px; font-size: .78rem; color: var(--fg-dim); }
 .footer a { color: var(--fg-dim); }
 .foot-links { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.foot-legal { flex-basis: 100%; margin: 0; } /* The company line takes its own row so it never squeezes the links. */
 
 @media (max-width: 900px) {
   :root { --page-gutter: 28px; --column-gap: 36px; --title-size: 3.2rem; --home-columns: minmax(0, 1fr); }

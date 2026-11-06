@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { isTracker, otherScripts } from "./analytics";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
@@ -11,7 +12,7 @@ for (const route of ["/", course]) {
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
     page.on("request", (request) => {
-      if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+      if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
     });
     await page.addInitScript(() => {
       document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -22,7 +23,7 @@ for (const route of ["/", course]) {
     for (const family of ["Mona Sans", "Albert Sans", "Commit Mono"]) expect(loadedFonts.some((font) => font.startsWith(family))).toBe(true);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-    await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
+    await expect(page.locator(`${otherScripts}, astro-island, link[rel="canonical"], [data-rebuild-placeholder]`)).toHaveCount(0);
     await expect(page.locator("form")).toHaveCount(route === "/" ? 1 : 0);
     await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");

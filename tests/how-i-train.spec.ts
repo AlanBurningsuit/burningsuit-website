@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { isTracker, otherScripts } from "./analytics";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 
@@ -14,7 +15,7 @@ test("How I train stays static, private and CSP-clean, with no form or third-par
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL) external.push(request.url());
+    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
   });
   await page.addInitScript(() => {
     document.addEventListener("securitypolicyviolation", (event) => console.error(`CSP: ${event.violatedDirective}`));
@@ -25,7 +26,7 @@ test("How I train stays static, private and CSP-clean, with no form or third-par
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "How I teach Power BI: practice on prepared examples, questions about your own work, help when you get stuck, and reasons behind recommendations.");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
-  await expect(page.locator('script, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form, input, button, main img, main picture')).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, link[rel="canonical"], [data-rebuild-placeholder], form, input, button, main img, main picture`)).toHaveCount(0);
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Training");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(pendingRoutes).not.toContain(route);

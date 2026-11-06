@@ -1,0 +1,11 @@
+/* Privacy notice: the /privacy/enquiries/ service layout (service.css) plus the visit-counting switch, which uses the enquiry form's Send button (enquiry.css). */
+.optout-control { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 22px; }
+.optout-control .send { line-height: var(--lh-snug); text-align: center; }
+.optout-status { margin: 0; color: var(--fg-dim); }
+.optout-control + .optout-nojs { margin-top: 1rem; }
+/* The switch needs its script; without scripting the tracker doesn't run either, so the fallback line replaces the switch. */
+.optout-nojs { display: none; }
+@media (scripting: none) {
+  .optout-control { display: none; }
+  .optout-nojs { display: block; }
+}
