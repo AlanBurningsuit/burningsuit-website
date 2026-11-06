@@ -71,7 +71,7 @@ test("content and the error route work without JavaScript", async ({ browser, ba
   const response = await page.goto("/missing-test-route/");
   expect(response?.status()).toBe(404);
   await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
-  await page.getByRole("link", { name: "burningsuit", exact: true }).click();
+  await page.getByRole("link", { name: "burningsuit home" }).click();
   await expect(page).toHaveURL(baseURL! + "/");
   await context.close();
 });
