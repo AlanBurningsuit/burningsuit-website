@@ -21,7 +21,7 @@ export const PRICE_SLOTS = [
 ];
 
 /** A pound sign then digits and commas only: no VAT text, no spaces, no ranges. */
-export const PRICE_FORMAT = /^£\d(?:[\d,]*\d)?$/;
+export const PRICE_FORMAT = /^£(?:\d+|\d{1,3}(?:,\d{3})+)$/;
 
 // Fixed text only. Never add the offending value, key contents or parser output to these.
 const MESSAGES = {

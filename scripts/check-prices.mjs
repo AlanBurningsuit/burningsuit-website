@@ -5,6 +5,7 @@
 //
 // Diagnostics name a rule and a path, never the matched text or any price. Exact private values are compared in memory only.
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { PRICE_SLOTS, PRICES_FILE, pricesRequested, loadTrainingPrices, trainingPriceCopy, TrainingPricesError } from "../src/lib/training-prices.mjs";
@@ -21,13 +22,19 @@ const MONETARY = /[£€]\s?\d|\$\s?\d|\d\s?(?:GBP|pounds|quid)\b|\bGBP\s?\d/i;
 // A price-like name assigned a number, with or without quotes or a currency symbol.
 const ASSIGNMENT = /\b(?:price|prices|rate|rates|fee|fees|cost|costs|seatFoundingRate|onSite|online|seat)["']?\s*[:=]\s*["'`]?\s?[£€$]?\s?\d/i;
 // Existing approved public text and vendor code that legitimately hold a currency-like token. Exact private values are still checked everywhere.
-const LITERAL_EXEMPT = new Set([
-  "tests/fixtures/umami/script.js",
-  "diagrams/export.mjs",
-  "content/writing/we-are-all-middle-management-now.mdx",
-  "src/content/writing/we-are-all-middle-management-now.mdx",
+// Pin existing exceptions to reviewed bytes: editing an exempt file must never create a blind spot for a new price.
+const digest = (text) => createHash("sha256").update(text).digest("hex");
+const LITERAL_EXEMPT = new Map([
+  ["tests/fixtures/umami/script.js", "78ea25421c1a446d5ba1c154e5e14d5c5f4cc433b27869e73ab3ebf902c5b317"],
+  ["diagrams/export.mjs", "6943fa8dc7671b46d1c0a1bff09203c60da3764837026dd76f3b710d92431315"],
+  ["content/writing/we-are-all-middle-management-now.mdx", "e5bca96a5509ad026df83f2a311502ede1eacc178faeba635a0382770a27c1a1"],
+  ["src/content/writing/we-are-all-middle-management-now.mdx", "676a483b1676c67466a960360e4b1960144004e40844b142ebca0f1388f56621"],
 ]);
-const DIST_LITERAL_EXEMPT = /(?:^|\/)we-are-all-middle-management-now\//;
+const ESSAY_ROUTE = "writing/we-are-all-middle-management-now/index.html";
+const ESSAY_PARAGRAPH = "74a9b533e32676322c3c24fde0f6f6cdb972fe117354858d465721cd3fc20ffc";
+const scanText = (path, text) => path === ESSAY_ROUTE
+  ? text.replace(/<p\b[^>]*>[\s\S]*?<\/p>/g, (paragraph) => digest(paragraph) === ESSAY_PARAGRAPH ? "" : paragraph)
+  : text;
 const BINARY = /\.(?:png|jpe?g|gif|webp|avif|ico|pdf|woff2?|ttf|otf|mp4|webm|zip)$/i;
 const PRIVATE_PATH = /(?:^|\/)(?:design\/|training-prices[^/]*\.json$|\.env(?:\.|$))/i;
 
@@ -77,7 +84,7 @@ function checkTracked() {
     const text = read(join(root, path));
     if (text === null) continue;
     if (values.some((value) => text.includes(value))) fail("private-value", path);
-    if (!LITERAL_EXEMPT.has(path)) {
+    if (LITERAL_EXEMPT.get(path) !== digest(text)) {
       if (MONETARY.test(text)) fail("monetary-literal", path);
       if (ASSIGNMENT.test(text)) fail("price-assignment", path);
     }
@@ -102,8 +109,8 @@ function checkDist() {
     if (text === null) continue;
     const inScope = priced && routePaths.has(path);
     if (!inScope && values.some((value) => text.includes(value))) fail("price-outside-scope", `dist/${path}`);
-    if (!inScope && path.endsWith(".html") && !DIST_LITERAL_EXEMPT.test(path)) {
-      if (MONETARY.test(text)) fail("monetary-literal", `dist/${path}`);
+    if (!inScope && path.endsWith(".html")) {
+      if (MONETARY.test(scanText(path, text))) fail("monetary-literal", `dist/${path}`);
       if (/\bex VAT\b|founding rate/i.test(text)) fail("price-wording-outside-scope", `dist/${path}`);
     }
   }

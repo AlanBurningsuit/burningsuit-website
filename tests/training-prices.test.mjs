@@ -117,6 +117,17 @@ test("validatePrices accepts only the expected shape and format", () => {
   assert.equal(validatePrices(extra).length, 10, "unrelated keys are never read");
 });
 
+test("a requested price rejects malformed thousands separators", () => {
+  const digits = amount().replace(/\D/g, "");
+  for (const malformed of [`£${digits.slice(0, 1)},,${digits.slice(1)}`, `£${digits.slice(0, 1)},${digits.slice(1, 2)}`]) {
+    const data = fixture();
+    data["power-bi-fundamentals"].onSite = malformed;
+    let refused = false;
+    try { validatePrices(data); } catch (error) { refused = error instanceof TrainingPricesError && error.code === "format"; }
+    assert.ok(refused, "malformed grouping must fail with a fixed format error");
+  }
+});
+
 // ---- Tracked-file gate -----------------------------------------------------------------------------------------------
 
 const tracked = (files, extra = {}) => {
@@ -186,6 +197,21 @@ test("an exact private value in a tracked file is caught even where literals are
   rmSync(dir, { recursive: true, force: true });
 });
 
+test("reviewed source exceptions reject new prices even without private input", () => {
+  for (const path of ["tests/fixtures/umami/script.js", "diagrams/export.mjs", "content/writing/we-are-all-middle-management-now.mdx", "src/content/writing/we-are-all-middle-management-now.mdx"]) {
+    const original = readFileSync(join(here, "..", path), "utf8");
+    const dir = tracked({ [path]: original });
+    assert.equal(gate(dir).status, 0, "unchanged reviewed bytes remain permitted");
+    const sample = amount();
+    writeFileSync(join(dir, path), `${original}\nTraining price: ${sample}\n`);
+    const result = gate(dir);
+    assert.equal(result.status, 1, "editing an exempt file must not hide a price");
+    assert.match(output(result), /monetary-literal/);
+    assert.ok(!output(result).includes(sample), "diagnostics never print the price");
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 // ---- Built-output gate -----------------------------------------------------------------------------------------------
 
 const li = (text) => `<li>${text}</li>`;
@@ -210,6 +236,23 @@ function distFixture(data, { pricedBuild, drop } = {}) {
   return { dir, copy };
 }
 const distRun = (dir, env) => run("check-prices.mjs", ["--dist", dir], { env: { ...process.env, SHOW_TRAINING_PRICES: "", ...env } });
+
+test("the essay exception permits only its approved paragraph, never added prices", () => {
+  const original = readFileSync(join(here, "..", "src/content/writing/we-are-all-middle-management-now.mdx"), "utf8");
+  const anecdote = original.split(/\r?\n/).find((line) => line.startsWith("With an agent,"));
+  assert.ok(anecdote, "the reviewed anecdote exists");
+  const dir = workspace("bs-dist-exception-");
+  const path = join(dir, "dist/writing/we-are-all-middle-management-now/index.html");
+  writeJson(path, `<html><body><p>${anecdote}</p></body></html>`);
+  assert.equal(distRun(dir, {}).status, 0, "the existing anecdote remains permitted");
+  const sample = amount();
+  writeJson(path, `<html><body><p>${anecdote}</p><p>${sample} a seat</p></body></html>`);
+  const result = distRun(dir, {});
+  assert.equal(result.status, 1, "a new amount on the essay route must fail without private input");
+  assert.match(output(result), /monetary-literal/);
+  assert.ok(!output(result).includes(sample), "diagnostics never print the price");
+  rmSync(dir, { recursive: true, force: true });
+});
 
 test("an unpriced build contains no amounts, no price wording and no private values on any route", () => {
   const data = fixture();
