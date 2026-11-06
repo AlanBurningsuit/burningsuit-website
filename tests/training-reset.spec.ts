@@ -19,7 +19,7 @@ for (const route of ["/", course]) {
     expect((await page.goto(route))?.status()).toBe(200);
     await page.evaluate(() => document.fonts.ready);
     const loadedFonts = await page.evaluate(() => Array.from(document.fonts).filter((font) => font.status === "loaded").map((font) => font.family));
-    for (const family of ["Mona Sans", "Albert Sans", "Commit Mono"]) expect(loadedFonts.some((font) => font.startsWith(family))).toBe(true);
+    for (const family of ["Mona Sans", "Albert Sans", "Burningsuit Reader"]) expect(loadedFonts.some((font) => font.startsWith(family))).toBe(true);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
     await expect(page.locator('script, astro-island, link[rel="canonical"], [data-rebuild-placeholder]')).toHaveCount(0);
@@ -32,6 +32,13 @@ for (const route of ["/", course]) {
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(page.locator("main")).toBeFocused();
+    // Beside Training, a disclosure lists the course pages; closed by default, it opens without JavaScript.
+    const courses = page.locator(".nav-menu");
+    await expect(courses.locator("summary")).toHaveAccessibleName("Training courses");
+    await expect(courses).not.toHaveAttribute("open", /.*/);
+    await courses.locator("summary").click();
+    await expect(courses.getByRole("link")).toHaveText(["Power BI fundamentals", "Power BI with AI agents 101", "How I train"]);
+    await courses.locator("summary").click();
     expect(errors).toEqual([]);
     expect(external).toEqual([]);
   });
@@ -249,12 +256,15 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect(await bg("#consultancy")).not.toBe(await bg("body"));
 
   const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
-  // Wide screens: the dark opening holds only the introduction and portrait, side by side; the starting points follow below it.
-  let intro = await box(".introduction"), list = await box(".courses"), photo = await box(".alan-photo");
-  expect(photo.x).toBeGreaterThanOrEqual(intro.x + intro.width);
-  expect(list.y).toBeGreaterThanOrEqual(Math.max(intro.y + intro.height, photo.y + photo.height));
+  // Wide screens: the dark opening holds only the introduction: the title across the full width, then the lede and
+  // introduction beside the portrait; the starting points follow below it.
+  let intro = await box(".introduction"), title = await box(".introduction h1"), copy = await box(".intro-copy"), list = await box(".courses"), photo = await box(".alan-photo");
+  expect(title.width).toBeGreaterThan(copy.width + photo.width);
+  expect(Math.min(copy.y, photo.y)).toBeGreaterThanOrEqual(title.y + title.height);
+  expect(photo.x).toBeGreaterThanOrEqual(copy.x + copy.width);
+  expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
   expect(await bg(".home-opening")).toBe("rgba(0, 0, 0, 0)");
-  expect(await page.locator(".home-opening").evaluate((el) => getComputedStyle(el.parentElement!).backgroundColor)).toBe(await bg("body"));
+  expect(await page.locator(".home-opening").evaluate((el) => getComputedStyle(el.closest(".dark")!).backgroundColor)).toBe(await bg("body"));
   expect(await bg("main")).not.toBe(await bg("body"));
   // The two primary entries sit side by side at equal width; the specialists follow beneath them.
   const [fundamentals, agents] = [await box('article[aria-labelledby="fundamentals-title"]'), await box('article[aria-labelledby="agents-101-title"]')];
@@ -263,10 +273,11 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect((await box(".specialists")).y).toBeGreaterThanOrEqual(Math.max(fundamentals.y + fundamentals.height, agents.y + agents.height));
 
   await page.setViewportSize({ width: 390, height: 844 });
-  intro = await box(".introduction"); list = await box(".courses"); photo = await box(".alan-photo");
-  // Narrow screens: the portrait, then the introduction, then the courses.
-  expect(intro.y).toBeGreaterThanOrEqual(photo.y + photo.height);
-  expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
+  title = await box(".introduction h1"); copy = await box(".intro-copy"); list = await box(".courses"); photo = await box(".alan-photo");
+  // Narrow screens: the title, the portrait, then the lede and introduction, then the courses.
+  expect(photo.y).toBeGreaterThanOrEqual(title.y + title.height);
+  expect(copy.y).toBeGreaterThanOrEqual(photo.y + photo.height);
+  expect(list.y).toBeGreaterThanOrEqual(copy.y + copy.height);
   for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
 });
 

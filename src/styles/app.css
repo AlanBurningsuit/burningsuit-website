@@ -24,10 +24,10 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 :focus-visible { outline: var(--px) solid var(--link); outline-offset: 5px; border-radius: var(--r-xs); }
 .wrap { max-width: var(--content-width); margin-inline: auto; padding-inline: var(--page-gutter); }
 .placeholder { max-width: 65ch; margin-inline: auto; padding: var(--page-gutter); }
-.eyebrow { font: 400 .72rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono-wide); color: var(--text-dim); }
+.eyebrow { font: 400 .92rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 .em { color: var(--amber); }
-/* The lede: the question or promise under a title, in a larger, lighter body voice, so the display face keeps the weight. */
-.standfirst { font: 400 clamp(1.3rem, 1.9vw, 1.6rem) / 1.35 var(--ff-body); letter-spacing: -0.005em; margin-bottom: 20px; }
+/* The lede: the question or promise under a title, in the serif margin voice, so the display face keeps the weight. */
+.standfirst { font: 400 clamp(1.45rem, 2.1vw, 1.8rem) / 1.3 var(--ff-note); margin-bottom: 20px; }
 .text-link { display: inline-block; font-weight: 600; padding-block: 7px; }
 /* A text link leads on with a warm arrow (an external one points out), which steps forward on hover. */
 .text-link::after { content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); }
@@ -48,6 +48,16 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .masthead nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 30px; }
 .masthead nav a { color: var(--text); text-decoration: none; font: 600 1rem / var(--lh-snug) var(--ff-display); padding-block: 10px; }
 .masthead nav a:hover, .masthead nav a[aria-current] { color: var(--link); }
+/* Training opens its overview; the chevron beside it discloses the course pages in a small dark panel. */
+.nav-training { position: relative; display: flex; align-items: center; gap: 2px; }
+.nav-menu summary { list-style: none; cursor: pointer; display: grid; place-items: center; width: 28px; height: 32px; border-radius: var(--r-sm); color: var(--text); }
+.nav-menu summary::-webkit-details-marker { display: none; }
+.nav-menu summary::after { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; rotate: 45deg; translate: 0 -2px; }
+.nav-menu[open] summary::after { rotate: -135deg; translate: 0 2px; }
+.nav-menu summary:hover { color: var(--link); background: var(--bg-3); }
+.nav-menu ul { position: absolute; z-index: 20; top: calc(100% + 8px); left: -14px; min-width: 17rem; margin: 0; padding: 8px; list-style: none; background: var(--bg-2); border-radius: var(--r); box-shadow: 0 18px 40px -16px rgb(0 0 0 / .7); }
+.masthead .nav-menu ul a { display: block; padding: 10px 12px; border-radius: var(--r-sm); font-size: .98rem; }
+.masthead .nav-menu ul a:hover { background: var(--bg-3); }
 
 /* A candid photo, matted like a print: a card-coloured mount, the frame radius and the soft lift. */
 .framed-photo img { display: block; width: 100%; height: auto; border: 6px solid var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
@@ -110,11 +120,15 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 @media (max-width: 680px) {
   :root { --page-gutter: 22px; --title-size: clamp(2.5rem, 11vw, 3.2rem); }
   h1 { margin-top: 16px; margin-bottom: 22px; }
-  .standfirst { font-size: 1.22rem; }
-  .masthead { flex-direction: column; justify-content: center; gap: 0; min-height: 0; padding-block: 10px; }
-  .brand { padding: 16px 0 12px; }
+  .standfirst { font-size: 1.35rem; }
+  /* On phones the logo keeps the left and the links run right-aligned on the line beneath it. */
+  .masthead { flex-wrap: wrap; justify-content: flex-start; gap: 0; min-height: 0; padding-block: 10px; }
+  .brand { padding: 14px 0 6px; }
   .brand img { width: 174px; }
-  .masthead nav { align-self: stretch; justify-content: space-between; gap: 6px 11px; padding: 4px 0 12px; }
+  .masthead nav { flex-basis: 100%; justify-content: flex-end; gap: 6px 16px; padding: 4px 0 10px; }
+  .masthead nav { position: relative; }
+  .nav-training { position: static; }
+  .nav-menu ul { left: auto; right: 0; }
   .masthead nav a { font-size: .88rem; }
   .course-facts > div { grid-template-columns: 80px minmax(0, 1fr); gap: 8px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }

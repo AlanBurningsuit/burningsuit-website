@@ -18,7 +18,7 @@
 }
 .enquiry-form .field { display: grid; gap: 7px; min-width: 0; }
 .enquiry-form label { font: 600 1rem / var(--lh-snug) var(--ff-display); }
-.enquiry-form .optional { font: 400 .8rem / 1 var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
+.enquiry-form .optional { font: 400 .92rem / 1 var(--ff-note); color: var(--text-dim); }
 .enquiry-form .hint { font-size: .9rem; color: var(--text-dim); max-width: 56ch; }
 .enquiry-form input, .enquiry-form textarea {
   width: 100%;

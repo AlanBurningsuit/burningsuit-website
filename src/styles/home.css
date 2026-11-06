@@ -1,21 +1,20 @@
-/* Opening: the dark stage introduces Alan, beside his portrait; on a wide screen it fills the first view but for the
-   edge of the daylight sheet, so the starting points rise into view as you scroll. */
+/* Opening: the dark stage introduces Alan. The title runs the full width; beneath it, the lede and introduction sit
+   beside a large portrait, with generous room around all three. */
 .home-opening {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
-  grid-template-areas: "intro photo";
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  grid-template-areas: "title title" "copy photo";
   column-gap: var(--column-gap);
-  padding-block: 28px 52px;
-  align-items: center;
+  row-gap: clamp(36px, 4.5vw, 64px);
+  padding-block: clamp(40px, 5vw, 72px) clamp(72px, 8vw, 120px);
+  align-items: start;
 }
-@media (min-width: 901px) and (min-height: 600px) {
-  .home-opening { min-height: min(calc(100svh - var(--masthead-h) - var(--sheet-r) - 96px), 860px); padding-block: 32px 64px; }
-}
-.introduction { grid-area: intro; }
-.introduction h1 { margin-top: 0; font-size: clamp(2.6rem, 5vw, 4.6rem); text-wrap: balance; }
-.introduction > p { max-width: 62ch; }
+.introduction h1 { grid-area: title; margin: 0; font-size: clamp(2.6rem, 6.2vw, 5.6rem); text-wrap: balance; }
+.intro-copy { grid-area: copy; padding-top: 4px; }
+.intro-copy > p { max-width: 50ch; }
+.intro-copy .standfirst { max-width: 24ch; margin-bottom: 28px; }
 .introduction strong { font-weight: 600; }
-.alan-photo { grid-area: photo; justify-self: end; width: 100%; max-width: 520px; }
+.alan-photo { grid-area: photo; width: 100%; }
 .alan-photo img { aspect-ratio: 3 / 2; object-fit: cover; object-position: center 30%; }
 
 /* Find your starting point: the two primary entries as equal cards, the specialists in a quieter block beneath. */
@@ -24,19 +23,22 @@
 .course-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
 .course { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
 /* Side by side, each card takes its own natural height, so its links follow straight on from its facts. */
-/* Who each entry is for, in the mono margin voice, led by a short ochre tick. */
-.course .course-fit, .specialists-lead { font: 400 .84rem / var(--lh-label) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); margin-bottom: 12px; }
+/* Who each entry is for, in the serif margin voice and the warm ink, led by a short ochre tick. */
+.course .course-fit, .specialists-lead { font: 400 1.05rem / var(--lh-label) var(--ff-note); color: var(--accent-ink); margin-bottom: 10px; }
 .course .course-fit::before, .specialists-lead::before { content: ""; display: inline-block; width: 1.75em; height: var(--bw-spine); margin-right: .6em; vertical-align: .3em; background: var(--accent); }
 .course h3 { font-size: clamp(1.55rem, 2.2vw, 1.8rem); margin-bottom: 12px; }
+/* A course name links to its outline: it keeps the heading's colour and gains the link's underline on hover. */
+.course h3 a { color: inherit; text-decoration: none; }
+.course h3 a:hover { color: var(--link); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .14em; }
 .course > p:not(.course-fit) { font-size: 1rem; }
-/* Each entry's deciding facts and prerequisite sit together: the facts as a field-guide metadata line in mono, warm
-   middots between them, a short label in small tracked capitals, then the prerequisite in the body voice. */
+/* Each entry's deciding facts and prerequisite sit together: the facts as a field-guide line in the serif note voice,
+   warm dots between them, a short label in small tracked capitals, then the prerequisite in the body voice. */
 .deciding { margin: 20px 0 16px; }
-.facts { margin: 0 0 10px; padding: 0; font: 400 .82rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text); row-gap: 2px; }
-/* Between facts, a small drawn ochre dot centred in the gap (a mono middot glyph is too faint to read as a mark). */
+.facts { margin: 0 0 10px; padding: 0; font: 400 1rem / var(--lh-relaxed) var(--ff-note); color: var(--text); row-gap: 2px; }
+/* Between facts, a small drawn ochre dot centred in the gap (a middot glyph is too faint to read as a mark). */
 .facts.dot-list { column-gap: 1.3em; }
 .facts.dot-list > li::before { content: ""; top: calc(.78em - 2px); left: calc(-.65em - 2px); width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
-.fact-label { font-size: .88em; letter-spacing: var(--ls-mono-xwide); text-transform: uppercase; color: var(--text-dim); }
+.fact-label { font-size: .76em; letter-spacing: .07em; text-transform: uppercase; color: var(--text-dim); }
 .facts .together { white-space: nowrap; }
 .prereq { font-size: .95rem; }
 .course-actions { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 10px; }
@@ -49,7 +51,7 @@
 .dot-list > li { position: relative; }
 .dot-list > li::before { content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
 .specialist-names { margin: 8px 0 10px; padding-block: 0; row-gap: 4px; font: 600 1.2rem / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display-tight); }
-.specialist-names .days { font: 400 .8rem / 1 var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
+.specialist-names .days { font: 400 .98rem / 1 var(--ff-note); color: var(--text-dim); }
 .specialists > p:last-child { font-size: .96rem; }
 .specialists a { font-weight: 600; }
 .not-sure { margin-top: 26px; font-size: 1rem; }
@@ -59,13 +61,13 @@
 .teacher-teaching h2 { margin-bottom: 26px; }
 .teacher-teaching p { max-width: 58ch; }
 .teacher-origin { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 24px 28px; margin-top: 78px; max-width: 44ch; }
-.teacher-origin p { font-size: 1.1rem; line-height: var(--lh-relaxed); }
+.teacher-origin p { font: 400 1.18rem / 1.5 var(--ff-note); }
 .teacher-origin .text-link { margin-top: 12px; }
 
 @media (max-width: 900px) {
-  .home-opening { grid-template-columns: minmax(0, 1fr); grid-template-areas: "photo" "intro"; row-gap: 28px; padding-block: 24px 48px; }
-  .alan-photo { justify-self: start; max-width: 560px; }
-  .introduction > p { max-width: 60ch; }
+  .home-opening { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "photo" "copy"; row-gap: 28px; padding-block: 28px 64px; }
+  .alan-photo { max-width: 640px; }
+  .intro-copy > p { max-width: 60ch; }
   .courses { padding-block: 52px 56px; }
   .course-list { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .course > p { max-width: 62ch; }
@@ -73,7 +75,7 @@
   .teacher-origin { margin-top: 0; }
 }
 @media (max-width: 680px) {
-  .home-opening { padding-block: 18px 40px; row-gap: 24px; }
+  .home-opening { padding-block: 20px 52px; row-gap: 24px; }
   .alan-photo img { aspect-ratio: 16 / 10; }
   .courses > h2 { font-size: 1.9rem; padding-bottom: 18px; }
   .course { padding: 22px 20px 20px; }
@@ -81,5 +83,5 @@
   .specialists { padding: 20px; }
   .specialist-names { font-size: 1.1rem; }
   .teacher-origin { padding: 20px 22px; }
-  .teacher-origin p { font-size: 1.05rem; }
+  .teacher-origin p { font-size: 1.1rem; }
 }

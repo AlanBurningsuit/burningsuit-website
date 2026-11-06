@@ -50,7 +50,9 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   const fund = page.getByRole("article", { name: "Power BI fundamentals" });
   await expect(fund.locator("p")).toHaveText(["New to Power BI?", "Learn to build an interactive report, prepare the data behind it and share it with the people who need it.", "No Power BI experience needed."]);
   await expect(fund.locator(".facts > li")).toHaveText(["2 days", ...privateFacts]);
-  await expect(fund.getByRole("link")).toHaveText(["Read the course outline", "Ask about dates"]);
+  // The course name links to its outline too.
+  await expect(fund.getByRole("link")).toHaveText(["Power BI fundamentals", "Read the course outline", "Ask about dates"]);
+  await expect(fund.getByRole("link", { name: "Power BI fundamentals" })).toHaveAttribute("href", fundamentals);
   await expect(fund.getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", fundamentals);
   await expect(fund.getByRole("link", { name: "Ask about dates" })).toHaveAttribute("href", "#contact");
 
@@ -65,7 +67,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(agents.locator(".facts > li")).toHaveText(["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", "Also private, for your team", "Price on request"]);
   await expect(agents.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
   // The 101 keeps booking on its own page: the outline link and the private-course email only, no form route.
-  await expect(agents.getByRole("link")).toHaveText(["Read the course outline", "Ask about a private course."]);
+  await expect(agents.getByRole("link")).toHaveText(["Power BI with AI agents 101", "Read the course outline", "Ask about a private course."]);
   await expect(agents.getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", course101);
   await expect(agents.getByRole("link", { name: "Ask about a private course." })).toHaveAttribute("href", email);
   await expect(agents.locator('a[href="#contact"]')).toHaveCount(0);
@@ -90,7 +92,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
 
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([fundamentals, "#contact", course101, email, "#contact", "#contact", "/training/how-i-train/", "/about/", ENQUIRY.privacyPath, email]);
+  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", course101, course101, email, "#contact", "#contact", "/training/how-i-train/", "/about/", ENQUIRY.privacyPath, email]);
   const text = await page.locator("main").innerText();
   // Developing and Claude courses stay off; no arrows, seats, booking or promises the copy doesn't make.
   for (const absent of [/Not sure where to start/i, /hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, /seat/i, /book/i, /\[|\]/, /to confirm/i, /coming soon/i]) expect(text).not.toMatch(absent);
@@ -206,7 +208,7 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
     await expect(deciding.locator(".prereq")).toHaveCount(1);
     expect(await deciding.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgba(0, 0, 0, 0)");
     const facts = await deciding.locator(".facts").evaluate((el) => { const c = getComputedStyle(el); return { font: c.fontFamily, transform: c.textTransform }; });
-    expect(facts.font).toMatch(/Commit Mono/);
+    expect(facts.font).toMatch(/Burningsuit Reader/);
     expect(facts.transform).toBe("none");
     for (const label of await deciding.locator(".fact-label").all()) expect(await label.evaluate((el) => getComputedStyle(el).textTransform)).toBe("uppercase");
     expect(await deciding.locator(".prereq").evaluate((el) => getComputedStyle(el).fontFamily)).toBe(bodyFont);
@@ -274,12 +276,12 @@ test("training chooser works from the keyboard without JavaScript", async ({ bro
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 10; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(2);
   }
-  expect(reached).toEqual([fundamentals, "#contact", course101, email, "#contact", "#contact", "/training/how-i-train/", "/about/"]);
+  expect(reached).toEqual([fundamentals, fundamentals, "#contact", course101, course101, email, "#contact", "#contact", "/training/how-i-train/", "/about/"]);
 
   // The 101 outline leads to its own page, where booking stays closed.
   await page.getByRole("article", { name: "Power BI with AI agents 101" }).getByRole("link", { name: "Read the course outline" }).click();

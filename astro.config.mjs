@@ -22,9 +22,10 @@ export default defineConfig({
       subsets: ["latin"], fallbacks: ["Arial", "sans-serif"],
     },
     {
-      provider: fontProviders.fontsource(), name: "Commit Mono",
-      cssVariable: "--font-commit", weights: [400], styles: ["normal"],
-      subsets: ["latin"], fallbacks: ["ui-monospace", "monospace"],
+      // A renamed Latin subset of Libron (OFL; see src/assets/fonts/burningsuit-reader-OFL.txt).
+      provider: fontProviders.local(), name: "Burningsuit Reader", cssVariable: "--font-reader",
+      options: { variants: [{ weight: 400, style: "normal", src: ["./src/assets/fonts/burningsuit-reader-400.woff2"] }] },
+      fallbacks: ["Georgia", "serif"],
     },
   ],
   // GitHub Pages cannot enforce frame-ancestors or HSTS through a meta CSP.

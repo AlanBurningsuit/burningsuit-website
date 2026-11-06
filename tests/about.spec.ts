@@ -88,7 +88,7 @@ test("each photo follows its prose, framed, at its own aspect ratio, with metada
     expect(shown.border).toBe("solid");
     expect(Math.abs(shown.ratio - ratio)).toBeLessThan(0.02);
     await expect(figure.locator("figcaption")).toHaveText(caption);
-    expect(await figure.locator("figcaption").evaluate((el) => getComputedStyle(el).fontFamily)).toMatch(/commit/i);
+    expect(await figure.locator("figcaption").evaluate((el) => getComputedStyle(el).fontFamily)).toMatch(/Burningsuit Reader/);
   }
   // The parents' photo keeps its 5:4 frame rather than being cropped to the others' 3:2.
   const [talkRatio, parentsRatio] = await Promise.all(["#human img", "#origin img"].map((s) => page.locator(s).evaluate((el) => el.clientWidth / el.clientHeight)));

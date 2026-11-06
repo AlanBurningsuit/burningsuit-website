@@ -13,16 +13,17 @@ import "../styles/home.css";
 >
   {pages[""].map((id) => <span id={id} aria-hidden="true" />)}
   <div class="dark stage">
-  <div class="home-opening wrap">
-    <section class="introduction" aria-labelledby="page-title">
+  <div class="wrap">
+    <section class="introduction home-opening" aria-labelledby="page-title">
       <h1 id="page-title">Power BI training for people whose job <span class="em">isn't</span> Power BI.</h1>
+      <div class="intro-copy">
       <p class="standfirst">Learn how Power BI works, and how to start handing the work to AI.</p>
       <p>If you build the reports because <strong>someone</strong> has to, you're who I teach. I explain how Power BI fits together and why it works the way it does, so you can get back to your actual job and worry about Power BI less. If you've already built a report, I can also show you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.</p>
+      </div>
+      <figure class="alan-photo framed-photo">
+        <Image src={portrait} alt="Alan Harman-Box smiling, outdoors under trees" widths={[400, 640, 960, 1600]} sizes="(max-width: 900px) calc(100vw - 44px), 640px" format="webp" loading="eager" />
+      </figure>
     </section>
-
-    <figure class="alan-photo framed-photo">
-      <Image src={portrait} alt="Alan Harman-Box smiling, outdoors under trees" widths={[400, 640, 960, 1600]} sizes="(max-width: 900px) calc(100vw - 44px), 520px" format="webp" loading="eager" />
-    </figure>
   </div>
   </div>
 
@@ -31,7 +32,7 @@ import "../styles/home.css";
       <div class="course-list">
         <article class="course" aria-labelledby="fundamentals-title">
           <p class="course-fit">New to Power BI?</p>
-          <h3 id="fundamentals-title">Power BI fundamentals</h3>
+          <h3 id="fundamentals-title"><a href="/training/power-bi-fundamentals/">Power BI fundamentals</a></h3>
           <p>Learn to build an interactive report, prepare the data behind it and share it with the people who need it.</p>
           <div class="deciding">
             <ul class="facts dot-list">
@@ -49,7 +50,7 @@ import "../styles/home.css";
         </article>
         <article class="course" aria-labelledby="agents-101-title">
           <p class="course-fit">Want to be ready for where Power BI is going?</p>
-          <h3 id="agents-101-title">Power BI with AI agents 101</h3>
+          <h3 id="agents-101-title"><a href="/training/agentic-development-for-power-bi/">Power BI with AI agents 101</a></h3>
           <p>In one morning, you get an AI agent to explain a report you haven't seen before and write notes on its calculations. Then you have it build a new calculation and check its answers yourself.</p>
           <div class="deciding">
             <ul class="facts dot-list">

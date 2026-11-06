@@ -4,7 +4,7 @@
   /* Astro assigns unique family names; connect them to the brand's type roles. */
   --ff-display: var(--font-mona);
   --ff-body: var(--font-albert);
-  --ff-mono: var(--font-commit);
+  --ff-note: var(--font-reader);
   --page-gutter: clamp(22px, 5vw, 72px);
   --content-width: 1280px;
   --column-gap: clamp(40px, 6vw, 82px);
@@ -37,6 +37,7 @@
   --rule: var(--line);
   --link: var(--amber);
   --accent: var(--amber);
+  --accent-ink: var(--amber);
 }
 main {
   --surface: var(--mist);
@@ -47,4 +48,5 @@ main {
   --rule: var(--mist-line);
   --link: var(--fern);
   --accent: var(--ochre);
+  --accent-ink: var(--ochre-ink);
 }

@@ -37,6 +37,7 @@
   --pine-soft: #4a5a53; /* captions and secondary lines on daylight grounds (AA-safe on sage) */
   --fern: #2a5d4d; /* links and the focus ring on daylight grounds; amber stays the warm rule */
   --mist-line: rgb(30 42 38 / 0.14); /* hairline divider on daylight grounds: pine at 14% */
+  --ochre-ink: #7f530a; /* ochre deep enough for small text on daylight: the serif kickers (4.9:1 on sage, 6.5:1 on leaf) */
   --ochre: #9c6a12; /* burnished ochre: amber's counterpart on daylight, where amber washes out; spines, markers and arrows (3.4:1 on sage, 4.5:1 on leaf) */
 
   /* ---- accents: warmth in small doses, one spark ---- */
@@ -56,7 +57,8 @@
   /* ---- type: three faces, three jobs; emphasis is a colour, never italic or serif ---- */
   --ff-display: "Mona Sans", "Trebuchet MS", Arial, sans-serif; /* headlines: 800 for page titles and dark anchors, 700 for section heads, 600 for item heads, buttons, labels and quotes */
   --ff-body: "Albert Sans", Arial, sans-serif; /* paragraphs: 400, 600 for emphasis */
-  --ff-mono: "Commit Mono", ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace; /* the margin voice and true metadata: handles, URLs, captions, dates */
+  --ff-mono: "Commit Mono", ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace; /* true code and terminal text only, where an asset shows some */
+  --ff-note: "Burningsuit Reader", Georgia, serif; /* the margin voice: ledes, kickers, facts, captions and notes; a renamed Libron subset, roman only */
 
   --lh-display: 1.02; /* display headings */
   --lh-tight: 1.1; /* statements and big quotes */

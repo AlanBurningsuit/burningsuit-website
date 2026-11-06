@@ -15,7 +15,7 @@
 p + p.course-fit { margin-top: 1.4rem; }
 
 .course-run { background: var(--surface-card); border-radius: var(--r); padding: 18px 26px 24px; margin-top: 10px; }
-.run-facts { list-style: none; margin: 0; padding: 0; font: 400 .92rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); }
+.run-facts { list-style: none; margin: 0; padding: 0; font: 400 1.05rem / var(--lh-relaxed) var(--ff-note); }
 .run-facts li { padding-block: 6px; }
 
 .booking { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-top: 24px; }
@@ -27,7 +27,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 }
 /* The only state today: paid booking is closed, so the control is visibly unavailable. */
 .book-button:disabled { color: var(--text); background: var(--bg-3); border: 0; padding: 17px 33px; cursor: not-allowed; }
-.booking-status { font: 400 .85rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
+.booking-status { font: 400 .98rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 .private-ask { margin-top: 22px; font-size: 1rem; }
 .private-ask a { font-weight: 600; }
 
@@ -40,7 +40,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 .do-lead p { font-size: 1.15rem; max-width: 30ch; }
 .do-steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
 .do-steps li { counter-increment: step; position: relative; border-left: var(--bw-spine) solid var(--rule); padding: 0 0 28px 56px; }
-.do-steps li::before { content: counter(step, decimal-leading-zero) / ""; position: absolute; left: 20px; top: 5px; font: 400 .76rem / 1 var(--ff-mono); color: var(--link); }
+.do-steps li::before { content: counter(step, decimal-leading-zero) / ""; position: absolute; left: 20px; top: 3px; font: 400 1rem / 1 var(--ff-note); color: var(--link); }
 .do-steps h3 { font-size: 1.3rem; margin-bottom: 8px; }
 .do-steps p { font-size: 1rem; max-width: 62ch; }
 .do-next { margin-top: 10px; max-width: 62ch; }
@@ -51,6 +51,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 .trust-check p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
 .trust-teacher { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 22px 26px; margin-top: 10px; max-width: 42ch; }
 .trust-teacher h3 { font-size: 1.3rem; margin-bottom: 10px; }
+.trust-teacher p { font: 400 1.15rem / 1.5 var(--ff-note); }
 .trust-teacher .text-link { margin-top: 12px; }
 
 /* What you'll need, then what you keep: the list on a lifted card, its items set apart by space and a warm marker rather than rules. */
@@ -67,8 +68,8 @@ p + p.course-fit { margin-top: 1.4rem; }
   .need-body { max-width: 76ch; }
 }
 .keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; max-width: 52ch; }
-/* A detail still to confirm: a quiet mono aside in the line, not a chip. */
-.to-confirm { font: 400 .82rem / 1.4 var(--ff-mono); vertical-align: baseline; color: var(--text-dim); display: inline-block; }
+/* A detail still to confirm: a quiet serif aside that flows in the line. */
+.to-confirm { font: 400 .98rem / 1.4 var(--ff-note); color: var(--text-dim); }
 
 /* Book a seat: the closing band. */
 .course-book { background: var(--bg-band); }

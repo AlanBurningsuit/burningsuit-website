@@ -17,7 +17,7 @@
 .parents-photo { max-width: 560px; }
 .zelda-photo { max-width: 460px; }
 /* Captions are metadata only (who or what), in the mono margin voice. */
-.about-photo figcaption { margin-top: 14px; font: 400 .8rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: var(--ls-mono); color: var(--text-dim); }
+.about-photo figcaption { margin-top: 14px; font: 400 .95rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 
 /* Where to start: the closing band, matching the enquiry band's ground without a form. */
 .about-start { background: var(--bg-band); margin-top: 80px; }

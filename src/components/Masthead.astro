@@ -11,7 +11,18 @@ const contact = Astro.url.pathname.startsWith("/contact/");
       <img src="/logos/burningsuit-on-green.svg" alt="burningsuit" width="200" height="44" />
     </a>
     <nav aria-label="Main navigation">
-      <a href="/training/" aria-current={training ? "true" : undefined}>Training</a>
+      <div class="nav-training">
+        <a href="/training/" aria-current={training ? "true" : undefined}>Training</a>
+        {/* The course pages, behind a disclosure that works without JavaScript; Training itself still opens the overview. */}
+        <details class="nav-menu">
+          <summary aria-label="Training courses"></summary>
+          <ul>
+            <li><a href="/training/power-bi-fundamentals/">Power BI fundamentals</a></li>
+            <li><a href="/training/agentic-development-for-power-bi/">Power BI with AI agents 101</a></li>
+            <li><a href="/training/how-i-train/">How I train</a></li>
+          </ul>
+        </details>
+      </div>
       <a href="/power-bi/" aria-current={consultancy ? "page" : undefined}>Consultancy</a>
       <a href="/about/" aria-current={about ? "page" : undefined}>About</a>
       <a href="/contact/" aria-current={contact ? "page" : undefined}>Contact</a>
