@@ -30,8 +30,8 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .standfirst { font: 400 clamp(1.45rem, 2.1vw, 1.8rem) / 1.3 var(--ff-note); margin-bottom: 20px; }
 /* Each page opens on a title band: the title and its lede on the dark stage; everything after opens the daylight sheet. */
 .title-band { padding-block: clamp(40px, 5vw, 72px) clamp(64px, 7vw, 104px); }
-.title-band h1 { margin: 0; text-wrap: balance; }
-.title-band .standfirst { margin: clamp(18px, 2vw, 28px) 0 0; text-wrap: balance; }
+.title-band h1 { margin: 0; font-size: clamp(2.5rem, 4.8vw, 4.2rem); text-wrap: balance; }
+.title-band .standfirst { margin: clamp(18px, 2vw, 28px) 0 0; max-width: 34ch; text-wrap: balance; }
 .text-link { display: inline-block; font-weight: 600; padding-block: 7px; }
 /* A text link leads on with a warm arrow (an external one points out), which steps forward on hover. */
 .text-link::after { content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); }

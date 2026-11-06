@@ -191,7 +191,9 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
   // The dark opening and enquiry band bookend the daylight body; the entries are cards lifted off it, the specialists a quieter recessed block.
   const ground = await bg("main");
   expect(ground).not.toBe(await bg("body"));
-  expect(await page.locator(".training-intro").evaluate((el) => getComputedStyle(el.parentElement!).backgroundColor)).toBe(await bg("body"));
+  // The title band sits on the dark stage; the introduction opens the daylight sheet.
+  expect(await page.locator(".title-band").evaluate((el) => getComputedStyle(el.closest(".dark")!).backgroundColor)).toBe(await bg("body"));
+  expect(await page.locator(".training-intro").evaluate((el) => el.closest(".dark"))).toBeNull();
   for (const selector of [".starting-points", ".specialist-courses", ".training-teacher", ".specialist-rows > li"]) expect(await bg(selector)).toBe("rgba(0, 0, 0, 0)");
   const band = await bg(".starting-points .course");
   expect(band).not.toBe(ground);

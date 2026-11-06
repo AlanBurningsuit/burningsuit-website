@@ -146,8 +146,9 @@ test("About layout: one essay column, each heading above its prose at every widt
     const [h, p] = [await box(`#${id} h2`), await box(`#${id} .about-prose`)];
     expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     expect(Math.abs(p.x - h.x)).toBeLessThanOrEqual(1);
-    // A reading column, not the full content width.
+    // A reading column, not the full content width, on the same left edge as the title band and every other page.
     expect(p.width).toBeLessThanOrEqual(760);
+    expect(Math.abs(h.x - (await box(".title-band h1")).x)).toBeLessThanOrEqual(1);
   }
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });

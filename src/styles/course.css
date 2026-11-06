@@ -2,8 +2,6 @@
 
 /* Opening: the title band on the dark stage; the introduction opens the daylight sheet with the deciding facts on a
    lifted card beside it on wide screens and after it on narrow ones. */
-.title-band h1 { font-size: clamp(2.5rem, 4.8vw, 4.2rem); }
-.title-band .standfirst { max-width: 34ch; }
 .course-opening {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr);

@@ -1,6 +1,6 @@
 /* Title band: the dark stage carries only the title, full width, and the lede. */
-.title-band h1 { font-size: clamp(2.6rem, 6.2vw, 5.6rem); }
-.title-band .standfirst { max-width: 30ch; }
+.home-title h1 { font-size: clamp(2.6rem, 6.2vw, 5.6rem); }
+.home-title .standfirst { max-width: 30ch; }
 
 /* The introduction opens the daylight sheet: the copy beside a large portrait. */
 .home-opening {

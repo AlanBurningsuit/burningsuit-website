@@ -1,10 +1,5 @@
 /* How I train (/training/how-i-train/): four related answers on the daylight body between dark bookends. Shared furniture (raised band, masthead, footer) lives in app.css. */
 
-/* Opening: the settled course-page title and one line at reading width. */
-.hit-opening { padding-block: 46px 44px; }
-.hit-opening h1 { margin-top: 0; font-size: clamp(2.5rem, 4.6vw, 3.9rem); text-wrap: balance; }
-.hit-lead { max-width: 52ch; font-size: 1.25rem; line-height: var(--lh-relaxed); text-wrap: pretty; }
-
 /* An answer: heading beside its prose, separated by space rather than rules. */
 .hit-answer { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; }
 .hit-answer > h2, .hit-pair-item > h2, .hit-facts > h2 { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
@@ -34,7 +29,6 @@
 .hit-next a { font-weight: 600; }
 
 @media (max-width: 900px) {
-  .hit-opening { padding-block: 34px 36px; }
   .hit-answer, .hit-facts, .hit-next-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
   .hit-do { padding-block: 32px 48px; }
   .hit-stuck .hit-answer { padding-block: 40px 46px; }
@@ -43,8 +37,6 @@
   .hit-next-inner { padding-block: 44px 50px; }
 }
 @media (max-width: 680px) {
-  .hit-opening { padding-block: 30px 30px; }
-  .hit-lead { font-size: 1.12rem; }
   .hit-stuck .hit-prose p { font-size: 1.1rem; }
   .hit-stuck .hit-prose { padding: 20px 22px 22px; }
   .hit-next p { font-size: 1.05rem; }
