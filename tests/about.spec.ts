@@ -70,7 +70,9 @@ test("each photo sits with its prose, framed, at its own aspect ratio, with meta
   const cafe = page.locator(".about-intro figure.framed-photo img");
   await expect(cafe).toHaveAttribute("alt", "Alan at an outdoor café table on a town street, writing on a tablet with a stylus beside a cup of coffee");
   await expect(cafe).toHaveAttribute("src", /DSC09129/);
-  expect(await page.locator(".about-intro figure").evaluate((el) => el.previousElementSibling?.className)).toBe("about-lead");
+  // It sits beside both the opening paragraph and the first chapter, which share its column.
+  expect(await page.locator(".about-intro figure").evaluate((el) => el.previousElementSibling?.className)).toBe("about-intro-text");
+  await expect(page.locator(".about-intro-text > .about-lead + #capable")).toHaveCount(1);
   const photos = [
     ["#human", "mmn-talk", "Alan giving his talk 'We're all middle management now' at a user group, the title slide beside him", "We're all middle management now", 1400 / 933],
     ["#origin", "stuart-alison", "Alison and Stuart, who ran burningsuit before Alan, at a laptop together", "Alison and Stuart", 1400 / 1120],
@@ -159,8 +161,10 @@ test("About layout: one reading column, each heading above its prose, photos opp
   const edge = (await box(".title-band h1")).x;
   expect(Math.abs((await box(".about-lead")).x - edge)).toBeLessThanOrEqual(1);
   expect(Math.abs((await box("#capable h2")).x - edge)).toBeLessThanOrEqual(1);
+  const cafe = await box(".about-intro figure"), chapter = await box("#capable .about-prose");
+  expect(cafe.x).toBeGreaterThanOrEqual(chapter.x + chapter.width);
   for (const [section, side] of [[".about-intro", "right"], ["#human", "left"], ["#origin", "right"], ["#dog", "left"]] as const) {
-    const photo = await box(`${section} figure`), text = await box(`${section} :is(.about-lead, .about-prose)`);
+    const photo = await box(`${section} > figure`), text = await box(section === ".about-intro" ? ".about-lead" : `${section} > .about-prose`);
     if (side === "right") expect(photo.x).toBeGreaterThanOrEqual(text.x + text.width);
     else { expect(text.x).toBeGreaterThanOrEqual(photo.x + photo.width); expect(Math.abs(photo.x - edge)).toBeLessThanOrEqual(1); }
     expect(photo.y).toBeLessThan(text.y + text.height);
