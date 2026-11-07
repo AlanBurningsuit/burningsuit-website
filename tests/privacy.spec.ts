@@ -22,12 +22,12 @@ const paragraphs = [
   "Umami Software, Inc., a US company, processes this for me in the US and the EU under its data processing agreement, which covers transfers from the UK. It keeps the statistics for 6 months. My lawful basis is legitimate interests. I don't profile anyone or sell the data. If you'd rather your visits weren't counted, turn counting off below.",
   "This switch stops Umami counting your visits from this browser. It's free, works straight away and can be switched back. It's saved in this browser, so clearing the site's data undoes it.",
   "The site is hosted on GitHub Pages. GitHub, Inc., a US company, logs visitors' IP addresses for its own security purposes, under its privacy statement.",
-  "You book the free call on Cal.com. Cal.com, Inc. processes the details you enter for me in the US, relying on the UK Extension to the EU-US Data Privacy Framework, and keeps bookings in my account while it's open. The call itself, and paid sessions, are covered by the terms you receive for them, including whether they're recorded. My lawful basis and how long I keep my copy are under Emailing me.",
+  "You book the free call on Cal.com. Cal.com, Inc. processes the details you enter for me in the US, relying on the UK Extension to the EU-US Data Privacy Framework, and keeps bookings in my account while it's open. The call runs on Microsoft Teams. When you book, you can choose whether I may record it. I only record if you tick that box; the recording stays in my Microsoft 365 account and is deleted automatically after 60 days. My lawful basis for a recording is your consent, which you can withdraw at any time, before or during the call. Paid sessions are covered by the terms you receive for them. My lawful basis and how long I keep my copy of the booking are under Emailing me.",
   "Email links open your own email program. I use Microsoft 365 for email, and Microsoft's privacy statement covers its processing and transfers.",
   "For bookings and emails, my lawful basis is legitimate interests: answering people who contact me about training or consultancy. If you ask me to take steps towards a contract with you, that processing is necessary for those steps. Apart from Cal.com's copy, I keep them for as long as the enquiry or any engagement that follows needs them, then delete them.",
   "You can ask for a copy of your information, or ask me to correct, delete or restrict it. You can object to anything based on legitimate interests, including the analytics, which the switch stops. Where I'm using information for steps towards a contract you asked for, you can also ask for it in a reusable format, for you or another organisation. Email alan@burningsuit.co.uk, or complain to the Information Commissioner's Office.",
   "I update this notice when anything here changes.",
-  "Last updated: 6 November 2026",
+  "Last updated: 7 November 2026",
 ];
 const links = [
   ENQUIRY.privacyPath, email, "https://umami.is/privacy", "https://umami.is/dpa", "#optout",
@@ -75,7 +75,7 @@ test("privacy notice carries the approved words, headings and links in order", a
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(headings);
   await expect(page.locator(".service-copy > p:not(.optout-nojs)")).toHaveText(paragraphs);
   expect(await page.locator(".service-copy a").evaluateAll((anchors) => anchors.map((a) => a.getAttribute("href")))).toEqual(links);
-  await expect(page.locator("time")).toHaveAttribute("datetime", "2026-11-06");
+  await expect(page.locator("time")).toHaveAttribute("datetime", "2026-11-07");
   await expect(page.locator(".service-copy")).not.toContainText(/aria-pressed|\[|\]/);
 });
 
