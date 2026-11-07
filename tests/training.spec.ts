@@ -71,7 +71,8 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expectItems(agents.locator(".facts > li"), ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", ...(copy ? [copy.publicSeat] : []), "Also private, for your team", priceOnRequest], "training 101 facts");
   await expect(agents.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
   // The 101 keeps booking on its own page: the outline link and the private-course email only, no form route.
-  await expect(agents.getByRole("link")).toHaveText(["Power BI with AI agents 101", "Read the course outline", "Ask about a private course."]);
+  // The priced build adds "Book a seat", which leads to the course's setup list and booking.
+  await expect(agents.getByRole("link")).toHaveText(["Power BI with AI agents 101", "Read the course outline", ...(priced ? ["Book a seat"] : []), "Ask about a private course."]);
   await expect(agents.getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", course101);
   await expect(agents.getByRole("link", { name: "Ask about a private course." })).toHaveAttribute("href", email);
   await expect(agents.locator('a[href="#contact"]')).toHaveCount(0);
@@ -114,12 +115,13 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
 
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", course101, course101, email, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
+  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#need-title"] : []), email, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
   const text = await page.locator("main").innerText();
   // Developing and Claude courses stay off; no arrows, seats, booking or promises the copy doesn't make.
   // Priced output states the 101's per-seat rates, so "seat" is allowed there; booking wording stays absent in both.
   // "per booking" is the approved price unit in priced output; any other booking wording stays absent.
-  expectNone(text.replaceAll("per booking", ""), [/Not sure where to start/i, /hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, ...(priced ? [] : [/seat/i]), /book/i, /\[|\]/, /to confirm/i, /coming soon/i], "training text");
+  // In the priced build the 101 card's "Book a seat" leads to the course page, where booking happens; nothing else books here.
+  expectNone(text.replaceAll("per booking", "").replaceAll(priced ? "Book a seat" : "\u0000", ""), [/Not sure where to start/i, /hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, ...(priced ? [] : [/seat/i]), /book/i, /\[|\]/, /to confirm/i, /coming soon/i], "training text");
   await expect(page.locator("blockquote, .to-confirm, .proof, button:not(.send)")).toHaveCount(0);
 });
 
@@ -338,12 +340,12 @@ test("training chooser works from the keyboard without JavaScript", async ({ bro
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < (priced ? 16 : 15); i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(2);
   }
-  expect(reached).toEqual([fundamentals, fundamentals, "#contact", course101, course101, email, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
+  expect(reached).toEqual([fundamentals, fundamentals, "#contact", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#need-title"] : []), email, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
 
   // An inbound coaching link lands on its section without JavaScript; its ask reaches the shared form.
   await page.goto(route + "#coaching");

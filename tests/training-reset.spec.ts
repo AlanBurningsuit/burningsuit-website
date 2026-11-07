@@ -131,7 +131,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   `);
   const text = await page.locator("main").innerText();
   // "Founding rate" is the approved wording for the priced seat facts only.
-  expectNone(text, [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, /refund/i, /checklist/i, /house-rules template/i, /setup notes/i, ...(priced ? [] : [/founding rate/i])], "101 text");
+  expectNone(text, [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, ...(priced ? [] : [/refund/i]), /checklist/i, /house-rules template/i, /setup notes/i, ...(priced ? [] : [/founding rate/i])], "101 text");
   if (priced) expect(/founding rate/.test(text) && !/limited|save|early bird|discount|countdown/i.test(text), "101 states the founding rate as a plain fact").toBe(true);
   await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a recording of the morning, along with the teaching project and clean copies, so you can work through it again.");
 });
@@ -216,7 +216,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
     const entry = page.getByRole("article", { name });
     await expectItems(entry.locator(".facts > li"), homeFacts[name], `home ${name} facts`);
     await expect(entry.getByRole("link", { name: "Read the course outline" })).toHaveCount(1);
-    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/agentic-development-for-power-bi/#book-title" : "#contact");
+    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/agentic-development-for-power-bi/#need-title" : "#contact");
   }
   await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
   await expect(page.locator(".specialist-names > li")).toHaveText(["DAX fundamentals (1 day)", "Data modelling (1 day)", "DAX deep dive (2 days)"]);

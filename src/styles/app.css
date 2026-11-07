@@ -74,6 +74,9 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .nav-training { position: relative; display: flex; align-items: center; gap: 2px; }
 .nav-menu summary { list-style: none; cursor: pointer; display: grid; place-items: center; width: 28px; height: 32px; border-radius: var(--r-sm); color: var(--text); }
 .nav-menu summary::-webkit-details-marker { display: none; }
+/* The chevron stays small, but its tap area grows to 44px tall and reaches into the gap on its right, never over the Training link. */
+.nav-menu summary { position: relative; }
+.nav-menu summary::before { content: ""; position: absolute; inset: -6px -8px -6px 0; }
 .nav-menu summary::after { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; rotate: 45deg; translate: 0 -2px; }
 .nav-menu[open] summary::after { rotate: -135deg; translate: 0 2px; }
 .nav-menu summary:hover { color: var(--link); background: var(--bg-3); }

@@ -106,6 +106,14 @@ const bookingStatus = "Booking isn't open yet.";
             ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
             : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>}
         </div>
+        {priced && <section class="booking-terms" aria-labelledby="booking-terms-title">
+          <h3 id="booking-terms-title">Booking terms</h3>
+          <ul role="list">
+            <li>Cancel up to 14 days before the course, by <time datetime="2027-01-06">Wednesday 6 January 2027</time>, for a full refund.</li>
+            <li>Can't make it after that? Send a colleague in your place: tell me at least 24 hours before.</li>
+            <li>If your setup can't be got working before the day, you can move to a later run, send a colleague or have a full refund.</li>
+          </ul>
+        </section>}
         <p class="invoice">If your organisation needs an invoice or a purchase order, email <a href={`mailto:${email}`}>{email}</a> and I'll send an invoice instead.</p>
       </div>
     </div>
