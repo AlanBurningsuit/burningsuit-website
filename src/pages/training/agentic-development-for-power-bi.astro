@@ -1,11 +1,12 @@
 ---
 // Approved wording: ops site/101-page-copy.md (4 Nov 2026). Bracketed items there are gaps, not copy.
-// Paid booking stays closed until delivery, demo, payment and setup readiness are verified,
-// so "Book a seat" renders as an unavailable control with no destination.
+// "Book a seat" links to the Stripe Payment Link in the priced production build only; elsewhere (unpriced builds,
+// previews) it stays an unavailable control beside "Price on request".
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TitleBand from "../../components/TitleBand.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
+import { SEAT_BOOKING_URL } from "../../config/booking.mjs";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/course.css";
 
@@ -38,8 +39,9 @@ const bookingStatus = "Booking isn't open yet.";
         {priced ? priced.seatFacts.map((fact) => <li>{fact}</li>) : <li>{price}</li>}
       </ul>
       <div class="booking">
-        <button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button>
-        <p class="booking-status" id="booking-status-opening">{bookingStatus}</p>
+        {priced
+          ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+          : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>}
       </div>
       <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
     </aside>
@@ -101,8 +103,9 @@ const bookingStatus = "Booking isn't open yet.";
       </div>
       <div>
         <div class="booking">
-          <button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button>
-          <p class="booking-status" id="booking-status-book">{bookingStatus}</p>
+          {priced
+            ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+            : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>}
         </div>
         <p class="invoice">If your organisation needs an invoice or a purchase order, email <a href={`mailto:${email}`}>{email}</a> and I'll send an invoice instead.</p>
       </div>

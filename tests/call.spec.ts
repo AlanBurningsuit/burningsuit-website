@@ -1,5 +1,6 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { priced } from "./prices";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 
 const route = "/call/";
@@ -94,6 +95,7 @@ test("both booking actions are the same ordinary same-tab link, styled as the sh
 });
 
 test("the 101's closed booking button keeps its disabled state", async ({ page }) => {
+  test.skip(priced, "Booking is a live link in the priced build.");
   await page.goto("/training/agentic-development-for-power-bi/");
   const closed = page.locator("button.book-button").first();
   await expect(closed).toBeDisabled();

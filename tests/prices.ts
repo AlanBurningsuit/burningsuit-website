@@ -66,3 +66,26 @@ export async function expectAriaWithoutAmounts(locator: Locator, template: strin
   expect(!/[£€$]\s*\d/.test(text), "unpriced structure holds no amount").toBe(true);
   await expect(locator).toMatchAriaSnapshot(template);
 }
+
+/** The 101's two "Book a seat" controls: links to the Stripe Payment Link in the priced build; disabled, explained buttons otherwise. */
+export async function expectSeatBooking(page: Page) {
+  const { SEAT_BOOKING_URL } = await import("../src/config/booking.mjs");
+  if (priced) {
+    const links = page.getByRole("link", { name: "Book a seat", exact: true });
+    await expect(links).toHaveCount(2);
+    for (const link of await links.all()) {
+      await expect(link).toHaveAttribute("href", SEAT_BOOKING_URL);
+      await expect(link).not.toHaveAttribute("target", /./);
+    }
+    await expect(page.getByRole("button", { name: "Book a seat" })).toHaveCount(0);
+    await expect(page.locator(".booking-status")).toHaveCount(0);
+  } else {
+    const buttons = page.getByRole("button", { name: "Book a seat" });
+    await expect(buttons).toHaveCount(2);
+    for (const control of await buttons.all()) {
+      await expect(control).toBeDisabled();
+      await expect(control).toHaveAccessibleDescription("Booking isn't open yet.");
+    }
+    await expect(page.locator("main a[href*='stripe']")).toHaveCount(0);
+  }
+}

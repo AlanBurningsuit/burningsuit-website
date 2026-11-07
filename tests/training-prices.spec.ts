@@ -1,5 +1,5 @@
 import { test, expect, otherScripts } from "./analytics";
-import { priced, copy, knownValues, expectAmountsOnlyWhenPriced, expectNone, expectItems, expectText } from "./prices";
+import { priced, copy, knownValues, expectAmountsOnlyWhenPriced, expectNone, expectItems, expectText, expectSeatBooking } from "./prices";
 import { readFileSync } from "node:fs";
 import { PRICE_SLOTS } from "../src/lib/training-prices.mjs";
 
@@ -90,15 +90,10 @@ test("unpriced and priced items keep the approved private-course wording", async
   expect(await page.locator("main").innerText()).not.toMatch(/ex VAT|founding rate/i);
 });
 
-test("the 101 keeps both booking buttons disabled, explained and unlinked in both variants", async ({ page }) => {
+test("the 101 books through the Stripe link only in the priced build, and stays closed and unlinked otherwise", async ({ page }) => {
   await page.goto(routes.agents);
-  const book = page.getByRole("button", { name: "Book a seat" });
-  await expect(book).toHaveCount(2);
-  for (const control of await book.all()) {
-    await expect(control).toBeDisabled();
-    await expect(control).toHaveAccessibleDescription("Booking isn't open yet.");
-  }
-  await expect(page.locator("main a[href*='stripe'], main a[href*='pay'], main a[href='#contact'], main form")).toHaveCount(0);
+  await expectSeatBooking(page);
+  await expect(page.locator("main a[href*='pay']:not([href*='buy.stripe.com']), main a[href='#contact'], main form")).toHaveCount(0);
   // The private email ask is unchanged and has no price item of its own on this page.
   await expect(page.getByRole("link", { name: "Ask about a private course." })).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
   const detail = await page.locator("main").innerText();

@@ -2,7 +2,7 @@ import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
-import { priced, copy, expectItems, expectText, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
+import { priced, copy, expectItems, expectText, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
 
 const course = "/training/agentic-development-for-power-bi/";
 
@@ -70,14 +70,9 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expectItems(page.locator(".run-facts > li"), ["Half a day, live online", "Wednesday 20 January 2027, 9:30am to 12:30pm UK time", "4 to 8 people", ...(copy ? copy.seatFacts : [priceOnRequest])], "101 facts");
   await expectText(page.locator(".book-facts"), `Wednesday 20 January 2027, 9:30am to 12:30pm UK time, live online. 4 to 8 people. ${copy ? copy.seatBookFacts : "Price on request."}`, "101 booking facts");
 
-  // Paid booking is closed: both controls are unavailable, explained and lead nowhere.
-  const book = page.getByRole("button", { name: "Book a seat" });
-  await expect(book).toHaveCount(2);
-  for (const control of await book.all()) {
-    await expect(control).toBeDisabled();
-    await expect(control).toHaveAccessibleDescription("Booking isn't open yet.");
-  }
-  await expect(page.locator("main form, main a[href*='stripe'], main a[href*='pay'], main a[href^='/contact'], main a[href='#contact']")).toHaveCount(0);
+  // Booking: the Stripe link in the priced build; unavailable, explained controls that lead nowhere otherwise.
+  await expectSeatBooking(page);
+  await expect(page.locator("main form, main a[href*='pay']:not([href*='buy.stripe.com']), main a[href^='/contact'], main a[href='#contact']")).toHaveCount(0);
 
   // Email is the private-course and invoice route; How I train is the one teaching-method link.
   // The address is literal on purpose: a wrong config value must fail here.
@@ -86,7 +81,11 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".invoice a")).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual(["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
+  // The priced build adds the two Stripe booking links, in reading order beside each "Book a seat".
+  const { SEAT_BOOKING_URL } = await import("../src/config/booking.mjs");
+  expect(mainLinks).toEqual(priced
+    ? [SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]
+    : ["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
 
   // The setup facts are settled (Alan, 7 Nov 2026): no open "to confirm" gaps remain.
   const needs = page.locator(".need-list > li");
@@ -176,7 +175,7 @@ test("course discovery, facts and email routes work without JavaScript", async (
   await expect(page).toHaveURL(baseURL! + course);
   await expect(page.getByRole("heading", { name: "Power BI with AI agents 101", exact: true })).toBeVisible();
   await expect(page.locator(".to-confirm")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Book a seat" }).first()).toBeDisabled();
+  await expectSeatBooking(page);
   await expect(page.locator('.course-book a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
   await expect(page.locator(".do-steps li").first()).toBeVisible();
   // Keyboard order skips the unavailable controls and reaches each live link, and the agent diagram's text-version toggle.
@@ -188,7 +187,10 @@ test("course discovery, facts and email routes work without JavaScript", async (
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? document.activeElement?.tagName ?? ""));
   }
-  expect(reached).toEqual(["mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
+  const { SEAT_BOOKING_URL: booking } = await import("../src/config/booking.mjs");
+  expect(reached).toEqual(priced
+    ? [booking, "mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/"]
+    : ["mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
   // The agent diagram is captioned, with an alt that leads with the main relationship.
   await expect(page.locator("main figure.course-figure img")).toHaveAttribute("alt", /^An agent combines an AI model running elsewhere/);
   await context.close();
@@ -209,11 +211,12 @@ test("homepage keeps the approved sections, order and starting points", async ({
     "Power BI fundamentals": copy ? ["2 days", "Private, for your team", copy.homeFundamentals] : ["2 days", "Private, for your team", "On site or online", priceOnRequest],
     "Power BI with AI agents 101": ["Half a day, online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time", ...(copy ? [copy.publicSeat] : []), "Also private, for your team", priceOnRequest],
   };
-  for (const [name, ask] of [["Power BI fundamentals", "Ask about dates"], ["Power BI with AI agents 101", "Ask about a seat"]]) {
+  // In the priced build the 101 card books on the course page; otherwise it asks through the form.
+  for (const [name, ask] of [["Power BI fundamentals", "Ask about dates"], ["Power BI with AI agents 101", priced ? "Book a seat" : "Ask about a seat"]]) {
     const entry = page.getByRole("article", { name });
     await expectItems(entry.locator(".facts > li"), homeFacts[name], `home ${name} facts`);
     await expect(entry.getByRole("link", { name: "Read the course outline" })).toHaveCount(1);
-    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", "#contact");
+    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/agentic-development-for-power-bi/#book-title" : "#contact");
   }
   await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
   await expect(page.locator(".specialist-names > li")).toHaveText(["DAX fundamentals (1 day)", "Data modelling (1 day)", "DAX deep dive (2 days)"]);
@@ -278,7 +281,7 @@ test("enquiry form is a labelled plain POST with nothing preselected that valida
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
   await page.goto("/");
-  await page.getByRole("link", { name: "Ask about a seat" }).click();
+  await page.getByRole("link", { name: priced ? "Ask about dates" : "Ask about a seat" }).click();
   await expect(page).toHaveURL(baseURL! + "/#contact");
   const form = page.getByRole("form", { name: "Tell me what you're looking for." });
   await expect(form).toBeVisible();

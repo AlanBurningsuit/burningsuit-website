@@ -2,7 +2,7 @@ import { type Page } from "@playwright/test";
 import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
-import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
+import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
 
 const route = "/training/";
 const course101 = "/training/agentic-development-for-power-bi/";
@@ -353,10 +353,10 @@ test("training chooser works from the keyboard without JavaScript", async ({ bro
   await expect(page.getByRole("form", { name: "Ask about a course" })).toBeInViewport();
   await page.goto(route);
 
-  // The 101 outline leads to its own page, where booking stays closed.
+  // The 101 outline leads to its own page, which carries the booking.
   await page.getByRole("article", { name: "Power BI with AI agents 101" }).getByRole("link", { name: "Read the course outline" }).click();
   await expect(page).toHaveURL(baseURL! + course101);
-  await expect(page.getByRole("button", { name: "Book a seat" }).first()).toBeDisabled();
+  await expectSeatBooking(page);
   await context.close();
 });
 
