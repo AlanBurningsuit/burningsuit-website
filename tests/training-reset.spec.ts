@@ -88,15 +88,16 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   expect(mainLinks).toEqual(["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
 
-  // Open facts stay tagged; withheld gaps, the parked showcase and "If plans change" stay off the page.
-  // Each open fact stays tagged on the requirement it qualifies.
+  // The setup facts are settled (Alan, 7 Nov 2026): no open "to confirm" gaps remain.
   const needs = page.locator(".need-list > li");
-  await expect(needs).toHaveCount(5);
-  for (const [index, tag] of [[0, "version and settings: to confirm"], [1, "which app and plan, and what it costs: to confirm"], [3, "where: to confirm"], [4, "when, and how long it takes: to confirm"]] as const) {
-    await expect(needs.nth(index).locator(".to-confirm")).toHaveText(tag);
-  }
-  await expect(page.locator(".to-confirm")).toHaveCount(4);
-  await expect(needs.nth(1)).toContainText("One of three agent tools, on a paid plan: GitHub Copilot, Claude or ChatGPT/Codex");
+  await expect(needs).toHaveText([
+    "A Windows computer with a version of Power BI Desktop released in the 3 months before the course.",
+    "One of three agent tools, on at least its lowest paid plan: Claude Desktop, ChatGPT or GitHub Copilot. Using something else? Tell me, and we can probably make it work.",
+    "Permission to install and use that tool. On a work laptop, check with your IT team early.",
+    "A folder on your computer for the teaching files, outside OneDrive and SharePoint, plus reliable internet and audio. A second screen helps.",
+    "A short setup check before the day. You'll get the details with your course information once your booking is confirmed.",
+  ]);
+  await expect(page.locator(".to-confirm")).toHaveCount(0);
 
   // The deciding opening and trust sentences, and the step sequence as a list for assistive technology.
   await expect(page.locator(".title-band .standfirst")).toHaveText("Want to be ready for where Power BI is going?");
@@ -146,13 +147,6 @@ test("the 101 puts facts beside the introduction on wide screens and after the p
   const [check, teacher] = [await box(".trust-check"), await box(".trust-teacher")];
   expect(teacher.x).toBeGreaterThanOrEqual(check.x + check.width);
 
-  // Enlarged text wraps the tags inside their requirement rather than overrunning it.
-  await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
-  for (const item of await page.locator(".need-list > li").all()) {
-    const [li, overflow] = await item.evaluate((el) => [el.getBoundingClientRect().right, Math.max(...[...el.querySelectorAll(".to-confirm")].flatMap((tag) => [...tag.getClientRects()].map((r) => r.right)), 0)]);
-    expect(overflow).toBeLessThanOrEqual(li + 0.5);
-  }
-  await page.evaluate(() => { document.documentElement.style.fontSize = ""; });
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
@@ -181,7 +175,7 @@ test("course discovery, facts and email routes work without JavaScript", async (
   await page.getByRole("article", { name: "Power BI with AI agents 101" }).getByRole("link", { name: "Read the course outline" }).click();
   await expect(page).toHaveURL(baseURL! + course);
   await expect(page.getByRole("heading", { name: "Power BI with AI agents 101", exact: true })).toBeVisible();
-  await expect(page.locator(".to-confirm")).toHaveCount(4);
+  await expect(page.locator(".to-confirm")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Book a seat" }).first()).toBeDisabled();
   await expect(page.locator('.course-book a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
   await expect(page.locator(".do-steps li").first()).toBeVisible();
