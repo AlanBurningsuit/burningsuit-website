@@ -32,6 +32,8 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .title-band { padding-block: clamp(40px, 5vw, 72px) clamp(64px, 7vw, 104px); }
 .title-band h1 { margin: 0; font-size: var(--title-band-size); text-wrap: balance; }
 .title-band .standfirst { margin: clamp(18px, 2vw, 28px) 0 0; max-width: 34ch; text-wrap: balance; }
+.title-actions { display: flex; flex-wrap: wrap; gap: 6px 28px; margin-top: clamp(18px, 2vw, 26px); }
+.title-actions .text-link { font-size: 1.05rem; }
 /* The one button, for every action that isn't a text link: it takes its colours from the ground it sits on (tokens.css). */
 .button {
   display: inline-block;

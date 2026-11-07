@@ -41,7 +41,7 @@ test("case study tells the approved story in order, anonymously", async ({ page 
   await expect(page.locator(".case-prose p")).toHaveText([
     "In 2025 I ran the DAX deep dive privately for a team at a local authority. DAX is the language behind Power BI's calculations, most of which live in measures. The people in the room already worked with Power BI, and the course was about the DAX behind their reports.",
     "I ran it on site, with exercises for people to work through on laptops I provided. The organiser's summary describes it as starting from the basics and progressing to more advanced topics.",
-    "One person arrived on the first day confident in what they could already do. They told me they were there to get their head around the advanced material. By mid-morning on the second day, they said they thought they'd go back and rewrite all their old measures. I don't know whether they did.",
+    "One person arrived on the first day confident in what they could already do. They told me they were there to get their head around the advanced material. By mid-morning on the second day, they said they thought they'd go back and rewrite all their old measures.",
     "After the course I sent a worked version of the variables exercise for reference. Variables let you name a step inside a measure and use it again, which makes a long measure easier to read and check.",
     "The organiser then surveyed the people who'd attended. I ran the course twice for them that year, and the summary covers both groups together.",
   ]);

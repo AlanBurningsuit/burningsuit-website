@@ -108,7 +108,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(coaching.locator("p:not(.study-evidence-label)")).toHaveText([/^Coaching is for/, "Mention coaching in your message."]);
   expect(await page.locator("main > section").evaluateAll((all) => all.map((el) => el.className.split(" ")[0]))).toEqual(["starting-points", "specialist-courses", "coaching", "training-teacher", "contact"]);
 
-  await expect(page.locator(".teacher-note p")).toHaveText("I'm Alan Harman-Box. I write and teach every course myself, and I've spent about five years working with organisations as they adopt Power BI. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course.");
+  await expect(page.locator(".teacher-note p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI, and about a decade in software delivery before that. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course.");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   await expect(page.locator(".enquiry-intro p")).toHaveText("If you know which course you want, name it in your message. If you don't, tell me what you use Power BI for now and I'll suggest where to start.");

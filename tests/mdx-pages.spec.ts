@@ -49,7 +49,7 @@ test("contextual and footer links lead to the matching evidence and restored ess
   for (const route of ["/", "/work/", essay, archive]) {
     await page.goto(route);
     await expect(page.locator("footer").getByRole("link", { name: "Work", exact: true })).toHaveAttribute("href", "/work/");
-    await expect(page.locator("footer").getByRole("link", { name: "We're all middle management now", exact: true })).toHaveAttribute("href", essay);
+    await expect(page.locator("footer").getByRole("link", { name: "Essay: We're all middle management now", exact: true })).toHaveAttribute("href", essay);
   }
 });
 

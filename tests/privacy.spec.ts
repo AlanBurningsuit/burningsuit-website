@@ -161,7 +161,7 @@ for (const path of footerRoutes) {
     await expect(line).toHaveText(legal);
     // Each separator stays with the segment before it.
     expect(await line.textContent()).toBe(legal.replaceAll(" ·", " ·"));
-    await expect(page.locator("footer .foot-links a")).toHaveText([ENQUIRY.email, "Privacy", "Work", "We're all middle management now", "LinkedIn"]);
+    await expect(page.locator("footer .foot-links a")).toHaveText([ENQUIRY.email, "Privacy", "Work", "Essay: We're all middle management now", "LinkedIn"]);
     await expect(page.locator("footer")).not.toContainText("West Sussex, England");
   });
 }

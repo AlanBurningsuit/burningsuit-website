@@ -260,7 +260,10 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
   expect(await page.locator(".title-band").evaluate((el) => getComputedStyle(el.closest(".dark")!).backgroundColor)).toBe(await bg("body"));
   expect(await page.locator(".introduction").evaluate((el) => el.closest(".dark"))).toBeNull();
-  await expect(page.locator(".title-band > *")).toHaveCount(2);
+  // The band holds the title, its standfirst and two first-screen actions: a course, or help with your own reports.
+  await expect(page.locator(".title-band > *")).toHaveCount(3);
+  await expect(page.locator(".title-actions a")).toHaveText(["Find a course", "Get help with your own reports"]);
+  expect(await page.locator(".title-actions a").evaluateAll((links) => links.map((link) => link.getAttribute("href")))).toEqual(["#training", "#consultancy"]);
   expect(await bg("main")).not.toBe(await bg("body"));
   // The two primary entries sit side by side at equal width; the specialists follow beneath them.
   const [fundamentals, agents] = [await box('article[aria-labelledby="fundamentals-title"]'), await box('article[aria-labelledby="agents-101-title"]')];
