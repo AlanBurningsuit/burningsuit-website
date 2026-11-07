@@ -5,7 +5,7 @@ import { PRICE_SLOTS } from "../src/lib/training-prices.mjs";
 
 // The built site is either the Price on request variant or the priced variant (SHOW_TRAINING_PRICES=true at build and test time).
 // Every price-bearing comparison happens in memory and asserts a boolean with a fixed message: no failure prints an amount.
-const routes = { home: "/", training: "/training/", agents: "/training/agentic-development-for-power-bi/", fundamentals: "/training/power-bi-fundamentals/" };
+const routes = { home: "/", training: "/training/", agents: "/training/agentic-development-for-power-bi/", fundamentals: "/training/power-bi-fundamentals/", daxDeepDive: "/training/dax-deep-dive/" };
 const unaffected = ["/power-bi/", "/hour/", "/about/", "/contact/", "/training/how-i-train/", "/work/", "/privacy/", "/404.html"];
 
 const html = async (request: import("@playwright/test").APIRequestContext, route: string) => (await request.get(route)).text();
@@ -20,9 +20,9 @@ test("the build under test matches the variant requested", async ({ request }) =
 });
 
 test("ten rate slots appear on their pages and nowhere else", async ({ request }) => {
-  const pages = { home: decode(await html(request, routes.home)), training: decode(await html(request, routes.training)), agents: decode(await html(request, routes.agents)), fundamentals: decode(await html(request, routes.fundamentals)) };
+  const pages = { home: decode(await html(request, routes.home)), training: decode(await html(request, routes.training)), agents: decode(await html(request, routes.agents)), fundamentals: decode(await html(request, routes.fundamentals)), daxDeepDive: decode(await html(request, routes.daxDeepDive)) };
   if (!priced) {
-    // Unpriced: no amount, price wording or founding-rate text on any of the four routes, and no private value even if the file exists locally.
+    // Unpriced: no amount, price wording or founding-rate text on any of the five routes, and no private value even if the file exists locally.
     for (const [name, text] of Object.entries(pages)) {
       expect(!/[£€$]\s?\d/.test(text) && !/ex VAT|founding rate|Standard rate|per booking/i.test(text), `unpriced ${name} has no price wording`).toBe(true);
       expect(knownValues.every((value) => !text.includes(value)), `unpriced ${name} holds no private rate`).toBe(true);
@@ -32,6 +32,7 @@ test("ten rate slots appear on their pages and nowhere else", async ({ request }
   const rates = {
     fundamentals: [copy!.homeFundamentals, copy!.trainingFundamentals, copy!.fundamentalsDetail],
     specialists: Object.values(copy!.specialists),
+    daxDeepDive: [copy!.daxDeepDiveDetail],
     seat: [copy!.publicSeat, ...copy!.seatFacts, copy!.seatBookFacts],
   };
   expect(rates.fundamentals.every((text) => [pages.home, pages.training, pages.fundamentals].some((page) => page.includes(text))), "Fundamentals rates render").toBe(true);
@@ -39,12 +40,13 @@ test("ten rate slots appear on their pages and nowhere else", async ({ request }
   expect(pages.training.includes(copy!.trainingFundamentals) && pages.training.includes(copy!.publicSeat) && rates.specialists.every((text) => pages.training.includes(text)), "Training renders every course price item").toBe(true);
   expect(copy!.seatFacts.every((text) => pages.agents.includes(text)) && pages.agents.includes(copy!.seatBookFacts), "101 renders both seat rates in its facts and booking line").toBe(true);
   expect(pages.fundamentals.includes(copy!.fundamentalsDetail), "Fundamentals renders the full private price").toBe(true);
+  expect(pages.daxDeepDive.includes(copy!.daxDeepDiveDetail), "DAX deep dive renders the full private price").toBe(true);
 
   // Each of the ten stored rates is checked individually against the pages that must carry it.
   const data = JSON.parse(readFileSync("design/copy/training-prices.json", "utf8"));
   const placement: Record<string, string[]> = {
     "power-bi-fundamentals": ["home", "training", "fundamentals"],
-    "dax-fundamentals": ["training"], "data-modelling": ["training"], "dax-deep-dive": ["training"],
+    "dax-fundamentals": ["training"], "data-modelling": ["training"], "dax-deep-dive": ["training", "daxDeepDive"],
     "agentic-development-for-power-bi": ["home", "training", "agents"],
   };
   let all = true;
@@ -62,7 +64,7 @@ test("ten rate slots appear on their pages and nowhere else", async ({ request }
   }
   for (const [name, text] of Object.entries(pages)) {
     let rest = text;
-    for (const slot of [...rates.fundamentals, ...rates.specialists, ...rates.seat]) rest = rest.replaceAll(slot, "");
+    for (const slot of [...rates.fundamentals, ...rates.specialists, ...rates.daxDeepDive, ...rates.seat]) rest = rest.replaceAll(slot, "");
     expect(knownValues.every((value) => !rest.includes(value)), `${name} shows rates only inside their approved items`).toBe(true);
   }
 });

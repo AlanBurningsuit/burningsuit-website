@@ -115,8 +115,10 @@ export function trainingPriceCopy(prices) {
     seatBookFacts: `${founding} a seat, the founding rate for this first run, ex VAT. ${standard} a seat, the standard rate, ex VAT.`,
     // Fundamentals page (F1)
     fundamentalsDetail: `${rate(prices.fundamentals)}, per booking, ex VAT, UK travel included`,
+    // DAX deep dive page (ops site/dax-deep-dive-page-copy.md, the Fundamentals pattern)
+    daxDeepDiveDetail: `${rate(prices.daxDeepDive)}, per booking, ex VAT, UK travel included`,
   });
 }
 
-/** Closing sentence of the Training and Fundamentals meta descriptions, kept only in the unpriced variant. */
+/** Closing sentence of the Training, Fundamentals and DAX deep dive meta descriptions, kept only in the unpriced variant. */
 export const PRICE_ON_REQUEST = "Price on request";

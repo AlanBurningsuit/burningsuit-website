@@ -332,7 +332,7 @@ for (const route of pendingRoutes) {
 
 // Every standing page's title carries one emphasised word, in the dark band's amber.
 test("each standing page's title has one amber emphasis", async ({ page }) => {
-  for (const route of ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/"]) {
+  for (const route of ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/"]) {
     await page.goto(route);
     const em = page.locator("h1 .em");
     await expect(em).toHaveCount(1);
@@ -342,7 +342,7 @@ test("each standing page's title has one amber emphasis", async ({ page }) => {
 });
 
 test("every page but home and contact opens on the title band, and its body opens the daylight sheet", async ({ page }) => {
-  const routes = ["/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/privacy/", "/privacy/enquiries/", "/enquiry-received/", "/enquiry-error/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
+  const routes = ["/training/", course, "/training/power-bi-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/privacy/", "/privacy/enquiries/", "/enquiry-received/", "/enquiry-error/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/404.html"];
   await page.setViewportSize({ width: 1366, height: 900 });
   let edge: number | undefined;
   for (const route of routes) {
@@ -365,7 +365,7 @@ test("every page but home and contact opens on the title band, and its body open
 });
 
 test("one heading scale across the site: a title size, a section size, a note size, an item size and a card size", async ({ page }) => {
-  const routes = ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/contact/", "/privacy/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/"];
+  const routes = ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/contact/", "/privacy/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/"];
   for (const width of [1366, 390]) {
     await page.setViewportSize({ width, height: 900 });
     const sizes: Record<string, Set<number>> = { h1: new Set(), h2: new Set(), h3: new Set() };

@@ -96,7 +96,7 @@ function checkTracked() {
 }
 
 const routeFile = (route) => join(root, "dist", route, "index.html");
-const ROUTES = { home: "", training: "training", agents: "training/agentic-development-for-power-bi", fundamentals: "training/power-bi-fundamentals" };
+const ROUTES = { home: "", training: "training", agents: "training/agentic-development-for-power-bi", fundamentals: "training/power-bi-fundamentals", daxDeepDive: "training/dax-deep-dive" };
 const count = (text, needle) => text.split(needle).length - 1;
 
 function checkDist() {
@@ -121,7 +121,7 @@ function checkDist() {
   }
   if (!priced) return;
 
-  // Priced build: all four routes render every approved slot from the private file, and the unpriced phrase survives only where it belongs.
+  // Priced build: all five routes render every approved slot from the private file, and the unpriced phrase survives only where it belongs.
   let copy;
   try {
     const prices = loadTrainingPrices({ env: { SHOW_TRAINING_PRICES: "true" }, file: join(root, PRICES_FILE) });
@@ -132,7 +132,7 @@ function checkDist() {
   }
   const page = (route) => (existsSync(routeFile(route)) ? readFileSync(routeFile(route), "utf8") : "");
   const has = (html, text) => html.includes(`>${text}<`);
-  const home = page(ROUTES.home), training = page(ROUTES.training), agents = page(ROUTES.agents), fundamentals = page(ROUTES.fundamentals);
+  const home = page(ROUTES.home), training = page(ROUTES.training), agents = page(ROUTES.agents), fundamentals = page(ROUTES.fundamentals), daxDeepDive = page(ROUTES.daxDeepDive);
   const expect = (ok, rule, path) => { if (!ok) fail(rule, path); };
 
   expect(has(home, copy.homeFundamentals) && has(home, copy.publicSeat), "priced-slot-missing", "dist/index.html");
@@ -140,11 +140,13 @@ function checkDist() {
   for (const text of Object.values(copy.specialists)) expect(has(training, text), "priced-slot-missing", "dist/training/index.html");
   expect(copy.seatFacts.every((text) => has(agents, text)) && agents.includes(copy.seatBookFacts), "priced-slot-missing", "dist/training/agentic-development-for-power-bi/index.html");
   expect(has(fundamentals, copy.fundamentalsDetail), "priced-slot-missing", "dist/training/power-bi-fundamentals/index.html");
+  expect(has(daxDeepDive, copy.daxDeepDiveDetail), "priced-slot-missing", "dist/training/dax-deep-dive/index.html");
   // Price on request stays for the private 101 (Home, Training) and coaching (Training) only; "On site or online" is omitted from priced output.
   expect(count(home, ">Price on request<") === 1 && !home.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/index.html");
   expect(count(training, ">Price on request<") === 2 && !training.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/index.html");
   expect(!agents.includes("Price on request"), "unpriced-phrase-in-priced-slot", "dist/training/agentic-development-for-power-bi/index.html");
   expect(!fundamentals.includes("Price on request") && !fundamentals.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/power-bi-fundamentals/index.html");
+  expect(!daxDeepDive.includes("Price on request") && !daxDeepDive.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/dax-deep-dive/index.html");
 }
 
 if (distMode) checkDist(); else checkTracked();
