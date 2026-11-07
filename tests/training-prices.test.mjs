@@ -23,7 +23,10 @@ const workspace = (prefix = "bs-prices-") => mkdtempSync(join(tmpdir(), prefix))
 const writeJson = (path, data) => { mkdirSync(dirname(path), { recursive: true }); writeFileSync(path, typeof data === "string" ? data : JSON.stringify(data)); };
 const valuesOf = (data) => PRICE_SLOTS.map(([course, key]) => data[course][key]);
 const priced = { SHOW_TRAINING_PRICES: "true" };
-const run = (script, args, options = {}) => spawnSync(process.execPath, [join(scripts, script), ...args], { encoding: "utf8", ...options });
+// Git exports GIT_DIR and friends to hooks (the pre-push hook runs these tests). Fixture repositories and the scripts
+// that read them must never inherit those, or git would act on this repository instead of the fixture.
+const cleanEnv = Object.fromEntries(Object.entries(process.env).filter(([name]) => !name.startsWith("GIT_")));
+const run = (script, args, options = {}) => spawnSync(process.execPath, [join(scripts, script), ...args], { encoding: "utf8", env: cleanEnv, ...options });
 const output = (result) => result.stdout + result.stderr;
 const leaks = (result, values) => values.some((value) => output(result).includes(value) || output(result).includes(value.replaceAll(",", "")));
 
@@ -167,10 +170,10 @@ test("a tracked monetary literal or price assignment fails with the rule and pat
 
 test("a private prices file or anything under design/ is rejected when tracked", () => {
   const dir = workspace("bs-gate-git-");
-  execFileSync("git", ["init", "-q"], { cwd: dir });
+  execFileSync("git", ["init", "-q"], { env: cleanEnv, cwd: dir });
   writeJson(join(dir, PRICES_FILE), fixture());
   writeJson(join(dir, "src/page.astro"), "<p>Price on request</p>");
-  execFileSync("git", ["add", "-f", "-A"], { cwd: dir });
+  execFileSync("git", ["add", "-f", "-A"], { env: cleanEnv, cwd: dir });
   const result = gate(dir);
   assert.equal(result.status, 1);
   assert.match(output(result), /private-file-tracked/);
@@ -178,11 +181,11 @@ test("a private prices file or anything under design/ is rejected when tracked",
   rmSync(dir, { recursive: true, force: true });
   // The same file present but untracked (as the gitignored design/ link is) is fine.
   const clean = workspace("bs-gate-git-");
-  execFileSync("git", ["init", "-q"], { cwd: clean });
+  execFileSync("git", ["init", "-q"], { env: cleanEnv, cwd: clean });
   writeJson(join(clean, PRICES_FILE), fixture());
   writeJson(join(clean, "src/page.astro"), "<p>Price on request</p>");
   writeFileSync(join(clean, ".gitignore"), "design/\n");
-  execFileSync("git", ["add", "-A"], { cwd: clean });
+  execFileSync("git", ["add", "-A"], { env: cleanEnv, cwd: clean });
   assert.equal(gate(clean).status, 0);
   rmSync(clean, { recursive: true, force: true });
 });

@@ -57,7 +57,9 @@ function walk(directory, base = directory) {
 /** Tracked files when the root is a git checkout, otherwise every file under it. */
 function trackedFiles() {
   try {
-    const out = execFileSync("git", ["-C", root, "ls-files", "-z"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
+    // Ignore inherited repository variables (git sets them for hooks), so -C root decides which repository is listed.
+    const env = Object.fromEntries(Object.entries(process.env).filter(([name]) => !["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR", "GIT_OBJECT_DIRECTORY", "GIT_PREFIX"].includes(name)));
+    const out = execFileSync("git", ["-C", root, "ls-files", "-z"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], env });
     return out.split("\0").filter(Boolean);
   } catch {
     return walk(root);
