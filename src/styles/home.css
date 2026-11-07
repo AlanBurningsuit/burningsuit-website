@@ -22,8 +22,7 @@
 .courses > h2 { padding-bottom: 28px; }
 .course-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
 .course { background: var(--surface-card); border-top: var(--bw-spine) solid var(--accent); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
-/* On the homepage the two cards share one height, and each card's links sit on the same line at its foot.
-   (Training keeps natural heights, so its links follow straight on from the facts.) */
+/* Side by side, the two cards share one height, and each card's links sit on the same line at its foot (Training does the same through a subgrid). */
 @media (min-width: 901px) {
   .courses .course-list { align-items: stretch; }
   .courses .course { display: flex; flex-direction: column; }

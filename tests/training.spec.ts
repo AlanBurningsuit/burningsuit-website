@@ -275,15 +275,17 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
     // A spine, heavier than the specialists' hairline rows.
     expect(spine).toBeGreaterThan(await page.locator(".specialist-rows > li").first().evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth)));
   }
-  // Side by side, the two entries start level and their titles line up; each takes its natural height, so inside
-  // each card the links follow straight on from the deciding facts and no hole opens between them.
+  // Side by side, the two entries share one height, their titles line up and their links sit on one line.
   const rects = async (selector: string) => page.locator(selector).evaluateAll((els) => els.map((el) => { const r = el.getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom) }; }));
   const [cardA, cardB] = await rects(".starting-points .course");
   expect(Math.abs(cardA.top - cardB.top)).toBeLessThanOrEqual(1);
   const [titleA, titleB] = await rects(".starting-points .course h3");
   expect(Math.abs(titleA.top - titleB.top)).toBeLessThanOrEqual(1);
   const decidings = await rects(".starting-points .deciding"), actions = await rects(".starting-points .course-actions");
-  for (const [index, block] of decidings.entries()) expect(actions[index].top - block.bottom).toBeLessThanOrEqual(40);
+  expect(Math.abs(cardA.bottom - cardB.bottom)).toBeLessThanOrEqual(1);
+  expect(Math.abs(actions[0].top - actions[1].top)).toBeLessThanOrEqual(1);
+  // The links still follow the taller card's facts closely.
+  expect(Math.min(...decidings.map((block, index) => actions[index].top - block.bottom))).toBeLessThanOrEqual(40);
   // The cards open on the daylight warm accent (the ochre tick
   // before each card's fit line), which the teacher note's rule does not carry.
   const size = (selector: string) => page.locator(selector).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
