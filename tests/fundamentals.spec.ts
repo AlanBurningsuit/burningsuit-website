@@ -6,7 +6,7 @@ import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced
 
 const route = "/training/power-bi-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
-const links = ["/training/", "#contact", "#need-title", "/training/how-i-train/", "/about/", "/power-bi/", ENQUIRY.privacyPath, email];
+const links = ["/training/", "#contact", "#need-title", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
 
 const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 
@@ -123,19 +123,20 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
   await expect(page.getByRole("heading", { name: /who's teaching/i })).toHaveCount(0);
 
-  // Alan supplied dates, equipment/licences and takeaways during rendered review.
-  // His setup clarification resolves the remaining annotations without guaranteeing individual publishing.
+  // Dates, setup, takeaways and the company-data point now live in How I train's private course terms (approved amendment, 7 Nov):
+  // a pointer comes first, then only this course's licence and publishing points.
   await expect(page.locator("#need-title")).toHaveText("What to arrange");
+  const pointer = page.locator(".course-need:not(.outcomes) .need-pointer");
+  await expect(pointer).toHaveText("For dates, setup and what you take away, see what's included.");
+  await expect(pointer.getByRole("link", { name: "see what's included" })).toHaveAttribute("href", "/training/how-i-train/#private-courses");
+  expect(await page.locator(".course-need:not(.outcomes) .need-body > *").evaluateAll((els) => els.map((el) => el.className))).toEqual(["need-pointer", "need-list"]);
   const needs = page.locator(".course-need:not(.outcomes) .need-list > li");
   await expect(needs).toHaveText([
-    "Dates: I'll arrange dates with you after you get in touch.",
-    "On site: you use my training laptops. I provide the course materials and manage the Power BI Desktop version and licences.",
-    "Online: use your own computer with a version of Power BI Desktop released in the 3 months before the course. I provide the course materials; you arrange your licences.",
-    "Online licences: a Power BI Pro licence is ideal, but most of the course works with a free licence.",
+    "On site licences: I provide and manage them.",
+    "Online licences: you arrange your own. A Power BI Pro licence is ideal, but most of the course works with a free licence.",
     "Publishing practice depends on licences and access.",
   ]);
-  await expect(page.locator(".need-note")).toHaveText("You don't bring company data. Help with your own reports is consultancy.");
-  await expect(page.locator(".keep")).toHaveText("On site, you take away the course materials. Online, you get the course materials and a recording of the session.");
+  await expect(page.locator(".need-note, .keep")).toHaveCount(0);
   await expect(page.locator(".to-confirm")).toHaveCount(0);
 
   await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me you're interested in Power BI fundamentals, how many people would come and roughly when.");

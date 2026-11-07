@@ -18,7 +18,7 @@ export const redirects = {
   "/fully-flexible-training-dax-skills/our-courses-power-bi-training": "/training/",
   "/fully-flexible-training-dax-skills/our-courses-power-bi-training/3-power-bi-advanced": "/training/",
   "/fully-flexible-training-dax-skills/our-courses-power-bi-training/10-power-bi-dax-fundamentals": "/training/",
-  "/fully-flexible-training-dax-skills/our-courses-power-bi-training/11-power-bi-dax-advanced": "/training/",
+  "/fully-flexible-training-dax-skills/our-courses-power-bi-training/11-power-bi-dax-advanced": "/training/dax-deep-dive/",
   "/experts-microsoft-consultancy-and-training-burningsuit": "/power-bi/",
   "/team-member/alan-harman-box": "/about/",
   "/get-in-touch": "/contact/",

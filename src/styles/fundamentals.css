@@ -27,6 +27,9 @@
 .agenda-steps li { padding-bottom: 22px; }
 .agenda-steps strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
 
+/* What to arrange: the pointer to How I train's private course terms comes first, above this course's own licence points. */
+.need-pointer { max-width: 64ch; margin-bottom: 18px; }
+
 /* Who teaches: one small line below the spine; biography and method link out. */
 .teacher-line { margin-top: 14px; max-width: 62ch; }
 .teacher-line p { font-size: .96rem; color: var(--text-dim); }

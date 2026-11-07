@@ -23,7 +23,7 @@ const description = `Two places to start with Power BI, and three specialist cou
 const specialists = [
   { name: "DAX fundamentals", length: "1 day" },
   { name: "Data modelling", length: "1 day" },
-  { name: "DAX deep dive", length: "2 days" },
+  { name: "DAX deep dive", length: "2 days", href: "/training/dax-deep-dive/" },
 ];
 ---
 <BaseLayout
@@ -88,13 +88,15 @@ const specialists = [
     </div>
     <div class="specialists-body">
       <ul class="specialist-rows" role="list">
-        {specialists.map(({ name, length }) => (
+        {specialists.map(({ name, length, href }) => (
           <li>
-            <h3>{name}</h3>
+            {/* Only the DAX deep dive has its own page so far: its name and an outline link lead there. */}
+            <h3>{href ? <a href={href}>{name}</a> : name}</h3>
             <ul class="facts dot-list">
               <li>{length}</li>
               {privateFacts(name).map((fact) => <li>{fact}</li>)}
             </ul>
+            {href && <a class="text-link outline-link" href={href}>Read the course outline</a>}
             {name === "DAX deep dive" && <StudyLinks studies={["dax-deep-dive"]} />}
           </li>
         ))}

@@ -15,7 +15,7 @@
 .private-ask a { font-weight: 600; }
 /* The public group size stays in one piece when the date line wraps. */
 
-/* Specialists: a quieter recessed block of rows, name beside its facts on wide screens; no cards, fit questions or per-row links. */
+/* Specialists: a quieter recessed block of rows, name beside its facts on wide screens; no cards or fit questions. A course with its own page adds one outline link under its facts. */
 .specialist-courses { padding-block: 56px 88px; }
 .specialists-head h2 { padding-bottom: 14px; }
 .specialists-head p { max-width: 60ch; margin-bottom: 22px; }
@@ -23,6 +23,8 @@
 .specialist-rows > li { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: baseline; padding-block: 13px; }
 .specialist-rows h3 { font-weight: 600; letter-spacing: var(--ls-display-tight); }
 .specialist-rows .facts { margin: 0; }
+.specialist-rows .outline-link { justify-self: start; align-self: start; margin-top: 10px; }
+@media (min-width: 681px) { .specialist-rows .outline-link { grid-area: 2 / 2; } }
 .specialist-courses .text-link { font-size: .96rem; }
 .name-course { font-size: .96rem; color: var(--text-dim); }
 .specialist-courses .not-sure { margin-top: 30px; }

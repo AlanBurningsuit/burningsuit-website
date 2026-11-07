@@ -7,7 +7,7 @@ const route = "/training/how-i-train/";
 const email = `mailto:${ENQUIRY.email}`;
 // The enquiry link targets the Contact page. That page is built on its own branch; until it is
 // integrated, /contact/ here is still the legacy redirect, so only the href itself is checked.
-const links = ["/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/", "/training/power-bi-fundamentals/", "/training/agentic-development-for-power-bi/", email, "/contact/", "/about/", "/work/"];
+const links = ["/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/power-bi/", "/training/agentic-development-for-power-bi/#need-title", "/training/", "/training/power-bi-fundamentals/", "/training/agentic-development-for-power-bi/", email, "/contact/", "/about/", "/work/"];
 
 test("How I train stays static, private and CSP-clean, with no form or third-party request", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -37,14 +37,18 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
   await expect(page.locator("h1")).toHaveText("How I train");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll do", "If you get stuck", "Questions about your own work", "Helping you use it afterwards", "On every course", "Where next"]);
-  await expect(page.locator("h3, h4")).toHaveCount(0);
+  // One subheading: the private course terms under "On every course" (approved amendment, 7 Nov).
+  await expect(page.locator("h3")).toHaveText(["Private course terms"]);
+  await expect(page.locator("h4")).toHaveCount(0);
   await expect(page.locator("main p:not(.study-evidence-label)")).toHaveText([
     "My courses are about understanding how Power BI works and putting it to use.",
     "Mostly, I explain and show you how something works, then you do it yourself on examples I've prepared for teaching. I want you to ask questions as we go. My aim is to make clear what each part is for before we get into how it works.",
     "I've made almost every mistake in Power BI worth making. If something isn't making sense, say so. I'll help you work out where it went wrong and build back up from there. I keep groups small so there's time to work through questions and help everyone follow what's happening.",
     "Yes. Ask how an idea applies where you work, and I'll follow the question within what the course covers. If you'd like to learn on your own work over several weeks, that's what Power BI coaching is for. If there's something specific you'd like to get working with your own data, we can work together.",
     "I aim for explanations you can use again. When I recommend a way of doing something, I tell you what it helps with and when it matters, so you can make your own choice when a similar problem turns up. I also name things as we meet them, because knowing what something's called helps you ask better questions.",
-    "I write and teach every course myself, for groups of up to 8 people. Dates, setup and what's included vary from course to course.",
+    "I write and teach every course myself, for groups of up to 8 people.",
+    "These terms apply to Power BI fundamentals, DAX fundamentals, Data modelling and the DAX deep dive.",
+    "Power BI with AI agents 101 is set up differently: see what you'll need for the 101.",
     "Compare all the courses, or start with Power BI fundamentals or Power BI with AI agents 101. If you've got a question about how I teach, email me or use the enquiry form. There's more about me too.",
   ]);
   // Every section is labelled by its own heading; nothing else is visible copy.
@@ -52,7 +56,17 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
     const id = await section.getAttribute("aria-labelledby");
     await expect(section.locator(`[id="${id}"]`)).toHaveCount(1);
   }
-  await expect(page.locator("main li:not(.study-links li), main figure, main blockquote, main dl")).toHaveCount(0);
+  await expect(page.locator("main figure, main blockquote, main dl")).toHaveCount(0);
+  // The only list outside the study links is the private course terms, a ruled list that #private-courses lands on.
+  await expect(page.locator("main li:not(.study-links li)")).toHaveText([
+    "Dates: I'll arrange dates with you after you get in touch.",
+    "On site: you use my training laptops. I provide the course materials and manage the Power BI Desktop version.",
+    "Online: use your own computer with a version of Power BI Desktop released in the 3 months before the course. I provide the course materials.",
+    "To take away: on site, the course materials. Online, the course materials and a recording of the session.",
+    "Your own data: the courses use examples I've prepared for teaching. For help with your own reports, we can work together.",
+  ]);
+  await expect(page.locator("#private-courses")).toHaveText("Private course terms");
+  expect(await page.locator("#private-courses").evaluate((el) => el.closest("section")?.getAttribute("aria-labelledby"))).toBe("facts-title");
   const text = await page.locator("main").innerText();
   for (const absent of [/\[|\]/, /—/, /price/i, /book/i, /organisation/i]) expect(text).not.toMatch(absent);
 });
@@ -68,7 +82,10 @@ test("How I train links: coaching, consultancy, the courses, email, the Contact 
     ["email me", email],
     ["the enquiry form", "/contact/"],
     ["about me", "/about/"],
-  ]) await expect(page.locator("main").getByRole("link", { name, exact: true })).toHaveAttribute("href", href);
+    ["what you'll need for the 101", "/training/agentic-development-for-power-bi/#need-title"],
+  ]) for (const link of await page.locator("main").getByRole("link", { name, exact: true }).all()) await expect(link).toHaveAttribute("href", href);
+  // "we can work together" appears twice, in the own-work answer and the private course terms; both lead to consultancy.
+  await expect(page.locator("main").getByRole("link", { name: "we can work together", exact: true })).toHaveCount(2);
   expect(await page.locator("main a").evaluateAll((all) => all.map((link) => link.getAttribute("href")))).toEqual(links);
   expect(await page.locator("main a").evaluateAll((all) => all.some((link) => /#contact/.test(link.getAttribute("href") ?? "")))).toBe(false);
 });
