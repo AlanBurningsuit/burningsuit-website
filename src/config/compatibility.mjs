@@ -72,6 +72,7 @@ export const pages = {
     "optout",
     "hosting",
     "booking",
+    "seat",
     "email",
     "rights",
     "changes"
