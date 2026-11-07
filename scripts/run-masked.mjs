@@ -33,24 +33,28 @@ const mask = (text) => {
   return out.replace(AMOUNT, "[amount]");
 };
 
-function relay(stream, target) {
-  let pending = "";
+// Keep stdout/stderr in arrival order until the command finishes: a fragmented
+// value must not escape across chunks, lines, markup or output channels.
+const limit = 8 * 1024 * 1024;
+let size = 0;
+let chunks = [];
+let suppressed = false;
+function collect(stream) {
   stream.setEncoding("utf8");
   stream.on("data", (chunk) => {
-    pending += chunk;
-    const cut = pending.lastIndexOf("\n");
-    if (cut < 0) return;
-    // A currency prefix may be followed by whitespace/newlines in a later chunk.
-    // Keep it until its number or other text arrives, rather than relaying it raw.
-    if (/[£€$]\p{White_Space}*$/u.test(decodePriceEntities(pending.slice(0, cut + 1)))) return;
-    target.write(mask(pending.slice(0, cut + 1)));
-    pending = pending.slice(cut + 1);
+    if (suppressed) return;
+    size += Buffer.byteLength(chunk, "utf8");
+    if (size > limit) { suppressed = true; chunks = []; return; }
+    chunks.push(chunk);
   });
-  stream.on("end", () => { if (pending) target.write(mask(pending)); });
 }
 
 const child = spawn(command, args, { stdio: ["ignore", "pipe", "pipe"], env: process.env });
-relay(child.stdout, process.stdout);
-relay(child.stderr, process.stderr);
+collect(child.stdout);
+collect(child.stderr);
 child.on("error", () => { console.error("run-masked: the command could not start."); process.exit(127); });
-child.on("close", (code, signal) => process.exit(code ?? (signal ? 1 : 0)));
+child.on("close", (code, signal) => {
+  process.stdout.write(suppressed ? "run-masked: output suppressed after the safe buffer limit.\n" : mask(chunks.join("")));
+  chunks = [];
+  process.exitCode = code ?? (signal ? 1 : 0);
+});

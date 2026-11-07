@@ -426,6 +426,82 @@ test("named spacing and invisible formats fail source, dist and exact-value scan
   }
 });
 
+test("markup-split amounts fail source, dist and exact-value scans and are masked across chunk boundaries", () => {
+  const data = fixture();
+  const sample = valuesOf(data)[0];
+  const digits = sample.slice(1);
+  const forms = [
+    `${sample[0]}<span>${digits}</span>`,
+    `${sample[0]}<!-- separator -->${digits}`,
+    `<span>${sample[0]}</span><em>${digits}</em>`,
+    `${sample[0]}${[...digits].map((character) => `<b>${character}</b>`).join("")}`,
+    `${sample[0]}${digits[0]}<!-- split --><span>${digits.slice(1)}</span>`,
+    `<span title="quoted > attribute">${sample[0]}</span><span>${digits}</span>`,
+    `${sample[0]}\n<!-- separator\ncontinues -->\n<span>${digits[0]}\n</span><b>${digits.slice(1)}</b>`,
+    `&pound;&lt;span&gt;${digits}&lt;/span&gt;`,
+    `<script>const value = "${sample[0]}<span>${digits}</span>";</script>`,
+    `<template><span>${sample[0]}</span><span>${digits}</span></template>`,
+  ];
+  for (const markup of forms) {
+    const dir = tracked({ "src/page.astro": markup });
+    const source = gate(dir);
+    assert.equal(source.status, 1, "source must reject split markup without private input");
+    assert.match(output(source), /monetary-literal/);
+    writeJson(join(dir, "dist/index.html"), markup);
+    const dist = distRun(dir, {});
+    assert.equal(dist.status, 1, "unpriced dist must reject split markup without private input");
+    assert.match(output(dist), /monetary-literal/);
+    // Force separate writes through tags/comments and any embedded newlines.
+    const chunks = markup.match(/.{1,3}|\n/g) ?? [];
+    const program = `(async () => { for (const chunk of ${JSON.stringify(chunks)}) { process.stdout.write(chunk); await new Promise(r => setTimeout(r, 1)); } console.error(${JSON.stringify(markup)}); process.exitCode = 3; })();`;
+    const masked = spawnSync(process.execPath, [join(scripts, "run-masked.mjs"), process.execPath, "-e", program], { encoding: "utf8", cwd: dir });
+    assert.equal(masked.status, 3);
+    assert.ok(!/\p{Nd}/u.test(output(masked)), "no digit fragment may escape markup/chunk masking");
+    assert.match(output(masked), /\[amount\]/);
+    writeJson(join(dir, PRICES_FILE), data);
+    assert.match(output(gate(dir)), /private-value\s+src\/page\.astro/);
+    assert.match(output(distRun(dir, {})), /price-outside-scope\s+dist\/index\.html/);
+    assert.ok(!leaks(source, valuesOf(data)) && !leaks(dist, valuesOf(data)), "diagnostics never echo an amount");
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("literal scan coverage retains private values in attributes and comments", () => {
+  const sample = amount();
+  for (const markup of [`<div data-rate="${sample}">Example</div>`, `<!-- ${sample} -->`]) {
+    const dir = tracked({ "src/page.astro": markup });
+    assert.equal(gate(dir).status, 1, "markup removal must not hide a literal stored price");
+    writeJson(join(dir, "dist/index.html"), markup);
+    assert.equal(distRun(dir, {}).status, 1);
+    const masked = spawnSync(process.execPath, [join(scripts, "run-masked.mjs"), process.execPath, "-e", `console.log(${JSON.stringify(markup)})`], { encoding: "utf8", cwd: dir });
+    assert.equal(masked.status, 0);
+    assert.ok(!/\p{Nd}/u.test(output(masked)), "hidden markup values must never reach the log");
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("masking combines stdout and stderr before redacting split markup", () => {
+  const sample = amount();
+  const dir = workspace("bs-mask-channels-");
+  const program = `process.stdout.write(${JSON.stringify(sample[0] + "<span>" + sample[1])}); setTimeout(() => { process.stderr.write(${JSON.stringify("<!-- split -->" + sample.slice(2) + "</span>")}); process.exitCode = 3; }, 20);`;
+  const result = spawnSync(process.execPath, [join(scripts, "run-masked.mjs"), process.execPath, "-e", program], { encoding: "utf8", cwd: dir });
+  assert.equal(result.status, 3);
+  assert.ok(!/\p{Nd}/u.test(output(result)), "no price fragments across output channels");
+  assert.match(output(result), /\[amount\]/);
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("oversized command output is suppressed entirely rather than relayed unredacted", () => {
+  const sample = amount();
+  const dir = workspace("bs-mask-limit-");
+  const program = `process.stdout.write(${JSON.stringify(sample)}); process.stdout.write(Buffer.alloc(8 * 1024 * 1024, 'x')); process.stdout.write(${JSON.stringify(sample)}); process.exitCode = 3;`;
+  const result = spawnSync(process.execPath, [join(scripts, "run-masked.mjs"), process.execPath, "-e", program], { encoding: "utf8", cwd: dir });
+  assert.equal(result.status, 3);
+  assert.match(output(result), /output suppressed after the safe buffer limit/);
+  assert.ok(!output(result).includes(sample.slice(1)), "no partial output from an oversized stream is exposed");
+  rmSync(dir, { recursive: true, force: true });
+});
+
 test("the secret writer validates, writes with owner-only access, and enables pricing for later steps", () => {
   const dir = workspace("bs-secret-");
   const data = fixture();

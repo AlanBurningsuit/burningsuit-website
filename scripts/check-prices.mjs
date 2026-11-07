@@ -9,7 +9,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { PRICE_SLOTS, PRICES_FILE, pricesRequested, loadTrainingPrices, trainingPriceCopy, TrainingPricesError } from "../src/lib/training-prices.mjs";
-import { decodePriceEntities } from "./price-text.mjs";
+import { priceScanText } from "./price-text.mjs";
 
 const args = process.argv.slice(2);
 const distMode = args.includes("--dist");
@@ -84,7 +84,7 @@ function checkTracked() {
     if (BINARY.test(path)) continue;
     const text = read(join(root, path));
     if (text === null) continue;
-    const decoded = decodePriceEntities(text);
+    const decoded = priceScanText(text);
     if (values.some((value) => decoded.includes(value))) fail("private-value", path);
     if (LITERAL_EXEMPT.get(path) !== digest(text)) {
       if (MONETARY.test(decoded)) fail("monetary-literal", path);
@@ -109,11 +109,11 @@ function checkDist() {
     if (BINARY.test(path)) continue;
     const text = read(join(dist, path));
     if (text === null) continue;
-    const decoded = decodePriceEntities(text);
+    const decoded = priceScanText(text);
     const inScope = priced && routePaths.has(path);
     if (!inScope && values.some((value) => decoded.includes(value))) fail("price-outside-scope", `dist/${path}`);
     if (!inScope && path.endsWith(".html")) {
-      if (MONETARY.test(decodePriceEntities(scanText(path, text)))) fail("monetary-literal", `dist/${path}`);
+      if (MONETARY.test(priceScanText(scanText(path, text)))) fail("monetary-literal", `dist/${path}`);
       if (/\bex VAT\b|founding rate/i.test(decoded)) fail("price-wording-outside-scope", `dist/${path}`);
     }
   }
