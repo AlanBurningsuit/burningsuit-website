@@ -7,12 +7,19 @@ import TitleBand from "../../components/TitleBand.astro";
 import EnquiryForm from "../../components/EnquiryForm.astro";
 import StudyLinks from "../../components/StudyLinks.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
+import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/home.css";
 import "../../styles/training.css";
 
 const { email } = ENQUIRY;
-const price = "Price on request";
-const privateFacts = ["Private, for your team", "On site or online", "Up to 8 people", price];
+// Priced only when SHOW_TRAINING_PRICES=true; coaching, the private 101 and every unpriced fact keep "Price on request".
+const priced = trainingPriceCopy(loadTrainingPrices());
+const price = PRICE_ON_REQUEST;
+// Priced output drops "On site or online": the price item already names both.
+const privateFacts = (course: string) => priced
+  ? ["Private, for your team", "Up to 8 people", course === "Power BI fundamentals" ? priced.trainingFundamentals : priced.specialists[course as keyof typeof priced.specialists]]
+  : ["Private, for your team", "On site or online", "Up to 8 people", price];
+const description = `Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each.${priced ? "" : " Price on request."}`;
 const specialists = [
   { name: "DAX fundamentals", length: "1 day" },
   { name: "Data modelling", length: "1 day" },
@@ -21,12 +28,13 @@ const specialists = [
 ---
 <BaseLayout
   title="Power BI courses | burningsuit"
-  description="Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each. Price on request."
+  description={description}
   placeholder={false}
 >
   <TitleBand heading={{ before: "Power BI ", em: "courses" }} />
   <div class="training-intro wrap">
     <p>If you're new to Power BI, start with Power BI fundamentals. If you've already built a report, Power BI with AI agents 101 shows you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.</p>
+    {priced && <p>{priced.trainingIntro}</p>}
   </div>
 
   <section class="starting-points" aria-labelledby="start-points-title">
@@ -40,7 +48,7 @@ const specialists = [
           <div class="deciding">
             <ul class="facts dot-list">
               <li>2 days</li>
-              {privateFacts.map((fact) => <li>{fact}</li>)}
+              {privateFacts("Power BI fundamentals").map((fact) => <li>{fact}</li>)}
             </ul>
             <p class="prereq">No Power BI experience needed.</p>
           </div>
@@ -57,6 +65,7 @@ const specialists = [
             <ul class="facts dot-list">
               <li>Half a day, live online</li>
               <li><span class="fact-label">Public course:</span> <time datetime="2027-01-20">Wednesday 20 January 2027</time>, <span class="together">9:30am to 12:30pm UK time</span>, <span class="together">4 to 8 people</span></li>
+              {priced && <li>{priced.publicSeat}</li>}
               <li>Also private, for your team</li>
               <li>{price}</li>
             </ul>
@@ -83,7 +92,7 @@ const specialists = [
             <h3>{name}</h3>
             <ul class="facts dot-list">
               <li>{length}</li>
-              {privateFacts.map((fact) => <li>{fact}</li>)}
+              {privateFacts(name).map((fact) => <li>{fact}</li>)}
             </ul>
             {name === "DAX deep dive" && <StudyLinks studies={["dax-deep-dive"]} />}
           </li>

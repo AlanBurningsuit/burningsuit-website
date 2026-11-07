@@ -6,10 +6,13 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import TitleBand from "../../components/TitleBand.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
+import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/course.css";
 
 const { email } = ENQUIRY;
-const price = "Price on request";
+// Seat prices show only when SHOW_TRAINING_PRICES=true. The private course has no price slot on this page; its email ask stays.
+const priced = trainingPriceCopy(loadTrainingPrices());
+const price = PRICE_ON_REQUEST;
 const bookingStatus = "Booking isn't open yet.";
 ---
 <BaseLayout
@@ -32,7 +35,7 @@ const bookingStatus = "Booking isn't open yet.";
         <li>Half a day, live online</li>
         <li><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
         <li>4 to 8 people</li>
-        <li>{price}</li>
+        {priced ? priced.seatFacts.map((fact) => <li>{fact}</li>) : <li>{price}</li>}
       </ul>
       <div class="booking">
         <button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button>
@@ -94,7 +97,7 @@ const bookingStatus = "Booking isn't open yet.";
     <div class="wrap closing-inner">
       <div>
         <h2 id="book-title">Book a seat</h2>
-        <p class="book-facts"><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time, live online. 4 to 8 people. {price}.</p>
+        <p class="book-facts"><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time, live online. 4 to 8 people. {priced ? priced.seatBookFacts : `${price}.`}</p>
       </div>
       <div>
         <div class="booking">

@@ -2,6 +2,7 @@ import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
+import { priced, copy, expectItems, expectText, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
 
 const course = "/training/agentic-development-for-power-bi/";
 
@@ -26,7 +27,7 @@ for (const route of ["/", course]) {
     await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Work", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");
     expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
-    expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
+    await expectAmountsOnlyWhenPriced(page, `static page ${route}`);
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
     await page.keyboard.press("Enter");
@@ -65,8 +66,9 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".do-steps h3")).toHaveText(["Get your bearings.", "Understand a report you didn't build.", "Document its calculations.", "Build one new calculation and check it."]);
   await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toBeVisible();
   await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText(["Wednesday 20 January 2027", "Wednesday 20 January 2027"]);
-  await expect(page.locator(".run-facts > li")).toHaveText(["Half a day, live online", "Wednesday 20 January 2027, 9:30am to 12:30pm UK time", "4 to 8 people", "Price on request"]);
-  await expect(page.locator(".book-facts")).toContainText("Price on request.");
+  // Seat rates (priced) or Price on request (unpriced); the private course has no price item on this page.
+  await expectItems(page.locator(".run-facts > li"), ["Half a day, live online", "Wednesday 20 January 2027, 9:30am to 12:30pm UK time", "4 to 8 people", ...(copy ? copy.seatFacts : [priceOnRequest])], "101 facts");
+  await expectText(page.locator(".book-facts"), `Wednesday 20 January 2027, 9:30am to 12:30pm UK time, live online. 4 to 8 people. ${copy ? copy.seatBookFacts : "Price on request."}`, "101 booking facts");
 
   // Paid booking is closed: both controls are unavailable, explained and lead nowhere.
   const book = page.getByRole("button", { name: "Book a seat" });
@@ -116,7 +118,9 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
         - heading "Build one new calculation and check it." [level=3]
         - paragraph
   `);
-  await expect(page.locator(".run-facts")).toMatchAriaSnapshot(`
+  // Priced facts carry amounts, which an ARIA snapshot would print on failure; the priced list is checked by role and in-memory text.
+  if (priced) await expect(page.locator(".run-facts").getByRole("listitem")).toHaveCount(5);
+  else await expectAriaWithoutAmounts(page.locator(".run-facts"), `
     - list:
       - listitem: Half a day, live online
       - listitem:
@@ -126,7 +130,9 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
       - listitem: Price on request
   `);
   const text = await page.locator("main").innerText();
-  for (const absent of [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, /refund/i, /checklist/i, /house-rules template/i, /setup notes/i, /founding rate/i]) expect(text).not.toMatch(absent);
+  // "Founding rate" is the approved wording for the priced seat facts only.
+  expectNone(text, [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, /refund/i, /checklist/i, /house-rules template/i, /setup notes/i, ...(priced ? [] : [/founding rate/i])], "101 text");
+  if (priced) expect(/founding rate/.test(text) && !/limited|save|early bird|discount|countdown/i.test(text), "101 states the founding rate as a plain fact").toBe(true);
   await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a recording of the morning, along with the teaching project and clean copies, so you can work through it again.");
 });
 
@@ -204,10 +210,14 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.locator(".introduction strong")).toHaveText("someone");
   const courses = page.getByRole("article");
   await expect(courses.getByRole("heading", { level: 3 })).toHaveText(["Power BI fundamentals", "Power BI with AI agents 101"]);
+  // Priced output replaces "On site or online" and the price on request with one self-contained price item, and adds the public seat rates.
+  const homeFacts: Record<string, string[]> = {
+    "Power BI fundamentals": copy ? ["2 days", "Private, for your team", copy.homeFundamentals] : ["2 days", "Private, for your team", "On site or online", priceOnRequest],
+    "Power BI with AI agents 101": ["Half a day, online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time", ...(copy ? [copy.publicSeat] : []), "Also private, for your team", priceOnRequest],
+  };
   for (const [name, ask] of [["Power BI fundamentals", "Ask about dates"], ["Power BI with AI agents 101", "Ask about a seat"]]) {
     const entry = page.getByRole("article", { name });
-    await expect(entry.locator(".facts > li")).toHaveCount(4);
-    await expect(entry.locator(".facts > li").last()).toHaveText("Price on request");
+    await expectItems(entry.locator(".facts > li"), homeFacts[name], `home ${name} facts`);
     await expect(entry.getByRole("link", { name: "Read the course outline" })).toHaveCount(1);
     await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", "#contact");
   }
@@ -246,10 +256,10 @@ test("homepage keeps the approved sections, order and starting points", async ({
   const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   // Wide screens: the dark title band holds only the title, across the full width, and the lede; the introduction then
   // opens the daylight sheet beside the portrait, and the starting points follow below it.
-  let intro = await box(".introduction"), title = await box(".title-band h1"), copy = await box(".intro-copy"), list = await box(".courses"), photo = await box(".alan-photo");
-  expect(title.width).toBeGreaterThan(copy.width + photo.width);
-  expect(Math.min(copy.y, photo.y)).toBeGreaterThanOrEqual((await box(".title-band")).y + (await box(".title-band")).height);
-  expect(photo.x).toBeGreaterThanOrEqual(copy.x + copy.width);
+  let intro = await box(".introduction"), title = await box(".title-band h1"), introCopy = await box(".intro-copy"), list = await box(".courses"), photo = await box(".alan-photo");
+  expect(title.width).toBeGreaterThan(introCopy.width + photo.width);
+  expect(Math.min(introCopy.y, photo.y)).toBeGreaterThanOrEqual((await box(".title-band")).y + (await box(".title-band")).height);
+  expect(photo.x).toBeGreaterThanOrEqual(introCopy.x + introCopy.width);
   expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
   expect(await page.locator(".title-band").evaluate((el) => getComputedStyle(el.closest(".dark")!).backgroundColor)).toBe(await bg("body"));
   expect(await page.locator(".introduction").evaluate((el) => el.closest(".dark"))).toBeNull();
@@ -262,11 +272,11 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect((await box(".specialists")).y).toBeGreaterThanOrEqual(Math.max(fundamentals.y + fundamentals.height, agents.y + agents.height));
 
   await page.setViewportSize({ width: 390, height: 844 });
-  title = await box(".title-band"); copy = await box(".intro-copy"); list = await box(".courses"); photo = await box(".alan-photo");
+  title = await box(".title-band"); introCopy = await box(".intro-copy"); list = await box(".courses"); photo = await box(".alan-photo");
   // Narrow screens: the title band, the portrait, then the introduction, then the courses.
   expect(photo.y).toBeGreaterThanOrEqual(title.y + title.height);
-  expect(copy.y).toBeGreaterThanOrEqual(photo.y + photo.height);
-  expect(list.y).toBeGreaterThanOrEqual(copy.y + copy.height);
+  expect(introCopy.y).toBeGreaterThanOrEqual(photo.y + photo.height);
+  expect(list.y).toBeGreaterThanOrEqual(introCopy.y + introCopy.height);
   for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
 });
 

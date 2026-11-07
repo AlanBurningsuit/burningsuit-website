@@ -1,9 +1,11 @@
 // Audits the existing build with default mobile emulation and throttling.
+// BURNINGSUIT_LH_URL (for example http://127.0.0.1:4651) audits an already-running isolated preview instead of starting the default static server.
+const base = process.env.BURNINGSUIT_LH_URL?.replace(/\/$/, "");
 module.exports = {
   ci: {
     collect: {
-      staticDistDir: "./dist",
-      url: require("./scripts/lighthouse-routes.cjs").map((path) => `http://localhost${path}`),
+      ...(base ? {} : { staticDistDir: "./dist" }),
+      url: require("./scripts/lighthouse-routes.cjs").map((path) => `${base ?? "http://localhost"}${path}`),
       numberOfRuns: 3,
       // Audits never contact Umami, as on desktop.
       settings: { formFactor: "mobile", blockedUrlPatterns: ["*umami.is*"] },

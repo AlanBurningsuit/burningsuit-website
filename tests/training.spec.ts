@@ -2,12 +2,15 @@ import { type Page } from "@playwright/test";
 import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
+import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
 
 const route = "/training/";
 const course101 = "/training/agentic-development-for-power-bi/";
 const fundamentals = "/training/power-bi-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
-const privateFacts = ["Private, for your team", "On site or online", "Up to 8 people", "Price on request"];
+// Priced output omits "On site or online": the price item names both delivery methods. Unpriced output keeps the approved facts.
+const privateFacts = (price: string) => priced ? ["Private, for your team", "Up to 8 people", price] : ["Private, for your team", "On site or online", "Up to 8 people", priceOnRequest];
+const baseDescription = "Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each.";
 
 const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 
@@ -23,7 +26,7 @@ test("training chooser stays static, private and CSP-clean", async ({ page, base
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI courses | burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each. Price on request.");
+  await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "training description");
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], main img`)).toHaveCount(0);
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
@@ -31,7 +34,7 @@ test("training chooser stays static, private and CSP-clean", async ({ page, base
   await expect(page.locator("form")).toHaveCount(1);
   await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Work", "About", "Contact"]);
   await expect(page.locator("nav a[aria-current]")).toHaveText("Training");
-  expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
+  await expectAmountsOnlyWhenPriced(page, "training chooser");
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -42,14 +45,15 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(page.locator("h1")).toHaveText("Power BI courses");
   await expect(page.locator("h1 .em")).toHaveText("courses");
   // Revision 3 omits the opening fit question: the introduction is the only paragraph before the starting points.
-  await expect(page.locator(".training-intro > p")).toHaveText("If you're new to Power BI, start with Power BI fundamentals. If you've already built a report, Power BI with AI agents 101 shows you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.");
+  // Priced output adds one plain paragraph: private course prices are per booking, up to 8 people, travel included.
+  await expect(page.locator(".training-intro > p")).toHaveText(priced ? ["If you're new to Power BI, start with Power BI fundamentals. If you've already built a report, Power BI with AI agents 101 shows you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did.", copy!.trainingIntro] : ["If you're new to Power BI, start with Power BI fundamentals. If you've already built a report, Power BI with AI agents 101 shows you how to start working with an AI agent: a tool that reads a report's files, makes the changes you ask for and shows you what it did."]);
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Two places to start", "Want to dive deeper into Power BI?", "Want to learn on your own work?", "Who's teaching", "Ask about a course"]);
 
   const entries = page.getByRole("article");
   await expect(entries.getByRole("heading", { level: 3 })).toHaveText(["Power BI fundamentals", "Power BI with AI agents 101"]);
   const fund = page.getByRole("article", { name: "Power BI fundamentals" });
   await expect(fund.locator("p")).toHaveText(["New to Power BI?", "Learn to build an interactive report, prepare the data behind it and share it with the people who need it.", "No Power BI experience needed."]);
-  await expect(fund.locator(".facts > li")).toHaveText(["2 days", ...privateFacts]);
+  await expectItems(fund.locator(".facts > li"), ["2 days", ...privateFacts(copy?.trainingFundamentals ?? "")], "training fundamentals facts");
   // The course name links to its outline too.
   await expect(fund.getByRole("link")).toHaveText(["Power BI fundamentals", "Read the course outline", "Ask about dates"]);
   await expect(fund.getByRole("link", { name: "Power BI fundamentals" })).toHaveAttribute("href", fundamentals);
@@ -64,7 +68,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
     "Want this for your team? Ask about a private course.",
   ]);
   // The public group size is bound to the public date; private runs state no size or format of their own.
-  await expect(agents.locator(".facts > li")).toHaveText(["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", "Also private, for your team", "Price on request"]);
+  await expectItems(agents.locator(".facts > li"), ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", ...(copy ? [copy.publicSeat] : []), "Also private, for your team", priceOnRequest], "training 101 facts");
   await expect(agents.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
   // The 101 keeps booking on its own page: the outline link and the private-course email only, no form route.
   await expect(agents.getByRole("link")).toHaveText(["Power BI with AI agents 101", "Read the course outline", "Ask about a private course."]);
@@ -74,7 +78,9 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
 
   const rows = page.locator(".specialist-courses .specialist-rows > li");
   await expect(rows.getByRole("heading", { level: 3 })).toHaveText(["DAX fundamentals", "Data modelling", "DAX deep dive"]);
-  for (const [index, length] of ["1 day", "1 day", "2 days"].entries()) await expect(rows.nth(index).locator(".facts > li")).toHaveText([length, ...privateFacts]);
+  for (const [index, [name, length]] of [["DAX fundamentals", "1 day"], ["Data modelling", "1 day"], ["DAX deep dive", "2 days"]].entries()) {
+    await expectItems(rows.nth(index).locator(".facts > li"), [length, ...privateFacts(copy?.specialists[name as keyof typeof copy.specialists] ?? "")], `training ${name} facts`);
+  }
   await expect(rows.locator("p:not(.study-evidence-label)")).toHaveCount(0);
   await expect(rows.locator("a")).toHaveText(["DAX deep dive for a local-authority team"]);
   await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams on calculations and table design.");
@@ -93,7 +99,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(coaching.locator(".specialists-head p")).toHaveText("Coaching is for 1 to 3 people from the same organisation, ideally the same team, who want to learn Power BI on the work they actually do. I write a syllabus for the people taking part, and we work on your own data, or on example data I build to look like yours, with the problems you're stuck on.");
   await expect(coaching.locator(".specialist-rows > li h3")).toHaveText(["Power BI coaching"]);
   await expect(coaching.locator(".specialist-rows").locator("a, p")).toHaveCount(0);
-  await expect(coaching.locator(".specialist-rows .facts > li")).toHaveText(["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", "Price on request"]);
+  await expectItems(coaching.locator(".specialist-rows .facts > li"), ["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", "Price on request"], "coaching facts remain unpriced");
   const askCoaching = coaching.getByRole("link", { name: "Ask about coaching", exact: true });
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");
@@ -111,13 +117,24 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", course101, course101, email, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
   const text = await page.locator("main").innerText();
   // Developing and Claude courses stay off; no arrows, seats, booking or promises the copy doesn't make.
-  for (const absent of [/Not sure where to start/i, /hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, /seat/i, /book/i, /\[|\]/, /to confirm/i, /coming soon/i]) expect(text).not.toMatch(absent);
+  // Priced output states the 101's per-seat rates, so "seat" is allowed there; booking wording stays absent in both.
+  // "per booking" is the approved price unit in priced output; any other booking wording stays absent.
+  expectNone(text.replaceAll("per booking", ""), [/Not sure where to start/i, /hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, ...(priced ? [] : [/seat/i]), /book/i, /\[|\]/, /to confirm/i, /coming soon/i], "training text");
   await expect(page.locator("blockquote, .to-confirm, .proof, button:not(.send)")).toHaveCount(0);
 });
 
 test("training chooser structure reads in order for assistive technology", async ({ page }) => {
   await page.goto(route);
-  await expect(page.locator(".specialist-courses .specialist-rows")).toMatchAriaSnapshot(`
+  // Priced output carries amounts, which an ARIA snapshot would print on failure: its structure is checked by role instead, and its text by in-memory comparison above.
+  if (priced) {
+    await expect(page.locator(".specialist-courses .specialist-rows > li")).toHaveCount(3);
+    for (const row of await page.locator(".specialist-courses .specialist-rows > li").all()) {
+      await expect(row.getByRole("heading", { level: 3 })).toHaveCount(1);
+      await expect(row.getByRole("list").first().getByRole("listitem")).toHaveCount(4);
+    }
+    await expect(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts").getByRole("listitem")).toHaveCount(5);
+  }
+  if (!priced) await expectAriaWithoutAmounts(page.locator(".specialist-courses .specialist-rows"), `
     - list:
       - listitem:
         - heading "DAX fundamentals" [level=3]
@@ -159,7 +176,7 @@ test("training chooser structure reads in order for assistive technology", async
           - listitem: Online, or on site where it suits
           - listitem: Price on request
   `);
-  await expect(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts")).toMatchAriaSnapshot(`
+  if (!priced) await expectAriaWithoutAmounts(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts"), `
     - list:
       - listitem: Half a day, live online
       - listitem:

@@ -2,6 +2,7 @@ import { type Page } from "@playwright/test";
 import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
+import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
 
 const route = "/training/power-bi-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
@@ -21,7 +22,8 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI fundamentals | burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.");
+  const baseDescription = "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.";
+  await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "fundamentals description");
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
   // The only image is the parts-of-Power-BI diagram: described by its alt, captioned, with a text version a keyboard can open.
@@ -36,12 +38,14 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   await expect(page.locator("form")).toHaveCount(1);
   await expect(page.locator("nav a[aria-current]:not(.nav-menu a)")).toHaveText("Training");
   await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("Power BI fundamentals");
-  // Private only: price on request everywhere, no public run, booking or payment route.
+  // Private only: no public run, booking or payment route. Unpriced output says Price on request once; priced output shows the private rates and never that phrase.
   const body = await page.locator("body").innerText();
-  expect(body).not.toMatch(/[£$€]\s*\d|\d\s*(GBP|ex VAT)/i);
-  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(1);
+  await expectAmountsOnlyWhenPriced(page, "fundamentals");
+  if (!priced) expectNone(body, [/\d\s*(GBP|ex VAT)/i], "fundamentals unpriced");
+  await expect(page.getByText(priceOnRequest, { exact: true })).toHaveCount(priced ? 0 : 1);
   await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
-  for (const absent of [/seat/i, /book/i, /public/i, /free hour/i, /Windows/i, /setup check/i, /\[|\]|\{|\}/, /founding/i]) expect(body).not.toMatch(absent);
+  // "per booking" is the approved price unit; any other booking wording stays absent.
+  expectNone(body.replaceAll("per booking", ""), [/seat/i, /book/i, /public/i, /free hour/i, /Windows/i, /setup check/i, /\[|\]|\{|\}/, /founding/i], "fundamentals text");
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -55,7 +59,12 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await expect(page.locator(".course-fit")).toHaveText("Already building reports and looking for a day on calculations or table design? Compare DAX fundamentals and Data modelling.");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll be able to do", "The two days", "What to arrange", "Ask about dates"]);
 
-  await expect(page.getByRole("complementary", { name: "Course facts" }).locator(".run-facts")).toMatchAriaSnapshot(`
+  // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
+  const facts = page.getByRole("complementary", { name: "Course facts" }).locator(".run-facts");
+  await expectItems(page.locator(".course-run .run-facts > li"), copy
+    ? ["2 days", "Private, for your team", "Up to 8 people", copy.fundamentalsDetail, "9:30am to 4pm each day"]
+    : ["2 days", "Private, for your team", "On site or online", "Up to 8 people", priceOnRequest, "9:30am to 4pm each day"], "fundamentals facts");
+  if (!priced) await expectAriaWithoutAmounts(facts, `
     - list:
       - listitem: 2 days
       - listitem: Private, for your team
