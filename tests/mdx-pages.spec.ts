@@ -11,7 +11,7 @@ const studyPaths = ["/work/dax-deep-dive/", "/work/contact-centre/", "/work/indi
 
 test("Work groups only the four active studies in the approved offer order", async ({ page }) => {
   await page.goto("/work/");
-  await expect(page.locator("h1")).toHaveText("Work");
+  await expect(page.locator("h1")).toHaveText("Case studies");
   await expect(page.locator("#cases")).toHaveCount(1);
   await expect(page.locator("h2")).toHaveText(["Courses", "Power BI coaching", "Consultancy", "Not sure which fits?"]);
   // The page's own words: a standfirst, the anonymity line, one line per offer and a way to ask.
@@ -19,11 +19,11 @@ test("Work groups only the four active studies in the approved offer order", asy
   await expect(page.locator(".work-intro")).toHaveText("Every example here is anonymous.");
   await expect(page.locator(".work-group-lead p")).toHaveText(["A course teaches a group from prepared teaching files.", "For 1 to 3 people from the same organisation, learning Power BI on the work they actually do.", "I work alongside your team on your own reports and models, so they understand what we build."]);
   await expect(page.locator(".work-next a")).toHaveAttribute("href", "/contact/");
-  await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Work");
+  await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Case studies");
   expect(await page.locator(".work-entries a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual(studyPaths);
   await expect(page.locator(".work-entries p")).toHaveText(["A local-authority team", "A contact-centre team lead", "An individual learner developing Power BI reporting", "A UK university's sustainability team"]);
   await expect(page.locator(".work-entries h3")).toHaveText(["DAX deep dive for a local-authority team", "Coaching a contact-centre team lead", "Individual Power BI coaching", "Their own method, in a model they can check."]);
-  await expect(page.locator("nav a:not(.nav-menu a)")).toHaveText(["Training", "Consultancy", "Work", "About", "Contact"]);
+  await expect(page.locator("nav a:not(.nav-menu a)")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
   for (const path of reserved404Routes) await expect(page.locator(`a[href="/${path}/"]`)).toHaveCount(0);
   for (const link of await page.locator(".work-group h2 a").all()) expect(await link.evaluate(el => getComputedStyle(el).textDecorationLine)).toContain("underline");
 });
@@ -42,13 +42,13 @@ test("contextual and footer links lead to the matching evidence and restored ess
     expect(await page.locator(`${selector} .study-links a`).evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual(expected);
     await expect(page.locator(`${selector} .study-evidence-label`)).toHaveText(expected.length === 1 ? "Case study" : "Case studies");
     await expect(page.locator(`${selector} .study-links a`)).toHaveText(expected.map(href => headings[href] ?? ""));
-    await expect(page.locator("main").getByRole("link", { name: "Work", exact: true })).toHaveAttribute("href", "/work/");
+    await expect(page.locator("main").getByRole("link", { name: "Case studies", exact: true })).toHaveAttribute("href", "/work/");
   }
   await page.goto("/about/");
   await expect(page.locator("#human").getByRole("link", { name: "We're all middle management now", exact: true })).toHaveAttribute("href", essay);
   for (const route of ["/", "/work/", essay, archive]) {
     await page.goto(route);
-    await expect(page.locator("footer").getByRole("link", { name: "Work", exact: true })).toHaveAttribute("href", "/work/");
+    await expect(page.locator("footer").getByRole("link", { name: "Case studies", exact: true })).toHaveAttribute("href", "/work/");
     await expect(page.locator("footer").getByRole("link", { name: "Essay: We're all middle management now", exact: true })).toHaveAttribute("href", essay);
   }
 });

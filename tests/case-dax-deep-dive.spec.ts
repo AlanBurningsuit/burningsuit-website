@@ -28,7 +28,7 @@ test("case study stays static, private and CSP-clean, with no form, embed, image
   expect(bespokeRoutes).not.toContain("work/dax-deep-dive");
   expect(Object.values(redirects)).not.toContain(route);
   // A study marks Work as its section, not as the current page.
-  await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Work");
+  await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Case studies");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);

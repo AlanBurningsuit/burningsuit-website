@@ -24,7 +24,7 @@ for (const route of ["/", course]) {
     await expectIndexable(page);
     await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
     await expect(page.locator("form")).toHaveCount(route === "/" ? 1 : 0);
-    await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Work", "About", "Contact"]);
+    await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");
     expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
     await expectAmountsOnlyWhenPriced(page, `static page ${route}`);
@@ -84,8 +84,8 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   // The priced build adds the two Stripe booking links, in reading order beside each "Book a seat".
   const { SEAT_BOOKING_URL } = await import("../src/config/booking.mjs");
   expect(mainLinks).toEqual(priced
-    ? [SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]
-    : ["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "mailto:alan@burningsuit.co.uk"]);
+    ? ["#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]
+    : ["#need-title", "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "mailto:alan@burningsuit.co.uk"]);
 
   // The setup facts are settled (Alan, 7 Nov 2026): no open "to confirm" gaps remain.
   const needs = page.locator(".need-list > li");
@@ -189,8 +189,8 @@ test("course discovery, facts and email routes work without JavaScript", async (
   }
   const { SEAT_BOOKING_URL: booking } = await import("../src/config/booking.mjs");
   expect(reached).toEqual(priced
-    ? [booking, "mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/"]
-    : ["mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/"]);
+    ? ["#need-title", booking, "mailto:alan@burningsuit.co.uk", "SUMMARY"]
+    : ["#need-title", "mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/"]);
   // The agent diagram is captioned, with an alt that leads with the main relationship.
   await expect(page.locator("main figure.course-figure img")).toHaveAttribute("alt", /^An agent combines an AI model running elsewhere/);
   await context.close();

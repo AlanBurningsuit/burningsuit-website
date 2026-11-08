@@ -18,6 +18,9 @@ p + p.course-fit { margin-top: 1.4rem; }
 .run-facts { list-style: none; margin: 0; padding: 0; font: 400 1.05rem / var(--lh-relaxed) var(--ff-note); }
 .run-facts li { padding-block: 6px; }
 
+/* The 101's short requirements line, read before its first booking button; the full list is under What you'll need. */
+.before-book { margin-top: 20px; padding-top: 16px; border-top: var(--bw-hair) solid var(--rule); font-size: .96rem; }
+.before-book a { font-weight: 600; }
 .booking { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-top: 24px; }
 /* Booking uses the shared .button (app.css); paid booking is closed today, so it shows the disabled state. */
 .booking-status { font: 400 .98rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }

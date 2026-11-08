@@ -38,6 +38,7 @@ const bookingStatus = "Booking isn't open yet.";
         <li>4 to 8 people</li>
         {priced ? priced.seatFacts.map((fact) => <li>{fact}</li>) : <li>{price}</li>}
       </ul>
+      <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
       <div class="booking">
         {priced
           ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>

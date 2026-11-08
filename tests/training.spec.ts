@@ -34,7 +34,7 @@ test("training chooser stays static, private and CSP-clean", async ({ page, base
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
   for (const directive of ["default-src 'none'", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
   await expect(page.locator("form")).toHaveCount(1);
-  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Work", "About", "Contact"]);
+  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
   await expect(page.locator("nav a[aria-current]")).toHaveText("Training");
   await expectAmountsOnlyWhenPriced(page, "training chooser");
   expect(errors).toEqual([]);

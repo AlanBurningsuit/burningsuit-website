@@ -24,7 +24,7 @@ test("carbon-footprint study stays static, private and CSP-clean, with no form, 
   await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], form, iframe, embed, object, main img`)).toHaveCount(0);
   expect(pages["work/carbon-footprint"]).toEqual([]);
   // A study marks Work as its section, not as the current page.
-  await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Work");
+  await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Case studies");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
