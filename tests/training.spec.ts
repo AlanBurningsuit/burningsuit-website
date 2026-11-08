@@ -92,7 +92,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(rows.nth(0).locator(".study-evidence")).toHaveCount(0);
   await expect(rows.nth(1).getByRole("link", { name: "DAX deep dive", exact: true })).toHaveAttribute("href", deepDive);
   await expect(rows.nth(1).getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", deepDive);
-  await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams on calculations.");
+  await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams on calculations. The DAX deep dive's first day covers the same topics as DAX fundamentals, and its second day goes further.");
   const ask = page.getByRole("link", { name: "Ask about one of these" });
   await expect(ask).toHaveAttribute("href", "#contact");
   await expect(ask).toHaveAccessibleDescription("Name the course in your message.");
@@ -118,7 +118,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(page.locator(".starting-points figure.pull-quote figcaption")).toHaveText("Corporate insights, a UK police force");
   expect(await page.locator("main > section").evaluateAll((all) => all.map((el) => el.className.split(" ")[0]))).toEqual(["starting-points", "specialist-courses", "coaching", "training-teacher", "contact"]);
 
-  await expect(page.locator(".teacher-note p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI, and about a decade in software delivery before that. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course.");
+  await expect(page.locator(".teacher-note p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI, and about a decade in software delivery before that. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course. I've taught Power BI fundamentals to about 300 people.");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   await expect(page.locator(".enquiry-intro p")).toHaveText("If you know which course you want, name it in your message. If you don't, tell me what you use Power BI for now and I'll suggest where to start.");

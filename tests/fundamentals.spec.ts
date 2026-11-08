@@ -120,7 +120,7 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   expect(await steps.nth(4).evaluate((li) => (li.parentElement as HTMLOListElement).start)).toBe(5);
 
   // One teacher line below the spine; biography and philosophy link out.
-  await expect(page.locator(".teacher-line p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
+  await expect(page.locator(".teacher-line p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself. I've taught this course to about 300 people.");
   await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
   await expect(page.getByRole("heading", { name: /who's teaching/i })).toHaveCount(0);
 

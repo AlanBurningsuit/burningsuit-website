@@ -84,8 +84,8 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   // The priced build adds the two Stripe booking links, in reading order beside each "Book a seat".
   const { SEAT_BOOKING_URL } = await import("../src/config/booking.mjs");
   expect(mainLinks).toEqual(priced
-    ? [SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]
-    : ["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
+    ? [SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]
+    : ["mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "mailto:alan@burningsuit.co.uk"]);
 
   // The setup facts are settled (Alan, 7 Nov 2026): no open "to confirm" gaps remain.
   const needs = page.locator(".need-list > li");
@@ -133,7 +133,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   // "Founding rate" is the approved wording for the priced seat facts only.
   expectNone(text, [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, ...(priced ? [] : [/refund/i]), /checklist/i, /house-rules template/i, /setup notes/i, ...(priced ? [] : [/founding rate/i])], "101 text");
   if (priced) expect(/founding rate/.test(text) && !/limited|save|early bird|discount|countdown/i.test(text), "101 states the founding rate as a plain fact").toBe(true);
-  await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a video recording of the morning, along with the teaching project and clean copies, so you can work through it again.");
+  await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a video recording of the morning, along with the teaching project and clean copies, so you can work through it again. How recordings work.");
 });
 
 test("the 101 puts facts beside the introduction on wide screens and after the prerequisite on narrow ones", async ({ page }) => {
@@ -190,7 +190,7 @@ test("course discovery, facts and email routes work without JavaScript", async (
   const { SEAT_BOOKING_URL: booking } = await import("../src/config/booking.mjs");
   expect(reached).toEqual(priced
     ? [booking, "mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/"]
-    : ["mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/", "mailto:alan@burningsuit.co.uk"]);
+    : ["mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/"]);
   // The agent diagram is captioned, with an alt that leads with the main relationship.
   await expect(page.locator("main figure.course-figure img")).toHaveAttribute("alt", /^An agent combines an AI model running elsewhere/);
   await context.close();

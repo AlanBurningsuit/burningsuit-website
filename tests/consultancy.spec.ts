@@ -137,7 +137,7 @@ test("consultancy links go to the free call page, the AI band, the courses and A
   await expect(page.getByRole("link", { name: "That's what Power BI coaching is for." })).toHaveAttribute("href", "/training/#coaching");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([call, "#ai", "/training/", "/training/#coaching", "/work/carbon-footprint/", "/work/", call, call, "/about/", call, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
+  expect(mainLinks).toEqual([call, "#ai", "/training/", "/training/#coaching", "/work/carbon-footprint/", "/work/", call, "/writing/we-are-all-middle-management-now/", call, "/about/", call, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
 });
 
 test("consultancy enquiry form is labelled, plain and has nothing preselected", async ({ page }) => {
@@ -172,11 +172,11 @@ test("consultancy page works without JavaScript, from keyboard and from a legacy
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 11; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
   }
-  expect(reached).toEqual([call, "#ai", "/training/", "/training/#coaching", "/work/carbon-footprint/", "/work/", call, call, "/about/", call]);
+  expect(reached).toEqual([call, "#ai", "/training/", "/training/#coaching", "/work/carbon-footprint/", "/work/", call, "/writing/we-are-all-middle-management-now/", call, "/about/", call]);
   // The step heading link shows a visible focus ring.
   await page.locator(".do-steps h3 a").focus();
   expect(await page.locator(".do-steps h3 a").evaluate((el) => parseFloat(getComputedStyle(el).outlineWidth))).toBeGreaterThanOrEqual(2);
