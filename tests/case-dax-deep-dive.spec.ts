@@ -4,7 +4,8 @@ import { bespokeRoutes, pages, redirects } from "../src/config/compatibility.mjs
 
 const route = "/work/dax-deep-dive/";
 const primary = "Ask about the DAX deep dive";
-const secondary = "See the DAX deep dive on Training";
+const secondary = "Read the DAX deep dive course outline";
+const course = "/training/dax-deep-dive/";
 const quote = "\"Alan was highly praised for his clear explanations, engaging teaching style, and ability to make complex DAX concepts understandable.\"";
 
 test("case study stays static, private and CSP-clean, with no form, embed, image or script", async ({ page, baseURL }) => {
@@ -54,41 +55,44 @@ test("case study tells the approved story in order, anonymously", async ({ page 
   await expect(panel.locator("img, svg, meter, progress, [role=img]")).toHaveCount(0);
   expect(await panel.evaluate((el) => [getComputedStyle(el).backgroundColor, getComputedStyle(el).boxShadow, getComputedStyle(el).borderLeftStyle])).toEqual(["rgba(0, 0, 0, 0)", "none", "solid"]);
   await expect(page.locator(".case-limits")).toHaveText("This shows how the two days ran and how people said they found them. It doesn't show what changed in their work afterwards.");
-  await expect(page.locator(".case-ask .raised-copy > p").first()).toHaveText("The course's current length, delivery and group size are on Training.");
+  await expect(page.locator(".case-ask .raised-copy > p").first()).toHaveText("What the course covers today, with its length, delivery and group size, is on its own page.");
   const text = await page.locator("main").innerText();
   for (const absent of [/★|☆|⭐/, /\[|\]/, /—/, /[£$€]\s*\d/, /february|feb\b/i, /101/, /free call/i, /consultancy/i]) expect(text).not.toMatch(absent);
 });
 
-test("the enquiry action and the route back to Training are ordinary links to existing anchors", async ({ page }) => {
+test("the enquiry action and the route to the course page are ordinary links to existing anchors", async ({ page }) => {
   await page.goto(route);
   const ask = page.getByRole("link", { name: primary, exact: true });
-  await expect(ask).toHaveAttribute("href", "/training/#contact");
+  await expect(ask).toHaveAttribute("href", `${course}#contact`);
   await expect(ask).toHaveClass(/text-link/);
   await expect(ask).toHaveAccessibleDescription("Name the course in your message.");
   // The ask closes the study on the shared dark closing band, so the link is amber.
   expect(await ask.evaluate((el) => getComputedStyle(el).color)).toBe("rgb(230, 152, 117)");
   await expect(page.locator("#name-course")).toHaveText("Name the course in your message.");
-  await expect(page.getByRole("link", { name: secondary, exact: true })).toHaveAttribute("href", "/training/#specialists-title");
+  await expect(page.getByRole("link", { name: secondary, exact: true })).toHaveAttribute("href", course);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual(["/training/#contact", "/training/#specialists-title"]);
-  for (const [name, id] of [[primary, "contact"], [secondary, "specialists-title"]] as const) {
-    await page.goto(route);
-    await page.getByRole("link", { name, exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`/training/#${id}$`));
-    await expect(page.locator(`#${id}`)).toBeInViewport();
-  }
-  await page.goto("/training/");
-  await expect(page.locator("#specialists-title")).toHaveText("Want to dive deeper into Power BI?");
+  expect(mainLinks).toEqual([`${course}#contact`, course]);
+  await page.getByRole("link", { name: primary, exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`${course}#contact$`));
+  await expect(page.locator("#contact")).toBeInViewport();
+  await page.goto(route);
+  await page.getByRole("link", { name: secondary, exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`${course}$`));
+  await expect(page.locator("h1")).toHaveText("DAX deep dive");
 });
 
-test("the relevant course entry and Work index link to the study", async ({ page }) => {
+test("the relevant course entry, the course page and Work index link to the study", async ({ page }) => {
   await page.goto("/training/");
   await expect(page.locator(".specialist-courses").getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
+  await page.goto(course);
+  await expect(page.locator(".study-evidence").getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
   await page.goto("/work/");
   await expect(page.locator('[aria-labelledby="courses-title"]').getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
-  for (const from of ["/", "/training/agentic-development-for-power-bi/", "/power-bi/", "/about/", "/contact/", "/call/"]) {
+  for (const from of ["/", "/training/agentic-development-for-power-bi/", "/training/dax-fundamentals/", "/power-bi/", "/about/", "/contact/", "/call/"]) {
     await page.goto(from);
-    await expect(page.locator(`a[href*="dax-deep-dive"]`)).toHaveCount(0);
+    // The masthead's Training menu links to the course page on every page; no other page links to the study or the course.
+    await expect(page.locator(`a[href*="dax-deep-dive"]:not(.nav-menu a)`)).toHaveCount(0);
+    await expect(page.locator(`a[href*="/work/dax-deep-dive"]`)).toHaveCount(0);
   }
 });
 
@@ -106,10 +110,10 @@ test("case study works without JavaScript and from the keyboard", async ({ brows
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
   }
-  expect(reached).toEqual(["/training/#contact", "/training/#specialists-title"]);
+  expect(reached).toEqual([`${course}#contact`, course]);
   expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(3);
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(baseURL + "/training/#specialists-title");
+  await expect(page).toHaveURL(baseURL + course);
   await context.close();
 });
 

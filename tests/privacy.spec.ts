@@ -37,7 +37,7 @@ const links = [
   "#optout", email, "https://ico.org.uk/make-a-complaint/",
 ];
 // Pages that render the shared footer (placeholders render none).
-const footerRoutes = ["/", "/training/", "/training/agentic-development-for-power-bi/", "/training/power-bi-fundamentals/", "/training/how-i-train/", "/power-bi/", "/call/", "/about/", "/contact/", route, ENQUIRY.privacyPath, ENQUIRY.successPath, ENQUIRY.errorPath];
+const footerRoutes = ["/", "/training/", "/training/agentic-development-for-power-bi/", "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/call/", "/about/", "/contact/", route, ENQUIRY.privacyPath, ENQUIRY.successPath, ENQUIRY.errorPath];
 
 const control = (page: Page) => page.getByRole("button", { name: /my visits/ });
 const status = (page: Page) => page.getByRole("status");

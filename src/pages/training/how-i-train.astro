@@ -1,7 +1,7 @@
 ---
 // Approved wording: private ops site/how-i-train-page-copy.md. Its field labels, layout notes and private notes are not copy.
 // No enquiry form here: the closing links reach email and the Contact page.
-// Fundamentals is a pending route (src/config/pending-routes.mjs); 101 booking stays on its own page.
+// 101 booking stays on its own page. #private-courses holds the shared private course terms (ops site/dax-deep-dive-page-copy.md, 2.1).
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TitleBand from "../../components/TitleBand.astro";
 import StudyLinks from "../../components/StudyLinks.astro";
@@ -49,7 +49,22 @@ const { email } = ENQUIRY;
 
   <section class="hit-facts wrap" aria-labelledby="facts-title">
     <h2 id="facts-title">On every course</h2>
-    <p class="hit-facts-note">I write and teach every course myself, for groups of up to 8 people. Dates, setup and what's included vary from course to course.</p>
+    <div class="hit-facts-body">
+      <p class="hit-facts-note">I write and teach every course myself, for groups of up to 8 people.</p>
+      {/* The private course terms: Fundamentals and the DAX deep dive link here for dates, setup and takeaways. */}
+      <div class="hit-terms">
+        <h3 id="private-courses">Private course terms</h3>
+        <p>These terms apply to Power BI fundamentals, DAX fundamentals, Data modelling and the DAX deep dive.</p>
+        <ul class="hit-terms-list" role="list">
+          <li><strong>Dates:</strong> I'll arrange dates with you after you get in touch.</li>
+          <li><strong>On site:</strong> you use my training laptops. I provide the course materials and manage the Power BI Desktop version.</li>
+          <li><strong>Online:</strong> use your own computer with a version of Power BI Desktop released in the 3 months before the course. I provide the course materials.</li>
+          <li><strong>To take away:</strong> on site, the course materials. Online, the course materials and a recording of the session.</li>
+          <li><strong>Your own data:</strong> the courses use examples I've prepared for teaching. For help with your own reports, <a href="/power-bi/">we can work together</a>.</li>
+        </ul>
+        <p>Power BI with AI agents 101 is set up differently: see <a href="/training/agentic-development-for-power-bi/#need-title">what you'll need for the 101</a>.</p>
+      </div>
+    </div>
   </section>
 
   <section class="hit-next closing-band dark" aria-labelledby="next-title">

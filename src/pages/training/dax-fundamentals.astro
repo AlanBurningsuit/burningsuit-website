@@ -1,0 +1,95 @@
+---
+// Approved wording: ops site/dax-fundamentals-page-copy.md (candidate 6, 8 Nov 2026). Its field labels, layout notes and annotations are not copy.
+// Course scope follows the DAX fundamentals Outline in Practice. Private course only: no public run or booking control; its price shows
+// only in the priced build (src/lib/training-prices.mjs). The shared course-page styles (course.css, fundamentals.css, dax-deep-dive.css)
+// is reused as it stands: one day, so one numbered sequence with no day groups.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
+import EnquiryForm from "../../components/EnquiryForm.astro";
+import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import "../../styles/course.css";
+import "../../styles/fundamentals.css";
+import "../../styles/dax-deep-dive.css";
+
+// Priced only when SHOW_TRAINING_PRICES=true; the price item then names both delivery methods, so "On site or online" is omitted.
+const priced = trainingPriceCopy(loadTrainingPrices());
+const price = PRICE_ON_REQUEST;
+const description = `A one-day private course for teams who build reports in Power BI but haven't written DAX yet: learn why a measure returns the number it does, and when to use a measure instead of a calculated column.${priced ? "" : " Price on request."}`;
+---
+<BaseLayout
+  title="DAX fundamentals | burningsuit"
+  description={description}
+  placeholder={false}
+>
+  <TitleBand heading={{ before: "DAX ", em: "fundamentals" }}>
+    <Fragment slot="standfirst">Building reports in Power BI, and ready to write your own measures?</Fragment>
+  </TitleBand>
+  <div class="course-opening wrap">
+    <section class="course-intro" aria-labelledby="page-title">
+      <p><strong>Start writing DAX with a clear idea of what it's doing.</strong> A one-day course for people who build reports in Power BI and haven't written DAX yet. You'll learn why a measure returns the number it does, and when to use a measure instead of a calculated column.</p>
+      <p class="course-fit">If you haven't built a report yet, it's too early: start with <a href="/training/power-bi-fundamentals/">Power BI fundamentals</a>, or <a href="/training/">compare all the courses</a>.</p>
+    </section>
+
+    <aside class="course-run" aria-label="Course facts">
+      <ul class="run-facts" role="list">
+        <li>1 day</li>
+        <li>Private, for your team</li>
+        {!priced && <li>On site or online</li>}
+        <li>Up to 8 people</li>
+        <li>{priced ? priced.daxFundamentalsDetail : price}</li>
+        <li>9:30am to 4pm</li>
+      </ul>
+      <a class="text-link run-action" href="#contact">Ask about dates</a>
+    </aside>
+  </div>
+
+  <section class="course-need outcomes wrap" aria-labelledby="outcomes-title">
+    <h2 id="outcomes-title">What you'll be able to do</h2>
+    <ul class="need-list" role="list">
+      <li>Trace the number a measure gives you back to the filters that produced it, and to the row context inside it. That includes how filters travel along the relationships in a star schema (one table of events, such as sales or visits, with lookup tables around it for dates, products and places).</li>
+      <li>Add calculated columns, and say when a measure or Power Query would do the job better.</li>
+      <li>Write measures with SUM, COUNTROWS and DISTINCTCOUNT. Use SUMX and the other iterators, which work row by row, where you might otherwise add a calculated column.</li>
+      <li>Change what a measure includes with CALCULATE, using simple filters, FILTER and ALL, for example to compare each value with the overall total.</li>
+    </ul>
+  </section>
+
+  <section class="course-do agenda one-day" aria-labelledby="do-title">
+    <div class="wrap do-inner">
+      <div class="do-lead">
+        <h2 id="do-title">The day</h2>
+        <p>You'll work on data prepared for teaching: I explain and demonstrate, then you write columns and measures yourself in exercises, with time for questions. Online has the same content and exercises.</p>
+      </div>
+      <div class="do-body">
+        <ol class="do-steps agenda-steps" role="list" aria-labelledby="do-title">
+          <li><p><strong>What DAX works on:</strong> the tables in your model, which ones hold events and which ones describe them, and why that shape makes formulas easier to write. We look at the model only as far as DAX needs it.</p></li>
+          <li><p><strong>Your first columns and measures:</strong> how a DAX formula is put together, the totals Power BI works out for you without a formula (implicit measures), measures you write yourself with SUM, COUNTROWS and DISTINCTCOUNT, and RELATED to bring in a value from a lookup table.</p></li>
+          <li><p><strong>Which rows a calculation sees:</strong> row context and filter context, and how SUMX and the other iterators work through a table one row at a time inside a measure, so a calculated column is seldom the answer.</p></li>
+          <li><p><strong>Measures that respond to slicers:</strong> SELECTEDVALUE to read a single choice, and a parameter table so someone viewing the report can change which calculation a visual shows. <span class="demo-tag">Demonstrated, not practised.</span></p></li>
+          <li><p><strong>Changing the filters with CALCULATE:</strong> start with simple true/false conditions, then add your own with FILTER and clear existing ones with ALL, until you can show each value as a share of the total.</p></li>
+        </ol>
+        <div class="teacher-line">
+          <p>I'm Alan Harman-Box, and I write and teach every course myself.</p>
+          <div class="teacher-links">
+            <a class="text-link" href="/training/how-i-train/">How I train</a>
+            <a class="text-link" href="/about/">More about me</a>
+          </div>
+        </div>
+        <div class="course-proof">
+          <p class="proof-line">I've run DAX fundamentals for teams before.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="course-need wrap" aria-labelledby="need-title">
+    <h2 id="need-title">What to arrange</h2>
+    <div class="need-body">
+      <p class="need-pointer">For dates, setup and what you take away, <a href="/training/how-i-train/#private-courses">see what's included</a>.</p>
+    </div>
+  </section>
+
+  <EnquiryForm>
+    <Fragment slot="heading">Ask about dates</Fragment>
+    Tell me you're interested in DAX fundamentals, how many people would come and roughly when.
+  </EnquiryForm>
+</BaseLayout>
