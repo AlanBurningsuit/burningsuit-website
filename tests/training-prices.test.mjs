@@ -63,6 +63,7 @@ test("a requested build with valid input returns all ten rates and composes the 
   assert.equal(copy.trainingFundamentals, `${fOn} on site or ${fOnline} online, ex VAT`);
   assert.equal(copy.fundamentalsDetail, `${fOn} on site or ${fOnline} online, per booking, ex VAT, UK travel included`);
   assert.equal(copy.daxDeepDiveDetail, `${pOn} on site or ${pOnline} online, per booking, ex VAT, UK travel included`);
+  assert.equal(copy.daxFundamentalsDetail, `${dOn} on site or ${dOnline} online, per booking, ex VAT, UK travel included`);
   assert.equal(copy.specialists["DAX fundamentals"], `${dOn} on site or ${dOnline} online, ex VAT`);
   assert.equal(copy.specialists["Data modelling"], `${mOn} on site or ${mOnline} online, ex VAT`);
   assert.equal(copy.specialists["DAX deep dive"], `${pOn} on site or ${pOnline} online, ex VAT`);
@@ -232,10 +233,11 @@ function distFixture(data, { pricedBuild, drop } = {}) {
   const agents = pricedBuild ? `<html><body>${copy.seatFacts.map(li).join("")}<p>${copy.seatBookFacts}</p></body></html>` : page(li("Price on request"));
   const fundamentals = pricedBuild ? page(li(copy.fundamentalsDetail)) : page(li("On site or online"), li("Price on request"));
   const daxDeepDive = pricedBuild ? page(li(copy.daxDeepDiveDetail)) : page(li("On site or online"), li("Price on request"));
+  const daxFundamentals = pricedBuild ? page(li(copy.daxFundamentalsDetail)) : page(li("On site or online"), li("Price on request"));
   const files = {
     "dist/index.html": home, "dist/training/index.html": training,
     "dist/training/agentic-development-for-power-bi/index.html": agents, "dist/training/power-bi-fundamentals/index.html": fundamentals,
-    "dist/training/dax-deep-dive/index.html": daxDeepDive,
+    "dist/training/dax-deep-dive/index.html": daxDeepDive, "dist/training/dax-fundamentals/index.html": daxFundamentals,
     "dist/power-bi/index.html": page(li("Price on request, usually a fixed price")),
   };
   if (drop) delete files[drop];
@@ -298,6 +300,16 @@ test("a priced build must render every slot and keep Price on request only for t
   writeJson(join(missingDeepDive.dir, "dist/training/dax-deep-dive/index.html"), `<ul>${li(missingDeepDive.copy.daxDeepDiveDetail)}${li("On site or online")}</ul>`);
   assert.match(output(distRun(missingDeepDive.dir, priced)), /unpriced-phrase-in-priced-slot\s+dist\/training\/dax-deep-dive\/index\.html/);
   rmSync(missingDeepDive.dir, { recursive: true, force: true });
+
+  // DAX fundamentals is the sixth priced route, checked the same way.
+  const missingDaxFundamentals = distFixture(data, { pricedBuild: true, drop: "dist/training/dax-fundamentals/index.html" });
+  const daxFundamentalsResult = distRun(missingDaxFundamentals.dir, priced);
+  assert.equal(daxFundamentalsResult.status, 1);
+  assert.match(output(daxFundamentalsResult), /priced-slot-missing\s+dist\/training\/dax-fundamentals\/index\.html/);
+  assert.ok(!leaks(daxFundamentalsResult, valuesOf(data)), "no value in diagnostics");
+  writeJson(join(missingDaxFundamentals.dir, "dist/training/dax-fundamentals/index.html"), `<ul>${li(missingDaxFundamentals.copy.daxFundamentalsDetail)}${li("Price on request")}</ul>`);
+  assert.match(output(distRun(missingDaxFundamentals.dir, priced)), /unpriced-phrase-in-priced-slot\s+dist\/training\/dax-fundamentals\/index\.html/);
+  rmSync(missingDaxFundamentals.dir, { recursive: true, force: true });
 
   // A slot that still reads Price on request in priced output is a failure.
   const fallback = distFixture(data, { pricedBuild: true });

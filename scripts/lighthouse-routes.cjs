@@ -3,6 +3,7 @@ module.exports = [
   "/index.html",
   "/training/agentic-development-for-power-bi/",
   "/training/power-bi-fundamentals/",
+  "/training/dax-fundamentals/",
   "/training/dax-deep-dive/",
   "/power-bi/",
   "/training/",

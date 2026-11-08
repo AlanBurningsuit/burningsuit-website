@@ -117,8 +117,10 @@ export function trainingPriceCopy(prices) {
     fundamentalsDetail: `${rate(prices.fundamentals)}, per booking, ex VAT, UK travel included`,
     // DAX deep dive page (ops site/dax-deep-dive-page-copy.md, the Fundamentals pattern)
     daxDeepDiveDetail: `${rate(prices.daxDeepDive)}, per booking, ex VAT, UK travel included`,
+    // DAX fundamentals page (ops site/dax-fundamentals-page-copy.md, the DAX deep dive pattern)
+    daxFundamentalsDetail: `${rate(prices.daxFundamentals)}, per booking, ex VAT, UK travel included`,
   });
 }
 
-/** Closing sentence of the Training, Fundamentals and DAX deep dive meta descriptions, kept only in the unpriced variant. */
+/** Closing sentence of the Training, Fundamentals, DAX fundamentals and DAX deep dive meta descriptions, kept only in the unpriced variant. */
 export const PRICE_ON_REQUEST = "Price on request";

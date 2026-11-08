@@ -21,6 +21,8 @@
   .agenda .do-body > ol:nth-of-type(1) { grid-area: 3 / 1; }
   .agenda .do-body > .day-title:nth-of-type(2) { grid-area: 2 / 2; margin-top: 0; }
   .agenda .do-body > ol:nth-of-type(2) { grid-area: 3 / 2; }
+  /* A one-day course (DAX fundamentals) has no day groups: its single sequence runs under the lead at full width. */
+  .agenda.one-day .do-body { display: block; }
 }
 .agenda .day-title { margin-bottom: 18px; text-wrap: balance; }
 .agenda .agenda-steps + .day-title { margin-top: 26px; }

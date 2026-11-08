@@ -170,8 +170,8 @@ test("the old DAX advanced course URL redirects to the DAX deep dive page", asyn
   await page.goto(legacy);
   await expect(page).toHaveURL(baseURL + route);
   await expect(page.locator("h1")).toHaveText("DAX deep dive");
-  // The neighbouring DAX fundamentals URL is unchanged.
-  expect((redirects as Record<string, string>)["/fully-flexible-training-dax-skills/our-courses-power-bi-training/10-power-bi-dax-fundamentals"]).toBe("/training/");
+  // The neighbouring DAX fundamentals URL leads to its own page, not this one.
+  expect((redirects as Record<string, string>)["/fully-flexible-training-dax-skills/our-courses-power-bi-training/10-power-bi-dax-fundamentals"]).toBe("/training/dax-fundamentals/");
 });
 
 test("DAX deep dive layout: facts beside the introduction on wide screens, directly after it on phones", async ({ page }) => {

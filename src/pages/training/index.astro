@@ -21,7 +21,7 @@ const privateFacts = (course: string) => priced
   : ["Private, for your team", "On site or online", "Up to 8 people", price];
 const description = `Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each.${priced ? "" : " Price on request."}`;
 const specialists = [
-  { name: "DAX fundamentals", length: "1 day" },
+  { name: "DAX fundamentals", length: "1 day", href: "/training/dax-fundamentals/" },
   { name: "Data modelling", length: "1 day" },
   { name: "DAX deep dive", length: "2 days", href: "/training/dax-deep-dive/" },
 ];
@@ -90,7 +90,7 @@ const specialists = [
       <ul class="specialist-rows" role="list">
         {specialists.map(({ name, length, href }) => (
           <li>
-            {/* Only the DAX deep dive has its own page so far: its name and an outline link lead there. */}
+            {/* A course with its own page (DAX fundamentals, the DAX deep dive): its name and an outline link lead there. */}
             <h3>{href ? <a href={href}>{name}</a> : name}</h3>
             <ul class="facts dot-list">
               <li>{length}</li>
