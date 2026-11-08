@@ -59,7 +59,7 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
   await expect(page.locator("main figure, main blockquote, main dl")).toHaveCount(0);
   // The only list outside the study links is the private course terms, a ruled list that #private-courses lands on.
   await expect(page.locator("main li:not(.study-links li)")).toHaveText([
-    "Dates: lead time depends on my diary, so get in touch for current availability and we'll arrange dates together.",
+    "Dates: lead time depends on my diary, so get in touch for current availability and we'll arrange dates together. Two-day courses usually run on consecutive days, but they can be split if that suits you better.",
     "Group size: the course fee covers up to 8 people, whether 8 come or fewer. For more than 8, we run the course more than once.",
     "Payment: I invoice when we agree your dates, and that confirms them. Invoices are due within 30 days, and purchase orders are welcome.",
     "Moving or cancelling: free up to 4 weeks before the course. After that, you can move your dates once for free, and cancelling costs 50% of the course fee. In the final week, moving costs 25% of the course fee plus any travel I've already paid for, and cancelling costs the full fee.",

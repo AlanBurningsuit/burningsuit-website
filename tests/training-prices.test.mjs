@@ -58,7 +58,7 @@ test("a requested build with valid input returns every rate and composes the app
   writeJson(file, data);
   const prices = loadTrainingPrices({ env: priced, file });
   const copy = trainingPriceCopy(prices);
-  const [fOn, fOnline, dOn, dOnline, pOn, pOnline, founding, seat, cFrom, cTo, kFrom, kTo] = valuesOf(data);
+  const [fOn, fOnline, dOn, dOnline, pOn, pOnline, founding, seat, kFrom, kTo] = valuesOf(data);
   assert.equal(copy.homeFundamentals, `${fOn} on site or ${fOnline} online, per booking for up to 8 people, ex VAT, UK travel included`);
   assert.equal(copy.trainingFundamentals, `${fOn} on site or ${fOnline} online, ex VAT`);
   assert.equal(copy.fundamentalsDetail, `${fOn} on site or ${fOnline} online, per booking, ex VAT, UK travel included`);
@@ -66,12 +66,12 @@ test("a requested build with valid input returns every rate and composes the app
   assert.equal(copy.daxFundamentalsDetail, `${dOn} on site or ${dOnline} online, per booking, ex VAT, UK travel included`);
   assert.equal(copy.specialists["DAX fundamentals"], `${dOn} on site or ${dOnline} online, ex VAT`);
   assert.equal(Object.keys(copy.specialists).length, 2, "two specialist courses are priced");
-  assert.equal(copy.coachingRange, `Usually ${cFrom} to ${cTo}, ex VAT`);
+  assert.equal(copy.coachingRange, undefined, "coaching has no price band");
   assert.equal(copy.consultancyRange, `Usually a fixed price of ${kFrom} to ${kTo}, ex VAT`);
   assert.equal(copy.specialists["DAX deep dive"], `${pOn} on site or ${pOnline} online, ex VAT`);
-  assert.equal(copy.publicSeat, `${founding} a seat, the founding rate for this first run. Standard rate ${seat} a seat. Ex VAT.`);
-  assert.deepEqual([...copy.seatFacts], [`${founding} a seat, the founding rate for this first run, ex VAT`, `${seat} a seat, the standard rate, ex VAT`]);
-  assert.equal(copy.seatBookFacts, `${founding} a seat, the founding rate for this first run, ex VAT. ${seat} a seat, the standard rate, ex VAT.`);
+  assert.equal(copy.publicSeat, `${founding} a seat for this first run, then ${seat} for later runs. Plus VAT at checkout.`);
+  assert.deepEqual([...copy.seatFacts], [`${founding} a seat for this first run, the founding rate`, `${seat} a seat for later runs`, "VAT is added at checkout"]);
+  assert.equal(copy.seatBookFacts, `${founding} a seat for this first run, the founding rate. Later runs are ${seat} a seat. VAT is added at checkout.`);
   assert.equal(copy.trainingIntro, "Private course prices are per booking, for up to 8 people, and include UK travel.");
   assert.equal(trainingPriceCopy(null), null, "the unpriced variant has no price wording");
   rmSync(dir, { recursive: true, force: true });
@@ -230,7 +230,7 @@ function distFixture(data, { pricedBuild, drop } = {}) {
   const page = (...items) => `<html><body><ul>${items.join("")}</ul></body></html>`;
   const home = pricedBuild ? page(li(copy.homeFundamentals), li(copy.publicSeat), li("Price on request")) : page(li("On site or online"), li("Price on request"), li("Price on request"));
   const training = pricedBuild
-    ? page(li(copy.trainingFundamentals), li(copy.publicSeat), ...Object.values(copy.specialists).map(li), li(copy.coachingRange), li(copy.trainingIntro), li("Price on request"))
+    ? page(li(copy.trainingFundamentals), li(copy.publicSeat), ...Object.values(copy.specialists).map(li), li(copy.trainingIntro), li("Price on request"), li("Price on request"))
     : page(li("Price on request"), li("Price on request"));
   const agents = pricedBuild ? `<html><body>${copy.seatFacts.map(li).join("")}<p>${copy.seatBookFacts}</p></body></html>` : page(li("Price on request"));
   const fundamentals = pricedBuild ? page(li(copy.fundamentalsDetail)) : page(li("On site or online"), li("Price on request"));
@@ -241,7 +241,6 @@ function distFixture(data, { pricedBuild, drop } = {}) {
     "dist/training/agentic-development-for-power-bi/index.html": agents, "dist/training/power-bi-fundamentals/index.html": fundamentals,
     "dist/training/dax-deep-dive/index.html": daxDeepDive, "dist/training/dax-fundamentals/index.html": daxFundamentals,
     "dist/power-bi/index.html": pricedBuild ? page(li(copy.consultancyRange)) : page(li("Price on request, usually a fixed price")),
-    "dist/work/individual-power-bi-coaching/index.html": pricedBuild ? page(li(`${copy.coachingRange}.`)) : page(li("Price on request.")),
   };
   if (drop) delete files[drop];
   for (const [path, text] of Object.entries(files)) writeJson(join(dir, path), text);

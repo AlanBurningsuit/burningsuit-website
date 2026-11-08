@@ -17,7 +17,6 @@ export const PRICE_SLOTS = [
   ["dax-fundamentals", "onSite"], ["dax-fundamentals", "online"],
   ["dax-deep-dive", "onSite"], ["dax-deep-dive", "online"],
   ["agentic-development-for-power-bi", "seatFoundingRate"], ["agentic-development-for-power-bi", "seat"],
-  ["coaching", "from"], ["coaching", "to"],
   ["consultancy", "from"], ["consultancy", "to"],
 ];
 
@@ -84,7 +83,6 @@ export function loadTrainingPrices({ env = process.env, file = resolve(process.c
     daxFundamentals: pair("dax-fundamentals", "onSite", "online"),
     daxDeepDive: pair("dax-deep-dive", "onSite", "online"),
     agent101: pair("agentic-development-for-power-bi", "seatFoundingRate", "seat"),
-    coaching: pair("coaching", "from", "to"),
     consultancy: pair("consultancy", "from", "to"),
   });
 }
@@ -101,7 +99,8 @@ export function trainingPriceCopy(prices) {
   return Object.freeze({
     // Home (H1, H2) and Training (T2, T3)
     homeFundamentals: `${rate(prices.fundamentals)}, per booking for up to 8 people, ex VAT, UK travel included`,
-    publicSeat: `${founding} a seat, the founding rate for this first run. Standard rate ${standard} a seat. Ex VAT.`,
+    // 101 seat wording (Alan, 8 Nov 2026): this run's price first, later runs second, and VAT added at checkout.
+    publicSeat: `${founding} a seat for this first run, then ${standard} for later runs. Plus VAT at checkout.`,
     trainingFundamentals: `${rate(prices.fundamentals)}, ex VAT`,
     trainingIntro: "Private course prices are per booking, for up to 8 people, and include UK travel.",
     specialists: Object.freeze({
@@ -110,18 +109,18 @@ export function trainingPriceCopy(prices) {
     }),
     // 101 page (A1, A2)
     seatFacts: Object.freeze([
-      `${founding} a seat, the founding rate for this first run, ex VAT`,
-      `${standard} a seat, the standard rate, ex VAT`,
+      `${founding} a seat for this first run, the founding rate`,
+      `${standard} a seat for later runs`,
+      "VAT is added at checkout",
     ]),
-    seatBookFacts: `${founding} a seat, the founding rate for this first run, ex VAT. ${standard} a seat, the standard rate, ex VAT.`,
+    seatBookFacts: `${founding} a seat for this first run, the founding rate. Later runs are ${standard} a seat. VAT is added at checkout.`,
     // Fundamentals page (F1)
     fundamentalsDetail: `${rate(prices.fundamentals)}, per booking, ex VAT, UK travel included`,
     // DAX deep dive page (ops site/dax-deep-dive-page-copy.md, the Fundamentals pattern)
     daxDeepDiveDetail: `${rate(prices.daxDeepDive)}, per booking, ex VAT, UK travel included`,
     // DAX fundamentals page (ops site/dax-fundamentals-page-copy.md, the DAX deep dive pattern)
     daxFundamentalsDetail: `${rate(prices.daxFundamentals)}, per booking, ex VAT, UK travel included`,
-    // Budget guidance (Alan, 8 Nov 2026): coaching on Training, consultancy on its own page. Both depend on the work.
-    coachingRange: `Usually ${prices.coaching.from} to ${prices.coaching.to}, ex VAT`,
+    // Budget guidance (Alan, 8 Nov 2026): consultancy only. Coaching stays on request: it's too bespoke for a band.
     consultancyRange: `Usually a fixed price of ${prices.consultancy.from} to ${prices.consultancy.to}, ex VAT`,
   });
 }

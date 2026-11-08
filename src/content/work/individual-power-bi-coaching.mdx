@@ -31,10 +31,6 @@ returnLinks:
     href: "/contact/"
 ---
 
-import { loadTrainingPrices, trainingPriceCopy } from "../../lib/training-prices.mjs";
-export const priced = trainingPriceCopy(loadTrainingPrices());
-
-
 <Section id="started" heading="Where he started">
 
 He wasn't starting from zero. He was already building reports from several data sources, shaping data in Power Query, writing measures and thinking about how people would find their way around the finished report.
@@ -109,6 +105,6 @@ In the final session he showed me his live model and named a problem in it himse
 
 <Return heading="Coaching for one person, or a few" links={frontmatter.returnLinks}>
 
-Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, mostly online, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. {priced ? `${priced.coachingRange}.` : "Price on request."}
+Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, mostly online, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. Price on request.
 
 </Return>

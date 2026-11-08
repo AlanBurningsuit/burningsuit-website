@@ -49,7 +49,7 @@ const invite = study.presentation === "chapters" ? study.footerInvitation.split(
 
     {study.presentation === "coaching" && <>
       <TitleBand heading={heading} eyebrowClass="cs-descriptor">
-        <Fragment slot="eyebrow">{study.descriptor}</Fragment>
+        <Fragment slot="eyebrow">{study.descriptor.charAt(0).toUpperCase() + study.descriptor.slice(1)}</Fragment>
       </TitleBand>
       <div class="cs-opening wrap">
         <div class="cs-opening-grid">

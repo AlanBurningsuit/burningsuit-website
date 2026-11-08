@@ -83,6 +83,8 @@ p + p.course-fit { margin-top: 1.4rem; }
 .book-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--column-gap); padding-block: 60px 66px; align-items: start; }
 .book-inner h2 { margin-bottom: 16px; }
 .book-facts { font-size: 1.1rem; max-width: 40ch; }
+.book-before { margin-top: 18px; font-size: .96rem; max-width: 52ch; }
+.book-before a { font-weight: 600; }
 .book-inner .booking { margin-top: 6px; }
 .invoice { margin-top: 26px; font-size: 1rem; max-width: 52ch; }
 /* Booking terms: a short ruled list under the booking action, in the band's quieter text. */

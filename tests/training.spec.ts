@@ -54,10 +54,10 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   const entries = page.getByRole("article");
   await expect(entries.getByRole("heading", { level: 3 })).toHaveText(["Power BI fundamentals", "Power BI with AI agents 101"]);
   const fund = page.getByRole("article", { name: "Power BI fundamentals" });
-  await expect(fund.locator("p")).toHaveText(["New to Power BI?", "Learn to build an interactive report, prepare the data behind it and share it with the people who need it.", "No Power BI experience needed."]);
+  await expect(fund.locator("p")).toHaveText(["New to Power BI?", "Learn to build an interactive report, prepare the data behind it and share it with the people who need it.", "No Power BI experience needed.", "On your own? Coaching starts wherever you are."]);
   await expectItems(fund.locator(".facts > li"), ["2 days", ...privateFacts(copy?.trainingFundamentals ?? "")], "training fundamentals facts");
   // The course name links to its outline too.
-  await expect(fund.getByRole("link")).toHaveText(["Power BI fundamentals", "Read the course outline", "Ask about dates"]);
+  await expect(fund.getByRole("link")).toHaveText(["Power BI fundamentals", "Read the course outline", "Ask about dates", "Coaching starts wherever you are."]);
   await expect(fund.getByRole("link", { name: "Power BI fundamentals" })).toHaveAttribute("href", fundamentals);
   await expect(fund.getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", fundamentals);
   await expect(fund.getByRole("link", { name: "Ask about dates" })).toHaveAttribute("href", "#contact");
@@ -108,7 +108,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(coaching.locator(".specialists-head p")).toHaveText("Coaching is for 1 to 3 people from the same organisation, ideally the same team, who want to learn Power BI on the work they actually do. I write a syllabus for the people taking part, and we work on your own data, or on example data I build to look like yours, with the problems you're stuck on.");
   await expect(coaching.locator(".specialist-rows > li h3")).toHaveText(["Power BI coaching"]);
   await expect(coaching.locator(".specialist-rows").locator("a, p")).toHaveCount(0);
-  await expectItems(coaching.locator(".specialist-rows .facts > li"), ["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", priced ? copy!.coachingRange : "Price on request"], "coaching facts");
+  await expectItems(coaching.locator(".specialist-rows .facts > li"), ["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", "Price on request"], "coaching facts");
   const askCoaching = coaching.getByRole("link", { name: "Ask about coaching", exact: true });
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");
@@ -118,14 +118,14 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(page.locator(".starting-points figure.pull-quote figcaption")).toHaveText("Corporate insights, a UK police force");
   expect(await page.locator("main > section").evaluateAll((all) => all.map((el) => el.className.split(" ")[0]))).toEqual(["starting-points", "specialist-courses", "coaching", "training-teacher", "contact"]);
 
-  await expect(page.locator(".teacher-note p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI, and about a decade in software delivery before that. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course. I've taught Power BI fundamentals to about 300 people.");
+  await expect(page.locator(".teacher-note p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI, and about a decade in software delivery before that. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course. I've taught Power BI fundamentals to about 300 people, and since 2021 people from about 80 organisations have learned with me.");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   await expect(page.locator(".enquiry-intro p")).toHaveText("If you know which course you want, name it in your message. If you don't, tell me what you use Power BI for now and I'll suggest where to start.");
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
 
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
+  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", "#coaching", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
   const text = await page.locator("main").innerText();
   // Developing and Claude courses stay off; no arrows, seats, booking or promises the copy doesn't make.
   // Priced output states the 101's per-seat rates, so "seat" is allowed there; booking wording stays absent in both.
@@ -354,12 +354,12 @@ test("training chooser works from the keyboard without JavaScript", async ({ bro
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < (priced ? 20 : 19); i++) {
+  for (let i = 0; i < (priced ? 21 : 20); i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(2);
   }
-  expect(reached).toEqual([fundamentals, fundamentals, "#contact", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
+  expect(reached).toEqual([fundamentals, fundamentals, "#contact", "#coaching", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
 
   // An inbound coaching link lands on its section without JavaScript; its ask reaches the shared form.
   await page.goto(route + "#coaching");

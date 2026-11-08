@@ -36,6 +36,9 @@
 .course h3 a { color: inherit; text-decoration: none; }
 .course h3 a:hover { color: var(--link); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .14em; }
 .course > p:not(.course-fit) { font-size: 1rem; }
+/* A solo beginner's way in, beside the team course: quieter than the facts, with the link carrying the weight. */
+.solo-ask { margin-top: 8px; font-size: .96rem; }
+.solo-ask a { font-weight: 600; }
 /* Each entry's deciding facts and prerequisite sit together: the facts as a field-guide line in the serif note voice,
    warm dots between them, a short label in small tracked capitals, then the prerequisite in the body voice. */
 .deciding { margin: 20px 0 16px; }

@@ -39,7 +39,8 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   await expect(page.locator("nav a[aria-current]:not(.nav-menu a)")).toHaveText("Training");
   await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("Power BI fundamentals");
   // Private only: no public run, booking or payment route. Unpriced output says Price on request once; priced output shows the private rates and never that phrase.
-  const body = await page.locator("body").innerText();
+  // The shared footer's "Booking terms" link is site furniture, not this page's wording.
+  const body = (await page.locator("body").innerText()).replace(await page.locator("footer").innerText(), "");
   await expectAmountsOnlyWhenPriced(page, "fundamentals");
   if (!priced) expectNone(body, [/\d\s*(GBP|ex VAT)/i], "fundamentals unpriced");
   await expect(page.getByText(priceOnRequest, { exact: true })).toHaveCount(priced ? 0 : 1);
@@ -128,8 +129,8 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   // a pointer comes first, then only this course's licence and publishing points.
   await expect(page.locator("#need-title")).toHaveText("What to arrange");
   const pointer = page.locator(".course-need:not(.outcomes) .need-pointer");
-  await expect(pointer).toHaveText("For dates, setup and what you take away, see what's included.");
-  await expect(pointer.getByRole("link", { name: "see what's included" })).toHaveAttribute("href", "/training/how-i-train/#private-courses");
+  await expect(pointer).toHaveText("For dates, setup, payment and cancelling, see the private course terms.");
+  await expect(pointer.getByRole("link", { name: "see the private course terms" })).toHaveAttribute("href", "/training/how-i-train/#private-courses");
   expect(await page.locator(".course-need:not(.outcomes) .need-body > *").evaluateAll((els) => els.map((el) => el.className))).toEqual(["need-pointer", "need-list"]);
   const needs = page.locator(".course-need:not(.outcomes) .need-list > li");
   await expect(needs).toHaveText([

@@ -15,7 +15,7 @@
      block's label, such as a facts card), an item heading, and a card title. Pages never set their own sizes. */
   --title-band-size: clamp(2.5rem, 4.8vw, 4.2rem);
   --h2-size: clamp(1.75rem, 2.7vw, 2.5rem);
-  --h2-note-size: 1.25rem;
+  --h2-note-size: var(--h3-size); /* never smaller than a heading it sits over (How I train's terms) */
   --h3-size: 1.3rem;
   --h3-card-size: clamp(1.55rem, 2.2vw, 1.8rem);
   /* The opening paragraph that starts a page's daylight body: one size everywhere (smaller on phones, app.css). */

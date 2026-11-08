@@ -38,13 +38,15 @@ test("DAX fundamentals page stays static, private, price-safe and CSP-clean", as
   await expect(page.locator("nav a[aria-current]:not(.nav-menu a)")).toHaveText("Training");
   await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("DAX fundamentals");
   // Private only: no public run, booking or payment route. Unpriced output says Price on request once; priced output shows the private rates and never that phrase.
-  const body = await page.locator("body").innerText();
+  // The shared footer's "Booking terms" link is site furniture, not this page's wording.
+  const body = (await page.locator("body").innerText()).replace(await page.locator("footer").innerText(), "");
   await expectAmountsOnlyWhenPriced(page, "DAX fundamentals");
   if (!priced) expectNone(body, [/\d\s*(GBP|ex VAT)/i], "DAX fundamentals unpriced");
   await expect(page.getByText(priceOnRequest, { exact: true })).toHaveCount(priced ? 0 : 1);
   await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
   // No quote, rating, count or case study; no "next step", bundle or prerequisite framing. The teaching-data name is kept out of tracked source, so it isn't asserted here.
-  expectNone(body.replaceAll("per booking", ""), [/seat/i, /book/i, /public/i, /founding/i, /free call/i, /next step/i, /prerequisite/i, /half/i, /out of 5|responses|praised/i, /★|☆/, /\[|\]|\{|\}/, /—/], "DAX fundamentals text");
+  // Alan approved the delivery-history line (8 Nov 2026); it names past public courses, not a public run of this one.
+  expectNone(body.replaceAll("per booking", "").replace("I've run this day for public-sector teams, and on public courses, since 2022.", ""), [/seat/i, /book/i, /public/i, /founding/i, /free call/i, /next step/i, /prerequisite/i, /half/i, /out of 5|responses|praised/i, /★|☆/, /\[|\]|\{|\}/, /—/], "DAX fundamentals text");
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -136,7 +138,7 @@ test("DAX fundamentals page renders the approved wording and question order", as
   // One teacher line below the spine, then the one proof line: no study link, quote, rating or count.
   await expect(page.locator(".teacher-line p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
   await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
-  await expect(page.locator(".proof-line")).toHaveText("I've run DAX fundamentals for teams before.");
+  await expect(page.locator(".proof-line")).toHaveText("I've run this day for public-sector teams, and on public courses, since 2022.");
   await expect(page.locator(".course-proof > *")).toHaveCount(1);
   await expect(page.locator("main blockquote, main .case-figures, .study-evidence")).toHaveCount(0);
 
@@ -144,8 +146,8 @@ test("DAX fundamentals page renders the approved wording and question order", as
   await expect(page.locator("#need-title")).toHaveText("What to arrange");
   const need = page.locator("section[aria-labelledby='need-title']");
   await expect(need.locator(".need-body > *")).toHaveCount(1);
-  await expect(need.locator(".need-pointer")).toHaveText("For dates, setup and what you take away, see what's included.");
-  await expect(need.getByRole("link", { name: "see what's included" })).toHaveAttribute("href", "/training/how-i-train/#private-courses");
+  await expect(need.locator(".need-pointer")).toHaveText("For dates, setup, payment and cancelling, see the private course terms.");
+  await expect(need.getByRole("link", { name: "see the private course terms" })).toHaveAttribute("href", "/training/how-i-train/#private-courses");
   await expect(need.locator("ul, .keep, .need-note")).toHaveCount(0);
   await expect(page.locator(".to-confirm")).toHaveCount(0);
 
@@ -254,7 +256,7 @@ test("DAX fundamentals page works from the keyboard without JavaScript", async (
   await page.locator(".run-action").click();
   await expect(page).toHaveURL(baseURL! + route + "#contact");
   await expect(page.getByRole("form", { name: "Ask about dates" })).toBeInViewport();
-  await page.getByRole("link", { name: "see what's included" }).click();
+  await page.getByRole("link", { name: "see the private course terms" }).click();
   await expect(page).toHaveURL(baseURL! + "/training/how-i-train/#private-courses");
   await expect(page.locator("#private-courses")).toBeInViewport();
   await context.close();

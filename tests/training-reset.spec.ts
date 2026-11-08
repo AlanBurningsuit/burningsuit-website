@@ -79,13 +79,17 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.getByRole("link", { name: "Ask about a private course." })).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
   await expect(page.getByRole("link", { name: /private/i })).toHaveCount(1);
   await expect(page.locator(".invoice a")).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
+  await expect(page.locator(".invoice")).toContainText("Invoices are due within 30 days.");
+  // The booking band repeats the setup line from the top of the page, so nobody pays before checking they can take part.
+  await expect(page.locator(".course-book .book-before")).toHaveText("Before you book: you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. See what you'll need.");
+  if (priced) await expect(page.locator(".booking-terms li").last()).toHaveText("If I have to cancel for any other reason, you get a full refund.");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   // The priced build adds the two Stripe booking links, in reading order beside each "Book a seat".
   const { SEAT_BOOKING_URL } = await import("../src/config/booking.mjs");
   expect(mainLinks).toEqual(priced
-    ? ["#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]
-    : ["#need-title", "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "mailto:alan@burningsuit.co.uk"]);
+    ? ["#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]
+    : ["#need-title", "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", "mailto:alan@burningsuit.co.uk"]);
 
   // The setup facts are settled (Alan, 7 Nov 2026): no open "to confirm" gaps remain.
   const needs = page.locator(".need-list > li");
@@ -119,7 +123,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
         - paragraph
   `);
   // Priced facts carry amounts, which an ARIA snapshot would print on failure; the priced list is checked by role and in-memory text.
-  if (priced) await expect(page.locator(".run-facts").getByRole("listitem")).toHaveCount(5);
+  if (priced) await expect(page.locator(".run-facts").getByRole("listitem")).toHaveCount(6);
   else await expectAriaWithoutAmounts(page.locator(".run-facts"), `
     - list:
       - listitem: Half a day, live online

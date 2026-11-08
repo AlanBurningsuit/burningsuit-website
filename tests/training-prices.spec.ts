@@ -5,7 +5,7 @@ import { PRICE_SLOTS } from "../src/lib/training-prices.mjs";
 
 // The built site is either the Price on request variant or the priced variant (SHOW_TRAINING_PRICES=true at build and test time).
 // Every price-bearing comparison happens in memory and asserts a boolean with a fixed message: no failure prints an amount.
-const routes = { home: "/", training: "/training/", agents: "/training/agentic-development-for-power-bi/", fundamentals: "/training/power-bi-fundamentals/", daxDeepDive: "/training/dax-deep-dive/", daxFundamentals: "/training/dax-fundamentals/", consultancy: "/power-bi/", coachingStudy: "/work/individual-power-bi-coaching/" };
+const routes = { home: "/", training: "/training/", agents: "/training/agentic-development-for-power-bi/", fundamentals: "/training/power-bi-fundamentals/", daxDeepDive: "/training/dax-deep-dive/", daxFundamentals: "/training/dax-fundamentals/", consultancy: "/power-bi/" };
 const unaffected = ["/call/", "/about/", "/contact/", "/training/how-i-train/", "/work/", "/privacy/", "/404.html"];
 
 const html = async (request: import("@playwright/test").APIRequestContext, route: string) => (await request.get(route)).text();
@@ -20,7 +20,7 @@ test("the build under test matches the variant requested", async ({ request }) =
 });
 
 test("every rate slot appears on its pages and nowhere else", async ({ request }) => {
-  const pages = { home: decode(await html(request, routes.home)), training: decode(await html(request, routes.training)), agents: decode(await html(request, routes.agents)), fundamentals: decode(await html(request, routes.fundamentals)), daxDeepDive: decode(await html(request, routes.daxDeepDive)), daxFundamentals: decode(await html(request, routes.daxFundamentals)), consultancy: decode(await html(request, routes.consultancy)), coachingStudy: decode(await html(request, routes.coachingStudy)) };
+  const pages = { home: decode(await html(request, routes.home)), training: decode(await html(request, routes.training)), agents: decode(await html(request, routes.agents)), fundamentals: decode(await html(request, routes.fundamentals)), daxDeepDive: decode(await html(request, routes.daxDeepDive)), daxFundamentals: decode(await html(request, routes.daxFundamentals)), consultancy: decode(await html(request, routes.consultancy)) };
   if (!priced) {
     // Unpriced: no amount, price wording or founding-rate text on any priced route, and no private value even if the file exists locally.
     for (const [name, text] of Object.entries(pages)) {
@@ -35,7 +35,7 @@ test("every rate slot appears on its pages and nowhere else", async ({ request }
     daxDeepDive: [copy!.daxDeepDiveDetail],
     daxFundamentals: [copy!.daxFundamentalsDetail],
     seat: [copy!.publicSeat, ...copy!.seatFacts, copy!.seatBookFacts],
-    ranges: [copy!.coachingRange, copy!.consultancyRange],
+    ranges: [copy!.consultancyRange],
   };
   expect(rates.fundamentals.every((text) => [pages.home, pages.training, pages.fundamentals].some((page) => page.includes(text))), "Fundamentals rates render").toBe(true);
   expect(pages.home.includes(copy!.homeFundamentals) && pages.home.includes(copy!.publicSeat), "Home renders both course price items").toBe(true);
@@ -44,7 +44,7 @@ test("every rate slot appears on its pages and nowhere else", async ({ request }
   expect(pages.fundamentals.includes(copy!.fundamentalsDetail), "Fundamentals renders the full private price").toBe(true);
   expect(pages.daxDeepDive.includes(copy!.daxDeepDiveDetail), "DAX deep dive renders the full private price").toBe(true);
   expect(pages.daxFundamentals.includes(copy!.daxFundamentalsDetail), "DAX fundamentals renders the full private price").toBe(true);
-  expect(pages.training.includes(copy!.coachingRange) && pages.consultancy.includes(copy!.consultancyRange) && pages.coachingStudy.includes(copy!.coachingRange), "coaching and consultancy render their usual ranges").toBe(true);
+  expect(pages.consultancy.includes(copy!.consultancyRange), "consultancy renders its usual range").toBe(true);
 
   // Each stored rate is checked individually against the pages that must carry it.
   const data = JSON.parse(readFileSync("design/copy/training-prices.json", "utf8"));
@@ -52,7 +52,7 @@ test("every rate slot appears on its pages and nowhere else", async ({ request }
     "power-bi-fundamentals": ["home", "training", "fundamentals"],
     "dax-fundamentals": ["training", "daxFundamentals"], "data-modelling": ["training"], "dax-deep-dive": ["training", "daxDeepDive"],
     "agentic-development-for-power-bi": ["home", "training", "agents"],
-    coaching: ["training", "coachingStudy"], consultancy: ["consultancy"],
+    consultancy: ["consultancy"],
   };
   let all = true;
   for (const [course, key] of PRICE_SLOTS) {
@@ -71,7 +71,8 @@ test("every rate slot appears on its pages and nowhere else", async ({ request }
   }
   for (const [name, text] of Object.entries(pages)) {
     let rest = text;
-    for (const slot of [...rates.fundamentals, ...rates.specialists, ...rates.daxDeepDive, ...rates.daxFundamentals, ...rates.seat, ...rates.ranges]) rest = rest.replaceAll(slot, "");
+    // Longest first: one slot can open another (the 101's first seat fact starts its booking line).
+    for (const slot of [...rates.fundamentals, ...rates.specialists, ...rates.daxDeepDive, ...rates.daxFundamentals, ...rates.seat, ...rates.ranges].sort((a, b) => b.length - a.length)) rest = rest.replaceAll(slot, "");
     expect(knownValues.every((value) => !rest.includes(value)), `${name} shows rates only inside their approved items`).toBe(true);
   }
 });
@@ -82,9 +83,9 @@ test("unpriced and priced items keep the approved private-course wording", async
   await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Price on request", "private 101 price remains on request");
   await page.goto(routes.training);
   await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Price on request", "private 101 price remains on request");
-  await expectText(page.locator("#coaching .facts > li").last(), priced ? copy!.coachingRange : "Price on request", "coaching shows its range only when priced");
-  // Priced: the private 101 only. Unpriced: Fundamentals, the 101, two specialists and coaching.
-  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(priced ? 1 : 5);
+  await expectText(page.locator("#coaching .facts > li").last(), "Price on request", "coaching stays on request in both variants");
+  // Priced: the private 101 and coaching. Unpriced: Fundamentals, the 101, two specialists and coaching.
+  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(priced ? 2 : 5);
   if (priced) {
     // The private-101 line follows "Also private, for your team", so the amounts above it cannot be read as its price.
     const facts = page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li");

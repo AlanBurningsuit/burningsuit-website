@@ -193,11 +193,21 @@ main:not(:has(> .dark:last-child, > :last-child > .dark:last-child)) + .footer-b
   .foot-links { gap: 0 20px; }
   .foot-links a { display: inline-block; padding-block: 11px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }
-  .footer { font-size: .7rem; gap: 12px; }
-  .foot-legal { font-size: .75rem; } /* The company line stays at least 12px; only the links shrink. */
+  .footer { gap: 12px; }
+  .foot-legal { font-size: .8rem; } /* The company line stays a step quieter than the links. */
 }
-/* Five links fit one line down to 375px; narrower phones wrap them onto two right-aligned lines. */
-@media (max-width: 400px) {
-  .masthead nav { gap: 6px 10px; }
-  .masthead nav a { font-size: .82rem; }
+/* Five links fit one line on phones from about 400px wide. Narrower phones get two deliberate right-aligned lines, three links over two, rather than one stranded link. */
+@media (max-width: 460px) {
+  .masthead nav { gap: 6px 8px; }
+  .masthead nav a { font-size: .8rem; }
+}
+@media (max-width: 401px) {
+  .masthead nav { gap: 0 14px; }
+  .masthead nav a { font-size: .86rem; }
+  .masthead nav::after { content: ""; flex-basis: 100%; order: 1; }
+  .masthead nav > a[href="/about/"], .masthead nav > a[href="/contact/"] { order: 2; }
+}
+@media (max-width: 340px) {
+  .masthead nav { gap: 0 10px; }
+  .masthead nav a { font-size: .8rem; }
 }
