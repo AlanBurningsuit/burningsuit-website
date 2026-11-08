@@ -241,6 +241,7 @@ function distFixture(data, { pricedBuild, drop } = {}) {
     "dist/training/agentic-development-for-power-bi/index.html": agents, "dist/training/power-bi-fundamentals/index.html": fundamentals,
     "dist/training/dax-deep-dive/index.html": daxDeepDive, "dist/training/dax-fundamentals/index.html": daxFundamentals,
     "dist/power-bi/index.html": pricedBuild ? page(li(copy.consultancyRange)) : page(li("Price on request, usually a fixed price")),
+    "dist/work/individual-power-bi-coaching/index.html": pricedBuild ? page(li(`${copy.coachingRange}.`)) : page(li("Price on request.")),
   };
   if (drop) delete files[drop];
   for (const [path, text] of Object.entries(files)) writeJson(join(dir, path), text);

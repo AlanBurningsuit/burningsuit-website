@@ -1,6 +1,7 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
+import { priced, copy, expectAmountsOnlyWhenPriced } from "./prices";
 
 const route = "/work/individual-power-bi-coaching/";
 // /training/#coaching is approved copy; the Training page's coaching entry lands on a separate branch, so only the href is checked here.
@@ -22,7 +23,7 @@ test("Individual coaching study stays static, private and CSP-clean, with no for
   await expectIndexable(page, { article: true });
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
   await expect(page.locator(`${otherScripts}, astro-island, iframe, [data-rebuild-placeholder], form, input, button, main img, main picture, [style]`)).toHaveCount(0);
-  expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
+  await expectAmountsOnlyWhenPriced(page, "individual coaching study");
   expect(pendingRoutes).not.toContain(route);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
@@ -45,7 +46,7 @@ test("Individual coaching study keeps the approved wording and heading hierarchy
     "example data shaped around his reporting, with homework between sessions; his live model in the final session",
     "reusable models, the sample data they run on, and the session notes",
   ]);
-  await expect(page.locator("main p")).toHaveText([
+  await expect(page.locator("main p").filter({ hasNotText: /^Power BI coaching is for one/ })).toHaveText([
     "an individual learner developing Power BI reporting",
     "He was already building Power BI reports from several sources. A course that started at the beginning would have spent most of its time on things he could already do. So over eight weekly sessions and a recap, we worked on the parts underneath: the data model, DAX (Power BI's calculation language) and checking the numbers.",
     "He wasn't starting from zero. He was already building reports from several data sources, shaping data in Power Query, writing measures and thinking about how people would find their way around the finished report.",
@@ -62,8 +63,10 @@ test("Individual coaching study keeps the approved wording and heading hierarchy
     "The refusal reads: \"only columns from a single table can be used in a True/False expression that is used as a table filter expression.\" A test that genuinely reaches across two tables is where FILTER comes in.",
     "At the end I sent him the reusable models, the sample data they run on, and the notes from every session, so the examples still work without me.",
     "In the final session he showed me his live model and named a problem in it himself: for each new calculation he had been building a new table, where a better-shaped model would let a measure do the work. When I asked what had changed most, he said modelling and DAX. That's probably not what he'd have picked at the start, and I think that's where the value is.",
-    "Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, mostly online, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. Price on request.",
   ]);
+  // The offer paragraph ends with the price: the coaching range when priced, compared in memory so no amount is ever printed.
+  const offer = ((await page.locator("main p").filter({ hasText: /^Power BI coaching is for one/ }).textContent()) ?? "").replace(/\s+/g, " ").trim();
+  expect(offer === `Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, mostly online, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. ${priced ? `${copy!.coachingRange}.` : "Price on request."}`, "coaching offer paragraph matches the approved copy").toBe(true);
   await expect(page.locator(".cs-teaching pre code")).toHaveText([
     "-- Accepted: two columns, one table", "Large online orders =", "CALCULATE (", "    [Orders],",
     "    Sales[Channel] = \"Online\" && Sales[Amount] > 1000", ")", "",
@@ -77,7 +80,7 @@ test("Individual coaching study keeps the approved wording and heading hierarchy
   }
   await expect(page.locator("main figure, main blockquote, main img")).toHaveCount(0);
   const text = await page.locator("main").innerText();
-  for (const absent of [/\[Visitor|Visitor question/i, /—/, /[‘’“”]/, /£/]) expect(text).not.toMatch(absent);
+  for (const absent of [/\[Visitor|Visitor question/i, /—/, /[‘’“”]/, ...(priced ? [] : [/£/])]) expect(text).not.toMatch(absent);
 });
 
 test("Individual coaching study returns to Training's coaching entry and the Contact page only", async ({ page }) => {

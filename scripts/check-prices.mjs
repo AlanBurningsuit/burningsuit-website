@@ -96,7 +96,7 @@ function checkTracked() {
 }
 
 const routeFile = (route) => join(root, "dist", route, "index.html");
-const ROUTES = { home: "", training: "training", agents: "training/agentic-development-for-power-bi", fundamentals: "training/power-bi-fundamentals", daxDeepDive: "training/dax-deep-dive", daxFundamentals: "training/dax-fundamentals", consultancy: "power-bi" };
+const ROUTES = { home: "", training: "training", agents: "training/agentic-development-for-power-bi", fundamentals: "training/power-bi-fundamentals", daxDeepDive: "training/dax-deep-dive", daxFundamentals: "training/dax-fundamentals", consultancy: "power-bi", coachingStudy: "work/individual-power-bi-coaching" };
 const count = (text, needle) => text.split(needle).length - 1;
 
 function checkDist() {
@@ -132,7 +132,7 @@ function checkDist() {
   }
   const page = (route) => (existsSync(routeFile(route)) ? readFileSync(routeFile(route), "utf8") : "");
   const has = (html, text) => html.includes(`>${text}<`);
-  const home = page(ROUTES.home), training = page(ROUTES.training), agents = page(ROUTES.agents), fundamentals = page(ROUTES.fundamentals), daxDeepDive = page(ROUTES.daxDeepDive), daxFundamentals = page(ROUTES.daxFundamentals), consultancy = page(ROUTES.consultancy);
+  const home = page(ROUTES.home), training = page(ROUTES.training), agents = page(ROUTES.agents), fundamentals = page(ROUTES.fundamentals), daxDeepDive = page(ROUTES.daxDeepDive), daxFundamentals = page(ROUTES.daxFundamentals), consultancy = page(ROUTES.consultancy), coachingStudy = page(ROUTES.coachingStudy);
   const expect = (ok, rule, path) => { if (!ok) fail(rule, path); };
 
   expect(has(home, copy.homeFundamentals) && has(home, copy.publicSeat), "priced-slot-missing", "dist/index.html");
@@ -140,6 +140,7 @@ function checkDist() {
   for (const text of Object.values(copy.specialists)) expect(has(training, text), "priced-slot-missing", "dist/training/index.html");
   expect(has(training, copy.coachingRange), "priced-slot-missing", "dist/training/index.html");
   expect(has(consultancy, copy.consultancyRange), "priced-slot-missing", "dist/power-bi/index.html");
+  expect(coachingStudy.includes(copy.coachingRange) && !coachingStudy.includes("Price on request"), "priced-slot-missing", "dist/work/individual-power-bi-coaching/index.html");
   expect(copy.seatFacts.every((text) => has(agents, text)) && agents.includes(copy.seatBookFacts), "priced-slot-missing", "dist/training/agentic-development-for-power-bi/index.html");
   expect(has(fundamentals, copy.fundamentalsDetail), "priced-slot-missing", "dist/training/power-bi-fundamentals/index.html");
   expect(has(daxDeepDive, copy.daxDeepDiveDetail), "priced-slot-missing", "dist/training/dax-deep-dive/index.html");

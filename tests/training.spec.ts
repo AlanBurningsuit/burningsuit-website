@@ -113,7 +113,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");
   await expect(askCoaching).toHaveAccessibleDescription("Mention coaching in your message.");
-  await expect(coaching.locator("p:not(.study-evidence-label)")).toHaveText([/^Coaching is for/, `"I'd never figured this out on my own."`, "Mention coaching in your message."]);
+  await expect(coaching.locator("p:not(.study-evidence-label)")).toHaveText([/^Coaching is for/, "“I’d never figured this out on my own.”", "Mention coaching in your message."]);
   await expect(coaching.locator("figure.pull-quote figcaption")).toHaveText("A contact-centre team lead");
   await expect(page.locator(".starting-points figure.pull-quote figcaption")).toHaveText("Corporate insights, a UK police force");
   expect(await page.locator("main > section").evaluateAll((all) => all.map((el) => el.className.split(" ")[0]))).toEqual(["starting-points", "specialist-courses", "coaching", "training-teacher", "contact"]);

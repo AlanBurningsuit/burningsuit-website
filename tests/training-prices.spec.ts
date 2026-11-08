@@ -5,7 +5,7 @@ import { PRICE_SLOTS } from "../src/lib/training-prices.mjs";
 
 // The built site is either the Price on request variant or the priced variant (SHOW_TRAINING_PRICES=true at build and test time).
 // Every price-bearing comparison happens in memory and asserts a boolean with a fixed message: no failure prints an amount.
-const routes = { home: "/", training: "/training/", agents: "/training/agentic-development-for-power-bi/", fundamentals: "/training/power-bi-fundamentals/", daxDeepDive: "/training/dax-deep-dive/", daxFundamentals: "/training/dax-fundamentals/", consultancy: "/power-bi/" };
+const routes = { home: "/", training: "/training/", agents: "/training/agentic-development-for-power-bi/", fundamentals: "/training/power-bi-fundamentals/", daxDeepDive: "/training/dax-deep-dive/", daxFundamentals: "/training/dax-fundamentals/", consultancy: "/power-bi/", coachingStudy: "/work/individual-power-bi-coaching/" };
 const unaffected = ["/call/", "/about/", "/contact/", "/training/how-i-train/", "/work/", "/privacy/", "/404.html"];
 
 const html = async (request: import("@playwright/test").APIRequestContext, route: string) => (await request.get(route)).text();
@@ -20,7 +20,7 @@ test("the build under test matches the variant requested", async ({ request }) =
 });
 
 test("every rate slot appears on its pages and nowhere else", async ({ request }) => {
-  const pages = { home: decode(await html(request, routes.home)), training: decode(await html(request, routes.training)), agents: decode(await html(request, routes.agents)), fundamentals: decode(await html(request, routes.fundamentals)), daxDeepDive: decode(await html(request, routes.daxDeepDive)), daxFundamentals: decode(await html(request, routes.daxFundamentals)), consultancy: decode(await html(request, routes.consultancy)) };
+  const pages = { home: decode(await html(request, routes.home)), training: decode(await html(request, routes.training)), agents: decode(await html(request, routes.agents)), fundamentals: decode(await html(request, routes.fundamentals)), daxDeepDive: decode(await html(request, routes.daxDeepDive)), daxFundamentals: decode(await html(request, routes.daxFundamentals)), consultancy: decode(await html(request, routes.consultancy)), coachingStudy: decode(await html(request, routes.coachingStudy)) };
   if (!priced) {
     // Unpriced: no amount, price wording or founding-rate text on any priced route, and no private value even if the file exists locally.
     for (const [name, text] of Object.entries(pages)) {
@@ -44,7 +44,7 @@ test("every rate slot appears on its pages and nowhere else", async ({ request }
   expect(pages.fundamentals.includes(copy!.fundamentalsDetail), "Fundamentals renders the full private price").toBe(true);
   expect(pages.daxDeepDive.includes(copy!.daxDeepDiveDetail), "DAX deep dive renders the full private price").toBe(true);
   expect(pages.daxFundamentals.includes(copy!.daxFundamentalsDetail), "DAX fundamentals renders the full private price").toBe(true);
-  expect(pages.training.includes(copy!.coachingRange) && pages.consultancy.includes(copy!.consultancyRange), "coaching and consultancy render their usual ranges").toBe(true);
+  expect(pages.training.includes(copy!.coachingRange) && pages.consultancy.includes(copy!.consultancyRange) && pages.coachingStudy.includes(copy!.coachingRange), "coaching and consultancy render their usual ranges").toBe(true);
 
   // Each stored rate is checked individually against the pages that must carry it.
   const data = JSON.parse(readFileSync("design/copy/training-prices.json", "utf8"));
@@ -52,7 +52,7 @@ test("every rate slot appears on its pages and nowhere else", async ({ request }
     "power-bi-fundamentals": ["home", "training", "fundamentals"],
     "dax-fundamentals": ["training", "daxFundamentals"], "data-modelling": ["training"], "dax-deep-dive": ["training", "daxDeepDive"],
     "agentic-development-for-power-bi": ["home", "training", "agents"],
-    coaching: ["training"], consultancy: ["consultancy"],
+    coaching: ["training", "coachingStudy"], consultancy: ["consultancy"],
   };
   let all = true;
   for (const [course, key] of PRICE_SLOTS) {

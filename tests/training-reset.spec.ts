@@ -224,8 +224,14 @@ test("homepage keeps the approved sections, order and starting points", async ({
   // Separators are decorative: hidden from assistive technology and never left at a line start or end.
   await expect(page.locator(".specialist-names")).toMatchAriaSnapshot(`
     - list:
-      - listitem: DAX fundamentals (1 day)
-      - listitem: DAX deep dive (2 days)
+      - listitem:
+        - link "DAX fundamentals":
+          - /url: /training/dax-fundamentals/
+        - text: (1 day)
+      - listitem:
+        - link "DAX deep dive":
+          - /url: /training/dax-deep-dive/
+        - text: (2 days)
   `);
   // Course facts and specialist names share the same wrapping middot line.
   const separators = async () => (await page.locator(".dot-list").evaluateAll((lists) => lists.flatMap((list) => {

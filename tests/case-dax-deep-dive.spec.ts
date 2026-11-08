@@ -6,7 +6,7 @@ const route = "/work/dax-deep-dive/";
 const primary = "Ask about the DAX deep dive";
 const secondary = "Read the DAX deep dive course outline";
 const course = "/training/dax-deep-dive/";
-const quote = "\"Alan was highly praised for his clear explanations, engaging teaching style, and ability to make complex DAX concepts understandable.\"";
+const quote = "“Alan was highly praised for his clear explanations, engaging teaching style, and ability to make complex DAX concepts understandable.”";
 
 test("case study stays static, private and CSP-clean, with no form, embed, image or script", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -88,7 +88,11 @@ test("the relevant course entry, the course page and Work index link to the stud
   await expect(page.locator(".study-evidence").getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
   await page.goto("/work/");
   await expect(page.locator('[aria-labelledby="courses-title"]').getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
-  for (const from of ["/", "/training/agentic-development-for-power-bi/", "/training/dax-fundamentals/", "/power-bi/", "/about/", "/contact/", "/call/"]) {
+  // The homepage names both DAX courses with links to their outlines (not the study).
+  await page.goto("/");
+  expect(await page.locator(".specialist-names a").evaluateAll((links) => links.map((a) => a.getAttribute("href")))).toEqual(["/training/dax-fundamentals/", "/training/dax-deep-dive/"]);
+  await expect(page.locator(`a[href*="/work/dax-deep-dive"]`)).toHaveCount(0);
+  for (const from of ["/training/agentic-development-for-power-bi/", "/training/dax-fundamentals/", "/power-bi/", "/about/", "/contact/", "/call/"]) {
     await page.goto(from);
     // The masthead's Training menu links to the course page on every page; no other page links to the study or the course.
     await expect(page.locator(`a[href*="dax-deep-dive"]:not(.nav-menu a)`)).toHaveCount(0);

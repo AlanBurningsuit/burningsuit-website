@@ -41,6 +41,7 @@ const Heading = headingLevel === 1 ? "h1" : "h2";
           <p class="hint" id="enquiry-message-hint">A line or two is enough: a course name, or what's going on with your reports.</p>
           <textarea id="enquiry-message" name="message" rows="6" aria-describedby="enquiry-message-hint" required></textarea>
         </div>
+        {fallback && <p class="hint reply-time">I'll reply within two working days.</p>}
         <p class="hint" id="enquiry-privacy">I use your details to reply to your enquiry. Formspark delivers this form. <a href={ENQUIRY.privacyPath}>Read how I handle your information</a>.</p>
         {/* A missing endpoint makes Send unavailable rather than silently failing. */}
         <button class="button send" type="submit" disabled={!ENQUIRY.action}>Send</button>

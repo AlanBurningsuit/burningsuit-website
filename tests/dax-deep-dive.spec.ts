@@ -151,7 +151,7 @@ test("DAX deep dive page renders the approved wording and question order", async
   await expect(study.getByRole("link")).toHaveText(["DAX deep dive for a local-authority team"]);
   await expect(page.locator("main .case-figures")).toHaveCount(0);
   const quote = page.locator(".outcomes figure.pull-quote");
-  await expect(quote.locator("blockquote")).toHaveText(`"Participants found the training to be one of the best they've attended."`);
+  await expect(quote.locator("blockquote")).toHaveText("“Participants found the training to be one of the best they’ve attended.”");
   await expect(quote.locator("figcaption")).toContainText("Course organiser's feedback summary, a local authority");
   await expect(quote.locator(".pull-figures")).toHaveText("4.93 out of 5 overall, from 14 responses across two runs of the course. No points for improvement were raised.");
   await expect(page.locator("main blockquote")).toHaveCount(1);
