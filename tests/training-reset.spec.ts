@@ -37,7 +37,7 @@ for (const route of ["/", course]) {
     await expect(courses.locator("summary")).toHaveAccessibleName("Training courses");
     await expect(courses).not.toHaveAttribute("open", /.*/);
     await courses.locator("summary").click();
-    await expect(courses.getByRole("link")).toHaveText(["Power BI fundamentals", "DAX deep dive", "Power BI with AI agents 101", "How I train"]);
+    await expect(courses.getByRole("link")).toHaveText(["Power BI fundamentals", "Power BI with AI agents 101", "DAX deep dive", "How I train"]);
     await courses.locator("summary").click();
     expect(errors).toEqual([]);
     expect(external).toEqual([]);
