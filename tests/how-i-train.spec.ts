@@ -59,8 +59,12 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
   await expect(page.locator("main figure, main blockquote, main dl")).toHaveCount(0);
   // The only list outside the study links is the private course terms, a ruled list that #private-courses lands on.
   await expect(page.locator("main li:not(.study-links li)")).toHaveText([
-    "Dates: I'll arrange dates with you after you get in touch.",
-    "On site: you use my training laptops. I provide the course materials and manage the Power BI Desktop version.",
+    "Dates: lead time depends on my diary, so get in touch for current availability and we'll arrange dates together.",
+    "Group size: the course fee covers up to 8 people, whether 8 come or fewer. For more than 8, we run the course more than once.",
+    "Payment: I invoice when we agree your dates, and that confirms them. Invoices are due within 30 days, and purchase orders are welcome.",
+    "Moving or cancelling: free up to 4 weeks before the course. After that, you can move your dates once for free, and cancelling costs 50% of the course fee. In the final week, moving costs 25% of the course fee plus any travel I've already paid for, and cancelling costs the full fee.",
+    "If I have to cancel: we agree a new date, or you get a full refund.",
+    "On site: anywhere in the UK, with travel included. You use my training laptops. I provide the course materials and manage the Power BI Desktop version.",
     "Online: use your own computer with a version of Power BI Desktop released in the 3 months before the course. I provide the course materials.",
     "To take away: on site, the course materials. Online, the course materials and a recording of the session.",
     "Your own data: the courses use examples I've prepared for teaching. For help with your own reports, we can work together.",
