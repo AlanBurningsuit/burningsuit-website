@@ -25,6 +25,8 @@ const Heading = headingLevel === 1 ? "h1" : "h2";
         <input type="hidden" name="_error" value={ENQUIRY.errorPath} />
         {/* Formspark otherwise appends the submitted personal data to the URL. */}
         <input type="hidden" name="_append" value="false" />
+        {/* The page the enquiry came from, so a message that doesn't name a course still says which one. */}
+        <input type="hidden" name="page" value={Astro.url.pathname} />
         <input type="checkbox" name="_gotcha" hidden tabindex="-1" autocomplete="off" aria-hidden="true" />
         <div class="field">
           <label for="enquiry-name">Name <span class="optional">(optional)</span></label>

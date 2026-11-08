@@ -176,11 +176,12 @@ for (const outcome of ["success", "error"] as const) {
     expect(new URL(page.url()).search).toBe("");
     expect(page.url()).not.toContain("example.com");
     expect(requests).toBe(1);
-    expect([...payload!.keys()].filter((key) => !key.startsWith("_")).sort()).toEqual(["email", "message", "name"]);
+    expect([...payload!.keys()].filter((key) => !key.startsWith("_")).sort()).toEqual(["email", "message", "name", "page"]);
     expect(payload!.get("name")).toBe("");
     expect(payload!.get("email")).toBe("test@example.com");
     expect(payload!.get("message")).toBe("Which course should our team start with?");
     expect(payload!.get("_append")).toBe("false");
+    expect(payload!.get("page")).toBe("/contact/");
     expect(payload!.has("_gotcha")).toBe(false);
     expect(violations).toEqual([]);
     if (outcome === "error") {
@@ -193,7 +194,7 @@ for (const outcome of ["success", "error"] as const) {
 
 test("the enquiry notice describes the three fields and returns to Contact", async ({ page, baseURL }) => {
   await page.goto(ENQUIRY.privacyPath);
-  await expect(page.getByRole("heading", { name: "What I use it for" }).locator("+ p")).toHaveText("The form asks for your email and your message. Your name is optional. I use these details to answer your enquiry and discuss any work you ask about. Without an email address, I can't reply.");
+  await expect(page.getByRole("heading", { name: "What I use it for" }).locator("+ p")).toHaveText("The form asks for your email and your message. Your name is optional. It also tells me which page of this site you sent it from. I use these details to answer your enquiry and discuss any work you ask about. Without an email address, I can't reply.");
   await expect(page.locator("main")).not.toContainText(/organisation|what your enquiry is about/i);
   await page.getByRole("link", { name: "Back to the enquiry form" }).click();
   await expect(page).toHaveURL(baseURL! + route);

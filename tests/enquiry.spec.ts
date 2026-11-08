@@ -26,11 +26,12 @@ for (const outcome of ["success", "error"] as const) {
     const path = outcome === "success" ? ENQUIRY.successPath : ENQUIRY.errorPath;
     await expect(page).toHaveURL(new URL(path, baseURL).href);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(outcome === "success" ? "Your message has been sent" : "Your message could not be sent");
-    expect([...payload!.keys()].filter((key) => !key.startsWith("_")).sort()).toEqual(["email", "message", "name"]);
+    expect([...payload!.keys()].filter((key) => !key.startsWith("_")).sort()).toEqual(["email", "message", "name", "page"]);
     expect(payload!.get("name")).toBe("Test Person");
     expect(payload!.get("email")).toBe("test@example.com");
     expect(payload!.get("message")).toBe("A sample enquiry with spaces & punctuation.");
     expect(payload!.get("_append")).toBe("false");
+    expect(payload!.get("page")).toBe("/");
     expect(payload!.get("_redirect")).not.toBe(payload!.get("_error"));
     expect(payload!.has("_gotcha")).toBe(false);
     expect(violations).toEqual([]);
