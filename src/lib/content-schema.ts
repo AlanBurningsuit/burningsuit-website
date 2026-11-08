@@ -14,6 +14,8 @@ const common = z.object({
   title: text,
   description: text,
   heading,
+  /** A plain name for lists and links, when the page's own heading is a sentence that would read as a caption there. */
+  linkLabel: text.optional(),
   descriptor: text,
   datePublished: z.coerce.date().optional(),
   dateModified: z.coerce.date().optional(),

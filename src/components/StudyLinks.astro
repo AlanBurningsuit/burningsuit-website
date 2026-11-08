@@ -4,8 +4,8 @@ interface Props { studies: string[] }
 const entries = await Promise.all(Astro.props.studies.map(async (id) => {
   const entry = await getEntry("work", id);
   if (!entry) throw new Error(`Missing study link destination: ${id}`);
-  const { heading } = entry.data;
-  const label = typeof heading === "string" ? heading : [heading.before, heading.em, heading.after].filter(Boolean).join("");
+  const { heading, linkLabel } = entry.data;
+  const label = linkLabel ?? (typeof heading === "string" ? heading : [heading.before, heading.em, heading.after].filter(Boolean).join(""));
   return { id, label };
 }));
 ---

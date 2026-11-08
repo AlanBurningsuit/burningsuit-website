@@ -26,7 +26,7 @@ const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() 
       </div>
       <ul class="work-entries" role="list">
         {studies.filter(({ data }) => data.category === group.category).map(({ id, data }) => <li>
-          <h3><a href={`/work/${id}/`}>{headingText(data.heading)}</a></h3>
+          <h3><a href={`/work/${id}/`}>{data.linkLabel ?? headingText(data.heading)}</a></h3>
           <p>{sentenceCase(data.descriptor)}</p>
         </li>)}
       </ul>

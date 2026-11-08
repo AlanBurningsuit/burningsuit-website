@@ -87,7 +87,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator("#ongoing .ongoing-body > *").nth(1)).toHaveClass(/ongoing-intro/);
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
   await expect(page.locator(".course-intro > p:not(.standfirst)")).toHaveText([
-    "Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running and people rely on it, but it all rests on one person, or two reports give different answers to the same question.",
+    "Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running, people rely on it, and it has become hard to change safely.",
     "That's what my consultancy is for. I work with your team on your own Power BI: how the data gets in, the models, the reports and how they reach the people who use them. I explain as I go, in your words rather than mine. The aim is a team that understands what was built and can change it, not one that relies on yet another contractor.",
     "Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free 30-minute call.",
   ]);

@@ -22,7 +22,7 @@ test("Work groups only the four active studies in the approved offer order", asy
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Work");
   expect(await page.locator(".work-entries a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual(studyPaths);
   await expect(page.locator(".work-entries p")).toHaveText(["A local-authority team", "A contact-centre team lead", "An individual learner developing Power BI reporting", "A UK university's sustainability team"]);
-  await expect(page.locator(".work-entries h3")).toHaveText(["DAX deep dive for a local-authority team", "Coaching a contact-centre team lead", "He already built the reports. Coaching was about what's underneath them.", "Their own method, in a model they can check."]);
+  await expect(page.locator(".work-entries h3")).toHaveText(["DAX deep dive for a local-authority team", "Coaching a contact-centre team lead", "Individual Power BI coaching", "Their own method, in a model they can check."]);
   await expect(page.locator("nav a:not(.nav-menu a)")).toHaveText(["Training", "Consultancy", "Work", "About", "Contact"]);
   for (const path of reserved404Routes) await expect(page.locator(`a[href="/${path}/"]`)).toHaveCount(0);
   for (const link of await page.locator(".work-group h2 a").all()) expect(await link.evaluate(el => getComputedStyle(el).textDecorationLine)).toContain("underline");
