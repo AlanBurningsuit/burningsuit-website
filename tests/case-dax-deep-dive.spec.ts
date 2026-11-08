@@ -45,14 +45,14 @@ test("case study tells the approved story in order, anonymously", async ({ page 
     "After the course I sent a worked version of the variables exercise for reference. Variables let you name a step inside a measure and use it again, which makes a long measure easier to read and check.",
     "The organiser then surveyed the people who'd attended. I ran the course twice for them that year, and the summary covers both groups together.",
   ]);
-  // One cream proof panel: the quote, its attribution and the figures as plain text; no stars, badge or logo.
+  // One piece of evidence, marked by the amber rule with no panel: the quote, its attribution and the figures as plain text; no stars, badge or logo.
   const panel = page.locator("figure.case-evidence");
   await expect(panel).toHaveCount(1);
   await expect(panel.locator("blockquote")).toHaveText(quote);
   await expect(panel.locator(".case-attribution")).toHaveText("The organiser's feedback summary");
   await expect(panel.locator(".case-figures")).toHaveText("4.93 out of 5 overall, from 14 responses across both groups. No points for improvement were raised.");
   await expect(panel.locator("img, svg, meter, progress, [role=img]")).toHaveCount(0);
-  expect(await panel.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(241, 236, 217)");
+  expect(await panel.evaluate((el) => [getComputedStyle(el).backgroundColor, getComputedStyle(el).boxShadow, getComputedStyle(el).borderLeftStyle])).toEqual(["rgba(0, 0, 0, 0)", "none", "solid"]);
   await expect(page.locator(".case-limits")).toHaveText("This shows how the two days ran and how people said they found them. It doesn't show what changed in their work afterwards.");
   await expect(page.locator(".case-ask .raised-copy > p").first()).toHaveText("The course's current length, delivery and group size are on Training.");
   const text = await page.locator("main").innerText();
@@ -127,9 +127,8 @@ test("case study layout: headings beside prose and figures beside the quote on w
     expect(prose.y).toBeGreaterThanOrEqual(heading.y + heading.height);
     quoteBox = await box(".case-evidence blockquote"); figures = await box(".case-figures");
     expect(figures.y).toBeGreaterThanOrEqual(quoteBox.y + quoteBox.height);
-    // The panel's hard shadow stays on screen.
     const panel = await box(".case-evidence");
-    expect(panel.x + panel.width + 5).toBeLessThanOrEqual(width);
+    expect(panel.x + panel.width).toBeLessThanOrEqual(width);
   }
 });
 

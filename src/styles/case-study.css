@@ -141,7 +141,7 @@
 :where(.case-course) .dot-list > li { position: relative; }
 :where(.case-course) .dot-list > li::before { content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
 /* course */
-/* Case study pages (/work/<case>/): the notebook layout of How I train and About, a cream proof panel for the one piece of evidence,
+/* Case study pages (/work/<case>/): the notebook layout of How I train and About, the amber evidence rule for the one piece of evidence,
    and the shared raised band (app.css) for the enquiry. The facts line is home.css's .facts.dot-list. */
 
 /* Opening: the settled course-page title and the facts line. */
@@ -155,7 +155,7 @@
 :where(.case-course) .case-prose p { max-width: 62ch; }
 :where(.case-course) .case-after { padding-bottom: 64px; }
 
-/* The evidence: the cream proof panel (app.css) holding the quote, its attribution and the figures as plain text. */
+/* The evidence, marked by the amber evidence rule (app.css): the quote, its attribution and the figures as plain text. */
 :where(.case-course) .case-evidence {
   grid-column: 1 / -1;
   display: grid;
@@ -165,12 +165,12 @@
   row-gap: 18px;
   align-items: start;
   margin-top: 44px;
-  padding: 36px 40px;
+  padding-block: 4px;
 }
 :where(.case-course) .case-evidence blockquote { grid-area: quote; }
-:where(.case-course) .case-evidence blockquote p { max-width: 34ch; color: var(--ink); font: 600 clamp(1.45rem, 2.4vw, 1.9rem) / var(--lh-tight) var(--ff-display); letter-spacing: var(--ls-display-tight); text-wrap: pretty; }
-:where(.case-course) .case-attribution { grid-area: cite; font: 400 .95rem / var(--lh-relaxed) var(--ff-note); }
-:where(.case-course) .case-figures { grid-area: figures; padding-left: 22px; border-left: var(--bw-spine) solid var(--paper-edge); font-size: 1.05rem; color: var(--ink); }
+:where(.case-course) .case-evidence blockquote p { max-width: 34ch; color: var(--text); font: 600 clamp(1.45rem, 2.4vw, 1.9rem) / var(--lh-tight) var(--ff-display); letter-spacing: var(--ls-display-tight); text-wrap: pretty; }
+:where(.case-course) .case-attribution { grid-area: cite; color: var(--text-dim); font: 400 .95rem / var(--lh-relaxed) var(--ff-note); }
+:where(.case-course) .case-figures { grid-area: figures; padding-left: 22px; border-left: var(--bw-hair) solid var(--rule); font-size: 1.05rem; color: var(--text); }
 
 /* The limits line, in Alan's voice, under the panel beside the prose column. */
 :where(.case-course) .case-limits { grid-column: 2; max-width: 62ch; margin-top: 32px; padding-left: 22px; border-left: var(--bw-spine) solid var(--rule); }
@@ -186,13 +186,12 @@
   :where(.case-course) .case-beat { grid-template-columns: minmax(0, 1fr); row-gap: 18px; padding-bottom: 36px; }
   :where(.case-course) .case-prose { padding-top: 0; border-top: 0; }
   :where(.case-course) .case-after { padding-bottom: 52px; }
-  :where(.case-course) .case-evidence { grid-template-columns: minmax(0, 1fr); grid-template-areas: "quote" "cite" "figures"; margin-top: 18px; padding: 28px 28px 30px; }
-  :where(.case-course) .case-figures { padding: 16px 0 0; border-left: 0; border-top: var(--bw-hair) solid var(--paper-edge); }
+  :where(.case-course) .case-evidence { grid-template-columns: minmax(0, 1fr); grid-template-areas: "quote" "cite" "figures"; margin-top: 18px; }
+  :where(.case-course) .case-figures { padding: 16px 0 0; border-left: 0; border-top: var(--bw-hair) solid var(--rule); }
   :where(.case-course) .case-limits { grid-column: 1; margin-top: 18px; }
 }
 @media (max-width: 680px) {
   :where(.case-course) .case-opening { padding-block: 24px 28px; }
-  :where(.case-course) .case-evidence { padding: 22px 20px 24px; margin-right: 5px; } /* keeps the hard shadow on screen */
   :where(.case-course) .case-evidence blockquote p { font-size: 1.35rem; }
 }
 
