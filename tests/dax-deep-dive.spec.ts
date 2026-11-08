@@ -153,7 +153,7 @@ test("DAX deep dive page renders the approved wording and question order", async
   const quote = page.locator(".outcomes figure.pull-quote");
   await expect(quote.locator("blockquote")).toHaveText(`"Participants found the training to be one of the best they've attended."`);
   await expect(quote.locator("figcaption")).toContainText("Course organiser's feedback summary, a local authority");
-  await expect(quote.locator(".pull-figures")).toHaveText("4.93 out of 5 overall, from 14 responses across two runs of the course in 2025. No points for improvement were raised.");
+  await expect(quote.locator(".pull-figures")).toHaveText("4.93 out of 5 overall, from 14 responses across two runs of the course. No points for improvement were raised.");
   await expect(page.locator("main blockquote")).toHaveCount(1);
 
   // What to arrange: one pointer line to How I train's private course terms; no list or keep paragraph.
