@@ -10,7 +10,7 @@ import { resolve } from "node:path";
 export const priced = pricesRequested();
 export const copy = trainingPriceCopy(loadTrainingPrices());
 
-/** The ten stored rate strings, or none for the unpriced variant. Held in memory only. */
+/** The stored rate strings, or none for the unpriced variant. Held in memory only. */
 export const privateValues: string[] = priced
   ? PRICE_SLOTS.map(([course, key]) => JSON.parse(readFileSync(resolve(process.cwd(), PRICES_FILE), "utf8"))[course][key] as string)
   : [];
@@ -34,7 +34,8 @@ export async function expectAttribute(locator: Locator, name: string, expected: 
   expect((await locator.getAttribute(name)) === expected, `${label}: ${name} matches the approved copy`).toBe(true);
 }
 
-const AMOUNT = /[£€$]\s*\d[\d,]*(?:\.\d+)?/g;
+// A comma straight after an amount (as in a range followed by ", ex VAT") is punctuation, not part of the amount.
+const AMOUNT = /[£€$]\s*\d+(?:,\d{3})*(?:\.\d+)?/g;
 
 /** Unpriced pages show no amount; priced pages show only amounts held in the private file. */
 export async function expectAmountsOnlyWhenPriced(page: Page, label: string) {

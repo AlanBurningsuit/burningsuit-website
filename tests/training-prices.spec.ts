@@ -5,8 +5,8 @@ import { PRICE_SLOTS } from "../src/lib/training-prices.mjs";
 
 // The built site is either the Price on request variant or the priced variant (SHOW_TRAINING_PRICES=true at build and test time).
 // Every price-bearing comparison happens in memory and asserts a boolean with a fixed message: no failure prints an amount.
-const routes = { home: "/", training: "/training/", agents: "/training/agentic-development-for-power-bi/", fundamentals: "/training/power-bi-fundamentals/", daxDeepDive: "/training/dax-deep-dive/", daxFundamentals: "/training/dax-fundamentals/" };
-const unaffected = ["/power-bi/", "/hour/", "/about/", "/contact/", "/training/how-i-train/", "/work/", "/privacy/", "/404.html"];
+const routes = { home: "/", training: "/training/", agents: "/training/agentic-development-for-power-bi/", fundamentals: "/training/power-bi-fundamentals/", daxDeepDive: "/training/dax-deep-dive/", daxFundamentals: "/training/dax-fundamentals/", consultancy: "/power-bi/" };
+const unaffected = ["/call/", "/about/", "/contact/", "/training/how-i-train/", "/work/", "/privacy/", "/404.html"];
 
 const html = async (request: import("@playwright/test").APIRequestContext, route: string) => (await request.get(route)).text();
 const decode = (text: string) => text.replaceAll("&#39;", "'").replaceAll("&#x27;", "'").replaceAll("&amp;", "&").replaceAll("&nbsp;", " ");
@@ -16,13 +16,13 @@ test("the build under test matches the variant requested", async ({ request }) =
   const training = decode(await html(request, routes.training));
   expect(training.includes(">Private course prices are per booking, for up to 8 people, and include UK travel.<"), "priced introduction is present only in the priced build").toBe(priced);
   expect(/ex VAT/.test(training), "ex VAT wording is present only in the priced build").toBe(priced);
-  if (priced) expect(knownValues.length, "ten private rates are loaded").toBe(PRICE_SLOTS.length);
+  if (priced) expect(knownValues.length, "every private rate is loaded").toBe(PRICE_SLOTS.length);
 });
 
-test("ten rate slots appear on their pages and nowhere else", async ({ request }) => {
-  const pages = { home: decode(await html(request, routes.home)), training: decode(await html(request, routes.training)), agents: decode(await html(request, routes.agents)), fundamentals: decode(await html(request, routes.fundamentals)), daxDeepDive: decode(await html(request, routes.daxDeepDive)), daxFundamentals: decode(await html(request, routes.daxFundamentals)) };
+test("every rate slot appears on its pages and nowhere else", async ({ request }) => {
+  const pages = { home: decode(await html(request, routes.home)), training: decode(await html(request, routes.training)), agents: decode(await html(request, routes.agents)), fundamentals: decode(await html(request, routes.fundamentals)), daxDeepDive: decode(await html(request, routes.daxDeepDive)), daxFundamentals: decode(await html(request, routes.daxFundamentals)), consultancy: decode(await html(request, routes.consultancy)) };
   if (!priced) {
-    // Unpriced: no amount, price wording or founding-rate text on any of the six routes, and no private value even if the file exists locally.
+    // Unpriced: no amount, price wording or founding-rate text on any priced route, and no private value even if the file exists locally.
     for (const [name, text] of Object.entries(pages)) {
       expect(!/[£€$]\s?\d/.test(text) && !/ex VAT|founding rate|Standard rate|per booking/i.test(text), `unpriced ${name} has no price wording`).toBe(true);
       expect(knownValues.every((value) => !text.includes(value)), `unpriced ${name} holds no private rate`).toBe(true);
@@ -35,6 +35,7 @@ test("ten rate slots appear on their pages and nowhere else", async ({ request }
     daxDeepDive: [copy!.daxDeepDiveDetail],
     daxFundamentals: [copy!.daxFundamentalsDetail],
     seat: [copy!.publicSeat, ...copy!.seatFacts, copy!.seatBookFacts],
+    ranges: [copy!.coachingRange, copy!.consultancyRange],
   };
   expect(rates.fundamentals.every((text) => [pages.home, pages.training, pages.fundamentals].some((page) => page.includes(text))), "Fundamentals rates render").toBe(true);
   expect(pages.home.includes(copy!.homeFundamentals) && pages.home.includes(copy!.publicSeat), "Home renders both course price items").toBe(true);
@@ -43,13 +44,15 @@ test("ten rate slots appear on their pages and nowhere else", async ({ request }
   expect(pages.fundamentals.includes(copy!.fundamentalsDetail), "Fundamentals renders the full private price").toBe(true);
   expect(pages.daxDeepDive.includes(copy!.daxDeepDiveDetail), "DAX deep dive renders the full private price").toBe(true);
   expect(pages.daxFundamentals.includes(copy!.daxFundamentalsDetail), "DAX fundamentals renders the full private price").toBe(true);
+  expect(pages.training.includes(copy!.coachingRange) && pages.consultancy.includes(copy!.consultancyRange), "coaching and consultancy render their usual ranges").toBe(true);
 
-  // Each of the ten stored rates is checked individually against the pages that must carry it.
+  // Each stored rate is checked individually against the pages that must carry it.
   const data = JSON.parse(readFileSync("design/copy/training-prices.json", "utf8"));
   const placement: Record<string, string[]> = {
     "power-bi-fundamentals": ["home", "training", "fundamentals"],
     "dax-fundamentals": ["training", "daxFundamentals"], "data-modelling": ["training"], "dax-deep-dive": ["training", "daxDeepDive"],
     "agentic-development-for-power-bi": ["home", "training", "agents"],
+    coaching: ["training"], consultancy: ["consultancy"],
   };
   let all = true;
   for (const [course, key] of PRICE_SLOTS) {
@@ -58,7 +61,7 @@ test("ten rate slots appear on their pages and nowhere else", async ({ request }
     const sharers = PRICE_SLOTS.filter(([c, k]) => data[c][k] === value).map(([c]) => c);
     for (const [name, text] of Object.entries(pages)) all &&= text.includes(value) === sharers.some((c) => placement[c].includes(name));
   }
-  expect(all, "all ten rates appear on exactly their intended pages").toBe(true);
+  expect(all, "every rate appears on exactly its intended pages").toBe(true);
 
   // Nothing else on the site, nor any attribute, script or metadata of these pages, carries a rate.
   for (const route of unaffected) {
@@ -68,7 +71,7 @@ test("ten rate slots appear on their pages and nowhere else", async ({ request }
   }
   for (const [name, text] of Object.entries(pages)) {
     let rest = text;
-    for (const slot of [...rates.fundamentals, ...rates.specialists, ...rates.daxDeepDive, ...rates.daxFundamentals, ...rates.seat]) rest = rest.replaceAll(slot, "");
+    for (const slot of [...rates.fundamentals, ...rates.specialists, ...rates.daxDeepDive, ...rates.daxFundamentals, ...rates.seat, ...rates.ranges]) rest = rest.replaceAll(slot, "");
     expect(knownValues.every((value) => !rest.includes(value)), `${name} shows rates only inside their approved items`).toBe(true);
   }
 });
@@ -79,19 +82,19 @@ test("unpriced and priced items keep the approved private-course wording", async
   await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Price on request", "private 101 price remains on request");
   await page.goto(routes.training);
   await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Price on request", "private 101 price remains on request");
-  await expectText(page.locator("#coaching .facts > li").last(), "Price on request", "coaching remains on request");
-  // Priced: private 101 and coaching. Unpriced: Fundamentals, the 101, three specialists and coaching.
-  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(priced ? 2 : 6);
+  await expectText(page.locator("#coaching .facts > li").last(), priced ? copy!.coachingRange : "Price on request", "coaching shows its range only when priced");
+  // Priced: the private 101 only. Unpriced: Fundamentals, the 101, two specialists and coaching.
+  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(priced ? 1 : 5);
   if (priced) {
     // The private-101 line follows "Also private, for your team", so the amounts above it cannot be read as its price.
     const facts = page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li");
     await expectItems(facts, ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", copy!.publicSeat, "Also private, for your team", "Price on request"], "101 chooser facts");
     await expectText(page.locator(".training-intro > p").nth(1), copy!.trainingIntro, "training price statement");
   }
-  // Consultancy and the free call keep their approved wording in both variants.
+  // Consultancy shows its usual range only when priced; the free call never carries a price.
   await page.goto("/power-bi/");
-  await expectText(page.locator(".run-facts > li").first(), "Price on request, usually a fixed price", "consultancy remains on request");
-  await page.goto("/hour/");
+  await expectText(page.locator(".run-facts > li").first(), priced ? copy!.consultancyRange : "Price on request, usually a fixed price", "consultancy price line");
+  await page.goto("/call/");
   await expectAmountsOnlyWhenPriced(page, "free call");
   expect(await page.locator("main").innerText()).not.toMatch(/ex VAT|founding rate/i);
 });

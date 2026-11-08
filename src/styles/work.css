@@ -6,9 +6,11 @@
 .work-group h2 a { color: var(--text); }
 .work-group h2 a:hover { color: var(--link); }
 .work-entries { list-style: none; margin: 0; padding: 0; }
-.work-entries li { padding: 22px 26px 24px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
+.work-entries li { position: relative; padding: 22px 26px 24px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
 .work-entries li + li { margin-top: 20px; }
 .work-entries h3 { font-size: var(--h3-card-size); line-height: var(--lh-snug); }
+/* The whole card answers the pointer: the title link stretches over it. */
+.work-entries h3 a::after { content: ""; position: absolute; inset: 0; border-radius: var(--r); }
 .work-entries p { color: var(--text-dim); margin-top: 10px; font-family: var(--ff-note); }
 .work-next .text-link { font-size: 1.1rem; }
 @media (max-width: 900px) {

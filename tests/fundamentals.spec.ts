@@ -6,7 +6,7 @@ import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced
 
 const route = "/training/power-bi-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
-const links = ["/training/", "#contact", "#need-title", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
+const links = ["/training/dax-fundamentals/", "#contact", "#need-title", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
 
 const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 
@@ -57,7 +57,7 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await expect(page.locator("h1")).toHaveText("Power BI fundamentals");
   await expect(page.locator(".title-band .standfirst")).toHaveText("New to Power BI?");
   await expect(page.locator(".course-intro > p:not(.standfirst):not(.course-fit)")).toHaveText("This two-day course takes your team from preparing data to sharing reports and keeping them up to date. No Power BI experience, DAX or coding needed.");
-  await expect(page.locator(".course-fit")).toHaveText("Already building reports and looking for a day on calculations or table design? Compare DAX fundamentals and Data modelling.");
+  await expect(page.locator(".course-fit")).toHaveText("Already building reports and looking for a day on calculations? See DAX fundamentals.");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll be able to do", "The two days", "What to arrange", "Ask about dates"]);
 
   // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.

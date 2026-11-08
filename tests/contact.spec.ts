@@ -6,8 +6,9 @@ import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 const route = "/contact/";
 const mailto = `mailto:${ENQUIRY.email}`;
 const intro = [
-  "I'm Alan Harman-Box. Send me a question about a course or your reports, or tell me what you're working on if you're unsure where to start. I'll reply by email.",
+  "I'm Alan Harman-Box. Send me a question about a course or your reports, or tell me what you're working on if you're unsure where to start. I'll reply by email within two working days.",
   `Email me at ${ENQUIRY.email}, or use the form.`,
+  "Rather talk it through? Book a free 30-minute call.",
 ];
 
 test("Contact is a real static page: private, CSP-clean, with Contact current", async ({ page, baseURL }) => {
@@ -79,7 +80,7 @@ test("Contact shows the approved wording, with email above the form and no secon
   if (ENQUIRY.action) await expect(send).toBeEnabled();
   else await expect(send).toBeDisabled();
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([mailto, ENQUIRY.privacyPath]);
+  expect(mainLinks).toEqual([mailto, "/call/", ENQUIRY.privacyPath]);
   // Email comes before the form in source order and on narrow screens.
   for (const width of [1366, 390]) {
     await page.setViewportSize({ width, height: 900 });
@@ -118,7 +119,7 @@ test("Contact validates natively and works from the keyboard without JavaScript"
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 7; i++) {
     await page.keyboard.press("Tab");
     const focus = await page.evaluate(() => {
       const el = document.activeElement as HTMLElement;
@@ -130,7 +131,7 @@ test("Contact validates natively and works from the keyboard without JavaScript"
     expect(focus.ring).toBe(true);
     expect(focus.visible).toBe(true);
   }
-  expect(reached).toEqual([mailto, "enquiry-name", "enquiry-email", "enquiry-message", ENQUIRY.privacyPath, "button"]);
+  expect(reached).toEqual([mailto, "/call/", "enquiry-name", "enquiry-email", "enquiry-message", ENQUIRY.privacyPath, "button"]);
 
   // Empty: the browser holds the enquiry and focuses the required email.
   await form.getByRole("button", { name: "Send", exact: true }).click();

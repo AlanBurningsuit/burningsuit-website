@@ -11,13 +11,14 @@ import { resolve } from "node:path";
 export const PRICES_FILE = "design/copy/training-prices.json";
 export const PRICES_FLAG = "SHOW_TRAINING_PRICES";
 
-/** Private file keys for the ten rate slots. */
+/** Private file keys for the rate slots. */
 export const PRICE_SLOTS = [
   ["power-bi-fundamentals", "onSite"], ["power-bi-fundamentals", "online"],
   ["dax-fundamentals", "onSite"], ["dax-fundamentals", "online"],
-  ["data-modelling", "onSite"], ["data-modelling", "online"],
   ["dax-deep-dive", "onSite"], ["dax-deep-dive", "online"],
   ["agentic-development-for-power-bi", "seatFoundingRate"], ["agentic-development-for-power-bi", "seat"],
+  ["coaching", "from"], ["coaching", "to"],
+  ["consultancy", "from"], ["consultancy", "to"],
 ];
 
 /** A pound sign then digits and commas only: no VAT text, no spaces, no ranges. */
@@ -59,7 +60,7 @@ export function validatePrices(data) {
 }
 
 /**
- * Returns null unless prices are requested. When requested, returns the ten validated rates or throws a TrainingPricesError.
+ * Returns null unless prices are requested. When requested, returns the validated rates or throws a TrainingPricesError.
  * @param {{ env?: Record<string, string | undefined>, file?: string }} [options]
  */
 export function loadTrainingPrices({ env = process.env, file = resolve(process.cwd(), PRICES_FILE) } = {}) {
@@ -81,9 +82,10 @@ export function loadTrainingPrices({ env = process.env, file = resolve(process.c
   return Object.freeze({
     fundamentals: pair("power-bi-fundamentals", "onSite", "online"),
     daxFundamentals: pair("dax-fundamentals", "onSite", "online"),
-    dataModelling: pair("data-modelling", "onSite", "online"),
     daxDeepDive: pair("dax-deep-dive", "onSite", "online"),
     agent101: pair("agentic-development-for-power-bi", "seatFoundingRate", "seat"),
+    coaching: pair("coaching", "from", "to"),
+    consultancy: pair("consultancy", "from", "to"),
   });
 }
 
@@ -104,7 +106,6 @@ export function trainingPriceCopy(prices) {
     trainingIntro: "Private course prices are per booking, for up to 8 people, and include UK travel.",
     specialists: Object.freeze({
       "DAX fundamentals": `${rate(prices.daxFundamentals)}, ex VAT`,
-      "Data modelling": `${rate(prices.dataModelling)}, ex VAT`,
       "DAX deep dive": `${rate(prices.daxDeepDive)}, ex VAT`,
     }),
     // 101 page (A1, A2)
@@ -119,6 +120,9 @@ export function trainingPriceCopy(prices) {
     daxDeepDiveDetail: `${rate(prices.daxDeepDive)}, per booking, ex VAT, UK travel included`,
     // DAX fundamentals page (ops site/dax-fundamentals-page-copy.md, the DAX deep dive pattern)
     daxFundamentalsDetail: `${rate(prices.daxFundamentals)}, per booking, ex VAT, UK travel included`,
+    // Budget guidance (Alan, 8 Nov 2026): coaching on Training, consultancy on its own page. Both depend on the work.
+    coachingRange: `Usually ${prices.coaching.from} to ${prices.coaching.to}, ex VAT`,
+    consultancyRange: `Usually a fixed price of ${prices.consultancy.from} to ${prices.consultancy.to}, ex VAT`,
   });
 }
 

@@ -92,7 +92,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(needs).toHaveText([
     "A Windows computer with a version of Power BI Desktop released in the 3 months before the course.",
     "One of three agent tools, on at least its lowest paid plan: Claude Desktop, ChatGPT or GitHub Copilot. Using something else? Tell me, and we can probably make it work.",
-    "Permission to install and use that tool. On a work laptop, check with your IT team early.",
+    "Permission to install and use that tool. On a work laptop, check with your IT team early. If your work laptop is locked down, you can use your own Windows computer.",
     "A folder on your computer for the teaching files, outside OneDrive and SharePoint, plus reliable internet and audio. A second screen helps.",
     "A short setup check before the day. You'll get the details with your course information once your booking is confirmed.",
   ]);
@@ -133,7 +133,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   // "Founding rate" is the approved wording for the priced seat facts only.
   expectNone(text, [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, ...(priced ? [] : [/refund/i]), /checklist/i, /house-rules template/i, /setup notes/i, ...(priced ? [] : [/founding rate/i])], "101 text");
   if (priced) expect(/founding rate/.test(text) && !/limited|save|early bird|discount|countdown/i.test(text), "101 states the founding rate as a plain fact").toBe(true);
-  await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a recording of the morning, along with the teaching project and clean copies, so you can work through it again.");
+  await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a video recording of the morning, along with the teaching project and clean copies, so you can work through it again.");
 });
 
 test("the 101 puts facts beside the introduction on wide screens and after the prerequisite on narrow ones", async ({ page }) => {
@@ -216,16 +216,15 @@ test("homepage keeps the approved sections, order and starting points", async ({
     const entry = page.getByRole("article", { name });
     await expectItems(entry.locator(".facts > li"), homeFacts[name], `home ${name} facts`);
     await expect(entry.getByRole("link", { name: "Read the course outline" })).toHaveCount(1);
-    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/agentic-development-for-power-bi/#need-title" : "#contact");
+    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/agentic-development-for-power-bi/#book-title" : "#contact");
   }
   await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
-  await expect(page.locator(".specialist-names > li")).toHaveText(["DAX fundamentals (1 day)", "Data modelling (1 day)", "DAX deep dive (2 days)"]);
+  await expect(page.locator(".specialist-names > li")).toHaveText(["DAX fundamentals (1 day)", "DAX deep dive (2 days)"]);
   await expect(page.locator(".specialist-names")).toBeVisible();
   // Separators are decorative: hidden from assistive technology and never left at a line start or end.
   await expect(page.locator(".specialist-names")).toMatchAriaSnapshot(`
     - list:
       - listitem: DAX fundamentals (1 day)
-      - listitem: Data modelling (1 day)
       - listitem: DAX deep dive (2 days)
   `);
   // Course facts and specialist names share the same wrapping middot line.

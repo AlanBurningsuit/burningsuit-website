@@ -1,7 +1,8 @@
 @import "./tokens.css";
 
 * { box-sizing: border-box; }
-html { color-scheme: dark; scroll-padding-top: 1.5rem; }
+/* The canvas takes the footer's ground, so a page shorter than the window ends on the footer, not a seam below it. */
+html { color-scheme: dark; scroll-padding-top: 1.5rem; background: var(--bg-band); }
 /* Zero specificity for .dark, so a closing band's own darker ground wins whatever the stylesheet order. */
 body, main, :where(.dark) { background: var(--surface); color: var(--text); }
 main { color-scheme: light; }
@@ -32,7 +33,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .title-band { padding-block: clamp(40px, 5vw, 72px) clamp(64px, 7vw, 104px); }
 .title-band h1 { margin: 0; font-size: var(--title-band-size); text-wrap: balance; }
 .title-band .standfirst { margin: clamp(18px, 2vw, 28px) 0 0; max-width: 34ch; text-wrap: balance; }
-.title-actions { display: flex; flex-wrap: wrap; gap: 6px 28px; margin-top: clamp(18px, 2vw, 26px); }
+.title-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: clamp(18px, 2vw, 26px); }
 .title-actions .text-link { font-size: 1.05rem; }
 /* The one button, for every action that isn't a text link: it takes its colours from the ground it sits on (tokens.css). */
 .button {
@@ -146,6 +147,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .raised-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: start; }
 .raised-copy p { max-width: 58ch; }
 .raised-copy .text-link { margin-top: 14px; }
+.raised-copy .button { margin-top: 20px; }
 
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }
@@ -181,6 +183,11 @@ main:not(:has(> .dark:last-child, > :last-child > .dark:last-child)) + .footer-b
   .nav-menu ul { left: auto; right: 0; }
   .masthead nav a { font-size: .86rem; }
   .nav-menu summary { width: 22px; }
+  .nav-menu summary::before { inset: -6px -12px -6px 0; } /* the whole gap to the next link */
+  /* Footer links and text grow to a comfortable reading size and tap height. */
+  .footer { font-size: .875rem; }
+  .foot-links { gap: 0 20px; }
+  .foot-links a { display: inline-block; padding-block: 11px; }
   .contact-inner { row-gap: 24px; padding-block: 38px; }
   .footer { font-size: .7rem; gap: 12px; }
   .foot-legal { font-size: .75rem; } /* The company line stays at least 12px; only the links shrink. */

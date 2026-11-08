@@ -47,7 +47,7 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
     "Yes. Ask how an idea applies where you work, and I'll follow the question within what the course covers. If you'd like to learn on your own work over several weeks, that's what Power BI coaching is for. If there's something specific you'd like to get working with your own data, we can work together.",
     "I aim for explanations you can use again. When I recommend a way of doing something, I tell you what it helps with and when it matters, so you can make your own choice when a similar problem turns up. I also name things as we meet them, because knowing what something's called helps you ask better questions.",
     "I write and teach every course myself, for groups of up to 8 people.",
-    "These terms apply to Power BI fundamentals, DAX fundamentals, Data modelling and the DAX deep dive.",
+    "These terms apply to Power BI fundamentals, DAX fundamentals and the DAX deep dive.",
     "Power BI with AI agents 101 is set up differently: see what you'll need for the 101.",
     "Compare all the courses, or start with Power BI fundamentals or Power BI with AI agents 101. If you've got a question about how I teach, email me or use the enquiry form. There's more about me too.",
   ]);

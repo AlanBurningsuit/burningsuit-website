@@ -10,12 +10,15 @@ import EnquiryForm from "../components/EnquiryForm.astro";
 import "../styles/course.css";
 import "../styles/consultancy.css";
 import working from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
+import { loadTrainingPrices, trainingPriceCopy } from "../lib/training-prices.mjs";
 
 const call = "/call/";
+// The priced build shows the usual range (private prices file); otherwise the price stays on request.
+const priced = trainingPriceCopy(loadTrainingPrices());
 ---
 <BaseLayout
   title="Power BI consultancy | burningsuit"
-  description="Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards. Price on request."
+  description={`Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards.${priced ? "" : " Price on request."}`}
   placeholder={false}
 >
   <TitleBand heading={{ before: "Power BI consultancy that leaves your team ", em: "independent" }}>
@@ -30,12 +33,12 @@ const call = "/call/";
 
     <aside class="course-run" aria-label="Consultancy facts and booking">
       <ul class="run-facts" role="list">
-        <li>Price on request, usually a fixed price</li>
+        <li>{priced ? priced.consultancyRange : "Price on request, usually a fixed price"}</li>
         <li>You get me, working with your team</li>
         <li>Built so your team can run it without me afterwards</li>
         <li>It starts with a free 30-minute call</li>
       </ul>
-      <a class="text-link run-action" href={call}>Book a free 30-minute call</a>
+      <a class="button run-action" href={call}>Book a free 30-minute call</a>
     </aside>
   </div>
 
@@ -104,7 +107,7 @@ const call = "/call/";
         <li><strong>Strategic advice</strong> as your reporting changes.</li>
         <li><strong>Regular office hours,</strong> such as a monthly call in a fixed window, where your team brings whatever has come up.</li>
       </ul>
-      <p class="ongoing-price">It's priced on request, like the rest of the work.</p>
+      <p class="ongoing-price">{priced ? "It's priced on request." : "It's priced on request, like the rest of the work."}</p>
     </div>
   </section>
 

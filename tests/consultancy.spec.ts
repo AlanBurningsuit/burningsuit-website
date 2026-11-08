@@ -2,6 +2,7 @@ import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { pages } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
+import { priced, expectAmountsOnlyWhenPriced } from "./prices";
 
 const route = "/power-bi/";
 const call = "/call/";
@@ -18,13 +19,13 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI consultancy | burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards. Price on request.");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", `Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards.${priced ? "" : " Price on request."}`);
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Consultancy");
   await expect(page.locator("aside.course-run")).toHaveAttribute("aria-label", "Consultancy facts and booking");
-  expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
+  await expectAmountsOnlyWhenPriced(page, "consultancy");
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -46,7 +47,10 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".do-steps > li").nth(1)).toHaveAttribute("id", "pricing");
   for (const id of ["deliver", "skills", "handover", "backup", "second-opinion", "discovery"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(0);
 
-  await expect(page.locator(".run-facts > li")).toHaveText(["Price on request, usually a fixed price", "You get me, working with your team", "Built so your team can run it without me afterwards", "It starts with a free 30-minute call"]);
+  // The price line is checked in memory by training-prices.spec.ts, so no amount is ever printed here.
+  const priceLine = ((await page.locator(".run-facts > li").nth(0).textContent()) ?? "").trim();
+  expect(priced ? priceLine.startsWith("Usually a fixed price of ") : priceLine === "Price on request, usually a fixed price", "consultancy price line").toBe(true);
+  await expect(page.locator(".run-facts > li").filter({ hasNotText: /price/i })).toHaveText(["You get me, working with your team", "Built so your team can run it without me afterwards", "It starts with a free 30-minute call"]);
   await expect(page.locator("#situations .lead-list > li strong")).toHaveText(["Thinking through your reporting as a whole.", "Owning the Power BI you've already got.", "Building or moving something, together.", "Getting started with AI agents."]);
   await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`
     - list:
@@ -94,7 +98,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".build-line")).toHaveText("If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.");
   await expect(page.locator('[aria-labelledby="method-title"] .lead-list > li')).toHaveText(["Coaching your team to do it. I take your team through each part of the work and, wherever I can, have them do it themselves while I help and check.", "In your own setup. We work with your data, models and reports, and the deadlines you actually have."]);
   await expect(page.locator("#ai .raised-copy p")).toHaveText("If your team wants to start using AI agents, we start from what you already have: your licences, tools, skills and setup. We work out what to hand to an agent, what to keep it away from, and how your team checks what it changed. Your team learns to use agents themselves, so you get work you can check, not new risks or a mess to clear up later.");
-  await expect(page.locator("#ongoing p")).toHaveText(["The whole point is that you don't need me.", "I'll teach your team the tool; I won't teach them to wait for me.", "Some teams still want someone to call on. If you do, we shape the support to fit the work we've done, for example:", "It's priced on request, like the rest of the work."]);
+  await expect(page.locator("#ongoing p")).toHaveText(["The whole point is that you don't need me.", "I'll teach your team the tool; I won't teach them to wait for me.", "Some teams still want someone to call on. If you do, we shape the support to fit the work we've done, for example:", priced ? "It's priced on request." : "It's priced on request, like the rest of the work."]);
   await expect(page.locator("#ongoing .lead-list > li")).toHaveText(["Retained support for your team.", "Strategic advice as your reporting changes.", "Regular office hours, such as a monthly call in a fixed window, where your team brings whatever has come up."]);
   await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to on the free call is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway.");
 

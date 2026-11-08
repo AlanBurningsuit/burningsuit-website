@@ -12,7 +12,7 @@ const daxFundamentals = "/training/dax-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
 // Priced output omits "On site or online": the price item names both delivery methods. Unpriced output keeps the approved facts.
 const privateFacts = (price: string) => priced ? ["Private, for your team", "Up to 8 people", price] : ["Private, for your team", "On site or online", "Up to 8 people", priceOnRequest];
-const baseDescription = "Two places to start with Power BI, and three specialist courses for teams, with length, delivery and group size for each.";
+const baseDescription = "Two places to start with Power BI, and two specialist courses for teams, with length, delivery and group size for each.";
 
 const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 
@@ -80,8 +80,8 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(agents.locator('a[href="#contact"]')).toHaveCount(0);
 
   const rows = page.locator(".specialist-courses .specialist-rows > li");
-  await expect(rows.getByRole("heading", { level: 3 })).toHaveText(["DAX fundamentals", "Data modelling", "DAX deep dive"]);
-  for (const [index, [name, length]] of [["DAX fundamentals", "1 day"], ["Data modelling", "1 day"], ["DAX deep dive", "2 days"]].entries()) {
+  await expect(rows.getByRole("heading", { level: 3 })).toHaveText(["DAX fundamentals", "DAX deep dive"]);
+  for (const [index, [name, length]] of [["DAX fundamentals", "1 day"], ["DAX deep dive", "2 days"]].entries()) {
     await expectItems(rows.nth(index).locator(".facts > li"), [length, ...privateFacts(copy?.specialists[name as keyof typeof copy.specialists] ?? "")], `training ${name} facts`);
   }
   await expect(rows.locator("p:not(.study-evidence-label)")).toHaveCount(0);
@@ -90,10 +90,9 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(rows.nth(0).getByRole("link", { name: "DAX fundamentals", exact: true })).toHaveAttribute("href", daxFundamentals);
   await expect(rows.nth(0).getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", daxFundamentals);
   await expect(rows.nth(0).locator(".study-evidence")).toHaveCount(0);
-  await expect(rows.nth(2).getByRole("link", { name: "DAX deep dive", exact: true })).toHaveAttribute("href", deepDive);
-  await expect(rows.nth(2).getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", deepDive);
-  await expect(rows.nth(1).locator("a")).toHaveCount(0);
-  await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams on calculations and table design.");
+  await expect(rows.nth(1).getByRole("link", { name: "DAX deep dive", exact: true })).toHaveAttribute("href", deepDive);
+  await expect(rows.nth(1).getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", deepDive);
+  await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams on calculations.");
   const ask = page.getByRole("link", { name: "Ask about one of these" });
   await expect(ask).toHaveAttribute("href", "#contact");
   await expect(ask).toHaveAccessibleDescription("Name the course in your message.");
@@ -109,7 +108,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(coaching.locator(".specialists-head p")).toHaveText("Coaching is for 1 to 3 people from the same organisation, ideally the same team, who want to learn Power BI on the work they actually do. I write a syllabus for the people taking part, and we work on your own data, or on example data I build to look like yours, with the problems you're stuck on.");
   await expect(coaching.locator(".specialist-rows > li h3")).toHaveText(["Power BI coaching"]);
   await expect(coaching.locator(".specialist-rows").locator("a, p")).toHaveCount(0);
-  await expectItems(coaching.locator(".specialist-rows .facts > li"), ["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", "Price on request"], "coaching facts remain unpriced");
+  await expectItems(coaching.locator(".specialist-rows .facts > li"), ["4 to 8 weeks", "A two-hour session each week, with homework in between", "Up to 3 people from one organisation", "Online, or on site where it suits", priced ? copy!.coachingRange : "Price on request"], "coaching facts");
   const askCoaching = coaching.getByRole("link", { name: "Ask about coaching", exact: true });
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");
@@ -126,7 +125,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
 
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#need-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
+  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
   const text = await page.locator("main").innerText();
   // Developing and Claude courses stay off; no arrows, seats, booking or promises the copy doesn't make.
   // Priced output states the 101's per-seat rates, so "seat" is allowed there; booking wording stays absent in both.
@@ -141,7 +140,7 @@ test("training chooser structure reads in order for assistive technology", async
   await page.goto(route);
   // Priced output carries amounts, which an ARIA snapshot would print on failure: its structure is checked by role instead, and its text by in-memory comparison above.
   if (priced) {
-    await expect(page.locator(".specialist-courses .specialist-rows > li")).toHaveCount(3);
+    await expect(page.locator(".specialist-courses .specialist-rows > li")).toHaveCount(2);
     for (const row of await page.locator(".specialist-courses .specialist-rows > li").all()) {
       await expect(row.getByRole("heading", { level: 3 })).toHaveCount(1);
       await expect(row.getByRole("list").first().getByRole("listitem")).toHaveCount(4);
@@ -163,14 +162,6 @@ test("training chooser structure reads in order for assistive technology", async
         - link "Read the course outline":
           - /url: /training/dax-fundamentals/
       - listitem:
-        - heading "Data modelling" [level=3]
-        - list:
-          - listitem: 1 day
-          - listitem: Private, for your team
-          - listitem: On site or online
-          - listitem: Up to 8 people
-          - listitem: Price on request
-      - listitem:
         - heading "DAX deep dive" [level=3]:
           - link "DAX deep dive":
             - /url: /training/dax-deep-dive/
@@ -187,7 +178,8 @@ test("training chooser structure reads in order for assistive technology", async
             - link "DAX deep dive for a local-authority team":
               - /url: /work/dax-deep-dive/
   `);
-  await expect(page.locator("#coaching .specialist-rows")).toMatchAriaSnapshot(`
+  // Priced, the coaching range is checked in memory above (expectItems), so no snapshot can print an amount.
+  if (!priced) await expectAriaWithoutAmounts(page.locator("#coaching .specialist-rows"), `
     - list:
       - listitem:
         - heading "Power BI coaching" [level=3]
@@ -367,7 +359,7 @@ test("training chooser works from the keyboard without JavaScript", async ({ bro
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(2);
   }
-  expect(reached).toEqual([fundamentals, fundamentals, "#contact", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#need-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
+  expect(reached).toEqual([fundamentals, fundamentals, "#contact", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
 
   // An inbound coaching link lands on its section without JavaScript; its ask reaches the shared form.
   await page.goto(route + "#coaching");

@@ -51,21 +51,23 @@ test("the unrequested build never reads the file (an unreadable or invalid file 
   rmSync(dir, { recursive: true, force: true });
 });
 
-test("a requested build with valid input returns all ten rates and composes the approved wording", () => {
+test("a requested build with valid input returns every rate and composes the approved wording", () => {
   const dir = workspace();
   const file = join(dir, "prices.json");
   const data = fixture();
   writeJson(file, data);
   const prices = loadTrainingPrices({ env: priced, file });
   const copy = trainingPriceCopy(prices);
-  const [fOn, fOnline, dOn, dOnline, mOn, mOnline, pOn, pOnline, founding, seat] = valuesOf(data);
+  const [fOn, fOnline, dOn, dOnline, pOn, pOnline, founding, seat, cFrom, cTo, kFrom, kTo] = valuesOf(data);
   assert.equal(copy.homeFundamentals, `${fOn} on site or ${fOnline} online, per booking for up to 8 people, ex VAT, UK travel included`);
   assert.equal(copy.trainingFundamentals, `${fOn} on site or ${fOnline} online, ex VAT`);
   assert.equal(copy.fundamentalsDetail, `${fOn} on site or ${fOnline} online, per booking, ex VAT, UK travel included`);
   assert.equal(copy.daxDeepDiveDetail, `${pOn} on site or ${pOnline} online, per booking, ex VAT, UK travel included`);
   assert.equal(copy.daxFundamentalsDetail, `${dOn} on site or ${dOnline} online, per booking, ex VAT, UK travel included`);
   assert.equal(copy.specialists["DAX fundamentals"], `${dOn} on site or ${dOnline} online, ex VAT`);
-  assert.equal(copy.specialists["Data modelling"], `${mOn} on site or ${mOnline} online, ex VAT`);
+  assert.equal(Object.keys(copy.specialists).length, 2, "two specialist courses are priced");
+  assert.equal(copy.coachingRange, `Usually ${cFrom} to ${cTo}, ex VAT`);
+  assert.equal(copy.consultancyRange, `Usually a fixed price of ${kFrom} to ${kTo}, ex VAT`);
   assert.equal(copy.specialists["DAX deep dive"], `${pOn} on site or ${pOnline} online, ex VAT`);
   assert.equal(copy.publicSeat, `${founding} a seat, the founding rate for this first run. Standard rate ${seat} a seat. Ex VAT.`);
   assert.deepEqual([...copy.seatFacts], [`${founding} a seat, the founding rate for this first run, ex VAT`, `${seat} a seat, the standard rate, ex VAT`]);
@@ -109,7 +111,7 @@ test("a requested build fails closed on missing, malformed, incomplete or badly 
   const unsafe = [n.slice(1), "£", `£ ${n.slice(1)}`, `${n} + VAT`, `${n} ex VAT`, `${n}.00`, `${n},`, "£,100", `$${n.slice(1)}`, `${n} to ${amount()}`, `${n}\n`, "£abc"];
   for (const bad of unsafe) {
     const data = fixture();
-    data["data-modelling"].online = bad;
+    data["dax-fundamentals"].online = bad;
     const thrown = expectCode("format", data);
     assert.ok(!thrown.message.includes(bad.trim()) || bad.trim() === "", "the offending value is never repeated");
   }
@@ -117,10 +119,10 @@ test("a requested build fails closed on missing, malformed, incomplete or badly 
 });
 
 test("validatePrices accepts only the expected shape and format", () => {
-  assert.equal(validatePrices(fixture()).length, 10);
+  assert.equal(validatePrices(fixture()).length, PRICE_SLOTS.length);
   const extra = fixture();
   extra.other = { ignored: "free text" };
-  assert.equal(validatePrices(extra).length, 10, "unrelated keys are never read");
+  assert.equal(validatePrices(extra).length, PRICE_SLOTS.length, "unrelated keys are never read");
 });
 
 test("a requested price rejects malformed thousands separators", () => {
@@ -228,7 +230,7 @@ function distFixture(data, { pricedBuild, drop } = {}) {
   const page = (...items) => `<html><body><ul>${items.join("")}</ul></body></html>`;
   const home = pricedBuild ? page(li(copy.homeFundamentals), li(copy.publicSeat), li("Price on request")) : page(li("On site or online"), li("Price on request"), li("Price on request"));
   const training = pricedBuild
-    ? page(li(copy.trainingFundamentals), li(copy.publicSeat), ...Object.values(copy.specialists).map(li), li(copy.trainingIntro), li("Price on request"), li("Price on request"))
+    ? page(li(copy.trainingFundamentals), li(copy.publicSeat), ...Object.values(copy.specialists).map(li), li(copy.coachingRange), li(copy.trainingIntro), li("Price on request"))
     : page(li("Price on request"), li("Price on request"));
   const agents = pricedBuild ? `<html><body>${copy.seatFacts.map(li).join("")}<p>${copy.seatBookFacts}</p></body></html>` : page(li("Price on request"));
   const fundamentals = pricedBuild ? page(li(copy.fundamentalsDetail)) : page(li("On site or online"), li("Price on request"));
@@ -238,7 +240,7 @@ function distFixture(data, { pricedBuild, drop } = {}) {
     "dist/index.html": home, "dist/training/index.html": training,
     "dist/training/agentic-development-for-power-bi/index.html": agents, "dist/training/power-bi-fundamentals/index.html": fundamentals,
     "dist/training/dax-deep-dive/index.html": daxDeepDive, "dist/training/dax-fundamentals/index.html": daxFundamentals,
-    "dist/power-bi/index.html": page(li("Price on request, usually a fixed price")),
+    "dist/power-bi/index.html": pricedBuild ? page(li(copy.consultancyRange)) : page(li("Price on request, usually a fixed price")),
   };
   if (drop) delete files[drop];
   for (const [path, text] of Object.entries(files)) writeJson(join(dir, path), text);
@@ -267,7 +269,7 @@ test("an unpriced build contains no amounts, no price wording and no private val
   const data = fixture();
   const { dir } = distFixture(data, { pricedBuild: false });
   assert.equal(distRun(dir, {}).status, 0);
-  writeJson(join(dir, "dist/power-bi/index.html"), `<p>${data["data-modelling"].online}</p>`);
+  writeJson(join(dir, "dist/power-bi/index.html"), `<p>${data["dax-fundamentals"].online}</p>`);
   const result = distRun(dir, {});
   assert.equal(result.status, 1);
   assert.match(output(result), /price-outside-scope\s+dist\/power-bi\/index\.html/);
@@ -278,7 +280,7 @@ test("an unpriced build contains no amounts, no price wording and no private val
   rmSync(dir, { recursive: true, force: true });
 });
 
-test("a priced build must render every slot and keep Price on request only for the private 101 and coaching", () => {
+test("a priced build must render every slot and keep Price on request only for the private 101", () => {
   const data = fixture();
   const { dir } = distFixture(data, { pricedBuild: true });
   assert.equal(distRun(dir, priced).status, 0);
@@ -317,8 +319,8 @@ test("a priced build must render every slot and keep Price on request only for t
   assert.match(output(distRun(fallback.dir, priced)), /unpriced-phrase-in-priced-slot/);
   // A rate leaking to another route is a failure.
   writeJson(join(fallback.dir, "dist/training/power-bi-fundamentals/index.html"), `<ul>${li(fallback.copy.fundamentalsDetail)}</ul>`);
-  writeJson(join(fallback.dir, "dist/power-bi/index.html"), `<ul>${li(data["dax-fundamentals"].onSite)}</ul>`);
-  assert.match(output(distRun(fallback.dir, priced)), /price-outside-scope\s+dist\/power-bi\/index\.html/);
+  writeJson(join(fallback.dir, "dist/about/index.html"), `<ul>${li(data["dax-fundamentals"].onSite)}</ul>`);
+  assert.match(output(distRun(fallback.dir, priced)), /price-outside-scope\s+dist\/about\/index\.html/);
   rmSync(fallback.dir, { recursive: true, force: true });
 });
 
@@ -542,7 +544,7 @@ test("the secret writer validates, writes with owner-only access, and enables pr
   assert.equal(result.status, 0);
   const file = join(dir, PRICES_FILE);
   assert.equal(statSync(file).mode & 0o777, 0o600);
-  assert.deepEqual(JSON.parse(readFileSync(file, "utf8")), data, "only the ten expected rates are kept");
+  assert.deepEqual(JSON.parse(readFileSync(file, "utf8")), data, "only the expected rates are kept");
   assert.equal(readFileSync(envFile, "utf8"), "SHOW_TRAINING_PRICES=true\n");
   const masks = result.stdout.split("\n").filter((line) => line.startsWith("::add-mask::"));
   assert.equal(masks.length, new Set(valuesOf(data).flatMap((value) => [value, value.replaceAll(",", "")])).size, "each rate is registered as a masked value");

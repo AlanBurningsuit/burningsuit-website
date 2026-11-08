@@ -32,7 +32,7 @@ if (process.env.GITHUB_ACTIONS === "true") {
 
 const file = resolve(process.cwd(), PRICES_FILE);
 mkdirSync(dirname(file), { recursive: true, mode: 0o700 });
-// Keep only the ten expected rates, whatever else the secret held.
+// Keep only the expected rates, whatever else the secret held.
 const clean = {};
 for (const [course, key] of PRICE_SLOTS) (clean[course] ??= {})[key] = data[course][key];
 writeFileSync(file, `${JSON.stringify(clean, null, 2)}\n`, { mode: 0o600 });
