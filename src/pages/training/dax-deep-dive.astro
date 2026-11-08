@@ -6,6 +6,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TitleBand from "../../components/TitleBand.astro";
 import StudyLinks from "../../components/StudyLinks.astro";
+import PullQuote from "../../components/PullQuote.astro";
 import EnquiryForm from "../../components/EnquiryForm.astro";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/course.css";
@@ -54,6 +55,7 @@ const description = `A two-day private course for teams who already write measur
       <li>Write DAX queries in DAX query view to see and test table expressions, such as TOPN and VALUES.</li>
       <li>Use time intelligence on a valid date table: previous period, year to date, and change from one period to the next.</li>
     </ul>
+    <PullQuote quote="Participants found the training to be one of the best they've attended." cite="Course organiser's feedback summary, a local authority" figures="4.93 out of 5 overall, from 14 responses across two runs of the course in 2025. No points for improvement were raised." />
   </section>
 
   <section class="course-do agenda" aria-labelledby="do-title">

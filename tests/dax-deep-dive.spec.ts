@@ -29,8 +29,9 @@ test("DAX deep dive page stays static, private, price-safe and CSP-clean", async
   await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "deep dive description");
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
-  // No portrait, figure or new diagram: the brief allows none.
-  await expect(page.locator("main img, main figure, main svg")).toHaveCount(0);
+  // No portrait or new diagram: the brief allows none. The one figure is the organiser's quote (Alan cleared it, 8 Nov).
+  await expect(page.locator("main img, main svg")).toHaveCount(0);
+  await expect(page.locator("main figure")).toHaveCount(1);
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
   for (const directive of ["default-src 'none'", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
   await expect(page.locator("h1")).toHaveCount(1);
@@ -43,8 +44,9 @@ test("DAX deep dive page stays static, private, price-safe and CSP-clean", async
   if (!priced) expectNone(body, [/\d\s*(GBP|ex VAT)/i], "deep dive unpriced");
   await expect(page.getByText(priceOnRequest, { exact: true })).toHaveCount(priced ? 0 : 1);
   await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
-  // No quote, rating or count from the study (its heading renders only in the study link); no DAX fundamentals or "foundations" framing. The teaching-data name is kept out of tracked source, so it isn't asserted here.
-  expectNone(body.replaceAll("per booking", ""), [/seat/i, /book/i, /public/i, /founding/i, /free call/i, /DAX fundamentals/, /foundation/i, /out of 5|responses|praised/i, /★|☆/, /\[|\]|\{|\}/, /—/], "deep dive text");
+  // The rating and count appear only in the organiser's pull quote (Alan cleared it for this page, 8 Nov), never in the copy around it; no study wording ("praised"); no DAX fundamentals or "foundations" framing. The teaching-data name is kept out of tracked source, so it isn't asserted here.
+  const quoteText = await page.locator(".outcomes figure.pull-quote").innerText();
+  expectNone(body.replace(quoteText, "").replaceAll("per booking", ""), [/seat/i, /book/i, /public/i, /founding/i, /free call/i, /DAX fundamentals/, /foundation/i, /out of 5|responses|praised/i, /★|☆/, /\[|\]|\{|\}/, /—/], "deep dive text");
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
@@ -147,7 +149,12 @@ test("DAX deep dive page renders the approved wording and question order", async
   const study = page.locator(".course-proof .study-evidence");
   await expect(study.locator(".study-evidence-label")).toHaveText("Case study");
   await expect(study.getByRole("link")).toHaveText(["DAX deep dive for a local-authority team"]);
-  await expect(page.locator("main blockquote, main .case-figures")).toHaveCount(0);
+  await expect(page.locator("main .case-figures")).toHaveCount(0);
+  const quote = page.locator(".outcomes figure.pull-quote");
+  await expect(quote.locator("blockquote")).toHaveText(`"Participants found the training to be one of the best they've attended."`);
+  await expect(quote.locator("figcaption")).toContainText("Course organiser's feedback summary, a local authority");
+  await expect(quote.locator(".pull-figures")).toHaveText("4.93 out of 5 overall, from 14 responses across two runs of the course in 2025. No points for improvement were raised.");
+  await expect(page.locator("main blockquote")).toHaveCount(1);
 
   // What to arrange: one pointer line to How I train's private course terms; no list or keep paragraph.
   await expect(page.locator("#need-title")).toHaveText("What to arrange");

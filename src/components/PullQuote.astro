@@ -1,10 +1,11 @@
 ---
-// One anonymised quote beside the offer it backs, marked by the amber evidence rule (app.css). The attribution gives a role
-// and a sector only: no names or organisations until a client is cleared for naming.
-interface Props { quote: string; cite: string; class?: string }
-const { quote, cite, class: extra } = Astro.props;
+// One anonymised quote beside the offer it backs, marked by the amber evidence rule (app.css). The attribution gives a
+// role and a sector only: no names or organisations until a client is cleared for naming. Figures, when the source has
+// them, follow the attribution as plain text.
+interface Props { quote: string; cite: string; figures?: string; class?: string }
+const { quote, cite, figures, class: extra } = Astro.props;
 ---
 <figure class:list={["pull-quote evidence-rule", extra]}>
   <blockquote><p>"{quote}"</p></blockquote>
-  <figcaption>{cite}</figcaption>
+  <figcaption>{cite}{figures && <span class="pull-figures">{figures}</span>}</figcaption>
 </figure>

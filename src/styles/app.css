@@ -65,6 +65,7 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .pull-quote { max-width: 46rem; margin-top: 32px; padding-block: 4px; }
 .pull-quote blockquote p { max-width: 40ch; color: var(--text); font: 600 clamp(1.2rem, 1.9vw, 1.45rem) / var(--lh-tight) var(--ff-display); letter-spacing: var(--ls-display-tight); text-wrap: pretty; }
 .pull-quote figcaption { margin-top: 12px; color: var(--text-dim); font: 400 .95rem / var(--lh-relaxed) var(--ff-note); }
+.pull-figures { display: block; margin-top: 6px; max-width: 62ch; color: var(--text); font: 400 1rem / var(--lh-relaxed) var(--ff-body); }
 @media (max-width: 680px) { .evidence-rule { padding-left: 18px; } }
 .study-links { list-style: none; margin: 12px 0 0; padding: 0; font-size: .98rem; }
 .study-links li + li { margin-top: 10px; }
