@@ -36,6 +36,7 @@ test("DAX deep dive page stays static, private, price-safe and CSP-clean", async
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator("form")).toHaveCount(1);
   await expect(page.locator("nav a[aria-current]:not(.nav-menu a)")).toHaveText("Training");
+  await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("DAX deep dive");
   // Private only: no public run, booking or payment route. Unpriced output says Price on request once; priced output shows the private rates and never that phrase.
   const body = await page.locator("body").innerText();
   await expectAmountsOnlyWhenPriced(page, "deep dive");

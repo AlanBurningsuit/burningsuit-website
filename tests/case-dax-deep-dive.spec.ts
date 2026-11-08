@@ -90,7 +90,9 @@ test("the relevant course entry, the course page and Work index link to the stud
   await expect(page.locator('[aria-labelledby="courses-title"]').getByRole("link", { name: "DAX deep dive for a local-authority team", exact: true })).toHaveAttribute("href", route);
   for (const from of ["/", "/training/agentic-development-for-power-bi/", "/power-bi/", "/about/", "/contact/", "/call/"]) {
     await page.goto(from);
-    await expect(page.locator(`a[href*="dax-deep-dive"]`)).toHaveCount(0);
+    // The masthead's Training menu links to the course page on every page; no other page links to the study or the course.
+    await expect(page.locator(`main a[href*="dax-deep-dive"]`)).toHaveCount(0);
+    await expect(page.locator(`a[href*="/work/dax-deep-dive"]`)).toHaveCount(0);
   }
 });
 
