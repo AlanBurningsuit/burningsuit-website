@@ -110,7 +110,10 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
 
   const text = await page.locator("main").innerText();
   for (const absent of [/\[|\]/, /second opinion/i, /discovery/i]) expect(text).not.toMatch(absent);
-  await expect(page.locator("blockquote, .to-confirm")).toHaveCount(0);
+  await expect(page.locator(".to-confirm")).toHaveCount(0);
+  // One approved, anonymised pull quote, beside the work it backs.
+  await expect(page.locator("#situations figure.pull-quote blockquote")).toHaveText('"This has moved us on leaps and bounds… information just at our fingertips."');
+  await expect(page.locator("main blockquote")).toHaveCount(1);
   // One candid photo, in Who does the work, in the brand's carved frame.
   await expect(page.locator("main img")).toHaveCount(1);
   const photo = page.locator(".who-does figure.framed-photo img");

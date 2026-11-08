@@ -105,7 +105,9 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");
   await expect(askCoaching).toHaveAccessibleDescription("Mention coaching in your message.");
-  await expect(coaching.locator("p:not(.study-evidence-label)")).toHaveText([/^Coaching is for/, "Mention coaching in your message."]);
+  await expect(coaching.locator("p:not(.study-evidence-label)")).toHaveText([/^Coaching is for/, `"I'd never figured this out on my own."`, "Mention coaching in your message."]);
+  await expect(coaching.locator("figure.pull-quote figcaption")).toHaveText("A contact-centre team lead");
+  await expect(page.locator(".starting-points figure.pull-quote figcaption")).toHaveText("Corporate insights, a UK police force");
   expect(await page.locator("main > section").evaluateAll((all) => all.map((el) => el.className.split(" ")[0]))).toEqual(["starting-points", "specialist-courses", "coaching", "training-teacher", "contact"]);
 
   await expect(page.locator(".teacher-note p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI, and about a decade in software delivery before that. So when a question leads down a useful rabbit hole, I can follow it and still bring you back to the course.");
@@ -122,7 +124,8 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   // "per booking" is the approved price unit in priced output; any other booking wording stays absent.
   // In the priced build the 101 card's "Book a seat" leads to the course page, where booking happens; nothing else books here.
   expectNone(text.replaceAll("per booking", "").replaceAll(priced ? "Book a seat" : "\u0000", ""), [/Not sure where to start/i, /hands-on day/i, /Modelling for agents/i, /Claude/, /→|->|›|»/, ...(priced ? [] : [/seat/i]), /book/i, /\[|\]/, /to confirm/i, /coming soon/i], "training text");
-  await expect(page.locator("blockquote, .to-confirm, .proof, button:not(.send)")).toHaveCount(0);
+  await expect(page.locator(".to-confirm, .proof, button:not(.send)")).toHaveCount(0);
+  await expect(page.locator("main blockquote")).toHaveCount(2); // the two approved, anonymised pull quotes
 });
 
 test("training chooser structure reads in order for assistive technology", async ({ page }) => {

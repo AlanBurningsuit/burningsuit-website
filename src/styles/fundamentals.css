@@ -5,6 +5,8 @@
 
 /* What you'll be able to do: the need-list card, straight after the opening, with no numbers of its own. */
 .course-need.outcomes { padding-block: 64px 76px; }
+/* Its quote sits under the list, in the list's column. */
+@media (min-width: 901px) { .outcomes .pull-quote { grid-column: 2; } }
 
 /* The two days: one numbered spine across both day groups. The counter lives on the body, so day 2 continues from 05. */
 .agenda .do-body { counter-reset: step; }
@@ -34,6 +36,7 @@
 .teacher-links .text-link { font-size: .96rem; }
 
 @media (max-width: 900px) {
+  .outcomes .pull-quote { margin-top: 10px; }
   .course-need.outcomes { padding-block: 48px 56px; }
 }
 @media (max-width: 680px) {

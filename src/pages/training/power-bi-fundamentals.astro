@@ -6,6 +6,7 @@
 // this page's differences live in fundamentals.css.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TitleBand from "../../components/TitleBand.astro";
+import PullQuote from "../../components/PullQuote.astro";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import EnquiryForm from "../../components/EnquiryForm.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
@@ -53,6 +54,7 @@ const description = `A two-day private course for teams new to Power BI: build a
       <li>Publish and share a report, knowing who can see it and what keeps its data current.</li>
       <li>Identify which part of Power BI a problem sits in, and use its vocabulary to find help.</li>
     </ul>
+    <PullQuote quote="Thank you very much for the brilliantly delivered course." cite="Assistant accountant, Power BI fundamentals" />
   </section>
 
   <section class="course-do agenda" aria-labelledby="do-title">

@@ -36,6 +36,7 @@
 /* Coaching: a quieter section after the specialists, reusing their heading and ruled-row pattern; the specialists' bottom padding already separates the two. */
 .coaching { padding-block: 0 80px; }
 .coaching .text-link { font-size: .96rem; }
+.coaching .pull-quote { margin-block: 28px 26px; }
 
 /* Who's teaching: heading beside a quietly ruled note (warm spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */
 .training-teacher { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 32px 96px; align-items: start; }

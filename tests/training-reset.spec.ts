@@ -244,7 +244,10 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Find your starting point", "Understanding that lasts", "Help with your own reporting", "Tell me what you're looking for."]);
   await expect(page.getByRole("link", { name: "Book a free 30-minute call" })).toHaveAttribute("href", "/call/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
-  await expect(page.locator(".proof, .exercise, blockquote")).toHaveCount(0);
+  await expect(page.locator(".proof, .exercise")).toHaveCount(0);
+  // One approved, anonymised pull quote, in the teaching section.
+  await expect(page.locator("main blockquote")).toHaveCount(1);
+  await expect(page.locator("#teaching figure.pull-quote figcaption")).toHaveText("Performance support officer, a local authority");
   for (const id of ["training", "teaching", "consultancy", "contact"]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
   // The consultancy band stays raised above the page background (shared .raised-band in app.css).
   const bg = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);

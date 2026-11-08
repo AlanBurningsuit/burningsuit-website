@@ -1,0 +1,10 @@
+---
+// One anonymised quote beside the offer it backs, on the cream proof panel (app.css). The attribution gives a role
+// and a sector only: no names or organisations until a client is cleared for naming.
+interface Props { quote: string; cite: string; class?: string }
+const { quote, cite, class: extra } = Astro.props;
+---
+<figure class:list={["pull-quote proof-panel", extra]}>
+  <blockquote><p>"{quote}"</p></blockquote>
+  <figcaption>{cite}</figcaption>
+</figure>

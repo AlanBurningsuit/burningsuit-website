@@ -46,6 +46,7 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
   // "per booking" is the approved price unit; any other booking wording stays absent.
   expectNone(body.replaceAll("per booking", ""), [/seat/i, /book/i, /public/i, /free hour/i, /Windows/i, /setup check/i, /\[|\]|\{|\}/, /founding/i], "fundamentals text");
+  await expect(page.locator(".outcomes figure.pull-quote figcaption")).toHaveText("Assistant accountant, Power BI fundamentals");
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });

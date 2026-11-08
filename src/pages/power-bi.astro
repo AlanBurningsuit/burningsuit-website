@@ -4,6 +4,7 @@
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TitleBand from "../components/TitleBand.astro";
+import PullQuote from "../components/PullQuote.astro";
 import StudyLinks from "../components/StudyLinks.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import "../styles/course.css";
@@ -50,6 +51,7 @@ const call = "/call/";
         <li><strong>Building or moving something, together.</strong> That might be a new model or report your team can't build yet, or moving your reporting into Power BI. Either way, your team knows how it works before they rely on it. If you're moving to Microsoft Fabric (the wider data platform that Power BI is part of), I coach your team through its own migration. I don't do the Fabric migration work myself.</li>
         <li><strong>Getting started with AI agents.</strong> I coach your team to use them on the Power BI you've got. <a href="#ai">More on that below</a></li>
       </ul>
+      <PullQuote quote="This has moved us on leaps and bounds… information just at our fingertips." cite="Team member, a city-centre museum and gallery" />
       <p class="build-line">If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.</p>
       <p class="aside courses-line">Just need your team to understand Power BI? <a href="/training/">That's what the courses are for.</a> Want 1 to 3 people to learn on your own work? <a href="/training/#coaching">That's what Power BI coaching is for.</a></p>
       <StudyLinks studies={["carbon-footprint"]} />
