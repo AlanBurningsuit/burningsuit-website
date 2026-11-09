@@ -324,6 +324,29 @@ test("a priced build must render every slot and keep Price on request only for t
   rmSync(fallback.dir, { recursive: true, force: true });
 });
 
+test("a priced route allows only its own approved values: any stray or other route's amount fails without printing it", () => {
+  const data = fixture();
+  const route = "dist/training/power-bi-fundamentals/index.html";
+  const { dir, copy } = distFixture(data, { pricedBuild: true });
+  const withExtra = (extra) => writeJson(join(dir, route), `<ul>${li(copy.fundamentalsDetail)}${li(extra)}</ul>`);
+  const fails = (extra, why) => {
+    withExtra(extra);
+    const result = distRun(dir, priced);
+    assert.equal(result.status, 1, why);
+    assert.match(output(result), /unapproved-amount\s+dist\/training\/power-bi-fundamentals\/index\.html/, why);
+    assert.ok(!leaks(result, valuesOf(data)) && !/£|\d{3}/.test(output(result)), "no value in diagnostics");
+  };
+  fails(`A discount to ${amount()}`, "a stray amount");
+  fails(`Also ${data.consultancy.from}`, "another route's approved value");
+  fails(`Now ${data["power-bi-fundamentals"].onSite}5`, "an approved value with an extra digit");
+  fails(`Now ${data["power-bi-fundamentals"].online}.50`, "an approved value with decimals");
+  fails(`${String(seed += 7)} GBP`, "an amount in currency words");
+  // The approved values alone, with or without separators and before punctuation, pass.
+  withExtra(`Same as ${data["power-bi-fundamentals"].onSite.replaceAll(",", "")}, or ${data["power-bi-fundamentals"].online}.`);
+  assert.equal(distRun(dir, priced).status, 0);
+  rmSync(dir, { recursive: true, force: true });
+});
+
 test("a priced build with the private file missing fails closed with a fixed rule", () => {
   const data = fixture();
   const { dir } = distFixture(data, { pricedBuild: true });
@@ -347,6 +370,16 @@ test("the masking runner hides currency amounts and exact private rates, and kee
   assert.ok(!/[£€$]\s?\d/.test(output(result)) && !leaks(result, valuesOf(data)), "no amount survives");
   assert.match(result.stdout, /\[amount\]/);
   rmSync(dir, { recursive: true, force: true });
+});
+
+test("the masking runner prints a fixed heartbeat while it buffers, and nothing from the command until it ends", () => {
+  const program = `console.log("partial ${amount()}"); setTimeout(() => process.exit(0), 400)`;
+  const result = spawnSync(process.execPath, [join(scripts, "run-masked.mjs"), process.execPath, "-e", program], { encoding: "utf8", env: { ...process.env, BURNINGSUIT_HEARTBEAT_MS: "100" } });
+  assert.equal(result.status, 0);
+  const beats = result.stderr.split("\n").filter(Boolean);
+  assert.ok(beats.length >= 1, "at least one heartbeat");
+  for (const line of beats) assert.match(line, /^run-masked: still running: \d+ s$/);
+  assert.match(result.stdout, /^partial \[amount\]\n$/);
 });
 
 test("named, decimal and hexadecimal currency entities cannot bypass either privacy gate", () => {
@@ -586,8 +619,8 @@ test("only the production workflow on main reads the secret, and every failure p
   const names = steps.map((step) => step.name);
   assert.ok(names.indexOf(write.name) < names.indexOf("Check, build and validate the site"), "prices are in place before the build");
   assert.equal(steps.find((step) => step.name === "Remove private training prices").if, "always()");
-  assert.ok(names.indexOf("Reject unfinished rebuilds") < names.indexOf("Upload the tested artifact"), "the release check still precedes upload");
-  assert.equal(steps.find((step) => step.name === "Reject unfinished rebuilds").run, "npm run check:release", "the release block is not weakened");
+  assert.ok(names.indexOf("Check the build is fit to release") < names.indexOf("Upload the tested artifact"), "the release check still precedes upload");
+  assert.equal(steps.find((step) => step.name === "Check the build is fit to release").run, "npm run check:release", "the release block is not weakened");
   for (const name of ["Check, build and validate the site", "Test the built artifact"]) assert.match(steps.find((step) => step.name === name).run, /^node scripts\/run-masked\.mjs /, "priced output passes through masking");
   assert.equal(deploy.jobs.deploy.if, "github.ref == 'refs/heads/main'", "only main deploys");
   assert.equal(deploy.jobs.build.steps.find((step) => step.uses?.startsWith("actions/upload-pages-artifact")).with.path, "dist", "only dist is uploaded");

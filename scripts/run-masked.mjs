@@ -49,11 +49,19 @@ function collect(stream) {
   });
 }
 
+// The output waits for the command to finish, so a hung run would leave an empty log. A fixed heartbeat line (never
+// anything from the command) shows it is still going. BURNINGSUIT_HEARTBEAT_MS overrides the 60 s interval in tests.
+const started = Date.now();
+const heartbeat = setInterval(() => {
+  process.stderr.write(`run-masked: still running: ${Math.round((Date.now() - started) / 1000)} s\n`);
+}, Number(process.env.BURNINGSUIT_HEARTBEAT_MS) || 60_000);
+
 const child = spawn(command, args, { stdio: ["ignore", "pipe", "pipe"], env: process.env });
 collect(child.stdout);
 collect(child.stderr);
 child.on("error", () => { console.error("run-masked: the command could not start."); process.exit(127); });
 child.on("close", (code, signal) => {
+  clearInterval(heartbeat);
   process.stdout.write(suppressed ? "run-masked: output suppressed after the safe buffer limit.\n" : mask(chunks.join("")));
   chunks = [];
   process.exitCode = code ?? (signal ? 1 : 0);

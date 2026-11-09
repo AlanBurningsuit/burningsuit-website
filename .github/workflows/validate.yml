@@ -29,8 +29,10 @@ jobs:
         run: npm ci
       - name: Check, build and validate the site
         run: npm run gate
-      - name: Install Playwright Chromium and OS dependencies
-        run: npx playwright install --with-deps chromium
-      # Functional checks serve the fresh artifact produced by the gate.
+      - name: Install Playwright Chromium, WebKit and OS dependencies
+        run: npx playwright install --with-deps chromium webkit
+      # Functional checks serve the fresh artifact produced by the gate; the WebKit smoke project runs here too.
       - name: Test the built artifact
         run: npm run test:functional
+      - name: Check the build is fit to release
+        run: npm run check:release
