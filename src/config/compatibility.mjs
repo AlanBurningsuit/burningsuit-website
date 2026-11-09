@@ -107,5 +107,9 @@ export const pages = {
   "work/law-firm": [],
   "work/carbon-footprint": [],
   "work/contact-centre": [],
+  // The coaching study's "The rule I got wrong" heading, linked from How I train's "If you get stuck".
+  "work/individual-power-bi-coaching": [
+    "rule-title"
+  ],
   "writing/we-are-all-middle-management-now": []
 };

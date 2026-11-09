@@ -9,7 +9,7 @@
 .agenda .do-body { counter-reset: step; }
 .agenda .agenda-steps { counter-reset: none; }
 .agenda .exercises { margin-bottom: 30px; max-width: 62ch; }
-/* On wide screens the lead sits above the two days, which run side by side; the teacher line spans beneath. */
+/* On wide screens the lead sits above the two days, which run side by side; the teacher card spans beneath. */
 @media (min-width: 901px) {
   .agenda .do-inner { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
   .agenda .do-lead { position: static; }
@@ -32,11 +32,10 @@
 .need-pointer { max-width: 64ch; }
 .need-pointer:not(:last-child) { margin-bottom: 18px; }
 
-/* Who teaches: one small line below the spine; biography and method link out. */
-.teacher-line { margin-top: 14px; max-width: 62ch; }
-.teacher-line p { font-size: .96rem; color: var(--text-dim); }
-.teacher-links { display: flex; flex-wrap: wrap; column-gap: 28px; margin-top: 6px; }
-.teacher-links .text-link { font-size: .96rem; }
+/* Who's teaching: the 101's card (course.css), below the spine; biography and method link out. */
+.do-body .trust-teacher { margin-top: 26px; }
+/* Its two short links stack, one per line, as the 101's longer pair does by wrapping. */
+.do-body .trust-teacher .text-link { display: block; width: fit-content; }
 
 @media (max-width: 900px) {
   .outcomes .pull-quote { margin-top: 10px; }

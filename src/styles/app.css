@@ -218,3 +218,28 @@ main:not(:has(> .dark:last-child, > :last-child > .dark:last-child)) + .footer-b
   .masthead nav { gap: 0 10px; }
   .masthead nav a { font-size: .8rem; }
 }
+
+/* Print: a course page forwarded to whoever approves the spend. Every band prints as the daylight body's dark text on
+   the paper, with no grounds, shadows, sheet edges or motion; navigation and the form's fields stay on screen. */
+@media print {
+  :root, .dark, main {
+    --fg: var(--pine); --fg-dim: var(--pine-soft); --amber: var(--ochre-ink); --line: var(--mist-line);
+    --text: var(--pine); --text-dim: var(--pine-soft); --rule: var(--mist-line);
+    --link: var(--fern); --accent: var(--ochre); --accent-ink: var(--ochre-ink);
+    color-scheme: light;
+  }
+  *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; }
+  :is(html, body, main, header, footer, section, div, article, aside, figure, ul, ol, blockquote, .button),
+  :is(header, footer, section, div, article)::before, :is(header, footer, section, div, article)::after { background: none !important; }
+  .skip, .masthead nav, .enquiry-form, [data-optout-root] { display: none !important; }
+  /* List markers are drawn grounds: keep them, which the browser would otherwise drop to save ink. */
+  li::before { print-color-adjust: exact; }
+  /* The masthead logo's cream lettering would vanish on paper: print the mono mark instead. */
+  .brand img { content: url("/logos/burningsuit-black-mono.svg"); }
+  .button { color: var(--link); padding: 0; text-align: start; }
+  a:not(.brand) { text-decoration: underline !important; }
+  /* An external address (a booking link, a profile) is spelled out; on the course pages the email address is its own link text. */
+  a[href^="http"]::after { content: " (" attr(href) ")" !important; color: var(--text-dim); font-weight: 400; }
+  :is(h1, h2, h3, h4) { break-after: avoid; }
+  :is(li, figure, blockquote, .trust-teacher, .course, .hit-pair-item, .hit-prose, .need-list, .booking-terms) { break-inside: avoid; }
+}

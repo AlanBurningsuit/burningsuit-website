@@ -12,6 +12,7 @@ import PullQuote from "../../components/PullQuote.astro";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import EnquiryForm from "../../components/EnquiryForm.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
+import TeacherCard from "../../components/TeacherCard.astro";
 import "../../styles/course.css";
 import "../../styles/fundamentals.css";
 
@@ -84,13 +85,11 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
           <li><p><strong>Distribute and maintain it:</strong> workspaces, sharing, licences, refresh, data source sign-ins, gateways and how the parts fit together.</p></li>
           <li><p><strong>Copilot in Power BI, briefly:</strong> what it can help with, why access varies and what to check. No exercise depends on it.</p></li>
         </ol>
-        <div class="teacher-line">
+        <TeacherCard>
           <p>I'm Alan Harman-Box, and I write and teach every course myself. I've taught this course to about 300 people.</p>
-          <div class="teacher-links">
-            <a class="text-link" href="/training/how-i-train/">How I train</a>
-            <a class="text-link" href="/about/">More about me</a>
-          </div>
-        </div>
+          <a class="text-link" href="/training/how-i-train/">How I train</a>
+          <a class="text-link" href="/about/">More about me</a>
+        </TeacherCard>
       </div>
     </div>
   </section>

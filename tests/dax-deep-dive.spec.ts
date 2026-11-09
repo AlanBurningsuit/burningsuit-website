@@ -144,9 +144,10 @@ test("DAX deep dive page renders the approved wording and question order", async
       - listitem
   `);
 
-  // One teacher line below the spine, then the one proof line above the study link: no quote, rating or count.
-  await expect(page.locator(".teacher-line p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
-  await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
+  // One teacher card below the spine, then the one proof line above the study link: no quote, rating or count.
+  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
+  await expect(page.locator(".trust-teacher a")).toHaveText(["How I train", "More about me"]);
+  await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toHaveCount(1);
   await expect(page.locator(".proof-line")).toHaveText("I've run the DAX deep dive for teams since 2023.");
   const study = page.locator(".course-proof .study-evidence");
   await expect(study.locator(".study-evidence-label")).toHaveText("Case study");

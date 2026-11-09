@@ -7,7 +7,7 @@ const route = "/training/how-i-train/";
 const email = `mailto:${ENQUIRY.email}`;
 // The enquiry link targets the Contact page. That page is built on its own branch; until it is
 // integrated, /contact/ here is still the legacy redirect, so only the href itself is checked.
-const links = ["/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/power-bi/", "/training/power-bi-with-ai-agents-101/#book-title", "/training/power-bi-with-ai-agents-101/#need-title", "/training/", "/training/power-bi-fundamentals/", "/training/power-bi-with-ai-agents-101/", email, "/contact/", "/about/", "/work/"];
+const links = ["/work/individual-power-bi-coaching/#rule-title", "/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/power-bi/", "/training/power-bi-with-ai-agents-101/#book-title", "/training/power-bi-with-ai-agents-101/#need-title", "/training/", "/training/power-bi-fundamentals/", "/training/power-bi-with-ai-agents-101/", email, "/contact/", "/about/", "/work/"];
 
 test("How I train stays static, private and CSP-clean, with no form or third-party request", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -79,6 +79,7 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
 test("How I train links: coaching, consultancy, the courses, email, the Contact page and About", async ({ page }) => {
   await page.goto(route);
   for (const [name, href] of [
+    ["almost every mistake in Power BI worth making", "/work/individual-power-bi-coaching/#rule-title"],
     ["Power BI coaching", "/training/#coaching"],
     ["we can work together", "/power-bi/"],
     ["all the courses", "/training/"],

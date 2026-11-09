@@ -138,10 +138,11 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   // Ordered-list semantics: the second list's first item is item 5.
   expect(await steps.nth(4).evaluate((li) => (li.parentElement as HTMLOListElement).start)).toBe(5);
 
-  // One teacher line below the spine; biography and philosophy link out.
-  await expect(page.locator(".teacher-line p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself. I've taught this course to about 300 people.");
-  await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
-  await expect(page.getByRole("heading", { name: /who's teaching/i })).toHaveCount(0);
+  // One teacher card below the spine; biography and philosophy link out.
+  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself. I've taught this course to about 300 people.");
+  await expect(page.locator(".trust-teacher a")).toHaveText(["How I train", "More about me"]);
+  // The 101's "Who's teaching" card, heading included, at the agenda's subheading level.
+  await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toHaveCount(1);
 
   // Dates, setup, takeaways and the company-data point now live in How I train's private course terms (approved amendment, 7 Nov):
   // a pointer comes first, then only this course's licence and publishing points.
@@ -204,7 +205,7 @@ test("Fundamentals layout: one decision group on the dark stage, the introductio
   const ochre = await page.locator(".need-list > li").first().evaluate((el) => getComputedStyle(el, "::before").backgroundColor);
   expect(await page.locator(".course-fit").evaluate((el) => getComputedStyle(el).borderLeftColor)).toBe(ochre);
   // On the daylight agenda band the step numbers take the daylight link colour, not amber (1.9:1 there).
-  const daylightLink = await page.locator(".teacher-links a").first().evaluate((el) => getComputedStyle(el).color);
+  const daylightLink = await page.locator(".trust-teacher a").first().evaluate((el) => getComputedStyle(el).color);
   expect(daylightLink).not.toBe(ochre);
   expect(amber).not.toBe("");
   expect(await page.locator(".agenda-steps > li").first().evaluate((el) => getComputedStyle(el, "::before").color)).toBe(daylightLink);
