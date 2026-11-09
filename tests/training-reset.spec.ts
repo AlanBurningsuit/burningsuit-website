@@ -217,7 +217,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   // Priced output replaces "On site or online" and the price on request with one self-contained price item, and adds the public seat rates.
   const homeFacts: Record<string, string[]> = {
     "Power BI fundamentals": copy ? ["2 days", "Private, for your team", copy.homeFundamentals] : ["2 days", "Private, for your team", "On site or online", priceOnRequest],
-    "Power BI with AI agents 101": ["Half a day, online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time", ...(copy ? [copy.publicSeat] : []), "Also private, for your team", priceOnRequest],
+    "Power BI with AI agents 101": ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", ...(copy ? [copy.publicSeat] : []), "Private for your team: price on request"],
   };
   // In the priced build the 101 card books on the course page; otherwise it asks through the form.
   for (const [name, ask] of [["Power BI fundamentals", "Ask about dates"], ["Power BI with AI agents 101", priced ? "Book a seat" : "Ask about a seat"]]) {

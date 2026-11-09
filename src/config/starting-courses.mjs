@@ -21,5 +21,7 @@ export const STARTING_COURSES = Object.freeze({
     summary: "In one morning, you get an AI agent to explain a report you haven't seen before and write notes on its calculations. Then you have it build a new calculation and check its answers yourself.",
     prereq: "You've built a report in Power BI Desktop, even a simple one. No coding or AI experience needed.",
     mode: "Half a day, live online",
+    // The private course has no published price; said as one fact so it cannot read as contradicting the seat price above it.
+    privateFact: "Private for your team: price on request",
   }),
 });

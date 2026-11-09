@@ -55,7 +55,7 @@ test("About keeps the approved wording, headings and anchors", async ({ page }) 
     "burningsuit was my parents' Power BI training business. My mum and dad, Alison and Stuart, handed it over to me and they're properly retired now, so it's me. It's still a training business at heart. I teach Power BI and how to work with AI agents on it, with consultancy alongside, and the reason it exists hasn't really changed.",
     "As my mum said, burningsuit was for \"everyone else\": people who just want to get a job done. That's still who it's for.",
     "Last thing: this is Zelda, who I'm told is Chief Morale Officer. She's no use at all with the DAX, but she's very good at making me get up and go outside now and then, which honestly does more for the work than you'd think.",
-    "You can email me or use the enquiry form. I'm on LinkedIn too.",
+    "Find a course, or read about consultancy. You can also email me or use the enquiry form, and I'm on LinkedIn too.",
   ]);
   // No inherited offer, unbuilt destination or invented signoff creeps back in.
   const text = await page.locator("main").innerText();
@@ -109,7 +109,9 @@ test("About links: courses first, consultancy second, then email, the form and L
   await expect(page.getByRole("link", { name: "the enquiry form" })).toHaveAttribute("href", "/#contact");
   await expect(page.locator("main").getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", linkedin);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  expect(mainLinks).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  await expect(page.getByRole("link", { name: "Find a course", exact: true })).toHaveAttribute("href", "/training/");
+  await expect(page.getByRole("link", { name: "read about consultancy", exact: true })).toHaveAttribute("href", "/power-bi/");
   // Profile aliases keep landing here; contact aliases now lead to the Contact page.
   for (const alias of ["/team-member/alan-harman-box", "/about-us/our-trainers"]) expect(redirects[alias as keyof typeof redirects]).toBe("/about/");
 });
@@ -133,14 +135,14 @@ test("About works without JavaScript, from the keyboard and from a legacy alias"
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 8; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     const ring = await page.evaluate(() => { const el = document.activeElement as HTMLElement; const s = getComputedStyle(el); const r = el.getBoundingClientRect(); return { width: parseFloat(s.outlineWidth), visible: r.width > 0 && r.height > 0 }; });
     expect(ring.width).toBeGreaterThanOrEqual(3);
     expect(ring.visible).toBe(true);
   }
-  expect(reached).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  expect(reached).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
   await context.close();
 });
 

@@ -147,13 +147,13 @@ test("DAX deep dive page renders the approved wording and question order", async
   // One teacher line below the spine, then the one proof line above the study link: no quote, rating or count.
   await expect(page.locator(".teacher-line p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
   await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
-  await expect(page.locator(".proof-line")).toHaveText("I've run this course on site for a team that already used Power BI.");
+  await expect(page.locator(".proof-line")).toHaveText("I've run the DAX deep dive for teams since 2023.");
   const study = page.locator(".course-proof .study-evidence");
   await expect(study.locator(".study-evidence-label")).toHaveText("Case study");
   await expect(study.getByRole("link")).toHaveText(["DAX deep dive for a local-authority team"]);
   await expect(page.locator("main .case-figures")).toHaveCount(0);
   const quote = page.locator(".outcomes figure.pull-quote");
-  await expect(quote.locator("blockquote")).toHaveText("“Participants found the training to be one of the best they’ve attended.”");
+  await expect(quote.locator("blockquote")).toHaveText("\"Participants found the training to be one of the best they've attended.\"");
   await expect(quote.locator("figcaption")).toContainText("Course organiser's feedback summary, a local authority");
   await expect(quote.locator(".pull-figures")).toHaveText("4.93 out of 5 overall, from 14 responses across two runs of the course. No points for improvement were raised.");
   await expect(page.locator("main blockquote")).toHaveCount(1);

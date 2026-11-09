@@ -62,7 +62,7 @@ test("Individual coaching study keeps the approved wording and heading hierarchy
     "The refusal reads: \"only columns from a single table can be used in a True/False expression that is used as a table filter expression.\" A test that genuinely reaches across two tables is where FILTER comes in.",
     "At the end I sent him the reusable models, the sample data they run on, and the notes from every session, so the examples still work without me.",
     "In the final session he showed me his live model and named a problem in it himself: for each new calculation he had been building a new table, where a better-shaped model would let a measure do the work. When I asked what had changed most, he said modelling and DAX. That's probably not what he'd have picked at the start, and I think that's where the value is.",
-    "Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, mostly online, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. Price on request.",
+    "Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, online, or on site where it suits, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. Price on request.",
   ]);
   await expect(page.locator(".cs-teaching pre code")).toHaveText([
     "-- Accepted: two columns, one table", "Large online orders =", "CALCULATE (", "    [Orders],",

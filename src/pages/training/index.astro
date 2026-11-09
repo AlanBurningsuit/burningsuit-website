@@ -67,8 +67,7 @@ const schema = [itemListNode({ pageUrl: new URL(Astro.url.pathname, Astro.site).
             <li>{STARTING_COURSES.agents101.mode}</li>
             <li><span class="fact-label">Public course:</span> <time datetime="2027-01-20">Wednesday 20 January 2027</time>, <span class="together">9:30am to 12:30pm UK time</span>, <span class="together">4 to 8 people</span></li>
             {priced && <li>{priced.publicSeat}</li>}
-            <li>Also private, for your team</li>
-            <li>{price}</li>
+            <li>{STARTING_COURSES.agents101.privateFact}</li>
           </Fragment>
           <Fragment slot="actions">{priced && <Tracked event={EVENTS.bookSeatLink}><a class="text-link" href="/training/power-bi-with-ai-agents-101/#book-title">Book a seat</a></Tracked>}</Fragment>
           <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
@@ -81,7 +80,7 @@ const schema = [itemListNode({ pageUrl: new URL(Astro.url.pathname, Astro.site).
   <section class="specialist-courses wrap" aria-labelledby="specialists-title">
     <div class="specialists-head">
       <h2 id="specialists-title">Want to dive deeper into Power BI?</h2>
-      <p>Private courses for teams on calculations. The DAX deep dive's first day covers the same topics as DAX fundamentals, and its second day goes further.</p>
+      <p>Private courses for teams, on Power BI's calculations. The DAX deep dive's first day covers the same topics as DAX fundamentals, and its second day goes further.</p>
     </div>
     <div class="specialists-body">
       <ul class="specialist-rows" role="list">

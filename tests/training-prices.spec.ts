@@ -79,17 +79,18 @@ test("every rate slot appears on its pages and nowhere else", async ({ request }
 
 test("unpriced and priced items keep the approved private-course wording", async ({ page }) => {
   await page.goto(routes.home);
-  // The private 101 keeps Price on request on Home and Training in both variants; coaching keeps it on Training.
-  await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Price on request", "private 101 price remains on request");
+  // The private 101 stays on request on Home and Training in both variants, as one fact of its own; coaching keeps Price on request on Training.
+  await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Private for your team: price on request", "private 101 price remains on request");
   await page.goto(routes.training);
-  await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Price on request", "private 101 price remains on request");
+  await expectText(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li").last(), "Private for your team: price on request", "private 101 price remains on request");
   await expectText(page.locator("#coaching .facts > li").last(), "Price on request", "coaching stays on request in both variants");
-  // Priced: the private 101 and coaching. Unpriced: Fundamentals, the 101, two specialists and coaching.
-  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(priced ? 2 : 5);
+  // Priced: coaching only. Unpriced: Fundamentals, two specialists and coaching. The private 101 says it in its own fact in both.
+  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(priced ? 1 : 4);
+  await expect(page.getByText("Private for your team: price on request", { exact: true })).toHaveCount(1);
   if (priced) {
-    // The private-101 line follows "Also private, for your team", so the amounts above it cannot be read as its price.
+    // The private 101 is one fact of its own, so the amounts above it cannot be read as its price.
     const facts = page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li");
-    await expectItems(facts, ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", copy!.publicSeat, "Also private, for your team", "Price on request"], "101 chooser facts");
+    await expectItems(facts, ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", copy!.publicSeat, "Private for your team: price on request"], "101 chooser facts");
     await expectText(page.locator(".training-intro > p").nth(1), copy!.trainingIntro, "training price statement");
   }
   // Consultancy shows its usual range only when priced; the free call never carries a price.

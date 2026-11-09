@@ -143,9 +143,9 @@ function checkDist() {
   expect(has(fundamentals, copy.fundamentalsDetail), "priced-slot-missing", "dist/training/power-bi-fundamentals/index.html");
   expect(has(daxDeepDive, copy.daxDeepDiveDetail), "priced-slot-missing", "dist/training/dax-deep-dive/index.html");
   expect(has(daxFundamentals, copy.daxFundamentalsDetail), "priced-slot-missing", "dist/training/dax-fundamentals/index.html");
-  // Price on request stays for the private 101 (Home, Training) and coaching (Training) only; "On site or online" is omitted from priced output.
-  expect(count(home, ">Price on request<") === 1 && !home.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/index.html");
-  expect(count(training, ">Price on request<") === 2 && !training.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/index.html");
+  // Price on request stays for the private 101 (Home, Training, as "Private for your team: price on request") and coaching (Training) only; "On site or online" is omitted from priced output.
+  expect(count(home, ">Private for your team: price on request<") === 1 && !home.includes(">Price on request<") && !home.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/index.html");
+  expect(count(training, ">Private for your team: price on request<") === 1 && count(training, ">Price on request<") === 1 && !training.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/index.html");
   expect(!agents.includes("Price on request"), "unpriced-phrase-in-priced-slot", "dist/training/power-bi-with-ai-agents-101/index.html");
   expect(!fundamentals.includes("Price on request") && !fundamentals.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/power-bi-fundamentals/index.html");
   expect(!daxDeepDive.includes("Price on request") && !daxDeepDive.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/dax-deep-dive/index.html");
