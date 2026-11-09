@@ -28,7 +28,6 @@ const digest = (text) => createHash("sha256").update(text).digest("hex");
 const LITERAL_EXEMPT = new Map([
   ["tests/fixtures/umami/script.js", "78ea25421c1a446d5ba1c154e5e14d5c5f4cc433b27869e73ab3ebf902c5b317"],
   ["diagrams/export.mjs", "c16da96804771039cf3eb58b81f9316c1332deb9bad5a54e7daa703cffd4632e"],
-  ["content/writing/we-are-all-middle-management-now.mdx", "e5bca96a5509ad026df83f2a311502ede1eacc178faeba635a0382770a27c1a1"],
   ["src/content/writing/we-are-all-middle-management-now.mdx", "9ab89dbad1cee004a104395a5790b47700586fa4fa5e688d5aae8d6705a6b318"],
 ]);
 const ESSAY_ROUTE = "writing/we-are-all-middle-management-now/index.html";

@@ -3,8 +3,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 
-// Check archived reference and every active collection before Astro can print a validation error.
-const directories = process.argv[2] ? [process.argv[2]] : ["content", "src/content/work", "src/content/writing"];
+// Check every collection before Astro can print a validation error.
+const directories = process.argv[2] ? [process.argv[2]] : ["src/content/work", "src/content/writing"];
 let checked = 0;
 let failed = false;
 for (const directory of directories) {

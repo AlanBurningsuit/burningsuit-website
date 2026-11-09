@@ -11,8 +11,7 @@
     "test-results",
     "playwright.config.ts",
     "tests",
-    "scripts",
-    "content"
+    "scripts"
   ],
   "compilerOptions": {
     "strictNullChecks": true,

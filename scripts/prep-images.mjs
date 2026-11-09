@@ -37,13 +37,8 @@ if (!existsSync(library)) {
 // pre-extracts a region before the downscale — used to frame a landscape
 // original into a portrait centred on the subject's eyes.
 const jobs = [
-  ["DSC08670-Edit.jpg", "DSC08670-Edit.jpg", 1000], // hero portrait (4:5, ~40vw right column)
   ["DSC08683-Edit.jpg", "DSC08683-Edit.jpg", 1600], // about-teaser landscape (panel doorway)
   ["DSC09119-2-Edit-Edit.jpg", "DSC09119-2-Edit-Edit.jpg", 1600], // material photo band
-  ["DSC09247-Edit.jpg", "DSC09247-Edit.jpg", 384], // face chip (2× of 192px)
-  // /power-bi hero (swapped to DSC08846 2026-07-28, Alan's pick): source is
-  // already hand-cropped to 4:5 portrait (3200×4000), so no extract step.
-  ["DSC08846-Edit_cropped.jpg", "DSC08846-Edit_cropped.jpg", 800],
   // /about — Zelda, the dog: phone portrait (3072×4080) cropped to a 3:2
   // landscape framed on her face + the blanket roll, so it fills the prose
   // content width in the "and the dog" chapter. 1400px covers 42rem at 2×.
