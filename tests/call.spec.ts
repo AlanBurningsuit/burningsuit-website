@@ -24,7 +24,7 @@ test("free call page stays static, private and CSP-clean, with no form, embed or
   await expect(page).toHaveTitle("Free 30-minute Power BI call | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Book a free 30-minute call with me, Alan Harman-Box, about your own Power BI. Talk through what's happening and whether I can help.");
   await expectIndexable(page);
-  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], form, iframe, embed, object, main img`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, form, iframe, embed, object, main img`)).toHaveCount(0);
   // The old /hour/ address, live on the current site, now redirects here.
   expect(redirects["/hour"]).toBe("/call/");
   expect(pages).not.toHaveProperty("hour");

@@ -24,7 +24,6 @@ a { color: var(--link); text-decoration-color: color-mix(in srgb, currentColor 5
 a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 :focus-visible { outline: var(--px) solid var(--link); outline-offset: 5px; border-radius: var(--r-xs); }
 .wrap { max-width: var(--content-width); margin-inline: auto; padding-inline: var(--page-gutter); }
-.placeholder { max-width: 65ch; margin-inline: auto; padding: var(--page-gutter); }
 .eyebrow { font: 400 .92rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 .em { color: var(--amber); }
 /* The lede: the question or promise under a title, in the serif margin voice, so the display face keeps the weight. */

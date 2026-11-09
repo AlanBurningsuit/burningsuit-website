@@ -30,7 +30,7 @@ for (const [path, anchors] of Object.entries(pages)) {
     await expect(page.locator(tracker)).toHaveAttribute("data-domains", ANALYTICS.domains);
     await expect(page.locator(otherScripts)).toHaveCount(path === "privacy" ? 1 : 0);
     if (path === "privacy") await expect(page.locator(otherScripts)).toHaveAttribute("src", /^\/_astro\/[^/]+\.js$/);
-    // About, the free call page and the privacy notice link onward instead; the other registered bespoke routes carry the form, and placeholders have none.
+    // About, the free call page and the privacy notice link onward instead; the other registered bespoke routes carry the form.
     await expect(page.locator("form")).toHaveCount(formRoutes.includes(path) ? 1 : 0);
     for (const id of anchors) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
     expect(errors).toEqual([]);

@@ -1,6 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
-import { pendingRoutes } from "../src/config/pending-routes.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, copy, expectItems, expectText, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
 import { RUN } from "../src/config/course-run.mjs";
@@ -23,7 +22,7 @@ for (const route of ["/", course]) {
     for (const family of ["Mona Sans", "Albert Sans", "Burningsuit Reader"]) expect(loadedFonts.some((font) => font.startsWith(family))).toBe(true);
     await expect(page.locator("h1")).toHaveCount(1);
     await expectIndexable(page);
-    await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
+    await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
     await expect(page.locator("form")).toHaveCount(route === "/" ? 1 : 0);
     await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");
@@ -345,13 +344,6 @@ test("enquiry form is a labelled plain POST with nothing preselected that valida
   await expect(form.locator(":invalid")).toHaveCount(0);
   await context.close();
 });
-
-for (const route of pendingRoutes) {
-  test(`future sitemap destination remains explicitly unbuilt: ${route}`, async ({ page }) => {
-    expect((await page.goto(route))?.status()).toBe(404);
-    await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
-  });
-}
 
 // Every standing page's title carries one emphasised word, in the dark band's amber.
 test("each standing page's title has one amber emphasis", async ({ page }) => {

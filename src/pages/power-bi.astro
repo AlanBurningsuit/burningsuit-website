@@ -25,7 +25,6 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
 <BaseLayout
   title="Power BI consultancy | burningsuit"
   description={`${summary}${priced ? "" : " Price on request."}`}
-  placeholder={false}
   schema={schema}
 >
   <TitleBand heading={{ before: "Power BI consultancy that leaves your team ", em: "independent" }}>

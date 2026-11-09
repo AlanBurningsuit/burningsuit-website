@@ -1,6 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
-import { pendingRoutes } from "../src/config/pending-routes.mjs";
 
 const route = "/work/contact-centre/";
 const links = ["/training/#coaching", "/contact/"];
@@ -20,13 +19,12 @@ test("The contact-centre study stays static, private and CSP-clean, with no form
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "A contact-centre team lead could follow Power BI tutorials but got stuck on her own data. Coaching on her reporting helped her do more of it herself.");
   await expectIndexable(page, { article: true });
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
-  await expect(page.locator(`${otherScripts}, astro-island, iframe, [data-rebuild-placeholder], form, input, button, main img, main picture, main svg, main figure, main blockquote`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, form, input, button, main img, main picture, main svg, main figure, main blockquote`)).toHaveCount(0);
   // The study sits outside the navigation's sections.
   // A study marks Work as its section, not as the current page.
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Case studies");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
-  expect(pendingRoutes).not.toContain(route);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });

@@ -25,7 +25,7 @@ test("About stays static, private and CSP-clean, with no form or third-party req
   await expect(page).toHaveTitle("About Alan Harman-Box | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "I'm Alan Harman-Box, and burningsuit is me. I write and teach Power BI and AI courses for people whose job isn't Power BI, and help teams with their own reporting.");
   await expectIndexable(page);
-  await expect(page.locator(`${otherScripts}, astro-island, iframe, [data-rebuild-placeholder], form`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, form`)).toHaveCount(0);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("About");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
   expect(errors).toEqual([]);

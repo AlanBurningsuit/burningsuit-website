@@ -9,7 +9,7 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", { day: "nume
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const archiveContext = essay.archiveMonth ? `${months[Number(essay.archiveMonth.slice(5)) - 1]} ${essay.archiveMonth.slice(0, 4)}` : undefined;
 ---
-<BaseLayout title={essay.title} description={essay.description} author={essay.author} ogType="article" placeholder={false}>
+<BaseLayout title={essay.title} description={essay.description} author={essay.author} ogType="article">
   <article class="reading-article" aria-labelledby="page-title">
     <TitleBand heading={essay.heading} standfirstClass="article-lead">
       <Fragment slot="eyebrow">{essay.kicker}</Fragment>

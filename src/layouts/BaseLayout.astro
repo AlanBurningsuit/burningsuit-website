@@ -10,8 +10,7 @@ import "../styles/app.css";
 
 interface Props {
   title?: string;
-  description?: string;
-  placeholder?: boolean;
+  description: string;
   ogImage?: string;
   author?: string;
   ogType?: "website" | "article";
@@ -22,16 +21,13 @@ interface Props {
 }
 const {
   title = SITE_NAME,
-  description = "burningsuit website rebuild.",
-  placeholder = true,
+  description,
   ogImage = "/og-image.png",
   author,
   ogType = "website",
-  noindex: noindexProp = false,
+  noindex = false,
   schema: pageNodes = [],
 } = Astro.props;
-// Placeholder pages never reach search either.
-const noindex = noindexProp || placeholder;
 const siteUrl = Astro.site!.href;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const pageName = title.replace(/\s+[|–-]\s+burningsuit$/, "");
@@ -76,10 +72,10 @@ const graph = [
       <script is:inline defer src={ANALYTICS.scriptSrc} data-website-id={ANALYTICS.websiteId} data-domains={ANALYTICS.domains} data-performance={ANALYTICS.performance ? "true" : undefined}></script>
     )}
   </head>
-  <body id="top" data-rebuild-placeholder={placeholder || undefined}>
+  <body id="top">
     <a class="skip" href="#main">Skip to content</a>
-    {!placeholder && <Masthead />}
-    <main id="main" tabindex="-1" class:list={{ placeholder }}><slot /></main>
-    {!placeholder && <Footer />}
+    <Masthead />
+    <main id="main" tabindex="-1"><slot /></main>
+    <Footer />
   </body>
 </html>
