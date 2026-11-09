@@ -119,7 +119,8 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
               ? <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>
               : <p class="booking-status run-status">{seat.line} <a href={`mailto:${email}`}>{seat.ask}.</a></p>}
         </div>
-        {priced && RUN.open && <section class="booking-terms" aria-labelledby="booking-terms-title">
+        {/* The terms stay while the run is full: people who have booked still need them. */}
+        {priced && RUN.status !== "past" && <section class="booking-terms" aria-labelledby="booking-terms-title">
           <h3 id="booking-terms-title">Booking terms</h3>
           <ul role="list">
             <li>Cancel up to {RUN.refundDays} days before the course, by <time datetime={RUN.refundBy.date}>{RUN.refundBy.long}</time>, for a full refund.</li>
