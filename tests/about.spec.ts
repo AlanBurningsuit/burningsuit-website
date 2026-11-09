@@ -1,5 +1,5 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, forEachTextSize, watchPage } from "./helpers";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
@@ -7,14 +7,7 @@ const route = "/about/";
 const linkedin = "https://www.linkedin.com/in/alan-harman-box";
 
 test("About stays static, private and CSP-clean, with no form or third-party request", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   // Load every lazy photo so their requests are counted too.
   for (const img of await page.locator("main img").all()) {
@@ -28,8 +21,7 @@ test("About stays static, private and CSP-clean, with no form or third-party req
   await expect(page.locator(`${otherScripts}, astro-island, iframe, form`)).toHaveCount(0);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("About");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("About keeps the approved wording, headings and anchors", async ({ page }) => {
@@ -147,11 +139,10 @@ test("About works without JavaScript, from the keyboard and from a legacy alias"
 });
 
 test("About layout: one reading column, each heading above its prose, photos opposite and alternating on wide screens", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
   for (const id of ["capable", "human", "origin", "dog"]) {
-    const [h, p] = [await box(`#${id} h2`), await box(`#${id} .about-prose`)];
+    const [h, p] = [await box(page, `#${id} h2`), await box(page, `#${id} .about-prose`)];
     expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     expect(Math.abs(p.x - h.x)).toBeLessThanOrEqual(1);
     // A reading column, not the full content width.
@@ -159,13 +150,13 @@ test("About layout: one reading column, each heading above its prose, photos opp
   }
   // The text starts on the title band's left edge, except where a photo takes the left; photos alternate sides
   // (introduction right, human left, origin right, dog left), each beside its own prose.
-  const edge = (await box(".title-band h1")).x;
-  expect(Math.abs((await box(".about-lead")).x - edge)).toBeLessThanOrEqual(1);
-  expect(Math.abs((await box("#capable h2")).x - edge)).toBeLessThanOrEqual(1);
-  const cafe = await box(".about-intro figure"), chapter = await box("#capable .about-prose");
+  const edge = (await box(page, ".title-band h1")).x;
+  expect(Math.abs((await box(page, ".about-lead")).x - edge)).toBeLessThanOrEqual(1);
+  expect(Math.abs((await box(page, "#capable h2")).x - edge)).toBeLessThanOrEqual(1);
+  const cafe = await box(page, ".about-intro figure"), chapter = await box(page, "#capable .about-prose");
   expect(cafe.x).toBeGreaterThanOrEqual(chapter.x + chapter.width);
   for (const [section, side] of [[".about-intro", "right"], ["#human", "left"], ["#origin", "right"], ["#dog", "left"]] as const) {
-    const photo = await box(`${section} > figure`), text = await box(section === ".about-intro" ? ".about-lead" : `${section} > .about-prose`);
+    const photo = await box(page, `${section} > figure`), text = await box(page, section === ".about-intro" ? ".about-lead" : `${section} > .about-prose`);
     if (side === "right") expect(photo.x).toBeGreaterThanOrEqual(text.x + text.width);
     else { expect(text.x).toBeGreaterThanOrEqual(photo.x + photo.width); expect(Math.abs(photo.x - edge)).toBeLessThanOrEqual(1); }
     expect(photo.y).toBeLessThan(text.y + text.height);
@@ -173,7 +164,7 @@ test("About layout: one reading column, each heading above its prose, photos opp
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
     for (const id of ["capable", "human", "origin", "dog"]) {
-      const [h, p] = [await box(`#${id} h2`), await box(`#${id} .about-prose`)];
+      const [h, p] = [await box(page, `#${id} h2`), await box(page, `#${id} .about-prose`)];
       expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     }
     for (const item of await page.locator("main figure, main a, main h1, main h2").all()) {
@@ -188,11 +179,9 @@ for (const width of [320, 390, 768, 1366]) {
   test(`About reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await forEachTextSize(page, async () => {
       await expect(page.getByRole("link", { name: "the enquiry form" })).toBeVisible();
-    }
+    });
   });
 }
 

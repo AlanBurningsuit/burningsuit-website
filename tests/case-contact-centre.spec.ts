@@ -1,18 +1,11 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, forEachTextSize, watchPage } from "./helpers";
 
 const route = "/work/contact-centre/";
 const links = ["/training/#coaching", "/contact/"];
 
 test("The contact-centre study stays static, private and CSP-clean, with no form, image or third-party request", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Coaching a contact-centre team lead | burningsuit");
@@ -25,8 +18,7 @@ test("The contact-centre study stays static, private and CSP-clean, with no form
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Case studies");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("The contact-centre study keeps the approved wording and heading hierarchy", async ({ page }) => {
@@ -102,12 +94,11 @@ test("The contact-centre study works without JavaScript and from the keyboard", 
 });
 
 test("The contact-centre study layout: headings beside their prose on wide screens, the facts quieter, phones stack", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   const size = async (selector: string) => parseFloat(await page.locator(selector).first().evaluate((el) => getComputedStyle(el).fontSize));
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
   for (const id of ["where-she-started", "what-we-worked-on"]) {
-    const [h, p] = [await box(`#${id}`), await box(`#${id} + p`)];
+    const [h, p] = [await box(page, `#${id}`), await box(page, `#${id} + p`)];
     expect(p.x).toBeGreaterThanOrEqual(h.x + h.width);
     expect(Math.abs(p.y - h.y)).toBeLessThan(2);
   }
@@ -120,12 +111,12 @@ test("The contact-centre study layout: headings beside their prose on wide scree
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
     for (const id of ["where-she-started", "what-we-worked-on"]) {
-      const [h, p] = [await box(`#${id}`), await box(`#${id} + p`)];
+      const [h, p] = [await box(page, `#${id}`), await box(page, `#${id} + p`)];
       expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     }
     // On phones the facts follow the lead, one per row.
-    const lead = await box(".study-lead");
-    const [first, second] = [await box(".study-facts > div:nth-child(1)"), await box(".study-facts > div:nth-child(2)")];
+    const lead = await box(page, ".study-lead");
+    const [first, second] = [await box(page, ".study-facts > div:nth-child(1)"), await box(page, ".study-facts > div:nth-child(2)")];
     expect(first.y).toBeGreaterThanOrEqual(lead.y + lead.height);
     expect(second.y).toBeGreaterThanOrEqual(first.y + first.height - 1);
     for (const item of await page.locator("main a, main h1, main h2, main p, main dt, main dd").all()) {
@@ -140,11 +131,9 @@ for (const width of [320, 390, 768, 1366]) {
   test(`The contact-centre study reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await forEachTextSize(page, async () => {
       await expect(page.getByRole("link", { name: "See Power BI coaching" })).toBeVisible();
-    }
+    });
   });
 }
 

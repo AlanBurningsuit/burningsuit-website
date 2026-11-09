@@ -1,4 +1,5 @@
 import { test, expect, otherScripts } from "./analytics";
+import { expectNoHorizontalScroll } from "./helpers";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
 // The normal suite stubs the provider: it never emails sample enquiries.
@@ -76,7 +77,7 @@ for (const path of [ENQUIRY.successPath, ENQUIRY.errorPath, ENQUIRY.privacyPath]
     for (const width of [320, 390, 1366]) {
       await page.setViewportSize({ width, height: 900 });
       await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await expectNoHorizontalScroll(page);
     }
     await context.close();
   });

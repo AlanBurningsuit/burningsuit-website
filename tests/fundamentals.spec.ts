@@ -1,6 +1,5 @@
-import { type Page } from "@playwright/test";
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, expectNoSpills, forEachTextSize, watchPage, agendaNumbers } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
 
@@ -9,17 +8,9 @@ const email = "mailto:alan@burningsuit.co.uk";
 // The decision hero's action comes first: it sits on the dark stage, above the introduction.
 const links = ["#contact", "/training/dax-fundamentals/", "#need-title", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
 
-const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 
 test("Fundamentals page stays static, private, price-safe and CSP-clean", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI fundamentals | burningsuit");
@@ -49,8 +40,7 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   // "per booking" is the approved price unit; any other booking wording stays absent.
   expectNone(body.replaceAll("per booking", ""), [/seat/i, /book/i, /public/i, /free hour/i, /Windows/i, /setup check/i, /\[|\]|\{|\}/, /founding/i], "fundamentals text");
   await expect(page.locator(".outcomes figure.pull-quote figcaption")).toHaveText("Assistant accountant, Power BI fundamentals");
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("Fundamentals page renders the approved wording, gaps and question order", async ({ page }) => {
@@ -244,17 +234,10 @@ test("Fundamentals layout: one decision group on the dark stage, the introductio
   }
 });
 
-test("the agenda's visible numbers run 01 to 09 across both days", async ({ browser, baseURL }) => {
-  // The numbers are decorative (alt text ""), so a test-only style exposes the same counter to Chromium's accessibility tree.
-  const context = await browser.newContext({ baseURL, bypassCSP: true });
-  const page = await context.newPage();
+test("the agenda's visible numbers run 01 to 09 across both days", async ({ page }) => {
   await page.goto(route);
-  await page.addStyleTag({ content: ".agenda-steps > li::before { content: counter(step, decimal-leading-zero) !important; }" });
-  const cdp = await context.newCDPSession(page);
-  const { nodes } = await cdp.send("Accessibility.getFullAXTree") as { nodes: { role?: { value?: string }; name?: { value?: string } }[] };
-  const numbers = nodes.filter((node) => node.role?.value === "StaticText" && /^\d\d$/.test(node.name?.value ?? "")).map((node) => node.name!.value!);
-  expect(numbers).toEqual(["01", "02", "03", "04", "05", "06", "07", "08", "09"]);
-  await context.close();
+  // Read from the page's own computed counters; the numbers are decorative (alt text ""), so they stay out of the accessibility tree.
+  expect(await agendaNumbers(page)).toEqual(["01", "02", "03", "04", "05", "06", "07", "08", "09"]);
 });
 
 for (const width of [320, 390, 768, 1024, 1366]) {
@@ -262,12 +245,9 @@ for (const width of [320, 390, 768, 1024, 1366]) {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
     await page.evaluate(() => document.fonts.ready);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-      const spills = await page.locator("main *").evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === "visible" && el.clientWidth > 0).map((el) => el.className || el.tagName));
-      expect(spills).toEqual([]);
-    }
+    await forEachTextSize(page, async () => {
+      await expectNoSpills(page);
+    });
   });
 }
 

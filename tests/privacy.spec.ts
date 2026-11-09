@@ -1,6 +1,6 @@
 import { type Page } from "@playwright/test";
-import { test, expect, isTracker, otherScripts, servedAsProduction, tracker } from "./analytics";
-import { reportCspViolations, expectIndexable } from "./helpers";
+import { test, expect, otherScripts, servedAsProduction, tracker } from "./analytics";
+import { expectIndexable, forEachTextSize, watchPage } from "./helpers";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 import { pages } from "../src/config/compatibility.mjs";
@@ -44,14 +44,7 @@ const control = (page: Page) => page.getByRole("button", { name: /my visits/ });
 const status = (page: Page) => page.getByRole("status");
 
 test("privacy notice stays static, private and CSP-clean, with only the tracker and its opt-out script", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Privacy | burningsuit");
@@ -66,9 +59,8 @@ test("privacy notice stays static, private and CSP-clean, with only the tracker 
   expect(pages.privacy).toEqual(["who", "analytics", "optout", "hosting", "booking", "seat", "recordings", "email", "rights", "changes"]);
   for (const [index, id] of pages.privacy.entries()) await expect(page.locator(`h2#${id}`)).toHaveText(headings[index]);
   await page.waitForLoadState("networkidle");
-  expect(errors).toEqual([]);
   // The tag reports only from the production domains, so no beacon leaves a test host.
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("privacy notice carries the approved words, headings and links in order", async ({ page }) => {
@@ -171,9 +163,7 @@ for (const width of [320, 390, 1366]) {
   test(`privacy notice and footer reflow at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((value) => { document.documentElement.style.fontSize = value; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await forEachTextSize(page, async (size) => {
       const footer = await page.locator("footer").boundingBox();
       if (size === "100%") {
         const [legalSize, linkSize] = await page.evaluate(() => [".foot-legal", ".foot-links a"].map((selector) => parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize)));
@@ -185,7 +175,7 @@ for (const width of [320, 390, 1366]) {
       // The company line spans the footer's content row and the links sit beneath it, not squeezed beside it.
       expect(legalBox!.y + legalBox!.height).toBeLessThanOrEqual(linksBox!.y);
       expect(legalBox!.x + legalBox!.width).toBeLessThanOrEqual(footer!.x + footer!.width);
-    }
+    });
   });
 }
 

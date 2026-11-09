@@ -1,5 +1,5 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, forEachTextSize, watchPage } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, copy, expectItems, expectText, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
 import { RUN } from "../src/config/course-run.mjs";
@@ -8,14 +8,7 @@ const course = "/training/power-bi-with-ai-agents-101/";
 
 for (const route of ["/", course]) {
   test(`built page stays static, private and CSP-clean: ${route}`, async ({ page, baseURL }) => {
-    const errors: string[] = [];
-    const external: string[] = [];
-    page.on("pageerror", (error) => errors.push(error.message));
-    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-    page.on("request", (request) => {
-      if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-    });
-    await reportCspViolations(page);
+    const watch = await watchPage(page);
     expect((await page.goto(route))?.status()).toBe(200);
     await page.evaluate(() => document.fonts.ready);
     const loadedFonts = await page.evaluate(() => Array.from(document.fonts).filter((font) => font.status === "loaded").map((font) => font.family));
@@ -39,18 +32,14 @@ for (const route of ["/", course]) {
     await courses.locator("summary").click();
     await expect(courses.getByRole("link")).toHaveText(["Power BI fundamentals", "Power BI with AI agents 101", "DAX fundamentals", "DAX deep dive", "How I train"]);
     await courses.locator("summary").click();
-    expect(errors).toEqual([]);
-    expect(external).toEqual([]);
+    watch.expectClean();
   });
 
   for (const width of [320, 390, 768, 1366]) {
     test(`page reflows at ${width}px with enlarged text: ${route}`, async ({ page }) => {
       await page.setViewportSize({ width, height: 768 });
       await page.goto(route);
-      for (const size of ["100%", "200%"]) {
-        await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-      }
+      await forEachTextSize(page);
     });
   }
 
@@ -141,7 +130,6 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
 });
 
 test("the 101 puts facts, Before you book and booking in the decision hero, above the introduction at every width", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(course);
   // One group on the dark stage: facts, then the requirements line, then booking, then the private-course ask.
@@ -149,20 +137,20 @@ test("the 101 puts facts, Before you book and booking in the decision hero, abov
   expect(await group.evaluate((el) => [...el.children].map((child) => child.className))).toEqual(["run-facts", "before-book", "booking", "private-ask"]);
   await expect(page.locator(".dark.stage .hero-facts .before-book")).toHaveText("Before you book: you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. See what you'll need.");
   await expect(group.locator(".booking .book-button")).toHaveCount(1);
-  let intro = await box(".course-intro"), facts = await box(".hero-facts");
+  let intro = await box(page, ".course-intro"), facts = await box(page, ".hero-facts");
   expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
   // The requirements line is read before the booking control.
-  expect((await box(".hero-facts .booking")).y).toBeGreaterThanOrEqual((await box(".hero-facts .before-book")).y + (await box(".hero-facts .before-book")).height);
-  const [check, teacher] = [await box(".trust-check"), await box(".trust-teacher")];
+  expect((await box(page, ".hero-facts .booking")).y).toBeGreaterThanOrEqual((await box(page, ".hero-facts .before-book")).y + (await box(page, ".hero-facts .before-book")).height);
+  const [check, teacher] = [await box(page, ".trust-check"), await box(page, ".trust-teacher")];
   expect(teacher.x).toBeGreaterThanOrEqual(check.x + check.width);
 
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await box(".course-intro"); facts = await box(".hero-facts");
+    intro = await box(page, ".course-intro"); facts = await box(page, ".hero-facts");
     expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
-    expect((await box(".course-do")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    const [narrowCheck, narrowTeacher] = [await box(".trust-check"), await box(".trust-teacher")];
+    expect((await box(page, ".course-do")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
+    const [narrowCheck, narrowTeacher] = [await box(page, ".trust-check"), await box(page, ".trust-teacher")];
     expect(narrowTeacher.y).toBeGreaterThanOrEqual(narrowCheck.y + narrowCheck.height);
     // Steps, tags and the booking control stay inside the viewport.
     for (const selector of [".do-steps", ".need-list", ".book-button", ".hero-facts .run-facts > li", ".before-book", ".private-ask"]) {
@@ -265,13 +253,11 @@ test("homepage keeps the approved sections, order and starting points", async ({
   // The consultancy band stays raised above the page background (shared .raised-band in app.css).
   const bg = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(await bg("#consultancy")).not.toBe(await bg("body"));
-
-  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   // Wide screens: the dark title band holds only the title, across the full width, and the lede; the introduction then
   // opens the daylight sheet beside the portrait, and the starting points follow below it.
-  let intro = await box(".introduction"), title = await box(".title-band h1"), introCopy = await box(".intro-copy"), list = await box(".courses"), photo = await box(".alan-photo");
+  let intro = await box(page, ".introduction"), title = await box(page, ".title-band h1"), introCopy = await box(page, ".intro-copy"), list = await box(page, ".courses"), photo = await box(page, ".alan-photo");
   expect(title.width).toBeGreaterThan(introCopy.width + photo.width);
-  expect(Math.min(introCopy.y, photo.y)).toBeGreaterThanOrEqual((await box(".title-band")).y + (await box(".title-band")).height);
+  expect(Math.min(introCopy.y, photo.y)).toBeGreaterThanOrEqual((await box(page, ".title-band")).y + (await box(page, ".title-band")).height);
   expect(photo.x).toBeGreaterThanOrEqual(introCopy.x + introCopy.width);
   expect(list.y).toBeGreaterThanOrEqual(intro.y + intro.height);
   expect(await page.locator(".title-band").evaluate((el) => getComputedStyle(el.closest(".dark")!).backgroundColor)).toBe(await bg("body"));
@@ -284,13 +270,13 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect(await page.locator(".title-actions a").evaluateAll((links) => links.map((link) => link.className))).toEqual(["button", "button"]);
   expect(await bg("main")).not.toBe(await bg("body"));
   // The two primary entries sit side by side at equal width; the specialists follow beneath them.
-  const [fundamentals, agents] = [await box('article[aria-labelledby="fundamentals-title"]'), await box('article[aria-labelledby="agents-101-title"]')];
+  const [fundamentals, agents] = [await box(page, 'article[aria-labelledby="fundamentals-title"]'), await box(page, 'article[aria-labelledby="agents-101-title"]')];
   expect(Math.abs(fundamentals.width - agents.width)).toBeLessThanOrEqual(1);
   expect(Math.abs(fundamentals.y - agents.y)).toBeLessThanOrEqual(1);
-  expect((await box(".specialists")).y).toBeGreaterThanOrEqual(Math.max(fundamentals.y + fundamentals.height, agents.y + agents.height));
+  expect((await box(page, ".specialists")).y).toBeGreaterThanOrEqual(Math.max(fundamentals.y + fundamentals.height, agents.y + agents.height));
 
   await page.setViewportSize({ width: 390, height: 844 });
-  title = await box(".title-band"); introCopy = await box(".intro-copy"); list = await box(".courses"); photo = await box(".alan-photo");
+  title = await box(page, ".title-band"); introCopy = await box(page, ".intro-copy"); list = await box(page, ".courses"); photo = await box(page, ".alan-photo");
   // Narrow screens: the title band, the portrait, then the introduction, then the courses.
   expect(photo.y).toBeGreaterThanOrEqual(title.y + title.height);
   expect(introCopy.y).toBeGreaterThanOrEqual(photo.y + photo.height);
@@ -299,7 +285,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   // On a phone the two title buttons stack at the same full width.
   const actions = await page.locator(".title-actions .button").evaluateAll((links) => links.map((link) => link.getBoundingClientRect().width));
   expect(actions[0]).toBe(actions[1]);
-  expect(actions[0]).toBe((await box(".title-actions")).width);
+  expect(actions[0]).toBe((await box(page, ".title-actions")).width);
 });
 
 test("enquiry form is a labelled plain POST with nothing preselected that validates without JavaScript", async ({ browser, baseURL }) => {

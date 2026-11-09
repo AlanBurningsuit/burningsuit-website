@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test, expect, otherScripts } from "./analytics";
-import { visualReview, expectIndexable } from "./helpers";
+import { visualReview, expectIndexable, forEachTextSize } from "./helpers";
 import { pages, reserved404Routes } from "../src/config/compatibility.mjs";
 
 const essay = "/writing/we-are-all-middle-management-now/";
@@ -128,15 +128,13 @@ for (const route of ["/work/", essay, archive]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(route);
       await page.evaluate(() => document.fonts.ready);
-      for (const size of ["100%", "200%"]) {
-        await page.evaluate(size => document.documentElement.style.fontSize = size, size);
-        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await forEachTextSize(page, async () => {
         for (const el of await page.locator("main p, main h1, main h2, main h3, main figure").all()) {
           const box = (await el.boundingBox())!;
           expect(box.x).toBeGreaterThanOrEqual(0);
           expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
         }
-      }
+      });
     });
   }
   visualReview(route);

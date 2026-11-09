@@ -1,42 +1,54 @@
-import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
-import { expectIndexable, reportCspViolations } from "./helpers";
+import { test, expect, otherScripts, tracker } from "./analytics";
+import { builtPages, expectIndexable, expectNoHorizontalScroll, watchPage } from "./helpers";
 import { bespokeRoutes, pages, reserved404Routes } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 
 const formRoutes = bespokeRoutes.filter((route) => !["about", "privacy", "work"].includes(route));
+const reserved = pages as Record<string, readonly string[]>;
 
-for (const [path, anchors] of Object.entries(pages)) {
-  if (reserved404Routes.includes(path)) continue;
-  test(`static, indexable, CSP-clean page: /${path}`, async ({ page }) => {
-    const errors: string[] = [];
-    const external: string[] = [];
-    page.on("pageerror", (error) => errors.push(error.message));
-    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-    const origin = new URL(test.info().project.use.baseURL!).origin;
-    page.on("request", (request) => { if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== origin && !isTracker(request.url())) external.push(request.url()); });
-    await reportCspViolations(page);
-    const response = await page.goto(`/${path}${path ? "/" : ""}`);
+// Every page the build emits (redirect stubs aside), found in dist/ rather than listed by hand.
+for (const { route, indexed } of builtPages) {
+  test(`static, ${indexed ? "indexable" : "noindex"}, CSP-clean page with the site shell: ${route}`, async ({ page }) => {
+    const watch = await watchPage(page);
+    const response = await page.goto(route);
     expect(response?.status()).toBe(200);
     await page.evaluate(() => document.fonts.ready);
     await expect(page.locator("h1")).toHaveCount(1);
-    // Case studies and essays add an Article node to the identity graph.
-    await expectIndexable(page, { article: /^(work|writing|blog)\/./.test(path) });
+    // The shell: skip link to main, masthead with the main navigation, footer.
+    await expect(page.locator('a.skip[href="#main"]')).toHaveText("Skip to content");
+    await expect(page.locator("main#main")).toHaveCount(1);
+    await expect(page.locator("header.masthead-band").getByRole("navigation", { name: "Main navigation" })).toHaveCount(1);
+    await expect(page.locator("footer.footer-band")).toHaveCount(1);
+    if (indexed) {
+      // Case studies and essays add an Article node to the identity graph.
+      await expectIndexable(page, { article: /^\/(work|writing|blog)\/./.test(route) });
+    } else {
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+      await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+    }
     const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
     for (const directive of ["default-src 'none'", "script-src", "style-src", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
     // Every page carries the Umami tag, limited to the production domains; only /privacy/ adds its same-origin opt-out module.
     await expect(page.locator(tracker)).toHaveCount(1);
     await expect(page.locator(tracker)).toHaveAttribute("data-website-id", ANALYTICS.websiteId);
     await expect(page.locator(tracker)).toHaveAttribute("data-domains", ANALYTICS.domains);
-    await expect(page.locator(otherScripts)).toHaveCount(path === "privacy" ? 1 : 0);
-    if (path === "privacy") await expect(page.locator(otherScripts)).toHaveAttribute("src", /^\/_astro\/[^/]+\.js$/);
-    // About, the free call page and the privacy notice link onward instead; the other registered bespoke routes carry the form.
-    await expect(page.locator("form")).toHaveCount(formRoutes.includes(path) ? 1 : 0);
-    for (const id of anchors) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
-    expect(errors).toEqual([]);
-    expect(external).toEqual([]);
+    await expect(page.locator(otherScripts)).toHaveCount(route === "/privacy/" ? 1 : 0);
+    if (route === "/privacy/") await expect(page.locator(otherScripts)).toHaveAttribute("src", /^\/_astro\/[^/]+\.js$/);
+    // Reserved routes keep their anchors; of those, About, the free call page and the privacy notice link onward instead of carrying the form.
+    const path = route.replace(/^\/|\/$/g, "");
+    if (path in reserved) {
+      await expect(page.locator("form")).toHaveCount(formRoutes.includes(path) ? 1 : 0);
+      for (const id of reserved[path]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+    }
+    watch.expectClean();
   });
 }
+
+test("every reserved route is a built page", () => {
+  const built = new Set(builtPages.map(({ route }) => route.replace(/^\/|\/$/g, "")));
+  expect(Object.keys(pages).filter((path) => !reserved404Routes.includes(path) && !built.has(path))).toEqual([]);
+});
 
 for (const path of reserved404Routes) {
   test(`reserved route remains a genuine 404: /${path}`, async ({ page }) => {
@@ -79,7 +91,7 @@ for (const width of [320, 390, 768, 1280]) {
     await page.setViewportSize({ width, height: 720 });
     await page.goto("/404.html");
     await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expectNoHorizontalScroll(page);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 }
