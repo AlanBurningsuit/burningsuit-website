@@ -17,8 +17,8 @@
 
 /* How I work with your team: the two principles as side-by-side cards under their heading. */
 @media (min-width: 901px) {
-  .method { grid-template-columns: minmax(0, 1fr); row-gap: 26px; }
-  .method > h2 { position: static; }
+  .course-need.method { grid-template-columns: minmax(0, 1fr); row-gap: 26px; }
+  .course-need.method > h2 { position: static; }
   .method .need-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; padding: 0; background: none; box-shadow: none; }
   .method .need-list li { max-width: none; padding: 24px 28px 26px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
   .method .need-list li::before { display: none; }
@@ -55,7 +55,7 @@
 @media (min-width: 901px) { .who-note { margin-top: 10px; } }
 .who-photo { max-width: 420px; }
 .who-photo img { aspect-ratio: 3 / 2; object-fit: cover; } /* guard: the derivative is already 3:2 */
-.who-does { padding-block: 24px 80px; }
+.course-need.who-does { padding-block: 24px 80px; }
 .who-note { border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; }
 .who-note p { max-width: 64ch; }
 .who-note .text-link { margin-top: 12px; }
@@ -71,7 +71,7 @@
 @media (max-width: 900px) {
   .consult-split { grid-template-columns: minmax(0, 1fr); row-gap: 22px; padding-block: 24px 56px; }
   .work-runs .do-inner { padding-block: 54px 40px; }
-  .who-does { padding-block: 16px 60px; }
+  .course-need.who-does { padding-block: 16px 60px; }
 }
 @media (max-width: 680px) {
   .pull-line { font-size: 1.4rem; }

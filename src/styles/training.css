@@ -16,7 +16,7 @@
   .start-list { grid-template-rows: repeat(6, auto); align-items: stretch; }
   .start-list > .course { display: grid; grid-row: span 6; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); row-gap: 0; align-content: start; }
 }
-.course > p.private-ask { margin-top: 10px; font-size: .96rem; }
+.start-list .course > p.private-ask { margin-top: 10px; font-size: .96rem; }
 .private-ask a { font-weight: 600; }
 /* The public group size stays in one piece when the date line wraps. */
 

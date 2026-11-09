@@ -5,7 +5,7 @@
 
 /* The opening holds everything before the booking band: the introduction, then "What happens" under it, with the
    facts card beside both on wide screens; on narrow ones the three stack in source order. */
-.call-opening { padding-bottom: clamp(36px, 4vw, 52px); }
+.course-opening.call-opening { padding-bottom: clamp(36px, 4vw, 52px); }
 @media (min-width: 901px) {
   .call-opening { grid-template-rows: auto 1fr; }
   .call-opening .course-run { grid-column: 2; grid-row: 1 / span 2; }
