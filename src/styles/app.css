@@ -156,7 +156,8 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .raised-copy .text-link { margin-top: 14px; }
 .raised-copy .button { margin-top: 20px; }
 /* A second link straight after the first sits close beneath it. */
-:is(.raised-copy, .trust-teacher) .text-link + .text-link { margin-top: 0; }
+/* A counted link sits in a Tracked wrapper, so the link after it follows the wrapper, not the link. */
+:is(.raised-copy, .trust-teacher) :is(.text-link, .tracked) + .text-link { margin-top: 0; }
 
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }
