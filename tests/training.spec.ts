@@ -145,7 +145,7 @@ test("training chooser structure reads in order for assistive technology", async
       await expect(row.getByRole("heading", { level: 3 })).toHaveCount(1);
       await expect(row.getByRole("list").first().getByRole("listitem")).toHaveCount(4);
     }
-    await expect(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts").getByRole("listitem")).toHaveCount(5);
+    await expect(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts").getByRole("listitem")).toHaveCount(4);
   }
   if (!priced) await expectAriaWithoutAmounts(page.locator(".specialist-courses .specialist-rows"), `
     - list:
