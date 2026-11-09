@@ -238,7 +238,7 @@ function distFixture(data, { pricedBuild, drop } = {}) {
   const daxFundamentals = pricedBuild ? page(li(copy.daxFundamentalsDetail)) : page(li("On site or online"), li("Price on request"));
   const files = {
     "dist/index.html": home, "dist/training/index.html": training,
-    "dist/training/agentic-development-for-power-bi/index.html": agents, "dist/training/power-bi-fundamentals/index.html": fundamentals,
+    "dist/training/power-bi-with-ai-agents-101/index.html": agents, "dist/training/power-bi-fundamentals/index.html": fundamentals,
     "dist/training/dax-deep-dive/index.html": daxDeepDive, "dist/training/dax-fundamentals/index.html": daxFundamentals,
     "dist/power-bi/index.html": pricedBuild ? page(li(copy.consultancyRange)) : page(li("Price on request, usually a fixed price")),
   };

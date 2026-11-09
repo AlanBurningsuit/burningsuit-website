@@ -92,7 +92,7 @@ test("the relevant course entry, the course page and Work index link to the stud
   await page.goto("/");
   expect(await page.locator(".specialist-names a").evaluateAll((links) => links.map((a) => a.getAttribute("href")))).toEqual(["/training/dax-fundamentals/", "/training/dax-deep-dive/"]);
   await expect(page.locator(`a[href*="/work/dax-deep-dive"]`)).toHaveCount(0);
-  for (const from of ["/training/agentic-development-for-power-bi/", "/training/dax-fundamentals/", "/power-bi/", "/about/", "/contact/", "/call/"]) {
+  for (const from of ["/training/power-bi-with-ai-agents-101/", "/training/dax-fundamentals/", "/power-bi/", "/about/", "/contact/", "/call/"]) {
     await page.goto(from);
     // The masthead's Training menu links to the course page on every page; no other page links to the study or the course.
     await expect(page.locator(`a[href*="dax-deep-dive"]:not(.nav-menu a)`)).toHaveCount(0);
