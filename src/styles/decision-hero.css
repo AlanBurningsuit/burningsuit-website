@@ -20,8 +20,14 @@
 .decision-opening .course-intro { max-width: 68ch; }
 
 @media (max-width: 680px) {
-  .hero-facts .run-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; }
+  /* Phones: tighter spacing (never smaller type) so the whole group, the 101's Book a seat included, fits the first screen at 390x844. */
+  .title-band.decision-hero { padding-top: 20px; }
+  .title-band.decision-hero .standfirst { margin-top: 14px; }
+  .hero-facts { margin-top: 16px; padding-top: 14px; }
+  .hero-facts .before-book { margin-top: 16px; padding-top: 12px; }
+  .hero-facts .booking { margin-top: 16px; }
+  .hero-facts .run-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 14px; }
   .hero-facts .run-facts li:not(.fact-price) + li:not(.fact-price)::before { content: none; }
-  .hero-facts .run-facts .fact-price { grid-column: 1 / -1; font-size: 1.05rem; }
+  .hero-facts .run-facts .fact-price { grid-column: 1 / -1; margin-top: 2px; font-size: 1.05rem; }
   .hero-facts .run-action { display: flex; justify-content: center; }
 }

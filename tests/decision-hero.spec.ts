@@ -117,6 +117,12 @@ for (const { route, label, action, price } of heroes) {
         expect(b.left).toBeGreaterThan(a.right);
         for (const p of narrow.filter((f) => f.price)) expect(p.right - p.left).toBeGreaterThan((a.right - a.left) * 1.5);
         if (action === ".run-action") expect(Math.abs(act.width - group.width)).toBeLessThanOrEqual(1);
+        // A common phone (390x844, normal text size): the whole primary action is on the first screen.
+        if (width === 390) {
+          expect(await page.evaluate(() => scrollY)).toBe(0);
+          expect(act.y).toBeGreaterThanOrEqual(0);
+          expect(act.y + act.height).toBeLessThanOrEqual(844);
+        }
       }
     }
   });
@@ -199,4 +205,21 @@ test("priced variant puts no price outside the hero's price items on course page
     const shown = await page.locator(".hero-facts .run-facts > li.fact-price").allInnerTexts();
     expect(shown.map((t) => t.trim()).join("|") === [...price()].join("|"), "hero price items match the private copy").toBe(true);
   }
+});
+
+test("the 101's whole Book a seat control is in the first 390x844 phone screen", async ({ page }) => {
+  // Regression guard: the taller 101 hero (seat rates, Before you book) once pushed the booking button below the fold on phones.
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/training/power-bi-with-ai-agents-101/");
+  await page.evaluate(() => document.fonts.ready);
+  const book = page.locator(".hero-facts .booking .book-button");
+  await expect(book).toHaveCount(1);
+  if (priced) await expect(book).toHaveAttribute("href", (await import("../src/config/booking.mjs")).SEAT_BOOKING_URL);
+  await expect(book).toBeInViewport({ ratio: 1 });
+  const b = (await book.boundingBox())!;
+  expect(b.y).toBeGreaterThanOrEqual(0);
+  expect(b.y + b.height).toBeLessThanOrEqual(844);
+  // Before you book still comes first, above the control.
+  const before = (await page.locator(".hero-facts .before-book").boundingBox())!;
+  expect(b.y).toBeGreaterThanOrEqual(before.y + before.height);
 });
