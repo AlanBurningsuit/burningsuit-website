@@ -1,5 +1,5 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, forEachTextSize, watchPage } from "./helpers";
 import { pages } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, expectAmountsOnlyWhenPriced } from "./prices";
@@ -8,14 +8,7 @@ const route = "/power-bi/";
 const call = "/call/";
 
 test("consultancy page stays static, private and CSP-clean", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI consultancy | burningsuit");
@@ -26,8 +19,7 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Consultancy");
   await expect(page.locator("section.course-run")).toHaveAttribute("aria-label", "Consultancy facts and booking");
   await expectAmountsOnlyWhenPriced(page, "consultancy");
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("consultancy page follows the visitor questions with the kept anchors", async ({ page }) => {
@@ -190,26 +182,25 @@ test("consultancy page works without JavaScript, from keyboard and from a legacy
 });
 
 test("consultancy layout: facts beside the introduction on wide screens, after it on narrow ones", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let intro = await box(".course-intro"), facts = await box(".course-run");
+  let intro = await box(page, ".course-intro"), facts = await box(page, ".course-run");
   expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
   expect(facts.y).toBeLessThan(intro.y + intro.height);
   for (const [lead, body] of [["#situations .split-lead", "#situations .split-body"], ["#ongoing .ongoing-lead", "#ongoing .ongoing-body"], [".who-does h2", ".who-note"]]) {
-    const [l, b] = [await box(lead), await box(body)];
+    const [l, b] = [await box(page, lead), await box(page, body)];
     expect(b.x).toBeGreaterThanOrEqual(l.x + l.width);
   }
   // How to start breaks the run of side-by-side sections: its heading and ask sit above the link.
-  expect((await box(".start-link")).y).toBeGreaterThanOrEqual((await box("#start .book-inner > div:first-child")).y + (await box("#start .book-inner > div:first-child")).height);
+  expect((await box(page, ".start-link")).y).toBeGreaterThanOrEqual((await box(page, "#start .book-inner > div:first-child")).y + (await box(page, "#start .book-inner > div:first-child")).height);
   // Who does the work reads at body width, not the 101's narrow aside.
-  expect((await box(".who-note")).width).toBeGreaterThan(600);
+  expect((await box(page, ".who-note")).width).toBeGreaterThan(600);
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await box(".course-intro"); facts = await box(".course-run");
+    intro = await box(page, ".course-intro"); facts = await box(page, ".course-run");
     expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    expect((await box("#situations")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    expect((await box(page, "#situations")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
     for (const selector of [".do-steps", ".lead-list", ".start-link", ".run-action", ".do-steps h3 a"]) {
       for (const item of await page.locator(selector).all()) {
         const b = (await item.boundingBox())!;
@@ -239,10 +230,7 @@ for (const width of [320, 390, 768, 1366]) {
   test(`consultancy page reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    }
+    await forEachTextSize(page);
   });
 }
 

@@ -1,5 +1,5 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, forEachTextSize, watchPage } from "./helpers";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
 
 const route = "/training/how-i-train/";
@@ -9,14 +9,7 @@ const email = `mailto:${ENQUIRY.email}`;
 const links = ["/work/individual-power-bi-coaching/#rule-title", "/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/power-bi/", "/training/power-bi-with-ai-agents-101/#book-title", "/training/power-bi-with-ai-agents-101/#need-title", "/training/", "/training/power-bi-fundamentals/", "/training/power-bi-with-ai-agents-101/", email, "/contact/", "/about/", "/work/"];
 
 test("How I train stays static, private and CSP-clean, with no form or third-party request", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("How I train | burningsuit");
@@ -26,8 +19,7 @@ test("How I train stays static, private and CSP-clean, with no form or third-par
   await expect(page.locator(`${otherScripts}, astro-island, iframe, form, input, button, main img, main picture`)).toHaveCount(0);
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Training");
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("How I train keeps the approved wording and heading hierarchy", async ({ page }) => {
@@ -117,16 +109,15 @@ test("How I train works without JavaScript and from the keyboard", async ({ brow
 });
 
 test("How I train layout: the stuck answer stands out, the facts note recedes, phones stack", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   const style = (selector: string, property: string) => page.locator(selector).evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), property);
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
   for (const id of ["do-title", "stuck-title"]) {
-    const [h, p] = [await box(`#${id}`), await box(`[aria-labelledby="${id}"] .hit-prose`)];
+    const [h, p] = [await box(page, `#${id}`), await box(page, `[aria-labelledby="${id}"] .hit-prose`)];
     expect(p.x).toBeGreaterThanOrEqual(h.x + h.width);
   }
   // The two related answers sit side by side; neither reads as the next step of the other.
-  const [own, after] = [await box('[aria-labelledby="own-work-title"]'), await box('[aria-labelledby="afterwards-title"]')];
+  const [own, after] = [await box(page, '[aria-labelledby="own-work-title"]'), await box(page, '[aria-labelledby="afterwards-title"]')];
   expect(after.x).toBeGreaterThanOrEqual(own.x + own.width);
   expect(Math.abs(after.y - own.y)).toBeLessThan(2);
   // The personal answer sits on the raised band with larger prose; the facts note is smaller than the answers.
@@ -138,10 +129,10 @@ test("How I train layout: the stuck answer stands out, the facts note recedes, p
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
     for (const id of ["do-title", "stuck-title"]) {
-      const [h, p] = [await box(`#${id}`), await box(`[aria-labelledby="${id}"] .hit-prose`)];
+      const [h, p] = [await box(page, `#${id}`), await box(page, `[aria-labelledby="${id}"] .hit-prose`)];
       expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     }
-    const [ownPhone, afterPhone] = [await box('[aria-labelledby="own-work-title"]'), await box('[aria-labelledby="afterwards-title"]')];
+    const [ownPhone, afterPhone] = [await box(page, '[aria-labelledby="own-work-title"]'), await box(page, '[aria-labelledby="afterwards-title"]')];
     expect(afterPhone.y).toBeGreaterThanOrEqual(ownPhone.y + ownPhone.height);
     for (const item of await page.locator("main a, main h1, main h2, main p").all()) {
       const b = (await item.boundingBox())!;
@@ -155,11 +146,9 @@ for (const width of [320, 390, 768, 1366]) {
   test(`How I train reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await forEachTextSize(page, async () => {
       await expect(page.getByRole("link", { name: "the enquiry form" })).toBeVisible();
-    }
+    });
   });
 }
 

@@ -10,7 +10,8 @@ const site = "https://burningsuit.co.uk";
 const unindexed = new Set(["404.html", "enquiry-received/index.html", "enquiry-error/index.html"]);
 const problems = [];
 const read = (name) => readFileSync(join(dist, name), "utf8");
-const files = readdirSync(dist, { recursive: true }).map(String).filter((name) => name.endsWith(".html"));
+// Forward slashes on every platform, as the names compared below assume (readdirSync gives backslashes on Windows).
+const files = readdirSync(dist, { recursive: true }).map((name) => String(name).replaceAll("\\", "/")).filter((name) => name.endsWith(".html"));
 const isNoindex = (html) => /<meta\b(?=[^>]*\bname=["']robots["'])(?=[^>]*\bcontent=["'][^"']*noindex)[^>]*>/i.test(html);
 const isRedirect = (html) => /<meta\b[^>]*http-equiv=["']refresh["']/i.test(html);
 const fileFor = (url) => { const path = new URL(url).pathname; return path.endsWith("/") ? `${path.slice(1)}index.html` : path.slice(1); };

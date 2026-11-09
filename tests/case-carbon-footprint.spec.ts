@@ -1,19 +1,11 @@
-import { readFileSync } from "node:fs";
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, firstBox, forEachTextSize, watchPage } from "./helpers";
 import { pages } from "../src/config/compatibility.mjs";
 
 const route = "/work/carbon-footprint/";
 
 test("carbon-footprint study stays static, private and CSP-clean, with no form, image or script", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Carbon reporting in a model the team can check | burningsuit");
@@ -26,8 +18,7 @@ test("carbon-footprint study stays static, private and CSP-clean, with no form, 
   // A study marks Work as its section, not as the current page.
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Case studies");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("carbon-footprint study reads in the approved words and order", async ({ page }) => {
@@ -78,10 +69,6 @@ test("carbon-footprint study carries none of the superseded entry's uncleared cl
   expect(html).not.toContain("linkedin-work-carbon-footprint");
 });
 
-test("the superseded carbon-footprint source is gone from the repository", () => {
-  expect(() => readFileSync(new URL("../content/work/carbon-footprint.mdx", import.meta.url))).toThrow();
-});
-
 test("carbon-footprint study works without JavaScript and from the keyboard", async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
@@ -105,20 +92,19 @@ test("carbon-footprint study works without JavaScript and from the keyboard", as
 });
 
 test("carbon-footprint layout: headings beside their beats on wide screens, stacked on narrow ones", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).first().boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
   for (const id of ["useful", "workings", "checking", "handover"]) {
-    const [h, p] = [await box(`#${id}`), await box(`section[aria-labelledby="${id}"] .case-prose`)];
+    const [h, p] = [await firstBox(page, `#${id}`), await firstBox(page, `section[aria-labelledby="${id}"] .case-prose`)];
     expect(p.x).toBeGreaterThanOrEqual(h.x + h.width);
   }
-  let [copy, links] = [await box(".case-return-copy"), await box(".case-return-links")];
+  let [copy, links] = [await firstBox(page, ".case-return-copy"), await firstBox(page, ".case-return-links")];
   expect(links.x).toBeGreaterThanOrEqual(copy.x + copy.width);
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    const [h, p] = [await box("#useful"), await box('section[aria-labelledby="useful"] .case-prose')];
+    const [h, p] = [await firstBox(page, "#useful"), await firstBox(page, 'section[aria-labelledby="useful"] .case-prose')];
     expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
-    [copy, links] = [await box(".case-return-copy"), await box(".case-return-links")];
+    [copy, links] = [await firstBox(page, ".case-return-copy"), await firstBox(page, ".case-return-links")];
     expect(links.y).toBeGreaterThanOrEqual(copy.y + copy.height);
   }
 });
@@ -127,10 +113,7 @@ for (const width of [320, 390, 414, 768, 1366]) {
   test(`carbon-footprint study reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    }
+    await forEachTextSize(page);
   });
 }
 

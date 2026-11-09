@@ -1,6 +1,5 @@
-import { type Page } from "@playwright/test";
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, expectNoSpills, forEachTextSize, watchPage, agendaNumbers } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { redirects } from "../src/config/compatibility.mjs";
 import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
@@ -12,17 +11,9 @@ const email = "mailto:alan@burningsuit.co.uk";
 const links = ["#contact", "/training/power-bi-fundamentals/", "/training/", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
 const demonstrated = "Demonstrated, not practised.";
 
-const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 
 test("DAX fundamentals page stays static, private, price-safe and CSP-clean", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("DAX fundamentals | burningsuit");
@@ -48,8 +39,7 @@ test("DAX fundamentals page stays static, private, price-safe and CSP-clean", as
   // No quote, rating, count or case study; no "next step", bundle or prerequisite framing. The teaching-data name is kept out of tracked source, so it isn't asserted here.
   // Alan approved the delivery-history line (8 Nov 2026); it names past public courses, not a public run of this one.
   expectNone(body.replaceAll("per booking", "").replace("I've run this day for public-sector teams, and on public courses, since 2022.", ""), [/seat/i, /book/i, /public/i, /founding/i, /free call/i, /next step/i, /prerequisite/i, /half/i, /out of 5|responses|praised/i, /★|☆/, /\[|\]|\{|\}/, /—/], "DAX fundamentals text");
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("DAX fundamentals page names and links to no study or other course page outside the Training menu, beyond its fit-line pointers", async ({ page }) => {
@@ -211,17 +201,10 @@ test("DAX fundamentals layout: facts and action in the decision hero, above the 
   }
 });
 
-test("the agenda's visible numbers run 01 to 05", async ({ browser, baseURL }) => {
-  // The numbers are decorative (alt text ""), so a test-only style exposes the same counter to Chromium's accessibility tree.
-  const context = await browser.newContext({ baseURL, bypassCSP: true });
-  const page = await context.newPage();
+test("the agenda's visible numbers run 01 to 05", async ({ page }) => {
   await page.goto(route);
-  await page.addStyleTag({ content: ".agenda-steps > li::before { content: counter(step, decimal-leading-zero) !important; }" });
-  const cdp = await context.newCDPSession(page);
-  const { nodes } = await cdp.send("Accessibility.getFullAXTree") as { nodes: { role?: { value?: string }; name?: { value?: string } }[] };
-  const numbers = nodes.filter((node) => node.role?.value === "StaticText" && /^\d\d$/.test(node.name?.value ?? "")).map((node) => node.name!.value!);
-  expect(numbers).toEqual(["01", "02", "03", "04", "05"]);
-  await context.close();
+  // Read from the page's own computed counters; the numbers are decorative (alt text ""), so they stay out of the accessibility tree.
+  expect(await agendaNumbers(page)).toEqual(["01", "02", "03", "04", "05"]);
 });
 
 for (const width of [320, 390, 768, 1024, 1366]) {
@@ -229,12 +212,9 @@ for (const width of [320, 390, 768, 1024, 1366]) {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
     await page.evaluate(() => document.fonts.ready);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-      const spills = await page.locator("main *").evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === "visible" && el.clientWidth > 0).map((el) => el.className || el.tagName));
-      expect(spills).toEqual([]);
-    }
+    await forEachTextSize(page, async () => {
+      await expectNoSpills(page);
+    });
   });
 }
 

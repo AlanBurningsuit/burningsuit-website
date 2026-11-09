@@ -1,5 +1,5 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, expectNoHorizontalScroll, expectNoSpills, watchPage } from "./helpers";
 import { bespokeRoutes, pages, redirects } from "../src/config/compatibility.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 
@@ -12,14 +12,7 @@ const intro = [
 ];
 
 test("Contact is a real static page: private, CSP-clean, with Contact current", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveURL(baseURL! + route);
@@ -34,8 +27,7 @@ test("Contact is a real static page: private, CSP-clean, with Contact current", 
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Contact Alan");
   await expect(page.locator("main h2")).toHaveCount(0);
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("Contact replaces its redirect; the contact aliases lead here", async ({ browser, baseURL }) => {
@@ -205,9 +197,8 @@ test("Contact reflows without overflow down to 320px with enlarged text", async 
   for (const width of [320, 390, 768, 1366]) {
     await page.setViewportSize({ width, height: 900 });
     await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    const spills = await page.locator("main *").evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === "visible" && el.clientWidth > 0).map((el) => el.className || el.tagName));
-    expect(spills).toEqual([]);
+    await expectNoHorizontalScroll(page);
+    await expectNoSpills(page);
     await page.evaluate(() => { document.documentElement.style.fontSize = ""; });
   }
 });

@@ -94,9 +94,35 @@ function checkTracked() {
   }
 }
 
+// One whole amount token (a currency symbol, digits, separators and any decimals), so an approved value cannot hide a longer one.
+const AMOUNT = /[£€$]\p{White_Space}*\p{Nd}+(?:,\p{Nd}+)*(?:\.\p{Nd}+)?/gu;
+/** The text with each amount token that exactly equals an approved value blanked out; any amount left is unapproved. */
+const withoutApproved = (text, approved) => {
+  const allowed = new Set(approved);
+  return text.replace(AMOUNT, (token) => (allowed.has(token.replace(/\p{White_Space}+/gu, "")) ? " " : token));
+};
+
 const routeFile = (route) => join(root, "dist", route, "index.html");
 const ROUTES = { home: "", training: "training", agents: "training/power-bi-with-ai-agents-101", fundamentals: "training/power-bi-fundamentals", daxDeepDive: "training/dax-deep-dive", daxFundamentals: "training/dax-fundamentals", consultancy: "power-bi" };
 const count = (text, needle) => text.split(needle).length - 1;
+// The private file's courses whose rates each priced route shows (see trainingPriceCopy); any other amount there fails.
+const ROUTE_COURSES = {
+  home: ["power-bi-fundamentals", "agentic-development-for-power-bi"],
+  training: ["power-bi-fundamentals", "dax-fundamentals", "dax-deep-dive", "agentic-development-for-power-bi"],
+  agents: ["agentic-development-for-power-bi"], fundamentals: ["power-bi-fundamentals"], daxDeepDive: ["dax-deep-dive"],
+  daxFundamentals: ["dax-fundamentals"], consultancy: ["consultancy"],
+};
+/** The approved values for one priced route's file, with and without thousands separators, held in memory only. */
+function routeValues(path) {
+  const name = Object.keys(ROUTES).find((key) => posix(join(ROUTES[key], "index.html")) === path);
+  try {
+    const data = JSON.parse(readFileSync(join(root, PRICES_FILE), "utf8"));
+    const values = PRICE_SLOTS.filter(([course]) => ROUTE_COURSES[name].includes(course)).map(([course, key]) => data?.[course]?.[key]).filter((value) => typeof value === "string" && value.length > 1);
+    return values.flatMap((value) => [value, value.replaceAll(",", "")]);
+  } catch {
+    return [];
+  }
+}
 
 function checkDist() {
   const dist = join(root, "dist");
@@ -117,6 +143,8 @@ function checkDist() {
       if (MONETARY.test(priceScanText(scanText(path, text)))) fail("monetary-literal", `dist/${path}`);
       if (/\bex VAT\b|founding rate/i.test(decoded)) fail("price-wording-outside-scope", `dist/${path}`);
     }
+    // A priced route may show its own approved slot values and nothing else: every other amount, including another route's rate, fails.
+    if (inScope && MONETARY.test(withoutApproved(decoded, routeValues(path)))) fail("unapproved-amount", `dist/${path}`);
   }
   if (!priced) return;
 

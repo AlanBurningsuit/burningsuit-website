@@ -5,7 +5,8 @@ import { pages as reserved, redirects, reserved404Routes } from "../src/config/c
 
 const dist = "dist";
 const site = "https://burningsuit.co.uk";
-const files = readdirSync(dist, { recursive: true }).filter((name) => name.endsWith(".html"));
+// Forward slashes on every platform, as the route arithmetic below assumes (readdirSync gives backslashes on Windows).
+const files = readdirSync(dist, { recursive: true }).map((name) => String(name).replaceAll("\\", "/")).filter((name) => name.endsWith(".html"));
 assert(files.length, "No HTML pages: build first.");
 const htmlAt = (path) => readFileSync(join(dist, path), "utf8");
 const fileAt = (path) => path === "/" ? "index.html" : path.replace(/^\//, "").replace(/\/$/, "") + "/index.html";

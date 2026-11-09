@@ -1,5 +1,5 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, firstBox, forEachTextSize, watchPage } from "./helpers";
 import { priced } from "./prices";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 
@@ -11,14 +11,7 @@ const label = "Book a free 30-minute call";
 test.beforeEach(async ({ context }) => { await context.route("https://cal.com/**", (request) => request.abort()); });
 
 test("free call page stays static, private and CSP-clean, with no form, embed or script", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Free 30-minute Power BI call | burningsuit");
@@ -31,8 +24,7 @@ test("free call page stays static, private and CSP-clean, with no form, embed or
   // Consultancy's page: the nav marks Consultancy as the section, not as this page.
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Consultancy");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("free call page answers the visitor's questions in order, in the approved words", async ({ page }) => {
@@ -150,28 +142,27 @@ test("free call page works without JavaScript and from the keyboard", async ({ b
 });
 
 test("free call layout: facts beside the introduction on wide screens, after it on narrow ones", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).first().boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let intro = await box(".course-intro"), facts = await box(".course-run");
+  let intro = await firstBox(page, ".course-intro"), facts = await firstBox(page, ".course-run");
   expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
   expect(facts.y).toBeLessThan(intro.y + intro.height);
   // The steps run left to right under their heading, as on Consultancy; the booking copy sits beside its action.
-  const [lead, steps] = [await box("#happens-title"), await box(".do-steps")];
+  const [lead, steps] = [await firstBox(page, "#happens-title"), await firstBox(page, ".do-steps")];
   // "What happens" sits under the introduction, beside the facts card.
-  const happens = await box(".call-steps");
+  const happens = await firstBox(page, ".call-steps");
   expect(happens.y).toBeGreaterThanOrEqual(intro.y + intro.height);
   expect(happens.x + happens.width).toBeLessThanOrEqual(facts.x);
   expect(steps.y).toBeGreaterThanOrEqual(lead.y + lead.height);
   const [first, second] = await page.locator(".do-steps > li").all();
   expect((await second.boundingBox())!.x).toBeGreaterThan((await first.boundingBox())!.x);
-  const [copy, action] = [await box(".call-book .closing-inner > div:first-child"), await box(".call-book .book-link")];
+  const [copy, action] = [await firstBox(page, ".call-book .closing-inner > div:first-child"), await firstBox(page, ".call-book .book-link")];
   expect(action.x).toBeGreaterThanOrEqual(copy.x + copy.width);
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await box(".course-intro"); facts = await box(".course-run");
+    intro = await firstBox(page, ".course-intro"); facts = await firstBox(page, ".course-run");
     expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    expect((await box(".call-steps")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    expect((await firstBox(page, ".call-steps")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
     // Each booking action, its hard shadow and its focus ring stay on screen.
     for (const action of await page.locator("a.book-link").all()) {
       const edges = await action.evaluate((el) => {
@@ -227,14 +218,12 @@ for (const width of [320, 390, 414, 428, 768, 1366]) {
   test(`free call page reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await forEachTextSize(page, async () => {
       for (const action of await page.locator("a.book-link").all()) {
         const b = (await action.boundingBox())!;
         expect(b.x + b.width).toBeLessThanOrEqual(width);
       }
-    }
+    });
   });
 }
 

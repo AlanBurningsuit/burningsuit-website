@@ -4,9 +4,23 @@
 set -e
 # Git exports its repository variables to hooks; the checks spawn git in their own fixture repositories, so clear them.
 unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_PREFIX GIT_COMMON_DIR GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES
+# The checks run on the working tree, so it must match the commits being pushed: refuse while tracked files have
+# uncommitted changes, staged or not. Untracked and ignored files (dist/, the private prices link) don't count.
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+  echo "pre-push: refused. Tracked files have uncommitted changes, so the checks would not test what you are pushing." >&2
+  echo "pre-push: commit or set them aside, then push again." >&2
+  exit 1
+fi
 to_main=no
+head=$(git rev-parse HEAD)
 while read -r local_ref local_sha remote_ref remote_sha; do
   [ "$remote_ref" = "refs/heads/main" ] && to_main=yes
+  # A deleted ref pushes no commits; any other ref must be the checked-out commit, the one the checks see.
+  case "$local_sha" in *[!0]*) ;; *) continue ;; esac
+  if [ "$local_sha" != "$head" ]; then
+    echo "pre-push: refused. $local_ref is not the checked-out commit, so the checks would not test it. Check it out and push again." >&2
+    exit 1
+  fi
 done
 echo "pre-push: gate and functional tests"
 npm run --silent gate

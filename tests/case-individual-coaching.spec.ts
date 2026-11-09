@@ -1,19 +1,12 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, forEachTextSize, watchPage } from "./helpers";
 
 const route = "/work/individual-power-bi-coaching/";
 // /training/#coaching is approved copy; the Training page's coaching entry lands on a separate branch, so only the href is checked here.
 const links = ["/training/#coaching", "/contact/"];
 
 test("Individual coaching study stays static, private and CSP-clean, with no form or third-party request", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Individual Power BI coaching | burningsuit");
@@ -22,8 +15,7 @@ test("Individual coaching study stays static, private and CSP-clean, with no for
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
   await expect(page.locator(`${otherScripts}, astro-island, iframe, form, input, button, main img, main picture, [style]`)).toHaveCount(0);
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("Individual coaching study keeps the approved wording and heading hierarchy", async ({ page }) => {
@@ -113,23 +105,22 @@ test("Individual coaching study works without JavaScript and from the keyboard",
 });
 
 test("Individual coaching study layout: facts beside the lead, teaching on a raised surface, phones stack", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   const style = (selector: string, property: string) => page.locator(selector).evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), property);
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  const [lead, facts] = [await box(".cs-lead"), await box(".cs-facts")];
+  const [lead, facts] = [await box(page, ".cs-lead"), await box(page, ".cs-facts")];
   expect(facts.x).toBeGreaterThanOrEqual(lead.x + lead.width);
   for (const id of ["started-title", "rule-title"]) {
-    const [h, p] = [await box(`#${id}`), await box(`[aria-labelledby="${id}"] .cs-prose`)];
+    const [h, p] = [await box(page, `#${id}`), await box(page, `[aria-labelledby="${id}"] .cs-prose`)];
     expect(p.x).toBeGreaterThanOrEqual(h.x + h.width);
   }
   expect(await style(".cs-teaching", "background-color")).not.toBe(await style("body", "background-color"));
   expect(await style(".cs-teaching", "background-color")).not.toBe("rgb(241, 236, 217)"); // never the cream evidence surface
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    const [leadPhone, factsPhone] = [await box(".cs-lead"), await box(".cs-facts")];
+    const [leadPhone, factsPhone] = [await box(page, ".cs-lead"), await box(page, ".cs-facts")];
     expect(factsPhone.y).toBeGreaterThanOrEqual(leadPhone.y + leadPhone.height);
-    const [h, p] = [await box("#rule-title"), await box('[aria-labelledby="rule-title"] .cs-prose')];
+    const [h, p] = [await box(page, "#rule-title"), await box(page, '[aria-labelledby="rule-title"] .cs-prose')];
     expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     for (const item of await page.locator("main a, main h1, main h2, main p, main dl, main pre").all()) {
       const b = (await item.boundingBox())!;
@@ -143,12 +134,10 @@ for (const width of [320, 390, 768, 1366]) {
   test(`Individual coaching study reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await forEachTextSize(page, async () => {
       expect(await page.locator(".cs-teaching pre").evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
       await expect(page.getByRole("link", { name: "Tell me who it's for and what they're building" })).toBeVisible();
-    }
+    });
   });
 }
 

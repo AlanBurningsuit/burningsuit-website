@@ -41,12 +41,12 @@ jobs:
       # Output of priced steps passes through the masking runner; failures print structure only, and no test artifacts are uploaded.
       - name: Check, build and validate the site
         run: node scripts/run-masked.mjs npm run gate
-      - name: Install Playwright Chromium and OS dependencies
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright Chromium, WebKit and OS dependencies
+        run: npx playwright install --with-deps chromium webkit
       # Functional checks serve the same fresh artifact that is uploaded below. A priced slot reading Price on request fails the run.
       - name: Test the built artifact
         run: node scripts/run-masked.mjs npm run test:functional
-      - name: Reject unfinished rebuilds
+      - name: Check the build is fit to release
         run: npm run check:release
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0

@@ -1,5 +1,6 @@
 import { type Page } from "@playwright/test";
 import { test, expect } from "./analytics";
+import { expectNoHorizontalScroll, expectNoSpills, firstBox } from "./helpers";
 import { priced, copy, expectItems } from "./prices";
 
 // The decision hero (DecisionHero.astro) on the four course pages: title, standfirst, facts and the primary action
@@ -12,7 +13,6 @@ const heroes = [
   { route: "/training/power-bi-with-ai-agents-101/", label: "Course facts and booking", action: ".book-button", price: () => copy!.seatFacts },
 ] as const;
 
-const box = async (page: Page, selector: string) => (await page.locator(selector).first().boundingBox())!;
 const facts = (page: Page) => page.locator(".hero-facts .run-facts > li").evaluateAll((els) => els.map((el) => {
   const r = el.getBoundingClientRect();
   return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, price: el.classList.contains("fact-price") };
@@ -68,7 +68,7 @@ for (const { route, label, action, price } of heroes) {
     await page.setViewportSize({ width: 1366, height: 900 });
     await page.goto(route);
     await page.evaluate(() => document.fonts.ready);
-    let stage = await box(page, ".dark.stage"), standfirst = await box(page, ".title-band .standfirst"), group = await box(page, ".hero-facts"), intro = await box(page, ".course-intro");
+    let stage = await firstBox(page, ".dark.stage"), standfirst = await firstBox(page, ".title-band .standfirst"), group = await firstBox(page, ".hero-facts"), intro = await firstBox(page, ".course-intro");
     expect(group.y).toBeGreaterThanOrEqual(standfirst.y + standfirst.height);
     expect(group.y + group.height).toBeLessThanOrEqual(stage.y + stage.height);
     expect(intro.y).toBeGreaterThanOrEqual(stage.y + stage.height - 1);
@@ -77,7 +77,7 @@ for (const { route, label, action, price } of heroes) {
     const line = wide.filter((f) => !f.price), prices = wide.filter((f) => f.price);
     for (const fact of line) expect(Math.abs(fact.top - line[0].top)).toBeLessThanOrEqual(1);
     for (const p of prices) expect(p.top).toBeGreaterThanOrEqual(Math.max(...line.map((f) => f.bottom)) - 1);
-    expect((await box(page, `.hero-facts ${action}`)).y).toBeGreaterThanOrEqual(Math.max(...prices.map((p) => p.bottom)));
+    expect((await firstBox(page, `.hero-facts ${action}`)).y).toBeGreaterThanOrEqual(Math.max(...prices.map((p) => p.bottom)));
     expect(await page.locator(".hero-facts .run-facts > li:nth-child(2)").evaluate((el) => getComputedStyle(el, "::before").content)).not.toBe("none");
     expect(await page.locator(".hero-facts .run-facts > li:first-child").evaluate((el) => getComputedStyle(el, "::before").content)).toBe("none");
     // Middots are decorative: the accessible text of the facts holds none.
@@ -88,7 +88,7 @@ for (const { route, label, action, price } of heroes) {
     for (const width of [1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 844 });
       await page.evaluate(() => scrollTo(0, 0));
-      stage = await box(page, ".dark.stage"); standfirst = await box(page, ".title-band .standfirst"); group = await box(page, ".hero-facts"); intro = await box(page, ".course-intro");
+      stage = await firstBox(page, ".dark.stage"); standfirst = await firstBox(page, ".title-band .standfirst"); group = await firstBox(page, ".hero-facts"); intro = await firstBox(page, ".course-intro");
       expect(group.y).toBeGreaterThanOrEqual(standfirst.y + standfirst.height);
       expect(group.y + group.height).toBeLessThanOrEqual(stage.y + stage.height);
       expect(intro.y).toBeGreaterThanOrEqual(group.y + group.height);
@@ -105,7 +105,7 @@ for (const { route, label, action, price } of heroes) {
         });
       });
       for (const { rowStart, price, shown } of marks) expect(shown).toBe(width > 680 && !price && !rowStart);
-      const act = await box(page, `.hero-facts ${action}`);
+      const act = await firstBox(page, `.hero-facts ${action}`);
       expect(act.x).toBeGreaterThanOrEqual(0);
       expect(act.x + act.width).toBeLessThanOrEqual(width);
       if (width <= 390) {
@@ -140,9 +140,8 @@ for (const { route, label, action, price } of heroes) {
     for (const width of [320, 390, 768, 1024, 1366]) {
       await page.setViewportSize({ width, height: 768 });
       await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-      const spills = await page.locator(".dark.stage *").evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === "visible" && el.clientWidth > 0).map((el) => el.className || el.tagName));
-      expect(spills).toEqual([]);
+      await expectNoHorizontalScroll(page);
+      await expectNoSpills(page, ".dark.stage *");
       for (const f of await facts(page)) expect(f.right).toBeLessThanOrEqual(width);
     }
   });

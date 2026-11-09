@@ -1,5 +1,5 @@
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, firstBox, forEachTextSize, watchPage } from "./helpers";
 import { bespokeRoutes, pages, redirects } from "../src/config/compatibility.mjs";
 
 const route = "/work/dax-deep-dive/";
@@ -9,14 +9,7 @@ const course = "/training/dax-deep-dive/";
 const quote = "\"Alan was highly praised for his clear explanations, engaging teaching style, and ability to make complex DAX concepts understandable.\"";
 
 test("case study stays static, private and CSP-clean, with no form, embed, image or script", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("DAX deep dive for a local-authority team | burningsuit");
@@ -30,8 +23,7 @@ test("case study stays static, private and CSP-clean, with no form, embed, image
   // A study marks Work as its section, not as the current page.
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Case studies");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveCount(0);
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("case study tells the approved story in order, anonymously", async ({ page }) => {
@@ -122,20 +114,19 @@ test("case study works without JavaScript and from the keyboard", async ({ brows
 });
 
 test("case study layout: headings beside prose and figures beside the quote on wide screens, stacked on narrow ones", async ({ page }) => {
-  const box = async (selector: string) => (await page.locator(selector).first().boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let heading = await box(".case-beat > h2"), prose = await box(".case-prose");
+  let heading = await firstBox(page, ".case-beat > h2"), prose = await firstBox(page, ".case-prose");
   expect(prose.x).toBeGreaterThanOrEqual(heading.x + heading.width);
-  let quoteBox = await box(".case-evidence blockquote"), figures = await box(".case-figures");
+  let quoteBox = await firstBox(page, ".case-evidence blockquote"), figures = await firstBox(page, ".case-figures");
   expect(figures.x).toBeGreaterThanOrEqual(quoteBox.x + quoteBox.width);
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    heading = await box(".case-beat > h2"); prose = await box(".case-prose");
+    heading = await firstBox(page, ".case-beat > h2"); prose = await firstBox(page, ".case-prose");
     expect(prose.y).toBeGreaterThanOrEqual(heading.y + heading.height);
-    quoteBox = await box(".case-evidence blockquote"); figures = await box(".case-figures");
+    quoteBox = await firstBox(page, ".case-evidence blockquote"); figures = await firstBox(page, ".case-figures");
     expect(figures.y).toBeGreaterThanOrEqual(quoteBox.y + quoteBox.height);
-    const panel = await box(".case-evidence");
+    const panel = await firstBox(page, ".case-evidence");
     expect(panel.x + panel.width).toBeLessThanOrEqual(width);
   }
 });
@@ -144,10 +135,7 @@ for (const width of [320, 390, 414, 768, 1366]) {
   test(`case study reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    }
+    await forEachTextSize(page);
   });
 }
 

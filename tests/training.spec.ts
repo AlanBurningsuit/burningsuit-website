@@ -1,6 +1,5 @@
-import { type Page } from "@playwright/test";
-import { test, expect, isTracker, otherScripts } from "./analytics";
-import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
+import { test, expect, otherScripts } from "./analytics";
+import { visualReview, expectIndexable, box, expectNoSpills, forEachTextSize, watchPage } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
 import { RUN } from "../src/config/course-run.mjs";
@@ -15,17 +14,9 @@ const email = "mailto:alan@burningsuit.co.uk";
 const privateFacts = (price: string) => priced ? ["Private, for your team", "Up to 8 people", price] : ["Private, for your team", "On site or online", "Up to 8 people", priceOnRequest];
 const baseDescription = "Two places to start with Power BI, and two specialist courses for teams, with length, delivery and group size for each.";
 
-const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 
 test("training chooser stays static, private and CSP-clean", async ({ page, baseURL }) => {
-  const errors: string[] = [];
-  const external: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  page.on("request", (request) => {
-    if (/^https?:/.test(request.url()) && new URL(request.url()).origin !== baseURL && !isTracker(request.url())) external.push(request.url());
-  });
-  await reportCspViolations(page);
+  const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI courses | burningsuit");
@@ -38,8 +29,7 @@ test("training chooser stays static, private and CSP-clean", async ({ page, base
   await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
   await expect(page.locator("nav a[aria-current]")).toHaveText("Training");
   await expectAmountsOnlyWhenPriced(page, "training chooser");
-  expect(errors).toEqual([]);
-  expect(external).toEqual([]);
+  watch.expectClean();
 });
 
 test("training chooser shows the approved wording, facts and routes", async ({ page }) => {
@@ -333,13 +323,10 @@ for (const width of [320, 390, 768, 1024, 1366]) {
   test(`training chooser reflows at ${width}px with enlarged text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
-    for (const size of ["100%", "200%"]) {
-      await page.evaluate((size) => { document.documentElement.style.fontSize = size; }, size);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await forEachTextSize(page, async () => {
       // No element's content spills past its own box sideways.
-      const spills = await page.locator("main *").evaluateAll((els) => els.filter((el) => el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).overflowX === "visible" && el.clientWidth > 0).map((el) => el.className || el.tagName));
-      expect(spills).toEqual([]);
-    }
+      await expectNoSpills(page);
+    });
   });
 }
 
