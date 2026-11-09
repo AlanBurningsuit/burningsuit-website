@@ -1,0 +1,9 @@
+---
+// Counts a click on the link inside as a named Umami event (the names are in src/config/analytics.mjs).
+// The attribute sits on this wrapper, not on the link itself: Umami holds a link that carries it until the
+// beacon has answered, and a booking link must never wait on analytics. On a wrapper the link follows at once
+// and the beacon goes out with keepalive. display: contents (app.css) keeps the wrapper out of the layout.
+interface Props { event: string; place?: string }
+const { event, place } = Astro.props;
+---
+<span class="tracked" data-umami-event={event} data-umami-event-place={place}><slot /></span>

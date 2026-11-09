@@ -3,6 +3,8 @@
 // heading; the email address sits above the form, so the fallback below it is omitted.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
+import Tracked from "../components/Tracked.astro";
+import { EVENTS } from "../config/analytics.mjs";
 import { ENQUIRY } from "../config/enquiry.mjs";
 ---
 <BaseLayout
@@ -15,7 +17,7 @@ import { ENQUIRY } from "../config/enquiry.mjs";
     <Fragment slot="intro">
       <p>I'm Alan Harman-Box. Send me a question about a course or your reports, or tell me what you're working on if you're unsure where to start. I'll reply by email within two working days.</p>
       <p>Email me at <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>, or use the form.</p>
-      <p>Rather talk it through? <a href="/call/">Book a free 30-minute call</a>.</p>
+      <p>Rather talk it through? <Tracked event={EVENTS.bookCallLink}><a href="/call/">Book a free 30-minute call</a></Tracked>.</p>
     </Fragment>
   </EnquiryForm>
 </BaseLayout>

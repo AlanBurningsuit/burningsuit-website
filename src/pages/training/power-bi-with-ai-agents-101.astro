@@ -8,6 +8,8 @@ import DecisionHero from "../../components/DecisionHero.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import { SEAT_BOOKING_URL } from "../../config/booking.mjs";
+import Tracked from "../../components/Tracked.astro";
+import { EVENTS } from "../../config/analytics.mjs";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/course.css";
 
@@ -37,7 +39,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
     <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
     <div class="booking">
       {priced
-        ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+        ? <Tracked event={EVENTS.bookSeat} place="top"><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
         : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>}
     </div>
     <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
@@ -108,7 +110,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       <div>
         <div class="booking">
           {priced
-            ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+            ? <Tracked event={EVENTS.bookSeat} place="bottom"><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
             : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>}
         </div>
         {priced && <section class="booking-terms" aria-labelledby="booking-terms-title">

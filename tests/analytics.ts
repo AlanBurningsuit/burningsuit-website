@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { test as base, expect, type BrowserContext } from "@playwright/test";
+import { test as base, expect, type BrowserContext, type Route } from "@playwright/test";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 
 // The site-wide Umami tag is the only permitted third-party script and request; it reports only from the production domains, never from test hosts.
@@ -45,3 +45,25 @@ export const test = base.extend<{ umamiGuard: void }, { guardNewContexts: void }
   }, { auto: true }],
 });
 export { expect };
+
+/**
+ * Serves the built site at the production address inside the browser only, where the tag does count. Umami's script loads
+ * as normal; anything else bound for umami.is is recorded and answered locally (`answer`, an empty success by default), so
+ * no beacon ever reaches Umami. Returns the beacons' URLs and their JSON bodies in arrival order.
+ */
+export async function servedAsProduction(context: BrowserContext, baseURL: string, answer: (route: Route) => unknown = (route) => route.fulfill({ status: 200, contentType: "application/json", body: "{}" })) {
+  const beacons: string[] = [];
+  const bodies: { type?: string; payload?: { name?: string; url?: string; data?: Record<string, string> } }[] = [];
+  await context.route(/^https:\/\/([a-z0-9-]+\.)*umami\.is\//, (route) => {
+    // The tag itself falls through to the shared guard, which serves the committed copy.
+    if (isTracker(route.request().url())) return route.fallback();
+    beacons.push(route.request().url());
+    try { bodies.push(route.request().postDataJSON()); } catch { /* not JSON: the URL is still recorded */ }
+    return answer(route);
+  });
+  await context.route("https://burningsuit.co.uk/**", async (route) => {
+    const url = new URL(route.request().url());
+    return route.fulfill({ response: await context.request.fetch(new URL(url.pathname + url.search, baseURL).href) });
+  });
+  return { beacons, bodies };
+}

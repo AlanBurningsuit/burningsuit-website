@@ -16,3 +16,17 @@ export const ANALYTICS = Object.freeze({
   domains: "burningsuit.co.uk,www.burningsuit.co.uk",
   performance: true,
 });
+
+/**
+ * Click events, counted beside page views (the privacy notice says so; change the two together).
+ * "Link" events are on-site links towards a booking page; the others leave for Stripe or Cal.com,
+ * or send the enquiry form. Umami records the page each happened on; `place` tells apart two on one page.
+ * Mark links with src/components/Tracked.astro, never with the attribute on the link itself.
+ */
+export const EVENTS = Object.freeze({
+  bookSeat: "book-seat",
+  bookSeatLink: "book-seat-link",
+  bookCall: "book-call",
+  bookCallLink: "book-call-link",
+  enquirySend: "enquiry-send",
+});

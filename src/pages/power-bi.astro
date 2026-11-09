@@ -8,6 +8,8 @@ import TitleBand from "../components/TitleBand.astro";
 import PullQuote from "../components/PullQuote.astro";
 import StudyLinks from "../components/StudyLinks.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
+import Tracked from "../components/Tracked.astro";
+import { EVENTS } from "../config/analytics.mjs";
 import "../styles/course.css";
 import "../styles/consultancy.css";
 import working from "../assets/photos/DSC09119-2-Edit-Edit.jpg";
@@ -43,7 +45,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
         <li>Built so your team can run it without me afterwards</li>
         <li>It starts with a free 30-minute call</li>
       </ul>
-      <a class="button run-action" href={call}>Book a free 30-minute call</a>
+      <Tracked event={EVENTS.bookCallLink} place="top"><a class="button run-action" href={call}>Book a free 30-minute call</a></Tracked>
     </aside>
   </div>
 
@@ -80,7 +82,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
       <h2 id="ai-title">AI agents on your own Power BI</h2>
       <div class="raised-copy">
         <p>If your team wants to start using AI agents, we start from what you already have: your licences, tools, skills and setup. We work out what to hand to an agent, what to keep it away from, and how your team checks what it changed. Your team learns to use agents themselves, so you get work you can check, not new risks or a mess to clear up later.</p>
-        <a class="text-link" href={call}>Book a free 30-minute call</a>
+        <Tracked event={EVENTS.bookCallLink} place="agents"><a class="text-link" href={call}>Book a free 30-minute call</a></Tracked>
         <a class="text-link" href="/writing/we-are-all-middle-management-now/">Essay: We're all middle management now</a>
       </div>
     </div>
@@ -137,7 +139,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
         <p class="start-ask">Tell me what's happening with your Power BI, and we'll work out what would help.</p>
       </div>
       <div>
-        <a class="text-link start-link" href={call}>Book a free 30-minute call</a>
+        <Tracked event={EVENTS.bookCallLink} place="start"><a class="text-link start-link" href={call}>Book a free 30-minute call</a></Tracked>
       </div>
     </div>
   </section>

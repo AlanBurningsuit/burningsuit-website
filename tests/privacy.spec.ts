@@ -1,5 +1,5 @@
-import { type BrowserContext, type Page } from "@playwright/test";
-import { test, expect, isTracker, otherScripts, tracker } from "./analytics";
+import { type Page } from "@playwright/test";
+import { test, expect, isTracker, otherScripts, servedAsProduction, tracker } from "./analytics";
 import { reportCspViolations, expectIndexable } from "./helpers";
 import { ANALYTICS } from "../src/config/analytics.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
@@ -18,7 +18,7 @@ const headings = ["Who is responsible", "Counting visits", "Turn off visit count
 const paragraphs = [
   "I'm Alan Harman-Box. This notice covers visiting this site, booking a free 30-minute call, paying for a course seat, recordings of online courses and emailing me. The enquiry form has its own notice.",
   "burningsuit is the trading name of Burningsuit Limited, registered in England and Wales, company number 05738130, registered office The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN. VAT number 770 3248 38. The company is the controller of your information and is registered with the Information Commissioner's Office. Contact me at alan@burningsuit.co.uk.",
-  "I use Umami to count which pages people read, so I can improve the site. It sets no cookies. For each page view it records the page, the page you came from, your browser and device, your approximate location, and how quickly and smoothly the page loaded. It uses your IP address briefly but doesn't keep it in the statistics, and it can't link your visits from one month to the next.",
+  "I use Umami to count which pages people read, so I can improve the site. It sets no cookies. For each page view it records the page, the page you came from, your browser and device, your approximate location, and how quickly and smoothly the page loaded. It also counts when someone uses a booking button or sends the enquiry form. It uses your IP address briefly but doesn't keep it in the statistics, and it can't link your visits from one month to the next.",
   "Umami Software, Inc., a US company, processes this for me in the US and the EU under its data processing agreement, which covers transfers from the UK. It keeps the statistics for 6 months. My lawful basis is legitimate interests. I don't profile anyone or sell the data. If you'd rather your visits weren't counted, turn counting off below.",
   "This switch stops Umami counting your visits from this browser. It's free, works straight away and can be switched back. It's saved in this browser, so clearing the site's data undoes it.",
   "The site is hosted on GitHub Pages. GitHub, Inc., a US company, logs visitors' IP addresses for its own security purposes, under its privacy statement.",
@@ -29,7 +29,7 @@ const paragraphs = [
   "For bookings and emails, my lawful basis is legitimate interests: answering people who contact me about training or consultancy. If you ask me to take steps towards a contract with you, that processing is necessary for those steps. Apart from Cal.com's copy, I keep them for as long as the enquiry or any engagement that follows needs them, then delete them.",
   "You can ask for a copy of your information, or ask me to correct, delete or restrict it. You can object to anything based on legitimate interests, including the analytics, which the switch stops. Where I'm using information for steps towards a contract you asked for, you can also ask for it in a reusable format, for you or another organisation. Email alan@burningsuit.co.uk, or complain to the Information Commissioner's Office.",
   "I update this notice when anything here changes.",
-  "Last updated: 8 November 2026",
+  "Last updated: 9 November 2026",
 ];
 const links = [
   ENQUIRY.privacyPath, email, "https://umami.is/privacy", "https://umami.is/dpa", "#optout",
@@ -77,7 +77,7 @@ test("privacy notice carries the approved words, headings and links in order", a
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(headings);
   await expect(page.locator(".service-copy > p:not(.optout-nojs)")).toHaveText(paragraphs);
   expect(await page.locator(".service-copy a").evaluateAll((anchors) => anchors.map((a) => a.getAttribute("href")))).toEqual(links);
-  await expect(page.locator("time")).toHaveAttribute("datetime", "2026-11-08");
+  await expect(page.locator("time")).toHaveAttribute("datetime", "2026-11-09");
   await expect(page.locator(".service-copy")).not.toContainText(/aria-pressed|\[|\]/);
 });
 
@@ -189,25 +189,9 @@ for (const width of [320, 390, 1366]) {
   });
 }
 
-// Serves the built site at the production address inside the browser only. Umami's script loads as normal; anything else bound for umami.is is answered locally, so no beacon ever reaches Umami.
-async function servedAsProduction(context: BrowserContext, baseURL: string) {
-  const beacons: string[] = [];
-  await context.route(/^https:\/\/([a-z0-9-]+\.)*umami\.is\//, (request) => {
-    // The tag itself falls through to the shared guard, which serves the committed copy.
-    if (isTracker(request.request().url())) return request.fallback();
-    beacons.push(request.request().url());
-    return request.fulfill({ status: 200, contentType: "application/json", body: "{}" });
-  });
-  await context.route("https://burningsuit.co.uk/**", async (request) => {
-    const url = new URL(request.request().url());
-    return request.fulfill({ response: await context.request.fetch(new URL(url.pathname + url.search, baseURL).href) });
-  });
-  return beacons;
-}
-
 test("on the production domain the tag counts a visit until the switch turns it off", async ({ browser, baseURL }) => {
   const context = await browser.newContext();
-  const beacons = await servedAsProduction(context, baseURL!);
+  const { beacons } = await servedAsProduction(context, baseURL!);
   const page = await context.newPage();
   const errors: string[] = [];
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });

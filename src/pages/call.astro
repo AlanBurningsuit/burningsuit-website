@@ -3,6 +3,8 @@
 // No reserved anchors (see src/config/compatibility.mjs). No form, embed or script: plain links to booking, Contact, About and consultancy.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TitleBand from "../components/TitleBand.astro";
+import Tracked from "../components/Tracked.astro";
+import { EVENTS } from "../config/analytics.mjs";
 import "../styles/course.css";
 import "../styles/consultancy.css";
 import "../styles/call.css";
@@ -30,7 +32,7 @@ const booking = "https://cal.com/alan-burningsuit/call";
         <li>Follow-up afterwards if it needs more thought</li>
         <li>Any further work quoted separately</li>
       </ul>
-      <a class="button book-link" href={booking}>Book a free 30-minute call</a>
+      <Tracked event={EVENTS.bookCall} place="top"><a class="button book-link" href={booking}>Book a free 30-minute call</a></Tracked>
     </aside>
 
     <section class="call-steps" aria-labelledby="happens-title">
@@ -50,7 +52,7 @@ const booking = "https://cal.com/alan-burningsuit/call";
         <p class="book-facts">Pick a time that suits you on my booking page.</p>
       </div>
       <div>
-        <a class="button book-link" href={booking}>Book a free 30-minute call</a>
+        <Tracked event={EVENTS.bookCall} place="bottom"><a class="button book-link" href={booking}>Book a free 30-minute call</a></Tracked>
         <p class="call-alt">Prefer to write? <a href="/contact/">Send me a message</a></p>
         <p class="call-alt"><a href="/power-bi/">More about my consultancy</a></p>
       </div>
