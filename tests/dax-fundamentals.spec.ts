@@ -107,9 +107,9 @@ test("DAX fundamentals page renders the approved wording and question order", as
     "Change what a measure includes with CALCULATE, using simple filters, FILTER and ALL, for example to compare each value with the overall total.",
   ]);
 
-  // How it runs: the lead only; no exercises line, figure or day groups.
+  // How it runs: the lead only; no exercises line, figure or day groups (the teacher card's heading is its only h3).
   await expect(page.locator(".agenda .do-lead p")).toHaveText("You'll work on data prepared for teaching: I explain and demonstrate, then you write columns and measures yourself in exercises, with time for questions. Online has the same content and exercises.");
-  await expect(page.locator(".agenda .exercises, .agenda .day-title, .agenda h3, .course-figure")).toHaveCount(0);
+  await expect(page.locator(".agenda .exercises, .agenda .day-title, .agenda h3:not(.trust-teacher h3), .course-figure")).toHaveCount(0);
 
   // One sequence, 01 to 05.
   await expect(page.locator(".agenda-steps")).toHaveCount(1);
@@ -136,9 +136,10 @@ test("DAX fundamentals page renders the approved wording and question order", as
       - listitem
   `);
 
-  // One teacher line below the spine, then the one proof line: no study link, quote, rating or count.
-  await expect(page.locator(".teacher-line p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
-  await expect(page.locator(".teacher-line a")).toHaveText(["How I train", "More about me"]);
+  // One teacher card below the spine, then the one proof line: no study link, quote, rating or count.
+  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
+  await expect(page.locator(".trust-teacher a")).toHaveText(["How I train", "More about me"]);
+  await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toHaveCount(1);
   await expect(page.locator(".proof-line")).toHaveText("I've run this day for public-sector teams, and on public courses, since 2022.");
   await expect(page.locator(".course-proof > *")).toHaveCount(1);
   await expect(page.locator("main blockquote, main .case-figures, .study-evidence")).toHaveCount(0);
@@ -181,12 +182,12 @@ test("DAX fundamentals layout: facts and action in the decision hero, above the 
   // The demonstrated tag is quieter than the item it marks.
   const size = (selector: string) => page.locator(selector).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
   expect(await size(".demo-tag")).toBeLessThan(await size(".agenda-steps p"));
-  // On wide screens the single sequence sits under the lead, aligned with it, wider than a day column would be; the teacher line follows it.
+  // On wide screens the single sequence sits under the lead, aligned with it, wider than a day column would be; the teacher card follows it.
   const lead = await box(page, ".agenda .do-lead"), list = await box(page, ".agenda-steps"), inner = await box(page, ".agenda .do-inner");
   expect(list.y).toBeGreaterThanOrEqual(lead.y + lead.height);
   expect(Math.abs(list.x - lead.x)).toBeLessThanOrEqual(1);
   expect(list.width).toBeGreaterThan(inner.width * 0.6);
-  expect((await box(page, ".teacher-line")).y).toBeGreaterThanOrEqual(list.y + list.height);
+  expect((await box(page, ".trust-teacher")).y).toBeGreaterThanOrEqual(list.y + list.height);
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
