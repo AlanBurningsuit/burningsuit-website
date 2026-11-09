@@ -37,6 +37,9 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .title-band .standfirst { margin: clamp(18px, 2vw, 28px) 0 0; max-width: 34ch; text-wrap: balance; }
 .title-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: clamp(18px, 2vw, 26px); }
 .title-actions .text-link { font-size: 1.05rem; }
+/* Two buttons sit close together; on a phone they stack at full width so neither looks like the lesser choice. */
+.title-actions:has(.button + .button) { column-gap: 16px; }
+@media (max-width: 480px) { .title-actions .button { flex: 1 1 100%; padding-inline: 16px; } }
 /* The one button, for every action that isn't a text link: it takes its colours from the ground it sits on (tokens.css). */
 .button {
   display: inline-block;

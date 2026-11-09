@@ -292,6 +292,10 @@ test("homepage keeps the approved sections, order and starting points", async ({
   expect(introCopy.y).toBeGreaterThanOrEqual(photo.y + photo.height);
   expect(list.y).toBeGreaterThanOrEqual(introCopy.y + introCopy.height);
   for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
+  // On a phone the two title buttons stack at the same full width.
+  const actions = await page.locator(".title-actions .button").evaluateAll((links) => links.map((link) => link.getBoundingClientRect().width));
+  expect(actions[0]).toBe(actions[1]);
+  expect(actions[0]).toBe((await box(".title-actions")).width);
 });
 
 test("enquiry form is a labelled plain POST with nothing preselected that validates without JavaScript", async ({ browser, baseURL }) => {
