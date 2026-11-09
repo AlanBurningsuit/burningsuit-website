@@ -1,0 +1,52 @@
+/* Power BI fundamentals: reuses the 101 composition in course.css; only this page's differences live here. */
+
+/* The facts panel's action is a text link, not the 101's booking button. */
+.run-action { margin-top: 18px; }
+
+/* What you'll be able to do: the need-list card, straight after the opening, with no numbers of its own. */
+.course-need.outcomes { padding-block: 64px 76px; }
+/* Its quote sits under the list, in the list's column. */
+@media (min-width: 901px) { .outcomes .pull-quote { grid-column: 2; } }
+
+/* The two days: one numbered spine across both day groups. The counter lives on the body, so day 2 continues from 05. */
+.agenda .do-body { counter-reset: step; }
+.agenda .agenda-steps { counter-reset: none; }
+.agenda .exercises { margin-bottom: 30px; max-width: 62ch; }
+/* On wide screens the lead sits above the two days, which run side by side; the teacher line spans beneath. */
+@media (min-width: 901px) {
+  .agenda .do-inner { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+  .agenda .do-lead { position: static; }
+  .agenda .do-lead p { max-width: 62ch; }
+  .agenda .do-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); }
+  .agenda .do-body > * { grid-column: 1 / -1; }
+  .agenda .do-body > .day-title:nth-of-type(1) { grid-area: 2 / 1; }
+  .agenda .do-body > ol:nth-of-type(1) { grid-area: 3 / 1; }
+  .agenda .do-body > .day-title:nth-of-type(2) { grid-area: 2 / 2; margin-top: 0; }
+  .agenda .do-body > ol:nth-of-type(2) { grid-area: 3 / 2; }
+  /* A one-day course (DAX fundamentals) has no day groups: its single sequence runs under the lead at full width. */
+  .agenda.one-day .do-body { display: block; }
+}
+.agenda .day-title { margin-bottom: 18px; text-wrap: balance; }
+.agenda .agenda-steps + .day-title { margin-top: 26px; }
+.agenda-steps li { padding-bottom: 22px; }
+.agenda-steps strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
+
+/* What to arrange: the pointer to How I train's private course terms comes first, above this course's own licence points. */
+.need-pointer { max-width: 64ch; }
+.need-pointer:not(:last-child) { margin-bottom: 18px; }
+
+/* Who teaches: one small line below the spine; biography and method link out. */
+.teacher-line { margin-top: 14px; max-width: 62ch; }
+.teacher-line p { font-size: .96rem; color: var(--text-dim); }
+.teacher-links { display: flex; flex-wrap: wrap; column-gap: 28px; margin-top: 6px; }
+.teacher-links .text-link { font-size: .96rem; }
+
+@media (max-width: 900px) {
+  .outcomes .pull-quote { margin-top: 10px; }
+  .course-need.outcomes { padding-block: 48px 56px; }
+}
+@media (max-width: 680px) {
+  .course-need.outcomes { padding-block: 36px 48px; }
+  /* With enlarged text the long title hyphenates rather than breaking at an arbitrary letter (the training chooser's treatment). */
+  .title-band h1 { hyphens: auto; }
+}

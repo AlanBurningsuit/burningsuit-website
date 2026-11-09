@@ -1,0 +1,112 @@
+---
+// Approved wording: ops site/fundamentals-page-copy.md (5 Nov 2026). Its field labels, layout notes and annotations are not copy;
+// its {{ }} items render as visible to-confirm tags. Course scope follows the Fundamentals Outline in Practice;
+// confirmed practical details follow the approved page copy.
+// Private course only: no public run or booking control; its price shows only in the priced build (src/lib/training-prices.mjs). The 101 composition (course.css) is reused;
+// this page's differences live in fundamentals.css.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
+import PullQuote from "../../components/PullQuote.astro";
+import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import EnquiryForm from "../../components/EnquiryForm.astro";
+import CourseFigure from "../../components/CourseFigure.astro";
+import "../../styles/course.css";
+import "../../styles/fundamentals.css";
+
+// Priced only when SHOW_TRAINING_PRICES=true; the price item then names both delivery methods, so "On site or online" is omitted.
+const priced = trainingPriceCopy(loadTrainingPrices());
+const price = PRICE_ON_REQUEST;
+const description = `A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.${priced ? "" : " Price on request."}`;
+---
+<BaseLayout
+  title="Power BI fundamentals | burningsuit"
+  description={description}
+  placeholder={false}
+>
+  <TitleBand heading={{ before: "Power BI ", em: "fundamentals" }}>
+    <Fragment slot="standfirst">New to Power BI?</Fragment>
+  </TitleBand>
+  <div class="course-opening wrap">
+    <section class="course-intro" aria-labelledby="page-title">
+      <p>This two-day course takes your team from preparing data to sharing reports and keeping them up to date. No Power BI experience, DAX or coding needed.</p>
+      <p class="course-fit">Already building reports and looking for a day on calculations? <a href="/training/dax-fundamentals/">See DAX fundamentals</a>.</p>
+    </section>
+
+    <aside class="course-run" aria-label="Course facts">
+      <ul class="run-facts" role="list">
+        <li>2 days</li>
+        <li>Private, for your team</li>
+        {!priced && <li>On site or online</li>}
+        <li>Up to 8 people</li>
+        <li>{priced ? priced.fundamentalsDetail : price}</li>
+        <li>9:30am to 4pm each day</li>
+      </ul>
+      <a class="button run-action" href="#contact">Ask about dates</a>
+    </aside>
+  </div>
+
+  <section class="course-need outcomes wrap" aria-labelledby="outcomes-title">
+    <h2 id="outcomes-title">What you'll be able to do</h2>
+    <ul class="need-list" role="list">
+      <li>Build an interactive report and check how filters change its numbers.</li>
+      <li>Clean and reshape data in Power Query, so the steps run again when the data changes.</li>
+      <li>Connect several tables in a semantic model: the tables, relationships and calculations behind a report.</li>
+      <li>Publish and share a report, knowing who can see it and what keeps its data current.</li>
+      <li>Identify which part of Power BI a problem sits in, and use its vocabulary to find help.</li>
+    </ul>
+    <PullQuote quote="Thank you very much for the brilliantly delivered course." cite="Assistant accountant, Power BI fundamentals" />
+  </section>
+
+  <section class="course-do agenda" aria-labelledby="do-title">
+    <div class="wrap"><CourseFigure kind="parts" /></div>
+    <div class="wrap do-inner">
+      <div class="do-lead">
+        <h2 id="do-title">The two days</h2>
+        <p>I explain and demonstrate using prepared teaching data. You build and practise, with time for questions.</p>
+      </div>
+      <div class="do-body">
+        <p class="exercises">Exercises include recreating a visual and building a report page.</p>
+        {/* One numbered sequence across both days: CSS continues the counter, start="5" continues it for assistive technology. */}
+        <h3 class="day-title" id="day-1-title">Day 1: from an Excel table to a shared report</h3>
+        <ol class="do-steps agenda-steps" role="list" aria-labelledby="day-1-title">
+          <li><p><strong>Build a first report</strong> from an Excel table: charts, tables, slicers, filters and the sums, averages and counts Power BI creates for you.</p></li>
+          <li><p><strong>Make it useful to its reader:</strong> suitable visuals, number formats and conditional formatting.</p></li>
+          <li><p><strong>Get it in front of people:</strong> publishing to the Power BI service, sharing, subscriptions, comments, dashboards and a second report from the published model. See <a href="#need-title">publishing arrangements</a>.</p></li>
+          <li><p><strong>Prepare data you can use again</strong> in Power Query: data types, cleaning, filtering, reshaping and refresh.</p></li>
+        </ol>
+        <h3 class="day-title" id="day-2-title">Day 2: what sits underneath</h3>
+        <ol class="do-steps agenda-steps" role="list" start="5" aria-labelledby="day-2-title">
+          <li><p><strong>Build a report page:</strong> a prepared exercise with hierarchies, drill-down, refresh and republish, with help as needed.</p></li>
+          <li><p><strong>Bring tables together:</strong> several sources, what each row represents, lookup tables and relationships that let one selection filter several tables.</p></li>
+          <li><p><strong>Meet DAX,</strong> Power BI's formula language. I demonstrate a simple measure, a calculation responding to filters. You may write one, depending on the group's progress.</p></li>
+          <li><p><strong>Distribute and maintain it:</strong> workspaces, sharing, licences, refresh, data source sign-ins, gateways and how the parts fit together.</p></li>
+          <li><p><strong>Copilot in Power BI, briefly:</strong> what it can help with, why access varies and what to check. No exercise depends on it.</p></li>
+        </ol>
+        <div class="teacher-line">
+          <p>I'm Alan Harman-Box, and I write and teach every course myself. I've taught this course to about 300 people.</p>
+          <div class="teacher-links">
+            <a class="text-link" href="/training/how-i-train/">How I train</a>
+            <a class="text-link" href="/about/">More about me</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="course-need wrap" aria-labelledby="need-title">
+    <h2 id="need-title">What to arrange</h2>
+    <div class="need-body">
+      <p class="need-pointer">For dates, setup, payment and cancelling, <a href="/training/how-i-train/#private-courses">see the private course terms</a>.</p>
+      <ul class="need-list" role="list">
+        <li><strong>On site licences:</strong> I provide and manage them.</li>
+        <li><strong>Online licences:</strong> you arrange your own. A Power BI Pro licence is ideal, but most of the course works with a free licence.</li>
+        <li>Publishing practice depends on licences and access.</li>
+      </ul>
+    </div>
+  </section>
+
+  <EnquiryForm>
+    <Fragment slot="heading">Ask about dates</Fragment>
+    Tell me you're interested in Power BI fundamentals, how many people would come and roughly when.
+  </EnquiryForm>
+</BaseLayout>

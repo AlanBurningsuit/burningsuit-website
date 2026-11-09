@@ -1,155 +1,80 @@
 ---
-/** About Alan, with the talk, family origin and dog photographs. */
+// Page wording and photo descriptions: private ops site/about-page-copy.md.
+// Kept anchors: capable, human, origin, dog; see src/config/compatibility.mjs. No enquiry form here:
+// the closing links reach email, the homepage form and LinkedIn.
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Signoff from "../components/Signoff.astro";
-import { Picture } from "astro:assets";
-import zelda from "../assets/photos/zelda.jpg";
-import mmnTalk from "../assets/photos/mmn-talk.jpg";
+import TitleBand from "../components/TitleBand.astro";
+import { ENQUIRY } from "../config/enquiry.mjs";
+import "../styles/about.css";
+import talk from "../assets/photos/mmn-talk.jpg";
 import parents from "../assets/photos/stuart-alison.jpg";
+import zelda from "../assets/photos/zelda.jpg";
+import cafe from "../assets/photos/DSC09129-2-Edit.jpg";
 
-const contactSubject = "Hello";
+const linkedin = "https://www.linkedin.com/in/alan-harman-box";
 ---
-
 <BaseLayout
-  title="About - burningsuit: Power BI, Fabric & AI for everyone else"
-  description="I'm Alan Harman-Box, the person behind burningsuit. I work alongside Power BI and Fabric teams, with a particular interest in what AI changes about responsibility."
-  contactSubject={contactSubject}
+  title="About Alan Harman-Box | burningsuit"
+  description="I'm Alan Harman-Box, and burningsuit is me. I write and teach Power BI and AI courses for people whose job isn't Power BI, and help teams with their own reporting."
+  placeholder={false}
 >
-  <Fragment slot="footer-invitation"
-    >If any of this sounds like the kind of thing you're dealing with, I'd
-    genuinely like to hear about it</Fragment
-  >
-
-  <section class="page-hero">
-    <div class="wrap">
-      <h1 class="enter appear-300">Power BI and AI - for everyone <em>else</em>.</h1>
-      <p class="lead enter appear-450">
-        I'm Alan, and burningsuit is me. There's a lot of noise about AI and Power BI at the moment, and most of it feels aimed at the people who are already knee-deep in 'agents'. I'm interested in everyone else - the people who just want to get their job done well and would rather not have to turn into a nerd to do it. Which is fine by me - I'm more than happy to be the nerd in the room, so you don't have to.
-      </p>
+  <TitleBand heading={{ before: "Power BI and AI for everyone ", em: "else", after: "." }} />
+  <div class="about-intro wrap">
+    <div class="about-intro-text">
+      <p class="about-lead">I'm Alan Harman-Box, and burningsuit is me. There's a lot of noise about AI and Power BI at the moment, and most of it feels aimed at people who already spend their days talking about agents. I'm interested in everyone else: the people who just want to get their job done well, and would rather not turn into a nerd to do it. Which is fine by me. I'm more than happy to be the nerd in the room, and to explain things so that you don't have to become one.</p>
+      <section id="capable" class="about-section" aria-labelledby="capable-title">
+        <h2 id="capable-title">I start from what people can do</h2>
+        <div class="about-prose">
+          <p>I've got a fairly stubborn belief that, with the right instruction and a bit of encouragement, almost anyone can learn almost anything. So I won't turn up assuming you're behind, or that the people are the problem. If someone's finding Power BI hard, I'd sooner assume they're busy with the day job, a bit wary of the latest thing and short of someone to explain it, than assume they can't do it.</p>
+          <p>I write and teach <a href="/training/">every burningsuit course</a> myself. I also <a href="/power-bi/">work alongside teams on their own reporting</a>.</p>
+        </div>
+      </section>
     </div>
+    <figure class="about-photo cafe-photo framed-photo">
+      <Image src={cafe} alt="Alan at an outdoor café table on a town street, writing on a tablet with a stylus beside a cup of coffee" widths={[400, 560, 840, 1100]} sizes="(max-width: 900px) calc(100vw - 44px), 380px" format="webp" loading="eager" />
+    </figure>
+  </div>
+
+  <section id="human" class="about-section photo-left wrap" aria-labelledby="human-title">
+    <h2 id="human-title">The part that isn't really technical</h2>
+    <div class="about-prose">
+      <p>I know the nuts and bolts of Power BI well, but that's honestly not usually the thing that makes the difference. It's much more about whether people who are busy, and a bit sceptical, actually feel like having a go. And whether, by the end, you reckon I get how you work, rather than feeling someone turned up to tell you you've been doing it wrong. That's really the part I care about getting right.</p>
+      <p>I've spent about five years working with organisations as they adopt Power BI and Fabric, and before that about a decade in software delivery. I've also given a talk called "<a href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>" at the Bristol and Manchester Power BI user groups and at DataSwindon, about being responsible for work you've handed off to something that can't be held responsible for it. The thing that's stuck with me through all of it is that this work mostly succeeds or fails on the people side, well before the technology really comes into it.</p>
+    </div>
+    <figure class="about-photo talk-photo framed-photo">
+      <Image src={talk} alt="Alan giving his talk 'We're all middle management now' at a user group, the title slide beside him" widths={[400, 640, 960, 1280]} sizes="(max-width: 680px) calc(100vw - 44px), 640px" format="webp" loading="lazy" />
+      <figcaption>We're all middle management now</figcaption>
+    </figure>
   </section>
 
-  <div class="thread" data-reveal-raw aria-hidden="true"></div>
-
-  <section class="chapter" aria-labelledby="capable">
-    <div class="wrap">
-      <h2 class="section-head" id="capable" data-reveal>I start from what people can do</h2>
-      <div class="prose">
-        <p data-reveal>
-          I've got a fairly stubborn belief that, with the right instruction and
-          a bit of encouragement, almost anyone can learn almost anything - so I
-          won't turn up assuming a team's behind, or that the people are the
-          problem. Most of the teams I meet are more capable than they've been
-          given credit for; they're just busy with the day job, a bit wary of
-          the latest thing, and short on someone to think it through with.
-        </p>
-        <p data-reveal>
-          There is more about <a href="/power-bi/">how I work with teams on their reporting</a>. If you'd sooner see the results, there are <a href="/work/">a few case studies</a>. And I'm on
-          <a href="https://www.linkedin.com/in/alan-harman-box"
-          target="_blank" rel="noopener noreferrer">LinkedIn</a>, if that's
-          where you check people out.
-        </p>
-      </div>
+  <section id="origin" class="about-section wrap" aria-labelledby="origin-title">
+    <h2 id="origin-title">Where burningsuit comes from</h2>
+    <div class="about-prose">
+      <p>burningsuit was my parents' Power BI training business. My mum and dad, Alison and Stuart, handed it over to me and they're properly retired now, so it's me. It's still a training business at heart. I teach Power BI and how to work with AI agents on it, with consultancy alongside, and the reason it exists hasn't really changed.</p>
+      <p>As my mum said, burningsuit was for "everyone else": people who just want to get a job done. That's still who it's for.</p>
     </div>
+    <figure class="about-photo parents-photo framed-photo">
+      <Image src={parents} alt="Alison and Stuart, who ran burningsuit before Alan, at a laptop together" widths={[400, 560, 840, 1120]} sizes="(max-width: 680px) calc(100vw - 44px), 560px" format="webp" loading="lazy" />
+      <figcaption>Alison and Stuart</figcaption>
+    </figure>
   </section>
 
-  <section class="chapter" aria-labelledby="human">
-    <div class="wrap">
-      <h2 class="section-head" id="human" data-reveal>The part that isn't really technical</h2>
-      <div class="prose">
-        <p data-reveal>
-          The nuts and bolts of Power BI I can do, and I've done it a long time. But that's honestly not usually the thing that makes the difference. It's much more about whether people who are busy, and a bit sceptical, actually feel like having a go - and whether, by the end, your team reckons I get how they work, rather than someone turning up to tell them they've been doing it wrong. That's really the part I care about getting right.
-        </p>
-        <p data-reveal>
-          I've spent about five years working with organisations getting to grips with Power BI and Fabric, and before that a decade or so in software delivery. I also give a talk at a few user groups, called <a href="/writing/we-are-all-middle-management-now/">We're all middle management now</a>, about being responsible for work you've handed off to something that can't be held responsible for it. The thing that's stuck with me through all of it is that these projects mostly succeed or fail on the people side, well before the technology really comes into it.
-        </p>
-        {/* The talk the paragraph above names, as it actually happens —
-            evidence beside its claim. Clearance row in the ops ledger. */}
-        <figure class="figure-inset" data-reveal-fig>
-          <div class="ph">
-            <Picture
-              src={mmnTalk}
-              alt="Alan giving the 'we're all middle management now' talk at a user group, the title slide up beside him"
-              formats={["avif"]}
-              fallbackFormat="webp"
-              widths={[700, 1050, 1400]}
-              sizes="(min-width: 56rem) 42rem, 100vw"
-              quality={60}
-              loading="lazy"
-            />
-          </div>
-          <figcaption class="ph-note">The talk, live - we're all middle management now</figcaption>
-        </figure>
-      </div>
+  <section id="dog" class="about-section photo-left wrap" aria-labelledby="dog-title">
+    <h2 id="dog-title">And the dog</h2>
+    <div class="about-prose">
+      <p>Last thing: this is Zelda, who I'm told is Chief Morale Officer. She's no use at all with the DAX, but she's very good at making me get up and go outside now and then, which honestly does more for the work than you'd think.</p>
     </div>
+    <figure class="about-photo zelda-photo framed-photo">
+      <Image src={zelda} alt="Zelda, a small black-and-tan dog, snuggled into a cream fleece blanket" widths={[400, 640, 960]} sizes="(max-width: 680px) calc(100vw - 44px), 460px" format="webp" loading="lazy" />
+      <figcaption>Zelda</figcaption>
+    </figure>
   </section>
 
-  <section class="chapter" aria-labelledby="origin">
-    <div class="wrap">
-      <h2 class="section-head" id="origin" data-reveal>Where burningsuit comes from</h2>
-      <div class="prose">
-        <p data-reveal>
-          burningsuit was my parents' Power BI training business. They handed it
-          over and they're properly retired now, so it's me. I've
-          taken it somewhere a bit different from where it started - these days
-          it's more about advising and designing alongside teams than running
-          courses - but the reason it exists hasn't really changed.
-        </p>
-        <p data-reveal>
-          As my mum said, burningsuit was for "everyone else" - normal people,
-          basically. Not the nerds, not the people who are always online
-          performing their work - just someone trying to get a job done. And
-          that's still the focus.
-        </p>
-        <figure class="figure-inset" data-reveal-fig>
-          <div class="ph">
-            <Picture
-              src={parents}
-              alt="Stuart and Alison, who ran burningsuit before Alan, at a laptop together - Alison pointing at the screen"
-              formats={["avif"]}
-              fallbackFormat="webp"
-              widths={[700, 1050, 1400]}
-              sizes="(min-width: 56rem) 42rem, 100vw"
-              quality={60}
-              loading="lazy"
-            />
-          </div>
-          <figcaption class="ph-note">Stuart &amp; Alison - the original Power BI people</figcaption>
-        </figure>
-      </div>
+  <section class="about-start dark" aria-labelledby="start-title">
+    <div class="wrap about-start-inner">
+      <h2 id="start-title">Where to start</h2>
+      <p>You can <a href={`mailto:${ENQUIRY.email}`}>email me</a> or use <a href="/#contact">the enquiry form</a>. I'm on <a href={linkedin}>LinkedIn</a> too.</p>
     </div>
   </section>
-
-  <section class="chapter" aria-labelledby="dog">
-    <div class="wrap">
-      <h2 class="section-head" id="dog" data-reveal>And the dog</h2>
-      <div class="prose">
-        <p data-reveal>
-          Last thing: this is Zelda, who I'm told is Chief Morale Officer. She's
-          no use at all with the DAX, but she's very good at making me get up and
-          go outside now and then, which honestly does more for the work than
-          you'd think.
-        </p>
-        <figure class="figure-inset" data-reveal-fig>
-          <div class="ph">
-            <Picture
-              src={zelda}
-              alt="Zelda, a small black-and-tan dog, snuggled into a cream fleece blanket"
-              formats={["avif"]}
-              fallbackFormat="webp"
-              widths={[700, 1050, 1400]}
-              sizes="(min-width: 56rem) 42rem, 100vw"
-              quality={60}
-              loading="lazy"
-            />
-          </div>
-          <figcaption class="ph-note">Chief Morale Officer, on duty</figcaption>
-        </figure>
-        <Signoff reveal />
-      </div>
-    </div>
-  </section>
-
-  <div class="thread thread-end" data-reveal-raw aria-hidden="true"></div>
-  <div class="talk-spacer"></div>
 </BaseLayout>

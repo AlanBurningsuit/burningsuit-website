@@ -1,86 +1,30 @@
 ---
-/**
- * /writing/<slug> — an essay in the site's existing chaptered reading layout.
- * The Article references Alan's Person node; the breadcrumb goes directly
- * from Home to the essay because there is no writing index yet.
- */
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
-import { articleNode, breadcrumbList } from "../lib/schema";
-import { notesHref } from "../config/site";
-
-interface Props {
-  essay: CollectionEntry<"writing">["data"];
-}
+import TitleBand from "../components/TitleBand.astro";
+import "../styles/articles.css";
+interface Props { essay: CollectionEntry<"writing">["data"] }
 const { essay } = Astro.props;
-const { kicker, heading, lead, title, description, contactSubject, footerInvitation, givenAt } = essay;
-const siteUrl = Astro.site?.href ?? "https://burningsuit.co.uk/";
-const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
-const publishedTime = essay.datePublished?.toISOString();
-const modifiedTime = essay.dateModified?.toISOString();
-const article = articleNode({
-  siteUrl,
-  pageUrl,
-  headline: [heading.before, heading.em, heading.after].filter(Boolean).join("").trim(),
-  description,
-  datePublished: publishedTime,
-  dateModified: modifiedTime,
-});
-const crumbs = breadcrumbList([
-  { name: "Home", url: siteUrl },
-  { name: title.replace(/ - burningsuit$/, ""), url: pageUrl },
-]);
-const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", {
-  day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
-}).format(date);
+const formatDate = (date: Date) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(date);
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const archiveContext = essay.archiveMonth ? `${months[Number(essay.archiveMonth.slice(5)) - 1]} ${essay.archiveMonth.slice(0, 4)}` : undefined;
 ---
-
-<BaseLayout
-  title={title}
-  description={description}
-  contactSubject={contactSubject}
-  ogType="article"
-  publishedTime={publishedTime}
-  modifiedTime={modifiedTime}
-  jsonLd={[article, crumbs]}
->
-  <Fragment slot="footer-invitation">{footerInvitation}</Fragment>
-
-  <section class="page-hero">
-    <div class="wrap">
-      <p class="kicker meta enter">{kicker}</p>
-      <h1 class="enter appear-300">
-        {heading.before}<em>{heading.em}</em>{heading.after}
-      </h1>
-      <p class="lead enter appear-450">{lead}</p>
-      {givenAt && givenAt.length > 0 && (
-        <div class="prose">
-          {givenAt.map(({ event, date }) => <p class="meta">Given at {event}, <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>.</p>)}
-        </div>
-      )}
-    </div>
-  </section>
-
-  <div class="thread" data-reveal-raw aria-hidden="true"></div>
-
-  <slot />
-
-  {/* Every essay closes like a case study: a ruled line where the essay stops,
-      one lead-in, then the notes signup for readers who want more and the way
-      into Alan's work. */}
-  <section class="chapter" aria-label="Related work">
-    <div class="wrap">
-      <div class="prose" data-reveal>
-        <hr />
-        <p>I write notes from working alongside Power BI teams, and send them when there's something worth saying. Or, if you're wondering who's been doing the talking, there's more about me.</p>
-        <div class="routes routes-stack">
-          <a class="route" href={notesHref("essay")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>
-          <a class="route" href="/about/">More about me, and the work I do</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
-  <div class="talk-spacer"></div>
+<BaseLayout title={essay.title} description={essay.description} author={essay.author} ogType="article" placeholder={false}>
+  <article class="reading-article" aria-labelledby="page-title">
+    <TitleBand heading={essay.heading} standfirstClass="article-lead">
+      <Fragment slot="eyebrow">{essay.kicker}</Fragment>
+      {essay.lead && <Fragment slot="standfirst">{essay.lead}</Fragment>}
+    </TitleBand>
+    <header class="article-opening wrap">
+      <p class="article-byline">{essay.author}{archiveContext && <> · <time datetime={essay.archiveMonth}>{archiveContext}</time></>}</p>
+      {essay.givenAt && <div class="article-appearances">{essay.givenAt.map(({ event, date }) => <p>Given at {event}, <time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>.</p>)}</div>}
+    </header>
+    <slot />
+  </article>
+  <div class="article-related closing-band dark"><div class="wrap closing-inner"><div class="links">
+    {essay.kind === "essay" && <a href="/training/agentic-development-for-power-bi/">Power BI with AI agents 101</a>}
+    <a href="/about/">About</a>
+    <a href="/training/">Training</a>
+    <a href="/power-bi/">Consultancy</a>
+  </div></div></div>
 </BaseLayout>

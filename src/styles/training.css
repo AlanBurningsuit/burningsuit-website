@@ -1,0 +1,68 @@
+/* Training chooser (/training/): the course entries come from home.css; only this page's composition lives here. */
+
+/* Opening: the settled course-page title and introduction, compact, without a facts column. */
+.training-intro { padding-block: clamp(40px, 5vw, 64px) 0; }
+.training-intro > p { max-width: 60ch; font-size: var(--lead-size); line-height: var(--lh-relaxed); text-wrap: pretty; }
+
+/* Two places to start: the page's main choice, as two equal daylight cards that open on a warm spine;
+   each one's deciding facts and prerequisite sit together beneath its description. */
+.starting-points { padding-block: 72px 56px; }
+.starting-points h2 { padding-bottom: 26px; }
+.start-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); align-items: start; }
+.starting-points .course { padding: 24px 30px 26px; }
+/* Side by side, the two cards share one height and their parts line up row for row (fit line, title, description,
+   facts, links, private ask) through a shared subgrid, so both cards' links sit on one line. */
+@media (min-width: 901px) {
+  .start-list { grid-template-rows: repeat(6, auto); align-items: stretch; }
+  .start-list > .course { display: grid; grid-row: span 6; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); row-gap: 0; align-content: start; }
+}
+.course > p.private-ask { margin-top: 10px; font-size: .96rem; }
+.private-ask a { font-weight: 600; }
+/* The public group size stays in one piece when the date line wraps. */
+
+/* Specialists: a quieter recessed block of rows, name beside its facts on wide screens; no cards or fit questions. A course with its own page adds one outline link under its facts. */
+.specialist-courses { padding-block: 56px 88px; }
+.specialists-head h2 { padding-bottom: 14px; }
+.specialists-head p { max-width: 60ch; margin-bottom: 22px; }
+.specialist-rows { list-style: none; margin: 0 0 18px; padding: 12px 30px; background: var(--surface-raised); border-radius: var(--r); }
+.specialist-rows > li { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: baseline; padding-block: 13px; }
+.specialist-rows h3 { font-weight: 600; letter-spacing: var(--ls-display-tight); }
+.specialist-rows .facts { margin: 0; }
+.specialist-rows .outline-link { justify-self: start; align-self: start; margin-top: 10px; }
+@media (min-width: 681px) { .specialist-rows > li > :not(h3) { grid-column: 2; } }
+/* A specialist name that links to its page keeps the heading's colour, as on the starting-point entries. */
+.specialist-rows h3 a { color: inherit; text-decoration: none; }
+.specialist-rows h3 a:hover { color: var(--link); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .14em; }
+.specialist-courses .text-link { font-size: .96rem; }
+.name-course { font-size: .96rem; color: var(--text-dim); }
+.specialist-courses .not-sure { margin-top: 30px; }
+.not-sure a { font-weight: 600; }
+
+/* Coaching: a quieter section after the specialists, reusing their heading and ruled-row pattern; the specialists' bottom padding already separates the two. */
+.coaching { padding-block: 0 80px; }
+.coaching .text-link { font-size: .96rem; }
+.coaching .pull-quote { margin-block: 28px 26px; }
+
+/* Who's teaching: heading beside a quietly ruled note (warm spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */
+.training-teacher { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 32px 96px; align-items: start; }
+.teacher-note { border-left: var(--bw-spine) solid var(--rule); padding-left: 22px; }
+.teacher-note p { max-width: 64ch; }
+.teacher-note .course-actions { margin-top: 12px; }
+
+@media (min-width: 901px) { .teacher-note { margin-top: 10px; } }
+@media (max-width: 900px) {
+  .start-list { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
+  .starting-points { padding-block: 48px 32px; }
+  .specialist-courses { padding-block: 48px 60px; }
+  .coaching { padding-block: 0 60px; }
+  .training-teacher { grid-template-columns: minmax(0, 1fr); row-gap: 22px; padding-block: 16px 60px; }
+}
+@media (max-width: 680px) {
+  .training-intro { padding-top: 32px; }
+  .starting-points h2 { padding-bottom: 18px; }
+  /* With enlarged text a long course name hyphenates rather than breaking at its last letter. */
+  .starting-points .course h3 { hyphens: auto; }
+  .starting-points .course { padding: 22px 20px 22px; }
+  .specialist-rows { padding: 10px 20px; }
+  .specialist-rows > li { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }
+}

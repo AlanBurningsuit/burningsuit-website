@@ -1,75 +1,41 @@
 ---
-/**
- * /work — the case-study index.
- *
- * A text-led page-hero pitched on recognition. The copy is agnostic about study
- * count and about whether clients are named, so flipping a study's namePublished
- * (or adding a study) needs no edit here. Studies render as carved "case file"
- * tiles built from the
- * `work` collection (sorted by `order`) through ServiceRows — the same
- * cream-panel-as-link the homepage uses. Adding a study to the collection adds a
- * tile here automatically.
- */
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import ServiceRows from "../../components/ServiceRows.astro";
-import BookCta from "../../components/BookCta.astro";
-import type { RowData } from "../../components/ServiceRow.astro";
-import { mailtoFor } from "../../config/site";
-
-const contactSubject = "Power BI & Fabric - one of these sounds like us";
-const contactMailto = mailtoFor(contactSubject);
-
+import TitleBand from "../../components/TitleBand.astro";
+import "../../styles/work.css";
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
-const rows: RowData[] = studies.map((s) => ({
-  href: `/work/${s.id}/`,
-  // The schema's documented contract: kicker drives the hero eyebrow AND the
-  // index tile plate, so a study that overrides it can't drift apart.
-  tab: s.data.kicker,
-  title: s.data.heading,
-  body: s.data.tileOutcome,
-  cta: "Read the full story",
-}));
+// Group lines reuse approved wording: the individual coaching study (courses), Training's coaching entry and the homepage's consultancy introduction.
+const groups = [
+  { category: "courses", heading: "Courses", href: "/training/", lead: "A course teaches a group from prepared teaching files." },
+  { category: "coaching", heading: "Power BI coaching", href: "/training/#coaching", lead: "For 1 to 3 people from the same organisation, learning Power BI on the work they actually do." },
+  { category: "consultancy", heading: "Consultancy", href: "/power-bi/", lead: "I work alongside your team on your own reports and models, so they understand what we build." },
+];
+const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => typeof heading === "string" ? heading : [heading.before, heading.em, heading.after].filter(Boolean).join("");
+const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() + descriptor.slice(1);
 ---
-
-<BaseLayout
-  title="Power BI & Fabric case studies - burningsuit"
-  description="Power BI and Fabric case studies from Alan Harman-Box. See how people learned to take care of reporting they built themselves or took over from someone else."
-  contactSubject={contactSubject}
->
-  <Fragment slot="footer-invitation"
-    >If one of these sounds like where you are, tell me about it - even if you're
-    not sure it's a project yet</Fragment
-  >
-
-  <section class="page-hero">
-    <div class="wrap">
-      <h1 class="enter appear-300">You'll recognise one of these.</h1>
-      <p class="lead enter appear-450">
-        These are teams and people I've worked with on Power BI and Fabric. Some built the reporting themselves; others took over something built for them. Read the story that sounds closest to yours.
-      </p>
+<BaseLayout title="Case studies | burningsuit" description="Anonymous examples of Alan Harman-Box's Power BI courses, coaching and consultancy, and how each one ran." placeholder={false}>
+  <TitleBand heading="Case studies">
+    <Fragment slot="standfirst">What the courses, coaching and consultancy look like in practice.</Fragment>
+  </TitleBand>
+  <div id="cases" class="work-index wrap">
+    <p class="work-intro">Every example here is anonymous.</p>
+    {groups.map((group) => <section class="work-group" aria-labelledby={`${group.category}-title`}>
+      <div class="work-group-lead">
+        <h2 id={`${group.category}-title`}><a href={group.href}>{group.heading}</a></h2>
+        <p>{group.lead}</p>
+      </div>
+      <ul class="work-entries" role="list">
+        {studies.filter(({ data }) => data.category === group.category).map(({ id, data }) => <li>
+          <h3><a href={`/work/${id}/`}>{data.linkLabel ?? headingText(data.heading)}</a></h3>
+          <p>{sentenceCase(data.descriptor)}</p>
+        </li>)}
+      </ul>
+    </section>)}
+  </div>
+  <section class="work-next closing-band dark" aria-labelledby="work-next-title">
+    <div class="wrap closing-inner">
+      <h2 id="work-next-title">Not sure which fits?</h2>
+      <a class="text-link" href="/contact/">Tell me what you use Power BI for now, and I'll suggest where to start.</a>
     </div>
   </section>
-
-  <div class="thread" data-reveal-raw aria-hidden="true"></div>
-
-  <section class="chapter" aria-labelledby="cases">
-    <div class="wrap">
-      <h2 class="section-head" id="cases" data-reveal>Case studies</h2>
-      <ServiceRows rows={rows} />
-    </div>
-  </section>
-
-  {/* The page's action beat — /work used to dump from the tiles straight into
-      the footer basement; the band closes the scroll deliberately. */}
-  <section class="cta-band" aria-label="Book an hour">
-    <div class="wrap">
-      <BookCta src="work" mailtoHref={contactMailto}>
-        If one of these is close to home, we can spend an hour talking it through. The call is free.
-      </BookCta>
-    </div>
-  </section>
-
-  <div class="thread thread-end thread-tight" data-reveal-raw aria-hidden="true"></div>
-  <div class="talk-spacer"></div>
 </BaseLayout>

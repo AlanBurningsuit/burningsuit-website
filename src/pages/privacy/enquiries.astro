@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
+import { ENQUIRY } from "../../config/enquiry.mjs";
+import "../../styles/service.css";
+---
+<BaseLayout title="Enquiry privacy | burningsuit" description="How Alan handles the information you send in an enquiry." placeholder={false}>
+  <TitleBand heading="Your enquiry and your information" id="privacy-title" />
+  <article class="wrap service-page" aria-labelledby="privacy-title">
+    <div class="service-copy">
+      <p>I'm Alan Harman-Box. Burningsuit Limited is responsible for your personal information when you enquire. You can contact me at <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>
+
+      <h2>What I use it for</h2>
+      <p>The form asks for your email and your message. Your name is optional. It also tells me which page of this site you sent it from. I use these details to answer your enquiry and discuss any work you ask about. Without an email address, I can't reply.</p>
+      <p>My lawful basis is legitimate interests: answering people who contact me about training or consultancy. If you ask me to take steps towards a contract with you, that processing is necessary for those steps.</p>
+      <p>Please don't include sensitive personal information, payment details or confidential reporting data.</p>
+
+      <h2>Who handles the form</h2>
+      <p><a href="https://formspark.io/legal/privacy-policy/">Formspark</a>, run by Trampoline Software SRL in Belgium, receives the form, filters spam, stores your enquiry and emails it to me. I use Microsoft 365 for email. <a href="https://privacy.microsoft.com/en-gb/privacystatement">Microsoft's privacy statement</a> explains its processing and international transfers. The form sends information to Formspark when you submit it.</p>
+      <p>Formspark also processes your IP address, approximate location, browser information and the referring page. Its <a href="https://formspark.io/legal/dpa/">data processing agreement</a> explains its role.</p>
+      <p>Formspark stores submission data in Ireland and Germany. Some of its suppliers process information outside the European Economic Area, including in the United States. Its <a href="https://formspark.io/legal/subprocessors/">supplier list</a> explains the locations and transfer safeguards.</p>
+
+      <h2>How long it stays</h2>
+      <p>I keep enquiries for as long as the enquiry or any engagement that follows needs them, then delete them from Formspark and my email.</p>
+      <p>Formspark keeps deleted submissions recoverable for 30 days. It retains IP addresses and approximate locations for 12 months. Rejected submissions are visible for 30 days and retained by Formspark for 12 months.</p>
+
+      <h2>Your choices and rights</h2>
+      <p>You can email me instead of using the form. You can ask me for a copy of your information, to correct or delete it, or to restrict its use. You can object to processing based on legitimate interests. Some rights depend on why the information is being used.</p>
+      <p>Contact <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a> with a request or concern. You can also <a href="https://ico.org.uk/make-a-complaint/">complain to the Information Commissioner's Office</a>.</p>
+      <p class="links"><a href="/contact/">Back to the enquiry form</a></p>
+    </div>
+  </article>
+</BaseLayout>

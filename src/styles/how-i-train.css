@@ -1,0 +1,49 @@
+/* How I train (/training/how-i-train/): four related answers on the daylight body between dark bookends. Shared furniture (raised band, masthead, footer) lives in app.css. */
+
+/* An answer: heading beside its prose, separated by space rather than rules. */
+.hit-answer { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; }
+.hit-prose p, .hit-pair-item p { max-width: 62ch; }
+.hit-do { padding-block: 48px 60px; }
+
+/* If you get stuck: the personal answer, on the raised band in a lifted card with the warm spine and larger prose. */
+.hit-stuck .hit-answer { padding-block: 52px 58px; }
+.hit-stuck .hit-prose { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 26px 32px 28px; }
+.hit-stuck .hit-prose p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 56ch; }
+
+/* Own work and using it afterwards: two related answers side by side, each on its own card. */
+.hit-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); padding-block: 64px 56px; align-items: start; }
+.hit-pair-item { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 28px; }
+.hit-pair-item > h2 { padding-bottom: 16px; }
+.hit-pair-item a { font-weight: 600; }
+
+/* On every course: a short supporting note, quieter than the answers, beside its small heading. */
+.hit-facts { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 8px 72px; align-items: baseline; }
+.hit-facts > h2 { font-size: var(--h2-note-size); font-weight: 600; letter-spacing: var(--ls-display-tight); }
+.hit-facts-note { border-left: var(--bw-spine) solid var(--rule); padding-left: 22px; max-width: 64ch; font-size: .98rem; }
+/* Private course terms: a small subheading over a ruled list, so #private-courses lands on the terms; the same quiet weight as the note. */
+.hit-terms { margin-top: 30px; max-width: 64ch; }
+.hit-terms h3 { margin-bottom: 10px; scroll-margin-top: 24px; }
+.hit-terms p { font-size: .98rem; }
+.hit-terms-list { list-style: none; margin: 14px 0 16px; padding: 0; font-size: .98rem; }
+.hit-terms-list li { border-top: var(--bw-hair) solid var(--rule); padding: 10px 0; }
+.hit-terms-list li:last-child { border-bottom: var(--bw-hair) solid var(--rule); }
+.hit-terms a { font-weight: 600; }
+
+/* Where next: the shared closing band (app.css). */
+.hit-next p { font-size: 1.15rem; line-height: var(--lh-relaxed); max-width: 52ch; }
+.hit-next a { font-weight: 600; }
+.hit-next .text-link { margin-top: 12px; }
+
+@media (max-width: 900px) {
+  .hit-answer, .hit-facts { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
+  .hit-do { padding-block: 32px 48px; }
+  .hit-stuck .hit-answer { padding-block: 40px 46px; }
+  .hit-pair { grid-template-columns: minmax(0, 1fr); row-gap: 48px; padding-block: 48px 44px; }
+  .hit-facts { row-gap: 12px; padding-block: 4px 56px; }
+}
+@media (max-width: 680px) {
+  .hit-stuck .hit-prose p { font-size: 1.1rem; }
+  .hit-stuck .hit-prose { padding: 20px 22px 22px; }
+  .hit-next p { font-size: 1.05rem; }
+  .hit-pair-item { padding: 22px 20px 24px; }
+}

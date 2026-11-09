@@ -1,49 +1,13 @@
----
-/**
- * The document's final contact section stays in flow. With normal motion and
- * JavaScript it reveals beneath main; focus returns it to its natural position.
- * The invitation line + face chip, then the two contact actions side by
- * side (primary "Book an hour", ghost "Email me", as in the hero), the
- * plain © line, and the full-width lockup signing the page.
- *
- * The invitation line is a named slot so each page can supply its own CTA copy
- * while keeping the chip + period consistent. Default = the homepage line.
- */
-import FaceChip from "./FaceChip.astro";
-import Signoff from "./Signoff.astro";
-import { bookingHref, mailtoFor, notesHref } from "../config/site";
-interface Props {
-  /** The mailto (with optional prefilled ?subject=) built per-page in
-   *  BaseLayout; defaults to a bare mailto. */
-  mailtoHref?: string;
-}
-const { mailtoHref = mailtoFor() } = Astro.props;
----
-<footer aria-labelledby="talk-h">
-  <div class="wrap outro">
-    <h2 id="talk-h">Let's <em>talk</em>.</h2>
-    <p class="sub">
-      <slot name="invitation"
-        >Tell me what your team is wrestling with. Replies come from me</slot
-      > <FaceChip loading="lazy" />.
-    </p>
-    <div class="cta-row cta-footer">
-      <a class="cta" href={bookingHref("footer")} target="_blank" rel="noopener noreferrer"
-        >Book an hour</a
-      >
-      <a class="cta ghost" href={mailtoHref}>Email me</a>
-    </div>
-    <p class="routes hour-link">
-      <a class="route" href="/hour/">What happens in the free hour?</a>
-      <a class="route" href={notesHref("footer")} target="_blank" rel="noopener noreferrer">Notes from burningsuit</a>
-    </p>
-    <Signoff />
-    <p class="legal">
-      Burningsuit Limited is a limited company registered in England &amp; Wales&NewLine;Registered number: 05738130 &middot; Registered office: The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN &middot; &copy; 2026 &middot; <a href="/privacy">Privacy</a>{
-      }
-    </p>
-  </div>
-  <div class="lockup">
-    <img src="/logos/burningsuit-on-green.svg" alt="burningsuit" width="285" height="52" />
-  </div>
+<footer class="footer-band">
+<div class="wrap footer">
+  <p class="foot-legal">Burningsuit Limited&nbsp;· Registered in England and Wales, no. 05738130&nbsp;· Registered office: The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN&nbsp;· VAT no. 770 3248 38</p>
+  <span class="foot-links">
+    <a href="mailto:alan@burningsuit.co.uk">alan@burningsuit.co.uk</a>
+    <a href="/privacy/">Privacy</a>
+    <a href="/work/">Case studies</a>
+    <a href="/training/how-i-train/#private-courses">Booking terms</a>
+    <a href="/writing/we-are-all-middle-management-now/">Essay: We're all middle management now</a>
+    <a href="https://www.linkedin.com/in/alan-harman-box">LinkedIn</a>
+  </span>
+</div>
 </footer>

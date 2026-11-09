@@ -3,45 +3,45 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "description": "burningsuit.co.uk — Power BI, Fabric and AI advisory (Astro 6 + Tailwind v4, static, GitHub Pages)",
+  "description": "burningsuit website — minimal static rebuild shell",
   "engines": {
     "node": ">=22.20.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
-    "build": "npm run prep:images && astro build && npm run check:budget",
-    "check:budget": "node scripts/check-budget.mjs",
-    "prep:images": "node scripts/prep-images.mjs",
-    "render:social": "node scripts/render-linkedin-featured.mjs",
+    "build": "npm run check:content && astro build && npm run check:budget",
     "preview": "astro preview",
     "check": "astro check",
+    "check:brand": "node scripts/check-brand.mjs",
+    "check:content": "node scripts/check-content.mjs",
+    "check:budget": "node scripts/check-budget.mjs",
     "check:seo": "node scripts/check-seo.mjs",
+    "check:release": "node scripts/check-release.mjs",
+    "check:prices": "node scripts/check-prices.mjs",
+    "check:prices:dist": "node scripts/check-prices.mjs --dist",
     "check:tests": "tsc --noEmit -p tsconfig.tests.json",
-    "serve": "http-server dist -p 4321 -s -c-1",
-    "test:visual": "npm run check:tests && playwright test --grep @visual",
-    "test:visual:update": "npm run check:tests && playwright test --grep @visual --update-snapshots",
-    "test:functional": "npm run check:tests && playwright test --project=chromium --grep-invert @visual",
-    "test:links": "linkinator dist --recurse --silent --skip \"^mailto:|^https?://(?!localhost)\"",
+    "prep:images": "node scripts/prep-images.mjs",
+    "test:functional": "npm run check:tests && node --test tests/*.test.mjs && playwright test",
+    "test:links": "node scripts/check-links.mjs",
     "test:lh": "lhci autorun",
     "test:lh:mobile": "lhci autorun --config=./lighthouserc.mobile.cjs",
-    "gate": "npm run check && npm run build && npm run test:links && npm run check:seo"
+    "gate": "npm run check:brand && npm run check:prices && npm run check && npm run build && npm run check:prices:dist && npm run test:links && npm run check:seo"
   },
   "dependencies": {
-    "@astrojs/mdx": "^6.0.3",
+    "@astrojs/mdx": "^8.1.3",
     "@astrojs/sitemap": "^3.7.4",
-    "astro": "^6.4.8",
+    "astro": "^7.4.7",
     "sharp": "^0.35.4"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
-    "@lhci/cli": "^0.15.1",
+    "@astrojs/check": "^0.9.12",
+    "@lhci/cli": "^0.16.0",
     "@playwright/test": "^1.63.0",
-    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.5.0",
-    "http-server": "^14.1.1",
+    "entities": "7.0.1",
     "linkinator": "^7.6.1",
-    "tailwindcss": "^4.3.3",
-    "typescript": "^5.9.3"
+    "parse5": "7.3.0",
+    "typescript": "^5.9.3",
+    "yaml": "2.9.0"
   }
 }

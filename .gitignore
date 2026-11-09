@@ -34,6 +34,8 @@ skills-lock.json
 # lowercase-only entry would let `git add .` stage CLAUDE.md there)
 CLAUDE.md
 claude.md
+AGENTS.md
+agents.md
 Burningsuit Brand Guidelines V1.pdf
 .agents/
 .claude/

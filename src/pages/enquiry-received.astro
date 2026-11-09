@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
+import "../styles/service.css";
+---
+<BaseLayout title="Message sent | burningsuit" description="Your enquiry has been sent to Alan." placeholder={false} noindex>
+  <TitleBand heading="Your message has been sent" id="result-title" />
+  <section class="wrap service-page" aria-labelledby="result-title">
+    <div class="service-copy">
+      <p>Thanks for your enquiry. I'll reply by email within two working days.</p>
+      <p class="links"><a href="/">Back to the homepage</a></p>
+    </div>
+  </section>
+</BaseLayout>

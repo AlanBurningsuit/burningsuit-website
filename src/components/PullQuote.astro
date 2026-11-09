@@ -1,0 +1,13 @@
+---
+// One anonymised quote beside the offer it backs, marked by the amber evidence rule (app.css). The attribution gives a
+// role and a sector only: no names or organisations until a client is cleared for naming. Figures, when the source has
+// them, follow the attribution as plain text.
+interface Props { quote: string; cite: string; figures?: string; class?: string }
+const { quote, cite, figures, class: extra } = Astro.props;
+// Display quotes are set typographically: curly marks, and curly apostrophes inside them to match.
+const set = quote.replaceAll("'", "’");
+---
+<figure class:list={["pull-quote evidence-rule", extra]}>
+  <blockquote><p>“{set}”</p></blockquote>
+  <figcaption>{cite}{figures && <span class="pull-figures">{figures}</span>}</figcaption>
+</figure>

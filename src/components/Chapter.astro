@@ -1,52 +1,9 @@
 ---
-/**
- * One case-study chapter. The kicker string IS the heading — promoted into
- * the display H2 (`.section-head`, --fs-3), same id, no eyebrow above it.
- *
- * Plain by default; an optional `aside` earns the notebook spine (`.what`):
- * the sticky left rail holds ONLY the margin-voice line (dark-ground only —
- * never cream) and the heading tops the content column. The body (markdown or
- * <Offer> blocks) is the default slot and reveals on scroll via `data-reveal`.
- *
- * Authored from MDX, e.g.
- *   <Chapter id="started" kicker="Where they started">
- *   …prose…
- *   </Chapter>
- */
-import Aside from "./Aside.astro";
-
-interface Props {
-  /** Unique id — used for the heading id and the section's aria-labelledby. */
-  id: string;
-  /** The section's one signed string — rendered as the display heading. */
-  kicker: string;
-  /** Optional margin-voice aside (one of Alan's signed lines). */
-  aside?: string;
-}
-const { id, kicker, aside } = Astro.props;
+// One case-study beat: its kicker is the section heading, beside the prose on wide screens.
+interface Props { id: string; kicker: string }
+const { id, kicker } = Astro.props;
 ---
-
-<section class="chapter" aria-labelledby={id}>
-  {
-    aside ? (
-      <div class="wrap what">
-        <h2 class="section-head" id={id} data-reveal>{kicker}</h2>
-        <div class="label">
-          <Aside data-reveal>{aside}</Aside>
-        </div>
-        <div>
-          <div class="prose" data-reveal>
-            <slot />
-          </div>
-        </div>
-      </div>
-    ) : (
-      <div class="wrap">
-        <h2 class="section-head" id={id} data-reveal>{kicker}</h2>
-        <div class="prose" data-reveal>
-          <slot />
-        </div>
-      </div>
-    )
-  }
+<section class="case-chapter wrap" aria-labelledby={id}>
+  <h2 id={id}>{kicker}</h2>
+  <div class="case-prose"><slot /></div>
 </section>

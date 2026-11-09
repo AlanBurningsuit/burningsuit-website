@@ -1,0 +1,113 @@
+---
+// Approved wording: ops site/dax-deep-dive-page-copy.md (candidate 4, 7 Nov 2026). Its field labels, layout notes and annotations are not copy.
+// Course scope follows the DAX deep dive Outline in Practice. Private course only: no public run or booking control; its price shows
+// only in the priced build (src/lib/training-prices.mjs). The Fundamentals composition (course.css, fundamentals.css) is reused;
+// this page's differences live in dax-deep-dive.css.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
+import StudyLinks from "../../components/StudyLinks.astro";
+import PullQuote from "../../components/PullQuote.astro";
+import EnquiryForm from "../../components/EnquiryForm.astro";
+import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import "../../styles/course.css";
+import "../../styles/fundamentals.css";
+import "../../styles/dax-deep-dive.css";
+
+// Priced only when SHOW_TRAINING_PRICES=true; the price item then names both delivery methods, so "On site or online" is omitted.
+const priced = trainingPriceCopy(loadTrainingPrices());
+const price = PRICE_ON_REQUEST;
+const description = `A two-day private course for teams who already write measures in Power BI: learn why your measures return the numbers they do, and how to make them return the ones you need.${priced ? "" : " Price on request."}`;
+---
+<BaseLayout
+  title="DAX deep dive | burningsuit"
+  description={description}
+  placeholder={false}
+>
+  <TitleBand heading={{ before: "DAX ", em: "deep dive" }}>
+    <Fragment slot="standfirst">Already writing measures, but not always sure why they return what they do?</Fragment>
+  </TitleBand>
+  <div class="course-opening wrap">
+    <section class="course-intro" aria-labelledby="page-title">
+      <p><strong>Write DAX you can explain, not just copy.</strong> A two-day course for people who already build reports in Power BI. You'll learn why your measures return the numbers they do, and how to make them return the ones you need.</p>
+      <p class="course-fit">You'll get most from it if you've already written a few measures. If you haven't built a report yet, it's too early: start with <a href="/training/power-bi-fundamentals/">Power BI fundamentals</a>, or <a href="/training/">compare all the courses</a>.</p>
+    </section>
+
+    <aside class="course-run" aria-label="Course facts">
+      <ul class="run-facts" role="list">
+        <li>2 days</li>
+        <li>Private, for your team</li>
+        {!priced && <li>On site or online</li>}
+        <li>Up to 8 people</li>
+        <li>{priced ? priced.daxDeepDiveDetail : price}</li>
+        <li>9:30am to 4pm each day</li>
+      </ul>
+      <a class="button run-action" href="#contact">Ask about dates</a>
+    </aside>
+  </div>
+
+  <section class="course-need outcomes wrap" aria-labelledby="outcomes-title">
+    <h2 id="outcomes-title">What you'll be able to do</h2>
+    <ul class="need-list" role="list">
+      <li>Say why a measure returns the number it does: row context, filter context, and how a star schema (one table of events, such as sales, with lookup tables around it) shapes the filters.</li>
+      <li>Write measures with iterators (SUMX and the others) instead of calculated columns.</li>
+      <li>Use CALCULATE with FILTER, ALL, ALLEXCEPT and ALLSELECTED, for example for percentage-of-total measures that respond to the slicers you want them to.</li>
+      <li>Rewrite long measures with variables, so they're easier to read and check.</li>
+      <li>Write DAX queries in DAX query view to see and test table expressions, such as TOPN and VALUES.</li>
+      <li>Use time intelligence on a valid date table: previous period, year to date, and change from one period to the next.</li>
+    </ul>
+    <PullQuote quote="Participants found the training to be one of the best they've attended." cite="Course organiser's feedback summary, a local authority" figures="4.93 out of 5 overall, from 14 responses across two runs of the course. No points for improvement were raised." />
+  </section>
+
+  <section class="course-do agenda" aria-labelledby="do-title">
+    <div class="wrap do-inner">
+      <div class="do-lead">
+        <h2 id="do-title">The two days</h2>
+        <p>I explain and demonstrate using data prepared for teaching. You write measures and queries in exercises, with time for questions. Online has the same content and exercises.</p>
+      </div>
+      <div class="do-body">
+        <p class="exercises">Exercises include rewriting a set of long measures with variables.</p>
+        {/* One numbered sequence across both days: CSS continues the counter, start="6" continues it for assistive technology. */}
+        <h3 class="day-title" id="day-1-title">Day 1: how DAX evaluates a measure</h3>
+        <ol class="do-steps agenda-steps" role="list" aria-labelledby="day-1-title">
+          <li><p><strong>Start from the model:</strong> fact tables, lookup tables and star schemas, and why DAX is easiest with a star schema. This isn't a data modelling course.</p></li>
+          <li><p><strong>Columns and measures:</strong> how a DAX expression is built, RELATED, implicit measures, SUM, COUNTROWS and DISTINCTCOUNT.</p></li>
+          <li><p><strong>Evaluation context:</strong> row context and filter context, why calculated columns are rarely needed, and iterators (SUMX and the others) that bring row context into a measure.</p></li>
+          <li><p><strong>Reading the filter context:</strong> SELECTEDVALUE, and parameter tables that let report users switch what a measure shows. <span class="demo-tag">Demonstrated, not practised.</span></p></li>
+          <li><p><strong>CALCULATE:</strong> simple true/false filters, then FILTER to add filters and ALL to remove them, for percentage-of-total measures.</p></li>
+        </ol>
+        <h3 class="day-title" id="day-2-title">Day 2: controlling the filters</h3>
+        <ol class="do-steps agenda-steps" role="list" start="6" aria-labelledby="day-2-title">
+          <li><p><strong>More ways to remove filters:</strong> ALLEXCEPT and ALLSELECTED, and what a visual's total row is actually calculating.</p></li>
+          <li><p><strong>Blanks and zeros:</strong> why a filter for zero also picks up blanks. <span class="demo-tag">Demonstrated, not practised.</span></p></li>
+          <li><p><strong>Variables:</strong> rewriting long measures so they're easier to read and check.</p></li>
+          <li><p><strong>Tables in DAX:</strong> ALL, FILTER, TOPN and VALUES as tables you can see and test in DAX query view.</p></li>
+          <li><p><strong>Time intelligence:</strong> a valid date table with auto date/time turned off, then previous period, year to date and change from one period to the next.</p></li>
+          <li><p><strong>Beyond the star schema:</strong> USERELATIONSHIP for inactive relationships, CROSSFILTER instead of two-way relationships, and dynamic titles with VALUES and CONCATENATEX. <span class="demo-tag">Demonstrated, not practised.</span></p></li>
+        </ol>
+        <div class="teacher-line">
+          <p>I'm Alan Harman-Box, and I write and teach every course myself.</p>
+          <div class="teacher-links">
+            <a class="text-link" href="/training/how-i-train/">How I train</a>
+            <a class="text-link" href="/about/">More about me</a>
+          </div>
+        </div>
+        <div class="course-proof">
+          <p class="proof-line">I've run this course on site for a team that already used Power BI.</p>
+          <StudyLinks studies={["dax-deep-dive"]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="course-need wrap" aria-labelledby="need-title">
+    <h2 id="need-title">What to arrange</h2>
+    <div class="need-body">
+      <p class="need-pointer">For dates, setup, payment and cancelling, <a href="/training/how-i-train/#private-courses">see the private course terms</a>.</p>
+    </div>
+  </section>
+
+  <EnquiryForm>
+    <Fragment slot="heading">Ask about dates</Fragment>
+    Tell me you're interested in the DAX deep dive, how many people would come and roughly when.
+  </EnquiryForm>
+</BaseLayout>

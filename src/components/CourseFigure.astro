@@ -1,0 +1,41 @@
+---
+/** The course pages' explanatory diagrams: daylight draw.io figures from diagrams/, exported by diagrams/export.mjs.
+    Each has a short alt that leads with the main relationship, a caption, and a longer text version for anyone
+    who wants the diagram as prose. Sizes are the exporter's printed viewBox sizes. */
+import agentWide from "../assets/diagrams/agent-anatomy-wide.svg?url";
+import agentNarrow from "../assets/diagrams/agent-anatomy-narrow.svg?url";
+import partsWide from "../assets/diagrams/power-bi-parts-wide.svg?url";
+import partsNarrow from "../assets/diagrams/power-bi-parts-narrow.svg?url";
+interface Props {
+  kind: "agent" | "parts";
+}
+const { kind } = Astro.props;
+const figures = {
+  agent: {
+    wide: agentWide, wideWidth: 1027, wideHeight: 854, narrow: agentNarrow, width: 410, height: 1024,
+    alt: "An agent combines an AI model running elsewhere with an interface and harness on your computer. The harness edits your report's Power BI project files; you open the same files in Power BI Desktop and check the result.",
+    caption: "The agent combines an AI model running elsewhere with a harness and interface on your computer. On this course you use GitHub Copilot, Claude or ChatGPT/Codex.",
+    text: "You ask for a change in the interface, which passes your request to the harness; both run on your computer. The harness sends your request and what it has read to the AI model on a server elsewhere, which replies with the next step, and this repeats. The harness runs the tools the AI model asks for, within the permissions you set, and reads and edits the text files of your Power BI project, which define its pages, visuals, tables, relationships and calculations. Power BI Desktop opens the same files and shows you the changed report, where you check it.",
+  },
+  parts: {
+    wide: partsWide, wideWidth: 1060, wideHeight: 606, narrow: partsNarrow, width: 409, height: 1448,
+    alt: "A map of Power BI. You build a report in Power BI Desktop and publish it to a workspace in the Power BI service, which refreshes the published model from data online directly and from your network through a gateway. Three common questions point to where to start looking.",
+    caption: "These are the parts of Power BI you learn to name on this course, so you can tell where a problem sits. Dashed lines show refresh, which the service runs on a schedule without you. The questions show where to start looking.",
+    text: "Data online and data on your network feed Power Query in Power BI Desktop on your computer. Power Query gets your data and cleans it, the same way at every refresh; the model holds tables, relationships and calculations; the report shows pages, visuals and slicers. You publish the model and report to a workspace in the Power BI service online, where colleagues view, comment and subscribe, and more reports are built on the published model, with dashboards pinned from them. The service refreshes the published model from data online directly, and from data on your network through a gateway, which lets the service reach your network. Three questions sit on the parts where to start looking: a total that looks wrong on the model, a colleague who can't open it on the workspace, and numbers out of date on refresh.",
+  },
+};
+const figure = figures[kind];
+const id = `course-figure-${kind}`;
+---
+
+<figure class="course-figure" id={id} aria-labelledby={`${id}-caption`}>
+  <picture>
+    <source media="(min-width: 56rem)" srcset={figure.wide} width={figure.wideWidth} height={figure.wideHeight} />
+    <img src={figure.narrow} width={figure.width} height={figure.height} loading="lazy" decoding="async" alt={figure.alt} />
+  </picture>
+  <figcaption id={`${id}-caption`}>{figure.caption}</figcaption>
+  <details class="figure-text">
+    <summary>Read the diagram as text</summary>
+    <p>{figure.text}</p>
+  </details>
+</figure>

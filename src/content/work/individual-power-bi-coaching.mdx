@@ -1,0 +1,110 @@
+---
+category: coaching
+order: 3
+presentation: coaching
+# Approved copy: private ops site/case-individual-coaching-copy.md ("Proposed metadata" and "Page copy" only). Change wording there first.
+title: "Individual Power BI coaching | burningsuit"
+description: "Coaching for someone already building Power BI reports: modelling and DAX on example data shaped around his reporting, with homework between sessions."
+descriptor: "an individual learner developing Power BI reporting"
+linkLabel: "Individual Power BI coaching"
+heading:
+  before: "He already built the reports. Coaching was about what's "
+  em: "underneath"
+  after: " them."
+lead: "He was already building Power BI reports from several sources. A course that started at the beginning would have spent most of its time on things he could already do. So over eight weekly sessions and a recap, we worked on the parts underneath: the data model, DAX (Power BI's calculation language) and checking the numbers."
+tile: "Someone already building Power BI reports worked on modelling and DAX, on example data shaped around his reporting, with homework between sessions."
+facts:
+  label: "The short version"
+  rows:
+    - term: "Format"
+      detail: "Power BI coaching, one learner"
+    - term: "This engagement"
+      detail: "eight weekly sessions, plus a recap"
+    - term: "Material"
+      detail: "example data shaped around his reporting, with homework between sessions; his live model in the final session"
+    - term: "Kept"
+      detail: "reusable models, the sample data they run on, and the session notes"
+returnLinks:
+  - text: "See how coaching fits with the courses"
+    href: "/training/#coaching"
+  - text: "Tell me who it's for and what they're building"
+    href: "/contact/"
+---
+
+<Section id="started" heading="Where he started">
+
+He wasn't starting from zero. He was already building reports from several data sources, shaping data in Power Query, writing measures and thinking about how people would find their way around the finished report.
+
+He had a good eye for how a report looks and reads. The gap was underneath: a model that would hold up as more data arrived, DAX he could write and explain, and the habit of checking a number before anyone else sees it. A polished report with a wrong number in it is more dangerous than a scruffy one, because it looks right.
+
+</Section>
+
+<Section id="one-person" heading="Written for one person">
+
+A course teaches a group from prepared teaching files. Here I wrote the syllabus for one person, around the reporting he was being asked to produce. The first session didn't start in Power BI's menus. It asked what his report was for, and how we would know its numbers were right.
+
+From there the sessions followed the path a real report build follows: the questions, the data model, shaping the data into it, DAX, then getting the finished reports in front of the right people.
+
+</Section>
+
+<Section id="example-data" heading="Example data, built around his reporting">
+
+Most of the teaching ran on example data I built to look like his reporting. That let us work on his kind of problem without his data being the starting point. In the final session we spent time on his live model, because by then that was the most useful thing on the table.
+
+</Section>
+
+<Section id="week" heading="A session, then homework">
+
+Each week, a session introduced an idea and built it on the example model. Each came with written notes to revise from. Most weeks, homework then asked him to use the idea himself before the next session, and I reviewed what he sent back. The homework is where the best teaching moment came from.
+
+</Section>
+
+<Section id="rule" heading="The rule I got wrong">
+
+One week's homework included a rule I had taught: a true-or-false test inside CALCULATE (the DAX function that changes which rows a measure looks at) can only refer to one column. He wrote a measure that tested two columns in one argument. DAX accepted it, and he was suspicious of it.
+
+On the day, I couldn't tell him why. I said I had probably written the example badly. Afterwards I tested it properly, and the rule was wrong. The limit is one table, not one column. The error message even says so: it names tables, not columns. I should have read it more carefully years ago.
+
+The correction opened that session's notes, with the tests behind it. He was right, and I told him so.
+
+<Teaching>
+
+**What I taught:** A true-or-false filter argument in CALCULATE can only refer to one column.
+
+**What's true:** It can refer to any number of columns, as long as they all come from one table. The second example below is refused because its test refers to columns from two tables.
+
+```dax
+-- Accepted: two columns, one table
+Large online orders =
+CALCULATE (
+    [Orders],
+    Sales[Channel] = "Online" && Sales[Amount] > 1000
+)
+
+-- Refused: the test reaches across two tables
+Large northern orders =
+CALCULATE (
+    [Orders],
+    Sales[Amount] > 1000 && Customer[Region] = "North"
+)
+```
+
+The refusal reads: "only columns from a single table can be used in a True/False expression that is used as a table filter expression." A test that genuinely reaches across two tables is where FILTER comes in.
+
+</Teaching>
+
+</Section>
+
+<Section id="kept" heading="What he kept, and what changed">
+
+At the end I sent him the reusable models, the sample data they run on, and the notes from every session, so the examples still work without me.
+
+In the final session he showed me his live model and named a problem in it himself: for each new calculation he had been building a new table, where a better-shaped model would let a measure do the work. When I asked what had changed most, he said modelling and DAX. That's probably not what he'd have picked at the start, and I think that's where the value is.
+
+</Section>
+
+<Return heading="Coaching for one person, or a few" links={frontmatter.returnLinks}>
+
+Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, mostly online, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. Price on request.
+
+</Return>

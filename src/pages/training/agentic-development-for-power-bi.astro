@@ -1,0 +1,126 @@
+---
+// Approved wording: ops site/101-page-copy.md (4 Nov 2026). Bracketed items there are gaps, not copy.
+// "Book a seat" links to the Stripe Payment Link in the priced production build only; elsewhere (unpriced builds,
+// previews) it stays an unavailable control beside "Price on request".
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
+import CourseFigure from "../../components/CourseFigure.astro";
+import { ENQUIRY } from "../../config/enquiry.mjs";
+import { SEAT_BOOKING_URL } from "../../config/booking.mjs";
+import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import "../../styles/course.css";
+
+const { email } = ENQUIRY;
+// Seat prices show only when SHOW_TRAINING_PRICES=true. The private course has no price slot on this page; its email ask stays.
+const priced = trainingPriceCopy(loadTrainingPrices());
+const price = PRICE_ON_REQUEST;
+const bookingStatus = "Booking isn't open yet.";
+---
+<BaseLayout
+  title="Power BI with AI agents 101 | burningsuit"
+  description="Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations."
+  placeholder={false}
+>
+  <TitleBand heading={{ before: "Power BI with AI ", em: "agents", after: " 101" }}>
+    <Fragment slot="standfirst">Want to be ready for where Power BI is going?</Fragment>
+  </TitleBand>
+  <div class="course-opening wrap">
+    <section class="course-intro" aria-labelledby="page-title">
+      <p>You've probably heard that AI agents are changing how Power BI reports get built. Join me for a morning to take your first steps in agentic development. You get an agent to explain a prepared report you've never seen and write notes on its calculations. Then you have it build one new calculation, and you check its answers yourself.</p>
+      <p>By the end, you can judge where Power BI is going from your own hands-on use, not from what you've read about it.</p>
+      <p class="course-fit">If you've built a report in Power BI Desktop, even a simple one, you're ready. No coding or AI experience needed. If you already use coding agents on Power BI work every day, this covers ground you know.</p>
+    </section>
+
+    <aside class="course-run" aria-label="Course facts and booking">
+      <ul class="run-facts" role="list">
+        <li>Half a day, live online</li>
+        <li><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
+        <li>4 to 8 people</li>
+        {priced ? priced.seatFacts.map((fact) => <li>{fact}</li>) : <li>{price}</li>}
+      </ul>
+      <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
+      <div class="booking">
+        {priced
+          ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+          : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>}
+      </div>
+      <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
+    </aside>
+  </div>
+
+  <section class="course-do" aria-labelledby="do-title">
+    <div class="wrap do-inner">
+      <div class="do-lead">
+        <h2 id="do-title">What you'll do</h2>
+        <p>One prepared report runs through the whole morning.</p>
+      </div>
+      <div class="do-body">
+        <ol class="do-steps" role="list">
+          <li><h3>Get your bearings.</h3><p>You see what an agent is, how a Power BI report's files fit together and what to check before giving a tool access to work files. Then you point your agent (GitHub Copilot, Claude or ChatGPT/Codex) at the teaching report.</p></li>
+          <li><h3>Understand a report you didn't build.</h3><p>You ask the agent to explain the report: what each page shows, the tables behind it, how they connect, how the data is prepared and what each calculation does. Nothing changes yet.</p></li>
+          <li><h3>Document its calculations.</h3><p>You give the agent a short set of house rules, then have it add comments and descriptions to the existing calculations, so whoever opens the report next can see what each one does. You bring the changes back into Power BI Desktop and check them there.</p></li>
+          <li><h3>Build one new calculation and check it.</h3><p>You describe a new calculation and have the agent build it. Then you check its total, a filtered result and an awkward case. If an answer is wrong, you show the agent the evidence so it can put it right, and you can always go back to a clean copy.</p></li>
+        </ol>
+        <p class="do-next">We finish with where this goes next: tools that let an agent check its own work, and agents doing more of the building while you decide what's right.</p>
+        {/* Reserved: one showcase line, held until that separately managed work supplies its wording and destination. */}
+      </div>
+    </div>
+    <div class="wrap"><CourseFigure kind="agent" /></div>
+  </section>
+
+  <section class="course-trust wrap" aria-labelledby="trust-title">
+    <div class="trust-check">
+      <h2 id="trust-title">How you'll check its answers</h2>
+      <p>An agent can sound sure of itself and still be wrong. You learn to check its work against numbers you can confirm, correct it with evidence and go back to a clean copy when you need to. Deciding whether an answer is right stays with you.</p>
+    </div>
+    <div class="trust-teacher">
+      <h3>Who's teaching</h3>
+      <p>I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI. I've used coding agents on Power BI since before they could write DAX. Now they're better than me on a good day, so it's time to show other people how it's done, including how to check their work.</p>
+      <a class="text-link" href="/training/how-i-train/">How I train</a>
+      <a class="text-link" href="/writing/we-are-all-middle-management-now/">Essay: We're all middle management now</a>
+    </div>
+  </section>
+
+  <section class="course-need wrap" aria-labelledby="need-title">
+    <h2 id="need-title">What you'll need</h2>
+    <div class="need-body">
+      <ul class="need-list" role="list">
+        <li>A Windows computer with a version of Power BI Desktop released in the 3 months before the course.</li>
+        <li>One of three agent tools, on at least its lowest paid plan: Claude Desktop, ChatGPT or GitHub Copilot. Using something else? Tell me, and we can probably make it work.</li>
+        <li>Permission to install and use that tool. On a work laptop, check with your IT team early. If your work laptop is locked down, you can use your own Windows computer.</li>
+        <li>A folder on your computer for the teaching files, outside OneDrive and SharePoint, plus reliable internet and audio. A second screen helps.</li>
+        <li>A short setup check before the day. You'll get the details with your course information once your booking is confirmed.</li>
+      </ul>
+      <p class="need-note">You work on a prepared report and sample data, not your organisation's own reports.</p>
+      <p class="keep">Afterwards, you keep a video recording of the morning, along with the teaching project and clean copies, so you can work through it again. <a href="/privacy/#recordings">How recordings work</a>.</p>
+    </div>
+  </section>
+
+  <section class="course-book closing-band dark" aria-labelledby="book-title">
+    <div class="wrap closing-inner">
+      <div>
+        <h2 id="book-title">Book a seat</h2>
+        <p class="book-facts"><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time, live online. 4 to 8 people. {priced ? priced.seatBookFacts : `${price}.`}</p>
+        <p class="book-before"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
+      </div>
+      <div>
+        <div class="booking">
+          {priced
+            ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+            : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>}
+        </div>
+        {priced && <section class="booking-terms" aria-labelledby="booking-terms-title">
+          <h3 id="booking-terms-title">Booking terms</h3>
+          <ul role="list">
+            <li>Cancel up to 14 days before the course, by <time datetime="2027-01-06">Wednesday 6 January 2027</time>, for a full refund.</li>
+            <li>Can't make it after that? Send a colleague in your place: tell me at least 24 hours before.</li>
+            <li>If your setup can't be got working before the day, you can move to a later run, send a colleague or have a full refund.</li>
+            <li>If fewer than 4 people have booked by <time datetime="2027-01-08">Friday 8 January 2027</time>, the course moves once to a date in February. If you can't make the new date, you get a full refund.</li>
+            <li>If I have to cancel for any other reason, you get a full refund.</li>
+          </ul>
+        </section>}
+        <p class="invoice">If your organisation needs an invoice or a purchase order, email <a href={`mailto:${email}`}>{email}</a> and I'll send an invoice instead. Invoices are due within 30 days.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

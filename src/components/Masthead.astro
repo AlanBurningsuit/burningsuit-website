@@ -1,0 +1,38 @@
+---
+// Training marks a section ("true": its pages sit under /training/); Work marks itself on the index and its section on a study; Consultancy, About and Contact mark the page itself.
+// The free call page belongs to consultancy, so it marks Consultancy as its section ("true"), not as the current page.
+const training = Astro.url.pathname.startsWith("/training/");
+const consultancy = Astro.url.pathname.startsWith("/power-bi/");
+const consultancySection = Astro.url.pathname.startsWith("/call/");
+const work = Astro.url.pathname === "/work/" ? "page" : Astro.url.pathname.startsWith("/work/") ? "true" : undefined;
+const about = Astro.url.pathname.startsWith("/about/");
+const here = (path: string) => Astro.url.pathname === path ? "page" : undefined;
+const contact = Astro.url.pathname.startsWith("/contact/");
+---
+<header class="masthead-band">
+  <div class="masthead wrap">
+    <a class="brand" href="/" aria-label="burningsuit home">
+      <img src="/logos/burningsuit-on-green.svg" alt="burningsuit" width="200" height="44" />
+    </a>
+    <nav aria-label="Main navigation">
+      <div class="nav-training">
+        <a href="/training/" aria-current={training ? "true" : undefined}>Training</a>
+        {/* The course pages, behind a disclosure that works without JavaScript; Training itself still opens the overview. */}
+        <details class="nav-menu">
+          <summary aria-label="Training courses"></summary>
+          <ul>
+            <li><a href="/training/power-bi-fundamentals/" aria-current={here("/training/power-bi-fundamentals/")}>Power BI fundamentals</a></li>
+            <li><a href="/training/agentic-development-for-power-bi/" aria-current={here("/training/agentic-development-for-power-bi/")}>Power BI with AI agents 101</a></li>
+            <li><a href="/training/dax-fundamentals/" aria-current={here("/training/dax-fundamentals/")}>DAX fundamentals</a></li>
+            <li><a href="/training/dax-deep-dive/" aria-current={here("/training/dax-deep-dive/")}>DAX deep dive</a></li>
+            <li><a href="/training/how-i-train/" aria-current={here("/training/how-i-train/")}>How I train</a></li>
+          </ul>
+        </details>
+      </div>
+      <a href="/power-bi/" aria-current={consultancy ? "page" : consultancySection ? "true" : undefined}>Consultancy</a>
+      <a href="/work/" aria-current={work}>Case studies</a>
+      <a href="/about/" aria-current={about ? "page" : undefined}>About</a>
+      <a href="/contact/" aria-current={contact ? "page" : undefined}>Contact</a>
+    </nav>
+  </div>
+</header>

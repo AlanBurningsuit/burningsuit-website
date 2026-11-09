@@ -1,0 +1,16 @@
+---
+// The study's way back to its offer: the closing band, with the links from the entry's returnLinks.
+interface Props { heading: string; links: { text: string; href: string }[] }
+const { heading, links } = Astro.props;
+---
+<section class="cs-return closing-band dark" aria-labelledby="next-title">
+  <div class="wrap closing-inner">
+    <h2 id="next-title">{heading}</h2>
+    <div>
+      <slot />
+      <ul class="cs-links">
+        {links.map((link) => <li><a href={link.href}>{link.text}</a></li>)}
+      </ul>
+    </div>
+  </div>
+</section>

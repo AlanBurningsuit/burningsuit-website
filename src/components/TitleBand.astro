@@ -1,0 +1,27 @@
+---
+// Every page's opening: the title, with an optional eyebrow above and standfirst below, on the dark stage. Whatever
+// follows opens the daylight sheet. The title is `heading`: a string, or before / em / after for its one amber word.
+// The eyebrow, standfirst and actions (links under the standfirst) are named slots.
+type Heading = string | { before?: string; em?: string; after?: string };
+interface Props {
+  heading: Heading;
+  id?: string;
+  class?: string;
+  eyebrowClass?: string;
+  standfirstClass?: string;
+}
+const { heading, id = "page-title", class: extra, eyebrowClass, standfirstClass } = Astro.props;
+const parts = typeof heading === "string" ? { before: heading } : heading;
+// A slot given conditionally (an essay without a lead) still counts as present, so test what it renders.
+const eyebrow = Astro.slots.has("eyebrow") ? (await Astro.slots.render("eyebrow")).trim() : "";
+const standfirst = Astro.slots.has("standfirst") ? (await Astro.slots.render("standfirst")).trim() : "";
+const hasActions = Astro.slots.has("actions");
+---
+<div class="dark stage">
+  <div class:list={["title-band wrap", extra]}>
+    {eyebrow && <p class:list={["eyebrow", eyebrowClass]} set:html={eyebrow} />}
+    <h1 id={id}>{parts.before}{parts.em && <span class="em">{parts.em}</span>}{parts.after}</h1>
+    {standfirst && <p class:list={["standfirst", standfirstClass]} set:html={standfirst} />}
+    {hasActions && <div class="title-actions"><slot name="actions" /></div>}
+  </div>
+</div>

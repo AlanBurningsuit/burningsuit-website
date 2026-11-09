@@ -1,0 +1,29 @@
+.article-opening { padding-block: clamp(28px, 4vw, 48px) 52px; }
+.title-band .eyebrow { margin: 0 0 14px; }
+.article-byline { margin-top: 0; color: var(--text-dim); font-size: .9rem; }
+.article-appearances { margin-top: 24px; color: var(--text-dim); font-size: .9rem; }
+.article-appearances p + p { margin-top: 4px; }
+.article-intro { padding-bottom: 36px; }
+.article-intro p { max-width: 66ch; font-size: var(--lead-size); }
+.reading-article { padding-bottom: 36px; }
+.reading-article .case-chapter { display: grid; grid-template-columns: minmax(0, .55fr) minmax(0, 1.45fr); gap: var(--column-gap); align-items: start; padding-block: 26px 52px; }
+.reading-article .case-chapter h2 { padding-top: 20px; border-top: var(--bw-spine) solid var(--text); }
+.reading-article .case-prose { min-width: 0; padding-top: 20px; border-top: var(--bw-hair) solid var(--rule); }
+.reading-article .case-prose > p { max-width: 66ch; }
+.reading-article blockquote { margin-block: 24px; padding-left: 22px; border-left: var(--bw-spine) solid var(--accent); font-size: 1.15rem; }
+.reading-article code { font: .88em var(--ff-mono); overflow-wrap: anywhere; }
+.article-related .links { margin-top: 0; }
+.essay-figure { margin-block: 34px; padding: 22px; background: var(--bg-2); border: var(--bw-hair) solid var(--line); border-radius: var(--r); }
+.essay-figure-heading { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; margin-bottom: 20px; }
+.essay-figure-heading span { color: var(--fg-dim); font-size: .8rem; }
+.essay-figure-heading strong { font: 600 1.1rem / var(--lh-snug) var(--ff-display); }
+.essay-diagram img { width: 100%; height: auto; }
+.essay-figure figcaption { margin-top: 18px; font: 400 .95rem / var(--lh-relaxed) var(--ff-note); color: var(--fg-dim); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 900px) {
+  .reading-article .case-chapter { grid-template-columns: minmax(0, 1fr); gap: 18px; padding-block: 16px 36px; }
+  .reading-article .case-prose { padding-top: 0; border-top: 0; }
+}
+@media (max-width: 680px) {
+  .essay-figure { padding: 12px; margin-inline: -6px; }
+}

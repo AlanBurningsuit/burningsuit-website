@@ -1,0 +1,57 @@
+/* About: a personal narrative in one reading column, each photo opposite the prose it belongs to. Shared furniture (framed photo, .em, masthead, footer) lives in app.css. */
+/* One reading column on the shared left edge; where a section has a photo, the photo sits opposite its prose on wide
+   screens, alternating sides down the page, and follows the prose on phones. The opening paragraph and the first
+   chapter share the first photo, on the right. */
+.about-section > :not(.about-photo) { max-width: 46rem; }
+.about-intro { padding-block: clamp(32px, 5vw, 64px) 8px; }
+.about-lead { font-size: var(--lead-size); line-height: var(--lh-relaxed); max-width: 58ch; }
+@media (min-width: 901px) {
+  .about-intro:has(> .about-photo), .about-section:has(> .about-photo) {
+    display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); grid-template-rows: auto 1fr; column-gap: var(--column-gap); align-items: start;
+  }
+  .about-intro > .about-intro-text { grid-column: 1; }
+  .about-intro-text > .about-section { padding-top: 48px; }
+  .about-section:has(> .about-photo) > :not(.about-photo) { grid-column: 1; }
+  :is(.about-intro, .about-section) > .about-photo { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; justify-self: end; width: 100%; }
+  .about-section.photo-left { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  .about-section.photo-left > :not(.about-photo) { grid-column: 2; }
+  .about-section.photo-left > .about-photo { grid-column: 1; justify-self: start; }
+}
+
+/* Each chapter: its heading above the prose, separated from the next by space alone. */
+.about-section { padding-block: 56px 0; }
+.about-section > h2 { margin-bottom: 20px; }
+.about-prose p { max-width: 62ch; }
+
+/* Each photo at its own aspect ratio, in the carved frame. */
+.about-photo { margin-top: 34px; }
+.talk-photo { max-width: 640px; }
+.parents-photo { max-width: 560px; }
+.zelda-photo { max-width: 460px; }
+.cafe-photo { max-width: 380px; }
+/* Captions are metadata only (who or what), in the mono margin voice. */
+.about-photo figcaption { margin-top: 14px; font: 400 .95rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
+
+/* Where to start: the closing band, matching the enquiry band's ground without a form. */
+.about-start { background: var(--bg-band); margin-top: 80px; }
+.about-start-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 56px 62px; align-items: baseline; }
+.about-start p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
+.about-start a { font-weight: 600; }
+
+@media (max-width: 900px) {
+  .cafe-photo img { aspect-ratio: 4 / 5; object-fit: cover; object-position: center 35%; }
+  /* On phones the photo follows the opening paragraph, before the first chapter. */
+  .about-intro { display: flex; flex-direction: column; }
+  .about-intro-text { display: contents; }
+  .about-lead { order: 1; }
+  .cafe-photo { order: 2; }
+  .about-intro-text > .about-section { order: 3; }
+  .about-start-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
+  .about-section { padding-block: 44px 0; }
+  .about-start { margin-top: 56px; }
+  .about-start-inner { padding-block: 44px 50px; }
+}
+@media (max-width: 680px) {
+  .about-photo { margin-top: 28px; }
+  .about-start p { font-size: 1.1rem; }
+}

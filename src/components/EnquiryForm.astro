@@ -1,0 +1,52 @@
+---
+// A plain HTML POST: no JavaScript, prefill or client validation beyond the browser's own.
+// Callers set the heading level (Contact's is the page h1), may give the introduction as its
+// own paragraphs in the "intro" slot instead of one default-slot paragraph, and may drop the
+// email fallback below the form when the introduction already offers it.
+import "../styles/enquiry.css";
+import { ENQUIRY } from "../config/enquiry.mjs";
+
+interface Props {
+  headingLevel?: 1 | 2;
+  fallback?: boolean;
+}
+const { headingLevel = 2, fallback = true } = Astro.props;
+const Heading = headingLevel === 1 ? "h1" : "h2";
+---
+<section id="contact" class="contact dark" aria-labelledby="contact-title">
+  <div class="wrap contact-inner enquiry">
+    <div class="enquiry-intro">
+      <Heading id="contact-title"><slot name="heading" /></Heading>
+      {Astro.slots.has("intro") ? <slot name="intro" /> : <p><slot /></p>}
+    </div>
+    <div class="enquiry-body">
+      <form class="enquiry-form" method="post" action={ENQUIRY.action ?? undefined} aria-labelledby="contact-title" aria-describedby="enquiry-privacy">
+        <input type="hidden" name="_redirect" value={ENQUIRY.successPath} />
+        <input type="hidden" name="_error" value={ENQUIRY.errorPath} />
+        {/* Formspark otherwise appends the submitted personal data to the URL. */}
+        <input type="hidden" name="_append" value="false" />
+        {/* The page the enquiry came from, so a message that doesn't name a course still says which one. */}
+        <input type="hidden" name="page" value={Astro.url.pathname} />
+        <input type="checkbox" name="_gotcha" hidden tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="field">
+          <label for="enquiry-name">Name <span class="optional">(optional)</span></label>
+          <input id="enquiry-name" name="name" type="text" autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="enquiry-email">Email</label>
+          <input id="enquiry-email" name="email" type="email" autocomplete="email" spellcheck="false" required />
+        </div>
+        <div class="field">
+          <label for="enquiry-message">Your message</label>
+          <p class="hint" id="enquiry-message-hint">A line or two is enough: a course name, or what's going on with your reports.</p>
+          <textarea id="enquiry-message" name="message" rows="6" aria-describedby="enquiry-message-hint" required></textarea>
+        </div>
+        {fallback && <p class="hint reply-time">I'll reply within two working days.</p>}
+        <p class="hint" id="enquiry-privacy">I use your details to reply to your enquiry. Formspark delivers this form. <a href={ENQUIRY.privacyPath}>Read how I handle your information</a>.</p>
+        {/* A missing endpoint makes Send unavailable rather than silently failing. */}
+        <button class="button send" type="submit" disabled={!ENQUIRY.action}>Send</button>
+      </form>
+      {fallback && <p class="fallback">Or email <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>}
+    </div>
+  </div>
+</section>

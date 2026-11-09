@@ -1,0 +1,18 @@
+/* Work: the title band and its line, then one ruled group per offer (heading and the offer in a line beside its studies), closing on a dark band back to Contact. */
+.work-index { padding-block: clamp(28px, 4vw, 48px) 72px; }
+.work-intro { margin: 0 0 clamp(28px, 3vw, 40px); font: 400 1.05rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
+.work-group { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: var(--column-gap); align-items: start; padding-block: 28px 52px; border-top: var(--bw-spine) solid var(--text); }
+.work-group-lead p { margin-top: 12px; max-width: 34ch; color: var(--text-dim); }
+.work-group h2 a { color: var(--text); }
+.work-group h2 a:hover { color: var(--link); }
+.work-entries { list-style: none; margin: 0; padding: 0; }
+.work-entries li { position: relative; padding: 22px 26px 24px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
+.work-entries li + li { margin-top: 20px; }
+.work-entries h3 { font-size: var(--h3-card-size); line-height: var(--lh-snug); }
+/* The whole card answers the pointer: the title link stretches over it. */
+.work-entries h3 a::after { content: ""; position: absolute; inset: 0; border-radius: var(--r); }
+.work-entries p { color: var(--text-dim); margin-top: 10px; font-family: var(--ff-note); }
+.work-next .text-link { font-size: 1.1rem; }
+@media (max-width: 900px) {
+  .work-group { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-bottom: 40px; }
+}
