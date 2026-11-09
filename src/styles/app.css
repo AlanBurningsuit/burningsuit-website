@@ -106,7 +106,8 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 
 /* Thresholds: the daylight body is a sheet laid on the dark ground. Its rounded top edge rises over each page's
    opening (.stage), and its rounded bottom edge rests on the closing band that follows daylight, each casting a
-   soft shadow onto the dark. A stage followed by a sage band sets --sheet; a closing band after one, --sheet-end. */
+   soft shadow onto the dark. Both edges are mist unless a page sets --sheet (no page does yet); a closing band after a
+   raised band takes --sheet-end: sage. */
 .stage { position: relative; padding-bottom: var(--sheet-r); overflow: clip; view-timeline: --stage block; }
 :is(section, div, article):not(.dark) + .dark { position: relative; padding-top: var(--sheet-r); }
 .stage::after, :is(section, div, article):not(.dark) + .dark::before { content: ""; position: absolute; z-index: 1; inset-inline: 0; height: var(--sheet-r); pointer-events: none; }

@@ -90,7 +90,7 @@ export function loadTrainingPrices({ env = process.env, file = resolve(process.c
 const rate = ({ onSite, online }) => `${onSite} on site or ${online} online`;
 
 /**
- * Approved price wording (ops site/training-prices-amendment-copy-2026-11-06.md), filled from the validated rates.
+ * Approved price wording (ops site/records/training-prices-amendment-copy-2026-11-06.md), filled from the validated rates.
  * Returns null for the unpriced variant, where every page keeps its baseline words.
  */
 export function trainingPriceCopy(prices) {
