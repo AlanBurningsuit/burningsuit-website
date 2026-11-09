@@ -5,15 +5,16 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { formActionFor } from "../src/config/enquiry.mjs";
+import { RUN } from "../src/config/course-run.mjs";
 import { fileURLToPath } from "node:url";
 
-function runFixture(script, filename, content, extraFiles = {}) {
+function runFixture(script, filename, content, extraFiles = {}, env = {}) {
   const directory = mkdtempSync(join(tmpdir(), "burningsuit-gate-test-"));
   try {
     for (const [name, text] of Object.entries({ [filename]: content, ...extraFiles })) {
       writeFileSync(join(directory, name), text);
     }
-    return spawnSync(process.execPath, [fileURLToPath(new URL(`../scripts/${script}`, import.meta.url)), directory], { encoding: "utf8" });
+    return spawnSync(process.execPath, [fileURLToPath(new URL(`../scripts/${script}`, import.meta.url)), directory], { encoding: "utf8", env: { ...process.env, ...env } });
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }
@@ -88,4 +89,11 @@ test("CSP form-action follows the configured endpoint", () => {
   assert.equal(formActionFor("https://forms.example/submit?x=1"), "https://forms.example 'self'");
   assert.throws(() => formActionFor("http://forms.example/submit"));
   assert.throws(() => formActionFor("//forms.example/submit"));
+});
+test("the release check blocks a course run still open after it has ended, with a fixed message", { skip: !RUN.open && "the committed run is not open" }, () => {
+  const run = (now) => runFixture("check-release.mjs", "index.html", page(), released(), { BURNINGSUIT_NOW: now });
+  const late = run(new Date(RUN.endsAt + 60_000).toISOString());
+  assert.equal(late.status, 1);
+  assert.match(late.stderr, /the 101's course run is still "open" but has ended: mark it "past" \(or move its date\) in src\/config\/course-run\.mjs/);
+  assert.equal(run(new Date(RUN.endsAt - 60_000).toISOString()).status, 0);
 });

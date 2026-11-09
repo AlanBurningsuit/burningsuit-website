@@ -6,6 +6,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { decodeHTML } from "entities";
 import { BREADCRUMB_SECTIONS } from "../src/config/site.ts";
+import { RUN } from "../src/config/course-run.mjs";
 import { INDEXNOW_KEY } from "../src/config/indexnow.mjs";
 import { indexedPages, llmsTxt } from "../src/integrations/llms-txt.mjs";
 
@@ -60,12 +61,13 @@ for (const [path, expected] of Object.entries(courses)) {
     const facts = runFacts(path);
     assert(facts.includes(expected.length), "length matches the facts list");
     assert.match(facts, new RegExp(`(Up to|4 to) ${run.maximumAttendeeCapacity} people`), "group size matches the facts list");
-    if (run.startDate) {
-      const shown = html(path).match(/<time datetime="(\d{4}-\d{2}-\d{2})">[^<]*<\/time>, 9:30am to 12:30pm UK time/);
-      assert(shown, "the run date and time are on the page");
-      assert.equal(run.startDate, `${shown[1]}T09:30:00+00:00`);
-      assert.equal(run.endDate, `${shown[1]}T12:30:00+00:00`);
-    }
+    if (path === "/training/power-bi-with-ai-agents-101/") {
+      // The run comes from src/config/course-run.mjs: its dates in JSON-LD unless it is past, and as the page shows them.
+      assert.equal(run.maximumAttendeeCapacity, RUN.maxPeople);
+      assert.equal(run.startDate, RUN.schemaRun?.startDate);
+      assert.equal(run.endDate, RUN.schemaRun?.endDate);
+      assert(html(path).includes(`<time datetime="${RUN.date}">${RUN.longDate}</time>, ${RUN.times}`), "the run date and time are on the page");
+    } else assert.equal(run.startDate, undefined, "only the 101 has a scheduled run");
   });
 }
 

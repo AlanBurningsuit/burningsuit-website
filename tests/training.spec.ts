@@ -3,6 +3,7 @@ import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
+import { RUN } from "../src/config/course-run.mjs";
 
 const route = "/training/";
 const course101 = "/training/power-bi-with-ai-agents-101/";
@@ -70,8 +71,8 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
     "Want this for your team? Ask about a private course.",
   ]);
   // The public group size is bound to the public date; private runs state no size or format of their own.
-  await expectItems(agents.locator(".facts > li"), ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", ...(copy ? [copy.publicSeat] : []), "Private for your team: price on request"], "training 101 facts");
-  await expect(agents.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
+  await expectItems(agents.locator(".facts > li"), ["Half a day, live online", `Public course: ${RUN.longDate}, ${RUN.times}, ${RUN.people}`, ...(copy ? [copy.publicSeat] : []), "Private for your team: price on request"], "training 101 facts");
+  await expect(agents.locator(`time[datetime="${RUN.date}"]`)).toHaveText(RUN.longDate);
   // The 101 keeps booking on its own page: the outline link and the private-course email only, no form route.
   // The priced build adds "Book a seat", which leads to the course's setup list and booking.
   await expect(agents.getByRole("link")).toHaveText(["Power BI with AI agents 101", "Read the course outline", ...(priced ? ["Book a seat"] : []), "Ask about a private course."]);
@@ -195,8 +196,8 @@ test("training chooser structure reads in order for assistive technology", async
       - listitem: Half a day, live online
       - listitem:
         - text: "Public course:"
-        - time: Wednesday 20 January 2027
-        - text: ", 9:30am to 12:30pm UK time, 4 to 8 people"
+        - time: ${RUN.longDate}
+        - text: ", ${RUN.times}, ${RUN.people}"
       - listitem: "Private for your team: price on request"
   `);
 });

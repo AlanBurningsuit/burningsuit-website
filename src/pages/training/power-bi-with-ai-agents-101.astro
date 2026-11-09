@@ -1,7 +1,8 @@
 ---
 // Approved wording: ops site/101-page-copy.md (4 Nov 2026). Bracketed items there are gaps, not copy.
-// "Book a seat" links to the Stripe Payment Link in the priced production build only; elsewhere (unpriced builds,
-// previews) it stays an unavailable control beside "Price on request".
+// "Book a seat" links to the Stripe Payment Link in the priced production build only, and only while the run
+// (src/config/course-run.mjs) is open; in unpriced builds and previews it stays an unavailable control beside
+// "Price on request". A full or past run shows its status line and the next-run ask instead.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { courseNode } from "../../lib/schema";
 import DecisionHero from "../../components/DecisionHero.astro";
@@ -9,6 +10,7 @@ import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import { SEAT_BOOKING_URL } from "../../config/booking.mjs";
 import Tracked from "../../components/Tracked.astro";
+import { RUN, seatAction } from "../../config/course-run.mjs";
 import { EVENTS } from "../../config/analytics.mjs";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/course.css";
@@ -19,9 +21,9 @@ const priced = trainingPriceCopy(loadTrainingPrices());
 const price = PRICE_ON_REQUEST;
 const bookingStatus = "Booking isn't open yet.";
 const description = "Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations.";
-// The run as the facts list shows it: 20 January 2027, 9:30am to 12:30pm UK time (GMT), live online, 4 to 8 people.
-// When the date changes, change it here and in the <time> elements together (tests/structured-data.test.mjs compares them).
-const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI with AI agents 101", description, modes: ["Online"], workload: "PT3H", maxPeople: 8, run: { startDate: "2027-01-20T09:30:00+00:00", endDate: "2027-01-20T12:30:00+00:00" } })];
+const seat = seatAction(RUN, { priced: Boolean(priced) });
+// The run's dates come from src/config/course-run.mjs (tests/structured-data.test.mjs compares them with the page).
+const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI with AI agents 101", description, modes: [RUN.schemaMode], workload: "PT3H", maxPeople: RUN.maxPeople, run: RUN.schemaRun })];
 ---
 <BaseLayout
   title="Power BI with AI agents 101 | burningsuit"
@@ -32,15 +34,17 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
   <DecisionHero heading={{ before: "Power BI with AI ", em: "agents", after: " 101" }} standfirst="Want to be ready for where Power BI is going?" label="Course facts and booking">
     <Fragment slot="facts">
       <li>Half a day, live online</li>
-      <li class="fact-wide"><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
-      <li>4 to 8 people</li>
+      <li class="fact-wide"><time datetime={RUN.date}>{RUN.longDate}</time>, {RUN.times}</li>
+      <li>{RUN.people}</li>
       {priced ? priced.seatFacts.map((fact) => <li class="fact-price">{fact}</li>) : <li class="fact-price">{price}</li>}
     </Fragment>
     <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
     <div class="booking">
-      {priced
+      {seat.kind === "book"
         ? <Tracked event={EVENTS.bookSeat} place="top"><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
-        : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>}
+        : seat.kind === "not-yet"
+          ? <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>
+          : <p class="booking-status run-status">{seat.line} <a href={`mailto:${email}`}>{seat.ask}.</a></p>}
     </div>
     <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
   </DecisionHero>
@@ -104,22 +108,24 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
     <div class="wrap closing-inner">
       <div>
         <h2 id="book-title">Book a seat</h2>
-        <p class="book-facts"><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time, live online. 4 to 8 people. {priced ? priced.seatBookFacts : `${price}.`}</p>
+        <p class="book-facts"><time datetime={RUN.date}>{RUN.longDate}</time>, {RUN.times}, {RUN.modeText}. {RUN.people}. {priced ? priced.seatBookFacts : `${price}.`}</p>
         <p class="book-before"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
       </div>
       <div>
         <div class="booking">
-          {priced
+          {seat.kind === "book"
             ? <Tracked event={EVENTS.bookSeat} place="bottom"><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
-            : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>}
+            : seat.kind === "not-yet"
+              ? <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>
+              : <p class="booking-status run-status">{seat.line} <a href={`mailto:${email}`}>{seat.ask}.</a></p>}
         </div>
-        {priced && <section class="booking-terms" aria-labelledby="booking-terms-title">
+        {priced && RUN.open && <section class="booking-terms" aria-labelledby="booking-terms-title">
           <h3 id="booking-terms-title">Booking terms</h3>
           <ul role="list">
-            <li>Cancel up to 14 days before the course, by <time datetime="2027-01-06">Wednesday 6 January 2027</time>, for a full refund.</li>
+            <li>Cancel up to {RUN.refundDays} days before the course, by <time datetime={RUN.refundBy.date}>{RUN.refundBy.long}</time>, for a full refund.</li>
             <li>Can't make it after that? Send a colleague in your place: tell me at least 24 hours before.</li>
             <li>If your setup can't be got working before the day, you can move to a later run, send a colleague or have a full refund.</li>
-            <li>If fewer than 4 people have booked by <time datetime="2027-01-08">Friday 8 January 2027</time>, the course moves once to a date in February. If you can't make the new date, you get a full refund.</li>
+            <li>If fewer than {RUN.minPeople} people have booked by <time datetime={RUN.minimumBy.date}>{RUN.minimumBy.long}</time>, the course moves once to a date in February. If you can't make the new date, you get a full refund.</li>
             <li>If I have to cancel for any other reason, you get a full refund.</li>
           </ul>
         </section>}
