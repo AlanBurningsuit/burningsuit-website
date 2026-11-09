@@ -1,6 +1,5 @@
 import { test, expect, isTracker, otherScripts } from "./analytics";
 import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
-import { pendingRoutes } from "../src/config/pending-routes.mjs";
 
 const route = "/work/individual-power-bi-coaching/";
 // /training/#coaching is approved copy; the Training page's coaching entry lands on a separate branch, so only the href is checked here.
@@ -21,9 +20,8 @@ test("Individual coaching study stays static, private and CSP-clean, with no for
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Coaching for someone already building Power BI reports: modelling and DAX on example data shaped around his reporting, with homework between sessions.");
   await expectIndexable(page, { article: true });
   await expect(page.locator('meta[http-equiv="Content-Security-Policy" i]')).toHaveAttribute("content", /default-src 'none'/);
-  await expect(page.locator(`${otherScripts}, astro-island, iframe, [data-rebuild-placeholder], form, input, button, main img, main picture, [style]`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, iframe, form, input, button, main img, main picture, [style]`)).toHaveCount(0);
   expect(await page.locator("body").innerText()).not.toMatch(/[£$€]\s*\d/);
-  expect(pendingRoutes).not.toContain(route);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });

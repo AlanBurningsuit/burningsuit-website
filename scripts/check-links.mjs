@@ -1,9 +1,5 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { LinkChecker, LinkState } from "linkinator";
-import { pendingRoutes } from "../src/config/pending-routes.mjs";
 
-const pending = new Set(pendingRoutes.filter((route) => !existsSync(join("dist", route, "index.html"))));
 // BURNINGSUIT_LINK_PORT pins the checker's own static server, falling back to BURNINGSUIT_TEST_PORT; unset, Linkinator picks a free port.
 const portSetting = process.env.BURNINGSUIT_LINK_PORT || process.env.BURNINGSUIT_TEST_PORT;
 const port = portSetting ? Number(portSetting) : undefined;
@@ -13,13 +9,11 @@ const result = await new LinkChecker().check({
   recurse: true,
   linksToSkip: async (link) => {
     const url = new URL(link);
-    return url.protocol === "mailto:" ||
-      (/^https?:$/.test(url.protocol) && url.hostname !== "localhost") ||
-      (url.hostname === "localhost" && pending.has(url.pathname));
+    return url.protocol === "mailto:" || (/^https?:$/.test(url.protocol) && url.hostname !== "localhost");
   },
 });
 for (const link of result.links.filter((link) => link.state === LinkState.BROKEN)) {
   console.error(`Broken link: ${link.url} (from ${link.parent ?? "entry"})`);
 }
-console.log(`Link check: ${result.passed ? "passed" : "failed"}; ${pending.size} explicit future routes remain unbuilt.`);
+console.log(`Link check: ${result.passed ? "passed" : "failed"}.`);
 if (!result.passed) process.exit(1);

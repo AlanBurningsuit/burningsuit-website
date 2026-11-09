@@ -8,10 +8,8 @@ import { courseNode } from "../../lib/schema";
 import DecisionHero from "../../components/DecisionHero.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
-import { SEAT_BOOKING_URL } from "../../config/booking.mjs";
-import Tracked from "../../components/Tracked.astro";
+import SeatBooking from "../../components/SeatBooking.astro";
 import { RUN, seatAction } from "../../config/course-run.mjs";
-import { EVENTS } from "../../config/analytics.mjs";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/course.css";
 
@@ -19,7 +17,6 @@ const { email } = ENQUIRY;
 // Seat prices show only when SHOW_TRAINING_PRICES=true. The private course has no price slot on this page; its email ask stays.
 const priced = trainingPriceCopy(loadTrainingPrices());
 const price = PRICE_ON_REQUEST;
-const bookingStatus = "Booking isn't open yet.";
 const description = "Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations.";
 const seat = seatAction(RUN, { priced: Boolean(priced) });
 // The run's dates come from src/config/course-run.mjs (tests/structured-data.test.mjs compares them with the page).
@@ -28,7 +25,6 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
 <BaseLayout
   title="Power BI with AI agents 101 | burningsuit"
   description={description}
-  placeholder={false}
   schema={schema}
 >
   <DecisionHero heading={{ before: "Power BI with AI ", em: "agents", after: " 101" }} standfirst="Want to be ready for where Power BI is going?" label="Course facts and booking">
@@ -39,13 +35,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       {priced ? priced.seatFacts.map((fact) => <li class="fact-price">{fact}</li>) : <li class="fact-price">{price}</li>}
     </Fragment>
     <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
-    <div class="booking">
-      {seat.kind === "book"
-        ? <Tracked event={EVENTS.bookSeat} place="top"><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
-        : seat.kind === "not-yet"
-          ? <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>
-          : <p class="booking-status run-status">{seat.line} <a href={`mailto:${email}`}>{seat.ask}.</a></p>}
-    </div>
+    <SeatBooking seat={seat} place="top" statusId="booking-status-opening" />
     <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
   </DecisionHero>
   <div class="course-opening decision-opening wrap">
@@ -112,13 +102,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
         <p class="book-before"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
       </div>
       <div>
-        <div class="booking">
-          {seat.kind === "book"
-            ? <Tracked event={EVENTS.bookSeat} place="bottom"><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
-            : seat.kind === "not-yet"
-              ? <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>
-              : <p class="booking-status run-status">{seat.line} <a href={`mailto:${email}`}>{seat.ask}.</a></p>}
-        </div>
+        <SeatBooking seat={seat} place="bottom" statusId="booking-status-book" />
         {/* The terms stay while the run is full: people who have booked still need them. */}
         {priced && RUN.status !== "past" && <section class="booking-terms" aria-labelledby="booking-terms-title">
           <h3 id="booking-terms-title">Booking terms</h3>

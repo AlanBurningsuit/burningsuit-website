@@ -52,7 +52,7 @@ export const redirects = {
   "/hour": "/call/"
 };
 
-// Manifest routes that have their own page in src/pages; the catch-all placeholder skips them, and each keeps its reserved anchors (check:seo).
+// Manifest routes that have their own page in src/pages; each keeps its reserved anchors (check:seo).
 export const bespokeRoutes = ["", "power-bi", "training", "about", "contact", "privacy", "work"];
 
 // Reserved for possible future entries; no document or redirect is generated.

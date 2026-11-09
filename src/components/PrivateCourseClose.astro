@@ -1,0 +1,23 @@
+---
+// The close of each private course page: what to arrange, then the dates enquiry. The default slot holds
+// any page-specific notes under the pointer to the private course terms. The markup keeps the pages' indentation, so the
+// enquiry sentence's text, whitespace included, is unchanged.
+import EnquiryForm from "./EnquiryForm.astro";
+interface Props {
+  /** The course as the enquiry sentence names it ("DAX fundamentals", "the DAX deep dive"). */
+  course: string;
+}
+const { course } = Astro.props;
+---
+  <section class="course-need wrap" aria-labelledby="need-title">
+    <h2 id="need-title">What to arrange</h2>
+    <div class="need-body">
+      <p class="need-pointer">For dates, setup, payment and cancelling, <a href="/training/how-i-train/#private-courses">see the private course terms</a>.</p>
+      <slot />
+    </div>
+  </section>
+
+  <EnquiryForm>
+    <Fragment slot="heading">Ask about dates</Fragment>
+    Tell me you're interested in {course}, how many people would come and roughly when.
+  </EnquiryForm>

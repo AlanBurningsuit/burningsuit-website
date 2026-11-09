@@ -2,7 +2,7 @@
    Legal details and profiles follow the ops reference (site/reference.md); descriptions mirror approved visible copy,
    because structured data must describe what a reader can see. */
 export const SITE_NAME = "burningsuit";
-export const CONTACT_EMAIL = "alan@burningsuit.co.uk";
+export { CONTACT_EMAIL } from "./enquiry.mjs";
 
 /** The 400 × 400 company mark, resolved against the site URL. */
 export const ORG_LOGO = "/social/burningsuit-mark-on-green.png";

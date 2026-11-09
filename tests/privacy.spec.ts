@@ -37,7 +37,7 @@ const links = [
   "https://cal.com/privacy", "#email", "https://stripe.com/gb/privacy", "https://privacy.microsoft.com/en-gb/privacystatement",
   "#optout", email, "https://ico.org.uk/make-a-complaint/",
 ];
-// Pages that render the shared footer (placeholders render none).
+// Pages that render the shared footer.
 const footerRoutes = ["/", "/training/", "/training/power-bi-with-ai-agents-101/", "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/call/", "/about/", "/contact/", route, ENQUIRY.privacyPath, ENQUIRY.successPath, ENQUIRY.errorPath];
 
 const control = (page: Page) => page.getByRole("button", { name: /my visits/ });
@@ -57,7 +57,7 @@ test("privacy notice stays static, private and CSP-clean, with only the tracker 
   await expect(page).toHaveTitle("Privacy | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "What happens to your information when you visit this site, book a call or email me, and how to turn off visit counting.");
   await expectIndexable(page);
-  await expect(page.locator(`[data-rebuild-placeholder], astro-island, form, iframe, embed, object, main img`)).toHaveCount(0);
+  await expect(page.locator(`astro-island, form, iframe, embed, object, main img`)).toHaveCount(0);
   await expect(page.locator(tracker)).toHaveCount(1);
   await expect(page.locator(otherScripts)).toHaveCount(1);
   await expect(page.locator(otherScripts)).toHaveAttribute("type", "module");

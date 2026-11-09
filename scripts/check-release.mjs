@@ -21,7 +21,6 @@ if (runProblem) problems.push(runProblem);
 if (!files.includes("index.html")) problems.push("no homepage");
 for (const name of files) {
   const html = read(name);
-  if (/data-rebuild-placeholder/.test(html)) problems.push(`${name}: unfinished rebuild page`);
   // A form without a delivery endpoint cannot send an enquiry.
   if ([...html.matchAll(/<form\b[^>]*>/gi)].some((form) => !/\saction=["']?(https:\/\/|\/(?!\/))[^"'\s>]+/i.test(form[0]))) problems.push(`${name}: form without a delivery endpoint`);
   if (isRedirect(html)) continue;

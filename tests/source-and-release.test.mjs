@@ -45,17 +45,11 @@ const release = (home, extra) => runFixture("check-release.mjs", "index.html", h
 test("a fully released build passes the release check", () => {
   assert.equal(release(page()), 0);
 });
-test("a rebuild marker blocks release even without a robots tag", () => {
-  assert.equal(release("<body data-rebuild-placeholder></body>"), 1);
-});
 test("a noindex homepage blocks release", () => {
   assert.equal(release(page('<meta content="noindex, nofollow" name="robots">')), 1);
 });
 test("a page without a canonical link blocks release", () => {
   assert.equal(release("<head></head>"), 1);
-});
-test("a remaining placeholder blocks release even when the homepage is finished", () => {
-  assert.equal(release(page(), { "unfinished.html": "<body data-rebuild-placeholder></body>" }), 1);
 });
 test("a noindex page outside the deliberate few blocks release", () => {
   assert.equal(release(page(), { "other.html": '<meta name="robots" content="noindex">' }), 1);

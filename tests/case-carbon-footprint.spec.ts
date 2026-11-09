@@ -21,7 +21,7 @@ test("carbon-footprint study stays static, private and CSP-clean, with no form, 
   await expectIndexable(page, { article: true });
   // The superseded social card is not used; the page keeps the site-wide card.
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", "https://burningsuit.co.uk/og-image.png");
-  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], form, iframe, embed, object, main img`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, form, iframe, embed, object, main img`)).toHaveCount(0);
   expect(pages["work/carbon-footprint"]).toEqual([]);
   // A study marks Work as its section, not as the current page.
   await expect(page.locator('nav a[aria-current="true"]')).toHaveText("Case studies");

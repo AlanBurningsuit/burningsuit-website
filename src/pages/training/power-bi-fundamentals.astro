@@ -6,28 +6,26 @@
 // this page's differences live in fundamentals.css. The opening is the shared decision hero (DecisionHero.astro): facts and
 // the primary action on the dark stage, the price last on its own line.
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { courseNode } from "../../lib/schema";
+import { privateCourse } from "../../lib/private-course";
 import DecisionHero from "../../components/DecisionHero.astro";
 import PullQuote from "../../components/PullQuote.astro";
-import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
-import EnquiryForm from "../../components/EnquiryForm.astro";
+import { PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import PrivateCourseClose from "../../components/PrivateCourseClose.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import TeacherCard from "../../components/TeacherCard.astro";
 import "../../styles/course.css";
 import "../../styles/fundamentals.css";
 
-// Priced only when SHOW_TRAINING_PRICES=true; the price item then names both delivery methods, so "On site or online" is omitted.
-const priced = trainingPriceCopy(loadTrainingPrices());
-const price = PRICE_ON_REQUEST;
-const summary = "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.";
-const description = `${summary}${priced ? "" : " Price on request."}`;
-// Course facts as the page shows them (the decision hero's facts below); delivery stays "On site or online" in both variants.
-const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI fundamentals", description: summary, modes: ["Onsite", "Online"], workload: "P2D", maxPeople: 8 })];
+// The course facts below are the Course JSON-LD's source: keep its length (P2D) and the shared 8-person maximum in step with them.
+const { priced, description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {
+  name: "Power BI fundamentals",
+  summary: "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.",
+  workload: "P2D",
+});
 ---
 <BaseLayout
   title="Power BI fundamentals | burningsuit"
   description={description}
-  placeholder={false}
   schema={schema}
 >
   <DecisionHero heading={{ before: "Power BI ", em: "fundamentals" }} standfirst="New to Power BI?" label="Course facts">
@@ -37,7 +35,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       {!priced && <li>On site or online</li>}
       <li>Up to 8 people</li>
       <li>9:30am to 4pm each day</li>
-      <li class="fact-price">{priced ? priced.fundamentalsDetail : price}</li>
+      <li class="fact-price">{priced ? priced.fundamentalsDetail : PRICE_ON_REQUEST}</li>
     </Fragment>
     <a class="button run-action" href="#contact">Ask about dates</a>
   </DecisionHero>
@@ -94,20 +92,11 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
     </div>
   </section>
 
-  <section class="course-need wrap" aria-labelledby="need-title">
-    <h2 id="need-title">What to arrange</h2>
-    <div class="need-body">
-      <p class="need-pointer">For dates, setup, payment and cancelling, <a href="/training/how-i-train/#private-courses">see the private course terms</a>.</p>
-      <ul class="need-list" role="list">
-        <li><strong>On site licences:</strong> I provide and manage them.</li>
-        <li><strong>Online licences:</strong> you arrange your own. A Power BI Pro licence is ideal, but most of the course works with a free licence.</li>
-        <li>Publishing practice depends on licences and access.</li>
-      </ul>
-    </div>
-  </section>
-
-  <EnquiryForm>
-    <Fragment slot="heading">Ask about dates</Fragment>
-    Tell me you're interested in Power BI fundamentals, how many people would come and roughly when.
-  </EnquiryForm>
+  <PrivateCourseClose course="Power BI fundamentals">
+    <ul class="need-list" role="list">
+      <li><strong>On site licences:</strong> I provide and manage them.</li>
+      <li><strong>Online licences:</strong> you arrange your own. A Power BI Pro licence is ideal, but most of the course works with a free licence.</li>
+      <li>Publishing practice depends on licences and access.</li>
+    </ul>
+  </PrivateCourseClose>
 </BaseLayout>

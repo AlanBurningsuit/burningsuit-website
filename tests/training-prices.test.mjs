@@ -206,7 +206,7 @@ test("an exact private value in a tracked file is caught even where literals are
 });
 
 test("reviewed source exceptions reject new prices even without private input", () => {
-  for (const path of ["tests/fixtures/umami/script.js", "diagrams/export.mjs", "content/writing/we-are-all-middle-management-now.mdx", "src/content/writing/we-are-all-middle-management-now.mdx"]) {
+  for (const path of ["tests/fixtures/umami/script.js", "diagrams/export.mjs", "src/content/writing/we-are-all-middle-management-now.mdx"]) {
     const original = readFileSync(join(here, "..", path), "utf8");
     const dir = tracked({ [path]: original });
     assert.equal(gate(dir).status, 0, "unchanged reviewed bytes remain permitted");

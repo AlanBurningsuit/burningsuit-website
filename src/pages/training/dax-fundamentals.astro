@@ -4,27 +4,25 @@
 // only in the priced build (src/lib/training-prices.mjs). The shared course-page styles (course.css, fundamentals.css, dax-deep-dive.css)
 // is reused as it stands: one day, so one numbered sequence with no day groups.
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { courseNode } from "../../lib/schema";
+import { privateCourse } from "../../lib/private-course";
 import DecisionHero from "../../components/DecisionHero.astro";
-import EnquiryForm from "../../components/EnquiryForm.astro";
+import PrivateCourseClose from "../../components/PrivateCourseClose.astro";
 import TeacherCard from "../../components/TeacherCard.astro";
-import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import { PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/course.css";
 import "../../styles/fundamentals.css";
 import "../../styles/dax-deep-dive.css";
 
-// Priced only when SHOW_TRAINING_PRICES=true; the price item then names both delivery methods, so "On site or online" is omitted.
-const priced = trainingPriceCopy(loadTrainingPrices());
-const price = PRICE_ON_REQUEST;
-const summary = "A one-day private course for teams who build reports in Power BI but haven't written DAX yet: learn why a measure returns the number it does, and when to use a measure instead of a calculated column.";
-const description = `${summary}${priced ? "" : " Price on request."}`;
-// Course facts as the page shows them (the decision hero's facts below); delivery stays "On site or online" in both variants.
-const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "DAX fundamentals", description: summary, modes: ["Onsite", "Online"], workload: "P1D", maxPeople: 8 })];
+// The course facts below are the Course JSON-LD's source: keep its length (P1D) and the shared 8-person maximum in step with them.
+const { priced, description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {
+  name: "DAX fundamentals",
+  summary: "A one-day private course for teams who build reports in Power BI but haven't written DAX yet: learn why a measure returns the number it does, and when to use a measure instead of a calculated column.",
+  workload: "P1D",
+});
 ---
 <BaseLayout
   title="DAX fundamentals | burningsuit"
   description={description}
-  placeholder={false}
   schema={schema}
 >
   <DecisionHero heading={{ before: "DAX ", em: "fundamentals" }} standfirst="Building reports in Power BI, and ready to write your own measures?" label="Course facts">
@@ -34,7 +32,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       {!priced && <li>On site or online</li>}
       <li>Up to 8 people</li>
       <li>9:30am to 4pm</li>
-      <li class="fact-price">{priced ? priced.daxFundamentalsDetail : price}</li>
+      <li class="fact-price">{priced ? priced.daxFundamentalsDetail : PRICE_ON_REQUEST}</li>
     </Fragment>
     <a class="button run-action" href="#contact">Ask about dates</a>
   </DecisionHero>
@@ -81,15 +79,5 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
     </div>
   </section>
 
-  <section class="course-need wrap" aria-labelledby="need-title">
-    <h2 id="need-title">What to arrange</h2>
-    <div class="need-body">
-      <p class="need-pointer">For dates, setup, payment and cancelling, <a href="/training/how-i-train/#private-courses">see the private course terms</a>.</p>
-    </div>
-  </section>
-
-  <EnquiryForm>
-    <Fragment slot="heading">Ask about dates</Fragment>
-    Tell me you're interested in DAX fundamentals, how many people would come and roughly when.
-  </EnquiryForm>
+  <PrivateCourseClose course="DAX fundamentals" />
 </BaseLayout>

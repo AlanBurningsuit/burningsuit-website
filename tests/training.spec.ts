@@ -31,7 +31,7 @@ test("training chooser stays static, private and CSP-clean", async ({ page, base
   await expect(page).toHaveTitle("Power BI courses | burningsuit");
   await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "training description");
   await expectIndexable(page);
-  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder], main img`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island, main img`)).toHaveCount(0);
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
   for (const directive of ["default-src 'none'", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
   await expect(page.locator("form")).toHaveCount(1);

@@ -29,7 +29,7 @@ test("DAX deep dive page stays static, private, price-safe and CSP-clean", async
   const baseDescription = "A two-day private course for teams who already write measures in Power BI: learn why your measures return the numbers they do, and how to make them return the ones you need.";
   await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "deep dive description");
   await expectIndexable(page);
-  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
   // No portrait or new diagram: the brief allows none. The one figure is the organiser's quote (Alan cleared it, 8 Nov).
   await expect(page.locator("main img, main svg")).toHaveCount(0);
   await expect(page.locator("main figure")).toHaveCount(1);

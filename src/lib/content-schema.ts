@@ -25,19 +25,18 @@ const common = z.object({
 });
 
 // Presentation variants retain the independently approved notebook compositions.
-// Unknown keys fail closed; unused future-index fields never become public copy.
+// Unknown keys fail closed.
 export const workSchema = z.discriminatedUnion("presentation", [
     common.extend({
-      presentation: z.literal("chapters"), kicker: text, lead: text, tileOutcome: text,
-      contactSubject: text, footerInvitation: text, footerLink: link,
+      presentation: z.literal("chapters"), kicker: text, lead: text, footerInvitation: text, footerLink: link,
     }).strict(),
     common.extend({
-      presentation: z.literal("story"), lead: text, tileOutcome: text.optional(),
+      presentation: z.literal("story"), lead: text,
       facts: z.array(z.object({ label: text, value: text }).strict()).min(1),
       next: z.object({ heading: text, body: text, link, then: link.extend({ hint: text.optional() }).strict().optional() }).strict(),
     }).strict(),
     common.extend({
-      presentation: z.literal("coaching"), lead: text, tile: text,
+      presentation: z.literal("coaching"), lead: text,
       facts: z.object({ label: text, rows: z.array(z.object({ term: text, detail: text }).strict()).min(1) }).strict(),
       returnLinks: z.array(link).min(1),
     }).strict(),

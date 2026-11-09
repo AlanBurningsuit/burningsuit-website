@@ -29,7 +29,7 @@ test("DAX fundamentals page stays static, private, price-safe and CSP-clean", as
   const baseDescription = "A one-day private course for teams who build reports in Power BI but haven't written DAX yet: learn why a measure returns the number it does, and when to use a measure instead of a calculated column.";
   await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "DAX fundamentals description");
   await expectIndexable(page);
-  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
   // No portrait, figure or diagram: the brief allows none.
   await expect(page.locator("main img, main figure, main svg")).toHaveCount(0);
   const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");

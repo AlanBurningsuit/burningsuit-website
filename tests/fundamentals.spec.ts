@@ -26,7 +26,7 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   const baseDescription = "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.";
   await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "fundamentals description");
   await expectIndexable(page);
-  await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
+  await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
   // The only image is the parts-of-Power-BI diagram: described by its alt, captioned, with a text version a keyboard can open.
   await expect(page.locator("main img")).toHaveCount(1);
   const figure = page.locator("main figure.course-figure");
