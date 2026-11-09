@@ -4,6 +4,7 @@
 // only in the priced build (src/lib/training-prices.mjs). The Fundamentals composition (course.css, fundamentals.css) is reused;
 // this page's differences live in dax-deep-dive.css.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { courseNode } from "../../lib/schema";
 import TitleBand from "../../components/TitleBand.astro";
 import StudyLinks from "../../components/StudyLinks.astro";
 import PullQuote from "../../components/PullQuote.astro";
@@ -16,12 +17,16 @@ import "../../styles/dax-deep-dive.css";
 // Priced only when SHOW_TRAINING_PRICES=true; the price item then names both delivery methods, so "On site or online" is omitted.
 const priced = trainingPriceCopy(loadTrainingPrices());
 const price = PRICE_ON_REQUEST;
-const description = `A two-day private course for teams who already write measures in Power BI: learn why your measures return the numbers they do, and how to make them return the ones you need.${priced ? "" : " Price on request."}`;
+const summary = "A two-day private course for teams who already write measures in Power BI: learn why your measures return the numbers they do, and how to make them return the ones you need.";
+const description = `${summary}${priced ? "" : " Price on request."}`;
+// Course facts as the page shows them (the run-facts list below); delivery stays "On site or online" in both variants.
+const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "DAX deep dive", description: summary, modes: ["Onsite", "Online"], workload: "P2D", maxPeople: 8 })];
 ---
 <BaseLayout
   title="DAX deep dive | burningsuit"
   description={description}
   placeholder={false}
+  schema={schema}
 >
   <TitleBand heading={{ before: "DAX ", em: "deep dive" }}>
     <Fragment slot="standfirst">Already writing measures, but not always sure why they return what they do?</Fragment>

@@ -3,6 +3,7 @@
 // "Book a seat" links to the Stripe Payment Link in the priced production build only; elsewhere (unpriced builds,
 // previews) it stays an unavailable control beside "Price on request".
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { courseNode } from "../../lib/schema";
 import TitleBand from "../../components/TitleBand.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
@@ -15,11 +16,16 @@ const { email } = ENQUIRY;
 const priced = trainingPriceCopy(loadTrainingPrices());
 const price = PRICE_ON_REQUEST;
 const bookingStatus = "Booking isn't open yet.";
+const description = "Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations.";
+// The run as the facts list shows it: 20 January 2027, 9:30am to 12:30pm UK time (GMT), live online, 4 to 8 people.
+// When the date changes, change it here and in the <time> elements together (tests/structured-data.test.mjs compares them).
+const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI with AI agents 101", description, modes: ["Online"], workload: "PT3H", maxPeople: 8, run: { startDate: "2027-01-20T09:30:00+00:00", endDate: "2027-01-20T12:30:00+00:00" } })];
 ---
 <BaseLayout
   title="Power BI with AI agents 101 | burningsuit"
-  description="Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations."
+  description={description}
   placeholder={false}
+  schema={schema}
 >
   <TitleBand heading={{ before: "Power BI with AI ", em: "agents", after: " 101" }}>
     <Fragment slot="standfirst">Want to be ready for where Power BI is going?</Fragment>

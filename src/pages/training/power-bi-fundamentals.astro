@@ -5,6 +5,7 @@
 // Private course only: no public run or booking control; its price shows only in the priced build (src/lib/training-prices.mjs). The 101 composition (course.css) is reused;
 // this page's differences live in fundamentals.css.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { courseNode } from "../../lib/schema";
 import TitleBand from "../../components/TitleBand.astro";
 import PullQuote from "../../components/PullQuote.astro";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
@@ -16,12 +17,16 @@ import "../../styles/fundamentals.css";
 // Priced only when SHOW_TRAINING_PRICES=true; the price item then names both delivery methods, so "On site or online" is omitted.
 const priced = trainingPriceCopy(loadTrainingPrices());
 const price = PRICE_ON_REQUEST;
-const description = `A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.${priced ? "" : " Price on request."}`;
+const summary = "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.";
+const description = `${summary}${priced ? "" : " Price on request."}`;
+// Course facts as the page shows them (the run-facts list below); delivery stays "On site or online" in both variants.
+const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI fundamentals", description: summary, modes: ["Onsite", "Online"], workload: "P2D", maxPeople: 8 })];
 ---
 <BaseLayout
   title="Power BI fundamentals | burningsuit"
   description={description}
   placeholder={false}
+  schema={schema}
 >
   <TitleBand heading={{ before: "Power BI ", em: "fundamentals" }}>
     <Fragment slot="standfirst">New to Power BI?</Fragment>

@@ -2,8 +2,9 @@
 // Page wording and photo descriptions: private ops site/about-page-copy.md.
 // Kept anchors: capable, human, origin, dog; see src/config/compatibility.mjs. No enquiry form here:
 // the closing links reach email, the homepage form and LinkedIn.
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { profilePageNode } from "../lib/schema";
 import TitleBand from "../components/TitleBand.astro";
 import { ENQUIRY } from "../config/enquiry.mjs";
 import "../styles/about.css";
@@ -13,11 +14,15 @@ import zelda from "../assets/photos/zelda.jpg";
 import cafe from "../assets/photos/DSC09129-2-Edit.jpg";
 
 const linkedin = "https://www.linkedin.com/in/alan-harman-box";
+// About is Alan's profile page; the café portrait (the largest width the page already serves) is its main image.
+const portrait = await getImage({ src: cafe, width: 1100, format: "webp" });
+const schema = [profilePageNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, image: new URL(portrait.src, Astro.site).href })];
 ---
 <BaseLayout
   title="About Alan Harman-Box | burningsuit"
   description="I'm Alan Harman-Box, and burningsuit is me. I write and teach Power BI and AI courses for people whose job isn't Power BI, and help teams with their own reporting."
   placeholder={false}
+  schema={schema}
 >
   <TitleBand heading={{ before: "Power BI and AI for everyone ", em: "else", after: "." }} />
   <div class="about-intro wrap">
