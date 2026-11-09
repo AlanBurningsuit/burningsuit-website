@@ -59,9 +59,9 @@ Things to know:
 | `src/config/indexnow.mjs`, `src/integrations/llms-txt.mjs` | IndexNow key; `/llms.txt`, written after the build from indexed pages' titles and descriptions. |
 | `src/lib/training-prices.mjs` | Loads and validates the private prices and composes the price wording (see Prices). |
 | `src/styles/brand.css` | Brand tokens, copied byte for byte from the brand repo. Change them there first. |
-| `src/styles/tokens.css` | Web-only values: surface roles (dark and daylight), the one heading scale, card shadows, motion. Pages never set their own heading sizes. |
+| `src/styles/tokens.css` | Web-only values: surface roles (dark and daylight), the one heading scale, the repeated text sizes, card shadows, motion. Pages never set their own heading sizes. |
 | `src/styles/app.css` | Shared furniture: the one `.button`, the closing band, the footer, pull quotes, the sheet edges. |
-| `src/styles/<page>.css` | Page compositions. Some pages reuse others' sheets: course pages use `course.css`, and the DAX pages also use `fundamentals.css` and `dax-deep-dive.css`. |
+| `src/styles/<page>.css` | Page compositions. The four course pages, Consultancy and the call page share `course-page.css`; the 101 adds `ai-agents-101.css`, the three agenda-led course pages `course-agenda.css`, and the two DAX pages `dax-course.css`. Training reuses `home.css` for its course entries. A page rule that overrides a shared one wins by specificity, never by stylesheet order. |
 | `diagrams/` | Editable draw.io sources for the shipped SVGs in `src/assets/diagrams/`. |
 | `public/` | Static files served as they are, including social images and the IndexNow key file. |
 | `scripts/` | Gate checks, the price tools, IndexNow submission and the push hook. |

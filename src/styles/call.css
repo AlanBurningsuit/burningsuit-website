@@ -1,11 +1,12 @@
-/* Free call page: reuses the consultancy opening and numbered spine (course.css, consultancy.css); only the differences live here. */
+/* Free call page (/call/): this page's own rules, on top of the shared course page composition (course-page.css):
+   Consultancy's opening with its facts card, and the numbered spine. */
 
 /* The booking action is the shared .button (app.css): ochre on the facts card, amber in the dark booking band. */
 .course-run .book-link { margin-top: 24px; }
 
 /* The opening holds everything before the booking band: the introduction, then "What happens" under it, with the
    facts card beside both on wide screens; on narrow ones the three stack in source order. */
-.call-opening { padding-bottom: clamp(36px, 4vw, 52px); }
+.course-opening.call-opening { padding-bottom: clamp(36px, 4vw, 52px); }
 @media (min-width: 901px) {
   .call-opening { grid-template-rows: auto 1fr; }
   .call-opening .course-run { grid-column: 2; grid-row: 1 / span 2; }
@@ -21,7 +22,7 @@
 .call-book .book-facts + .book-facts { margin-top: 1rem; }
 .call-book .book-facts a, .call-alt a { font-weight: 600; }
 .call-book .book-link { margin-top: 8px; }
-.call-alt { margin-top: 22px; font-size: 1rem; }
+.call-alt { margin-top: 22px; font-size: var(--compact-size); }
 .call-alt + .call-alt { margin-top: 10px; }
 
 @media (max-width: 680px) {

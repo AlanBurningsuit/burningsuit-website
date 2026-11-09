@@ -1,6 +1,6 @@
 /* Work: the title band and its line, then one ruled group per offer (heading and the offer in a line beside its studies), closing on a dark band back to Contact. */
 .work-index { padding-block: clamp(28px, 4vw, 48px) 72px; }
-.work-intro { margin: 0 0 clamp(28px, 3vw, 40px); font: 400 1.05rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
+.work-intro { margin: 0 0 clamp(28px, 3vw, 40px); font: 400 var(--fact-size) / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 .work-group { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: var(--column-gap); align-items: start; padding-block: 28px 52px; border-top: var(--bw-spine) solid var(--text); }
 .work-group-lead p { margin-top: 12px; max-width: 34ch; color: var(--text-dim); }
 .work-group h2 a { color: var(--text); }

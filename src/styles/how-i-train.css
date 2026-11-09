@@ -8,7 +8,7 @@
 /* If you get stuck: the personal answer, on the raised band in a lifted card with the warm spine and larger prose. */
 .hit-stuck .hit-answer { padding-block: 52px 58px; }
 .hit-stuck .hit-prose { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 26px 32px 28px; }
-.hit-stuck .hit-prose p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 56ch; }
+.hit-stuck .hit-prose p { font-size: var(--lead-size); line-height: var(--lh-relaxed); max-width: 56ch; }
 
 /* Own work and using it afterwards: two related answers side by side, each on its own card. */
 .hit-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--column-gap); padding-block: 64px 56px; align-items: start; }
@@ -30,7 +30,7 @@
 .hit-terms a { font-weight: 600; }
 
 /* Where next: the shared closing band (app.css). */
-.hit-next p { font-size: 1.15rem; line-height: var(--lh-relaxed); max-width: 52ch; }
+.hit-next p { font-size: var(--raised-size); line-height: var(--lh-relaxed); max-width: 52ch; }
 .hit-next a { font-weight: 600; }
 .hit-next .text-link { margin-top: 12px; }
 
@@ -42,8 +42,6 @@
   .hit-facts { row-gap: 12px; padding-block: 4px 56px; }
 }
 @media (max-width: 680px) {
-  .hit-stuck .hit-prose p { font-size: 1.1rem; }
   .hit-stuck .hit-prose { padding: 20px 22px 22px; }
-  .hit-next p { font-size: 1.05rem; }
   .hit-pair-item { padding: 22px 20px 24px; }
 }

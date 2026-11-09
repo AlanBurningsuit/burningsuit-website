@@ -2,14 +2,14 @@
    Facts run as one middot line with a price item on its own line beneath; on phones they pair up in two columns.
    The middots are decorative (empty alt text) and sit in the gap before each item, so the one that would start a
    wrapped row is clipped by the list (the homepage's .dot-list technique).
-   Fact typography is course.css's .run-facts; the heading scale and the .button are shared (tokens.css, app.css). */
+   Fact typography is course-page.css's .run-facts; the heading scale and the .button are shared (tokens.css, app.css). */
 .title-band.decision-hero { padding-block: clamp(28px, 3.4vw, 48px) clamp(40px, 4.4vw, 64px); }
 .decision-hero .standfirst { margin-bottom: 0; }
 .hero-facts { margin-top: clamp(20px, 2.2vw, 30px); padding-top: 18px; border-top: var(--bw-hair) solid var(--rule); max-width: 62rem; }
 .hero-facts .run-facts { display: flex; flex-wrap: wrap; gap: 4px 1.2em; overflow: hidden; }
 .hero-facts .run-facts li { position: relative; padding-block: 0; }
 .hero-facts .run-facts li:not(.fact-price) + li:not(.fact-price)::before { content: "·"; content: "·" / ""; position: absolute; left: -.74em; color: var(--accent); }
-.hero-facts .run-facts .fact-price { flex-basis: 100%; margin-top: 6px; font-size: 1.15rem; }
+.hero-facts .run-facts .fact-price { flex-basis: 100%; margin-top: 6px; font-size: var(--raised-size); }
 .hero-facts .run-action { margin-top: 20px; }
 /* The 101's booking group, when it uses this hero: the requirements line and booking control follow the facts. */
 .hero-facts .before-book { max-width: 62ch; }
@@ -30,6 +30,6 @@
   /* A fact too long to share a row (the 101's date and times) puts the whole list one to a row. */
   .hero-facts .run-facts:has(.fact-wide) { grid-template-columns: minmax(0, 1fr); }
   .hero-facts .run-facts li:not(.fact-price) + li:not(.fact-price)::before { content: none; }
-  .hero-facts .run-facts .fact-price { grid-column: 1 / -1; margin-top: 2px; font-size: 1.05rem; }
+  .hero-facts .run-facts .fact-price { grid-column: 1 / -1; margin-top: 2px; }
   .hero-facts .run-action { display: flex; justify-content: center; }
 }

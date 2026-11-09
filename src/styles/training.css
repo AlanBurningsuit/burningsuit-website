@@ -16,7 +16,7 @@
   .start-list { grid-template-rows: repeat(6, auto); align-items: stretch; }
   .start-list > .course { display: grid; grid-row: span 6; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); row-gap: 0; align-content: start; }
 }
-.course > p.private-ask { margin-top: 10px; font-size: .96rem; }
+.start-list .course > p.private-ask { margin-top: 10px; font-size: var(--quiet-size); }
 .private-ask a { font-weight: 600; }
 /* The public group size stays in one piece when the date line wraps. */
 
@@ -33,14 +33,14 @@
 /* A specialist name that links to its page keeps the heading's colour, as on the starting-point entries. */
 .specialist-rows h3 a { color: inherit; text-decoration: none; }
 .specialist-rows h3 a:hover { color: var(--link); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .14em; }
-.specialist-courses .text-link { font-size: .96rem; }
-.name-course { font-size: .96rem; color: var(--text-dim); }
+.specialist-courses .text-link { font-size: var(--quiet-size); }
+.name-course { font-size: var(--quiet-size); color: var(--text-dim); }
 .specialist-courses .not-sure { margin-top: 30px; }
 .not-sure a { font-weight: 600; }
 
 /* Coaching: a quieter section after the specialists, reusing their heading and ruled-row pattern; the specialists' bottom padding already separates the two. */
 .coaching { padding-block: 0 80px; }
-.coaching .text-link { font-size: .96rem; }
+.coaching .text-link { font-size: var(--quiet-size); }
 .coaching .pull-quote { margin-block: 28px 26px; }
 
 /* Who's teaching: heading beside a quietly ruled note (warm spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */

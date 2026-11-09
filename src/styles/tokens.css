@@ -14,12 +14,21 @@
   /* One heading scale for the whole site: the page title in its band, a section heading, a note heading (a short
      block's label, such as a facts card), an item heading, and a card title. Pages never set their own sizes. */
   --title-band-size: clamp(2.5rem, 4.8vw, 4.2rem);
+  --home-title-size: clamp(2.6rem, 6.2vw, 5.6rem); /* Home's title only: the one title larger than the band's */
   --h2-size: clamp(1.75rem, 2.7vw, 2.5rem);
   --h2-note-size: var(--h3-size); /* never smaller than a heading it sits over (How I train's terms) */
   --h3-size: 1.3rem;
   --h3-card-size: clamp(1.55rem, 2.2vw, 1.8rem);
-  /* The opening paragraph that starts a page's daylight body: one size everywhere (smaller on phones, app.css). */
+  /* The opening paragraph that starts a page's daylight body, and the few later lines set at its size to stand out:
+     one size everywhere (smaller on phones, app.css). */
   --lead-size: 1.2rem;
+  /* Text sizes a step either side of the body, for the steps pages repeat. Raised steps down on phones (app.css). */
+  --raised-size: 1.15rem; /* a closing invitation or the hero's price line, a step above body */
+  --fact-size: 1.05rem; /* facts, fit lines and figure captions in the note voice */
+  --compact-size: 1rem; /* card, step and list copy, notes under a list, form fields */
+  --quiet-size: .96rem; /* a quieter line or small link beside body copy */
+  --caption-size: .95rem; /* captions and small print */
+  --label-size: .92rem; /* eyebrows, labels, tags and hints */
   --masthead-h: 84px;
   /* A daylight card: a crisp pine edge, a contact shadow and a soft lift; raised is its hover and focus state, its edge warmed to ochre. */
   --lift: 0 0 0 1px color-mix(in srgb, var(--pine) 14%, transparent), 0 1px 2px color-mix(in srgb, var(--pine) 10%, transparent), 0 14px 32px -22px color-mix(in srgb, var(--pine) 45%, transparent);

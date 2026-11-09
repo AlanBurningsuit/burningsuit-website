@@ -1,8 +1,7 @@
-/* Power BI consultancy page: reuses the course page composition in course.css; only the differences live here. */
+/* Power BI consultancy page (/power-bi/): this page's own rules, on top of the shared course page composition (course-page.css). */
 
 /* The opening panel's action is a text link, not the 101's booking button. */
 .run-action { margin-top: 18px; }
-.run-facts li { text-wrap: balance; }
 
 /* Lists whose entries open with a bold lead: display face, weight and a small size step; line-height is inherited so a wrapping lead keeps the paragraph's leading. */
 .lead-list strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
@@ -17,8 +16,8 @@
 
 /* How I work with your team: the two principles as side-by-side cards under their heading. */
 @media (min-width: 901px) {
-  .method { grid-template-columns: minmax(0, 1fr); row-gap: 26px; }
-  .method > h2 { position: static; }
+  .course-need.method { grid-template-columns: minmax(0, 1fr); row-gap: 26px; }
+  .course-need.method > h2 { position: static; }
   .method .need-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; padding: 0; background: none; box-shadow: none; }
   .method .need-list li { max-width: none; padding: 24px 28px 26px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
   .method .need-list li::before { display: none; }
@@ -55,7 +54,7 @@
 @media (min-width: 901px) { .who-note { margin-top: 10px; } }
 .who-photo { max-width: 420px; }
 .who-photo img { aspect-ratio: 3 / 2; object-fit: cover; } /* guard: the derivative is already 3:2 */
-.who-does { padding-block: 24px 80px; }
+.course-need.who-does { padding-block: 24px 80px; }
 .who-note { border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; }
 .who-note p { max-width: 64ch; }
 .who-note .text-link { margin-top: 12px; }
@@ -64,14 +63,16 @@
 .start { background: var(--surface-raised); }
 /* The enquiry band after it rounds the sheet's foot in the band's sage. */
 .start + .dark { --sheet-end: var(--sage); }
-.start .book-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
+.book-inner { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 18px; padding-block: 60px 66px; align-items: start; }
+.book-inner h2 { margin-bottom: 16px; }
 .start-ask { font-size: 1.1rem; max-width: 40ch; }
 .start-link { font-size: 1.3rem; line-height: var(--lh-snug); }
 
 @media (max-width: 900px) {
   .consult-split { grid-template-columns: minmax(0, 1fr); row-gap: 22px; padding-block: 24px 56px; }
   .work-runs .do-inner { padding-block: 54px 40px; }
-  .who-does { padding-block: 16px 60px; }
+  .course-need.who-does { padding-block: 16px 60px; }
+  .book-inner { padding-block: 46px 52px; }
 }
 @media (max-width: 680px) {
   .pull-line { font-size: 1.4rem; }

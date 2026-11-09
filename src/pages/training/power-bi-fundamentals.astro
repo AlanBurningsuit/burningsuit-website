@@ -13,8 +13,8 @@ import { PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import PrivateCourseClose from "../../components/PrivateCourseClose.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import TeacherCard from "../../components/TeacherCard.astro";
-import "../../styles/course.css";
-import "../../styles/fundamentals.css";
+import "../../styles/course-page.css";
+import "../../styles/course-agenda.css";
 
 // The course facts below are the Course JSON-LD's source: keep its length (P2D) and the shared 8-person maximum in step with them.
 const { priced, description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {
