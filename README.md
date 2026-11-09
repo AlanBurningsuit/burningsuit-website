@@ -49,7 +49,8 @@ Things to know:
 | `src/config/compatibility.mjs` | Legacy redirects, reserved routes and anchors (checked by `check:seo`), and `reserved404Routes`, the parked study routes that must return a real 404. |
 | `src/config/enquiry.mjs` | The Formspark endpoint. A null endpoint disables Send. |
 | `src/config/booking.mjs` | The 101's Stripe payment link (used only in the priced build). |
-| `src/config/analytics.mjs` | The Umami tag, which also feeds the CSP. |
+| `src/config/analytics.mjs` | The Umami tag, which also feeds the CSP, and the names of the counted click events. |
+| `src/config/starting-courses.mjs` | The wording Home and Training share for the two starting courses, used through `src/components/CourseEntry.astro`. |
 | `src/config/writing-routes.mjs` | Fixed public URLs for the two articles. |
 | `src/config/pending-routes.mjs` | Linked pages not yet built, allowed by the link check until they exist. Empty. |
 | `src/config/indexnow.mjs`, `src/integrations/llms-txt.mjs` | IndexNow key; `/llms.txt`, written after the build from indexed pages' titles and descriptions. |
@@ -71,6 +72,8 @@ Every page that takes enquiries uses `EnquiryForm.astro` (which pages, and which
 ### Analytics
 
 Every page loads the cookieless Umami tag, limited by `data-domains` to the production hostnames. The only page script is the opt-out switch at `/privacy/#optout`, a bundled same-origin module that sets Umami's `umami.disabled` flag in `localStorage`. Without JavaScript, a fallback line shows instead.
+
+Clicks towards a booking and on the enquiry form's Send are counted as named Umami events (`EVENTS` in `src/config/analytics.mjs`; the privacy notice says so, and the two change together). Mark a link by wrapping it in `src/components/Tracked.astro`, never by putting the attribute on the link: Umami holds a marked link until its beacon answers, and a booking link must not wait on analytics. `tests/booking-events.spec.ts` covers the marks, the beacon and a beacon that never answers.
 
 ### Structured data and search
 
