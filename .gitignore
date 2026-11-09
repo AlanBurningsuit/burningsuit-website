@@ -29,13 +29,8 @@ Thumbs.db
 skills-lock.json
 .case-study-work/
 
-# kept out of the (public) repo: internal orientation doc + brand source PDF
-# (exact case matters: gitignore is case-sensitive on Linux/CI checkouts, and a
-# lowercase-only entry would let `git add .` stage CLAUDE.md there)
-CLAUDE.md
-claude.md
-AGENTS.md
-agents.md
+# kept out of the (public) repo: the brand source PDF and local agent settings.
+# CLAUDE.md (and its AGENTS.md symlink) is tracked: it holds no private material.
 Burningsuit Brand Guidelines V1.pdf
 .agents/
 .claude/

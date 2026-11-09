@@ -3,7 +3,7 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "description": "burningsuit website — minimal static rebuild shell",
+  "description": "The burningsuit.co.uk static site",
   "engines": {
     "node": ">=22.20.0"
   },

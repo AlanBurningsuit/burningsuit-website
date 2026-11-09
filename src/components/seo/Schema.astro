@@ -4,9 +4,8 @@
  * carrying an `@graph` of the supplied nodes, so every entity (@id) resolves
  * within a single connected block.
  *
- * This is the ONLY place structured data is emitted. It follows the proven
- * pattern from the old BaseLayout inline block: `is:inline` keeps Astro from
- * bundling it, `set:html` keeps Astro from HTML-escaping the JSON. ld+json is
+ * This is the ONLY place structured data is emitted. `is:inline` keeps Astro
+ * from bundling it, and `set:html` keeps Astro from HTML-escaping the JSON. ld+json is
  * inert data, not executable script, so Astro's security.csp does NOT need to
  * hash it — adding schema requires zero CSP change. Never emit schema from a
  * client script; this component renders into the static HTML at build time.
