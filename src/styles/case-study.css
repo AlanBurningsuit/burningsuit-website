@@ -17,12 +17,12 @@
 /* Return: the approach in one paragraph on the warm spine, beside the two onward links. */
 :where(.case-chapters) .case-return-inner { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); column-gap: var(--column-gap); align-items: start; padding-block: 24px 68px; }
 :where(.case-chapters) .case-return-copy { border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; }
-:where(.case-chapters) .case-return-copy p { font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); max-width: 52ch; }
+:where(.case-chapters) .case-return-copy p { font: 600 var(--lead-size) / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); max-width: 52ch; }
 :where(.case-chapters) .case-return-links { list-style: none; margin: 0; padding: 0; }
 :where(.case-chapters) .case-return-links li + li { margin-top: 6px; }
 
 /* The footer invitation, with its call as a real link. */
-:where(.case-chapters) .case-invite p { font-size: 1.15rem; max-width: 62ch; }
+:where(.case-chapters) .case-invite p { font-size: var(--raised-size); max-width: 62ch; }
 :where(.case-chapters) .case-invite a { font-weight: 600; }
 
 @media (max-width: 900px) {
@@ -33,8 +33,6 @@
 }
 @media (max-width: 680px) {
   :where(.case-chapters) .case-opening { padding-block: 24px 32px; }
-  :where(.case-chapters) .case-return-copy p { font-size: 1.1rem; }
-  :where(.case-chapters) .case-invite p { font-size: 1.05rem; }
 }
 
 /* story */
@@ -47,7 +45,7 @@
 /* Facts strip: ruled label/value pairs, quieter than the story. */
 :where(.case-story) .study-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--column-gap); margin-top: 40px; border-top: var(--bw-spine) solid var(--text); }
 :where(.case-story) .study-facts > div { padding-block: 14px; border-bottom: var(--bw-hair) solid var(--rule); }
-:where(.case-story) .study-facts dt { font: 400 .92rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
+:where(.case-story) .study-facts dt { font: 400 var(--label-size) / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 :where(.case-story) .study-facts dd { margin: 4px 0 0; font: 600 1.05rem / var(--lh-snug) var(--ff-display); }
 
 /* The story: each heading beside its prose on the ruled page. Headings sit in the first column and paragraphs in the second, in source order; a heading spans two rows so a tall one never pushes its second paragraph down. */
@@ -59,11 +57,11 @@
 :where(.case-story) .study-story > h2:not(:first-child), :where(.case-story) .study-story > h2:not(:first-child) + p { margin-top: 56px; }
 
 /* Where next: the closing band, as on How I train, with the main link and a quieter alternative. */
-:where(.case-story) .study-next-copy > p:first-child { font-size: 1.15rem; line-height: var(--lh-relaxed); max-width: 52ch; }
+:where(.case-story) .study-next-copy > p:first-child { font-size: var(--raised-size); line-height: var(--lh-relaxed); max-width: 52ch; }
 :where(.case-story) .study-next-copy .text-link { margin-top: 14px; font-size: 1.1rem; }
 :where(.case-story) .study-then { margin-top: 10px; }
 :where(.case-story) .study-then a { font-weight: 400; }
-:where(.case-story) .study-hint { display: block; margin-top: 4px; font-size: .92rem; color: var(--text-dim); }
+:where(.case-story) .study-hint { display: block; margin-top: 4px; font-size: var(--label-size); color: var(--text-dim); }
 
 @media (max-width: 900px) {
   :where(.case-story) .study-opening { padding-block: 24px 44px; }
@@ -79,7 +77,6 @@
   :where(.case-story) .study-facts { grid-template-columns: minmax(0, 1fr); margin-top: 30px; }
   :where(.case-story) .study-facts > div { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: baseline; padding-block: 11px; }
   :where(.case-story) .study-facts dd { margin-top: 0; }
-  :where(.case-story) .study-next-copy > p:first-child { font-size: 1.05rem; }
 }
 
 /* coaching */
@@ -95,7 +92,7 @@
 /* The short version: a ruled block of deciding facts on a warm spine. */
 :where(.case-coaching) .cs-facts { border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; }
 :where(.case-coaching) .cs-facts h2 { font-size: var(--h2-note-size); font-weight: 600; letter-spacing: var(--ls-display-tight); }
-:where(.case-coaching) .cs-facts dl { margin-top: 10px; font-size: .95rem; }
+:where(.case-coaching) .cs-facts dl { margin-top: 10px; font-size: var(--caption-size); }
 :where(.case-coaching) .cs-facts dl > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 14px; padding-block: 9px; border-top: var(--bw-hair) solid var(--rule); }
 :where(.case-coaching) .cs-facts dt { color: var(--text-dim); }
 :where(.case-coaching) .cs-facts dd { margin: 0; }
@@ -115,7 +112,7 @@
 :where(.case-coaching) .cs-line { display: inline-block; width: 100%; padding-left: 6ch; text-indent: -6ch; }
 
 /* Back to the offer: the closing band, as on How I train. */
-:where(.case-coaching) .cs-return p { font-size: 1.15rem; line-height: var(--lh-relaxed); max-width: 56ch; }
+:where(.case-coaching) .cs-return p { font-size: var(--raised-size); line-height: var(--lh-relaxed); max-width: 56ch; }
 :where(.case-coaching) .cs-links { list-style: none; margin: 22px 0 0; padding: 0; }
 :where(.case-coaching) .cs-links li { border-top: var(--bw-hair) solid var(--rule); }
 :where(.case-coaching) .cs-links li:last-child { border-bottom: var(--bw-hair) solid var(--rule); }
@@ -133,10 +130,9 @@
   :where(.case-coaching) .cs-facts dl > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   :where(.case-coaching) .cs-teaching { margin-inline: calc(var(--page-gutter) * -0.5); padding: 22px 18px; }
   :where(.case-coaching) .cs-code { margin-inline: -8px; padding: 14px 12px; font-size: .8rem; }
-  :where(.case-coaching) .cs-return p { font-size: 1.05rem; }
 }
 
-:where(.case-course) .facts { margin: 16px 0 12px; padding-block: 9px; border-block: var(--bw-hair) solid var(--rule); font-size: .95rem; row-gap: 2px; }
+:where(.case-course) .facts { margin: 16px 0 12px; padding-block: 9px; border-block: var(--bw-hair) solid var(--rule); font-size: var(--caption-size); row-gap: 2px; }
 :where(.case-course) .dot-list { list-style: none; padding-inline: 0; display: flex; flex-wrap: wrap; column-gap: 1.2em; overflow: hidden; }
 :where(.case-course) .dot-list > li { position: relative; }
 :where(.case-course) .dot-list > li::before { content: "·"; content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
@@ -146,7 +142,7 @@
 
 /* Opening: the settled course-page title and the facts line. */
 :where(.case-course) .case-opening { padding-block: clamp(28px, 4vw, 48px) 40px; }
-:where(.case-course) .case-facts { margin: 0; max-width: 64ch; font-size: 1rem; }
+:where(.case-course) .case-facts { margin: 0; max-width: 64ch; font-size: var(--compact-size); }
 
 /* A beat: heading beside its prose on the ruled page. */
 :where(.case-course) .case-beat { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; padding-block: 0 44px; }
@@ -169,7 +165,7 @@
 }
 :where(.case-course) .case-evidence blockquote { grid-area: quote; }
 :where(.case-course) .case-evidence blockquote p { max-width: 34ch; color: var(--text); font: 600 clamp(1.45rem, 2.4vw, 1.9rem) / var(--lh-tight) var(--ff-display); letter-spacing: var(--ls-display-tight); text-wrap: pretty; }
-:where(.case-course) .case-attribution { grid-area: cite; color: var(--text-dim); font: 400 .95rem / var(--lh-relaxed) var(--ff-note); }
+:where(.case-course) .case-attribution { grid-area: cite; color: var(--text-dim); font: 400 var(--caption-size) / var(--lh-relaxed) var(--ff-note); }
 :where(.case-course) .case-figures { grid-area: figures; padding-left: 22px; border-left: var(--bw-hair) solid var(--rule); font-size: 1.05rem; color: var(--text); }
 
 /* The limits line, in Alan's voice, under the panel beside the prose column. */
@@ -177,8 +173,8 @@
 
 /* The enquiry: the primary amber link, its hint, then the route back to Training. */
 :where(.case-course) .case-ask .raised-copy > p:first-child { font-size: 1.1rem; }
-:where(.case-course) .name-course { margin-top: 0; font-size: .96rem; color: var(--text-dim); }
-:where(.case-course) .case-see { margin-top: 22px; padding-top: 16px; border-top: var(--bw-hair) solid var(--rule); font-size: 1rem; }
+:where(.case-course) .name-course { margin-top: 0; font-size: var(--quiet-size); color: var(--text-dim); }
+:where(.case-course) .case-see { margin-top: 22px; padding-top: 16px; border-top: var(--bw-hair) solid var(--rule); font-size: var(--compact-size); }
 :where(.case-course) .case-see a { font-weight: 600; }
 
 @media (max-width: 900px) {

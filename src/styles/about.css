@@ -30,12 +30,12 @@
 .zelda-photo { max-width: 460px; }
 .cafe-photo { max-width: 380px; }
 /* Captions are metadata only (who or what), in the mono margin voice. */
-.about-photo figcaption { margin-top: 14px; font: 400 .95rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
+.about-photo figcaption { margin-top: 14px; font: 400 var(--caption-size) / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 
 /* Where to start: the closing band, matching the enquiry band's ground without a form. */
 .about-start { background: var(--bg-band); margin-top: 80px; }
 .about-start-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 56px 62px; align-items: baseline; }
-.about-start p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
+.about-start p { font-size: var(--lead-size); line-height: var(--lh-relaxed); max-width: 46ch; }
 .about-start a { font-weight: 600; }
 
 @media (max-width: 900px) {
@@ -53,5 +53,4 @@
 }
 @media (max-width: 680px) {
   .about-photo { margin-top: 28px; }
-  .about-start p { font-size: 1.1rem; }
 }
