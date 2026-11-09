@@ -45,7 +45,7 @@ const courses = {
   "/training/power-bi-fundamentals/": { modes: ["Onsite", "Online"], workload: "P2D", length: "2 days" },
   "/training/dax-fundamentals/": { modes: ["Onsite", "Online"], workload: "P1D", length: "1 day" },
   "/training/dax-deep-dive/": { modes: ["Onsite", "Online"], workload: "P2D", length: "2 days" },
-  "/training/agentic-development-for-power-bi/": { modes: "Online", workload: "PT3H", length: "Half a day, live online" },
+  "/training/power-bi-with-ai-agents-101/": { modes: "Online", workload: "PT3H", length: "Half a day, live online" },
 };
 for (const [path, expected] of Object.entries(courses)) {
   test(`${path} describes its course as the page does`, () => {

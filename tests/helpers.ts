@@ -54,7 +54,7 @@ export function pageSchemaTypes(path: string): string[] {
     "/training/": "ItemList",
     "/power-bi/": "Service",
     "/training/power-bi-fundamentals/": "Course",
-    "/training/agentic-development-for-power-bi/": "Course",
+    "/training/power-bi-with-ai-agents-101/": "Course",
     "/training/dax-fundamentals/": "Course",
     "/training/dax-deep-dive/": "Course",
   };

@@ -29,7 +29,7 @@ const specialists = [
 // The four courses in the order the page lists them; each course page carries its own Course node.
 const courses = [
   { name: "Power BI fundamentals", href: "/training/power-bi-fundamentals/" },
-  { name: "Power BI with AI agents 101", href: "/training/agentic-development-for-power-bi/" },
+  { name: "Power BI with AI agents 101", href: "/training/power-bi-with-ai-agents-101/" },
   ...specialists,
 ];
 const schema = [itemListNode({ pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI courses", items: courses.map((course) => ({ name: course.name, url: new URL(course.href, Astro.site).href })) })];
