@@ -24,7 +24,7 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   await expect(page.locator(`${otherScripts}, astro-island, [data-rebuild-placeholder]`)).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Consultancy");
-  await expect(page.locator("aside.course-run")).toHaveAttribute("aria-label", "Consultancy facts and booking");
+  await expect(page.locator("section.course-run")).toHaveAttribute("aria-label", "Consultancy facts and booking");
   await expectAmountsOnlyWhenPriced(page, "consultancy");
   expect(errors).toEqual([]);
   expect(external).toEqual([]);

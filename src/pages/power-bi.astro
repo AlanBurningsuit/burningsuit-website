@@ -38,7 +38,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
       <p>Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free 30-minute call.</p>
     </section>
 
-    <aside class="course-run" aria-label="Consultancy facts and booking">
+    <section class="course-run" aria-label="Consultancy facts and booking">
       <ul class="run-facts" role="list">
         <li>{priced ? priced.consultancyRange : "Price on request, usually a fixed price"}</li>
         <li>You get me, working with your team</li>
@@ -46,7 +46,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
         <li>It starts with a free 30-minute call</li>
       </ul>
       <Tracked event={EVENTS.bookCallLink} place="top"><a class="button run-action" href={call}>Book a free 30-minute call</a></Tracked>
-    </aside>
+    </section>
   </div>
 
   <section id="situations" class="consult-split wrap" aria-labelledby="situations-title">

@@ -145,7 +145,7 @@ test("the 101 puts facts, Before you book and booking in the decision hero, abov
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(course);
   // One group on the dark stage: facts, then the requirements line, then booking, then the private-course ask.
-  const group = page.getByRole("complementary", { name: "Course facts and booking", exact: true });
+  const group = page.getByRole("region", { name: "Course facts and booking", exact: true });
   expect(await group.evaluate((el) => [...el.children].map((child) => child.className))).toEqual(["run-facts", "before-book", "booking", "private-ask"]);
   await expect(page.locator(".dark.stage .hero-facts .before-book")).toHaveText("Before you book: you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. See what you'll need.");
   await expect(group.locator(".booking .book-button")).toHaveCount(1);

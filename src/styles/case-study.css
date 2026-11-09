@@ -139,7 +139,7 @@
 :where(.case-course) .facts { margin: 16px 0 12px; padding-block: 9px; border-block: var(--bw-hair) solid var(--rule); font-size: .95rem; row-gap: 2px; }
 :where(.case-course) .dot-list { list-style: none; padding-inline: 0; display: flex; flex-wrap: wrap; column-gap: 1.2em; overflow: hidden; }
 :where(.case-course) .dot-list > li { position: relative; }
-:where(.case-course) .dot-list > li::before { content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
+:where(.case-course) .dot-list > li::before { content: "·"; content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
 /* course */
 /* Case study pages (/work/<case>/): the notebook layout of How I train and About, the amber evidence rule for the one piece of evidence,
    and the shared raised band (app.css) for the enquiry. The facts line is home.css's .facts.dot-list. */

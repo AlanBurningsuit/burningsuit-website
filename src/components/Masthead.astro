@@ -1,5 +1,5 @@
 ---
-// Training marks a section ("true": its pages sit under /training/); Work marks itself on the index and its section on a study; Consultancy, About and Contact mark the page itself.
+// Training marks itself on /training/ and its section ("true") on the pages beneath it; Work marks itself on the index and its section on a study; Consultancy, About and Contact mark the page itself.
 // The free call page belongs to consultancy, so it marks Consultancy as its section ("true"), not as the current page.
 const training = Astro.url.pathname.startsWith("/training/");
 const consultancy = Astro.url.pathname.startsWith("/power-bi/");
@@ -16,7 +16,7 @@ const contact = Astro.url.pathname.startsWith("/contact/");
     </a>
     <nav aria-label="Main navigation">
       <div class="nav-training">
-        <a href="/training/" aria-current={training ? "true" : undefined}>Training</a>
+        <a href="/training/" aria-current={Astro.url.pathname === "/training/" ? "page" : training ? "true" : undefined}>Training</a>
         {/* The course pages, behind a disclosure that works without JavaScript; Training itself still opens the overview. */}
         <details class="nav-menu">
           <summary aria-label="Training courses"></summary>

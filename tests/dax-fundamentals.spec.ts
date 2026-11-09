@@ -82,7 +82,7 @@ test("DAX fundamentals page renders the approved wording and question order", as
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll be able to do", "The day", "What to arrange", "Ask about dates"]);
 
   // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
-  const facts = page.getByRole("complementary", { name: "Course facts" }).locator(".run-facts");
+  const facts = page.getByRole("region", { name: "Course facts" }).locator(".run-facts");
   await expectItems(page.locator(".hero-facts .run-facts > li"), copy
     ? ["1 day", "Private, for your team", "Up to 8 people", "9:30am to 4pm", copy.daxFundamentalsDetail]
     : ["1 day", "Private, for your team", "On site or online", "Up to 8 people", "9:30am to 4pm", priceOnRequest], "DAX fundamentals facts");

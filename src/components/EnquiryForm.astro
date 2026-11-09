@@ -14,7 +14,7 @@ interface Props {
 const { headingLevel = 2, fallback = true } = Astro.props;
 const Heading = headingLevel === 1 ? "h1" : "h2";
 ---
-<section id="contact" class="contact dark" aria-labelledby="contact-title">
+<section id="contact" class="contact dark">
   <div class="wrap contact-inner enquiry">
     <div class="enquiry-intro">
       <Heading id="contact-title"><slot name="heading" /></Heading>

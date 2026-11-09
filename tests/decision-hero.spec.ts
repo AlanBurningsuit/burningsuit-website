@@ -23,10 +23,10 @@ for (const { route, label, action, price } of heroes) {
     await page.goto(route);
     const hero = page.locator(".dark.stage .title-band.decision-hero");
     await expect(hero).toHaveCount(1);
-    expect(await hero.evaluate((el) => [...el.children].map((child) => child.tagName + "." + child.className))).toEqual(["H1.", "P.standfirst", "ASIDE.hero-facts"]);
-    const group = page.getByRole("complementary", { name: label, exact: true });
+    expect(await hero.evaluate((el) => [...el.children].map((child) => child.tagName + "." + child.className))).toEqual(["H1.", "P.standfirst", "SECTION.hero-facts"]);
+    const group = page.getByRole("region", { name: label, exact: true });
     await expect(group).toHaveCount(1);
-    await expect(hero.locator("aside.hero-facts")).toHaveAttribute("aria-label", label);
+    await expect(hero.locator("section.hero-facts")).toHaveAttribute("aria-label", label);
     // The old lifted facts card is gone; the introduction opens the daylight sheet alone, at reading width.
     await expect(page.locator(".course-run")).toHaveCount(0);
     await expect(page.locator(".dark.stage .course-intro")).toHaveCount(0);
@@ -110,12 +110,19 @@ for (const { route, label, action, price } of heroes) {
       expect(act.x + act.width).toBeLessThanOrEqual(width);
       if (width <= 390) {
         // Phones: no middots; the facts pair in two columns and each price spans both; the action spans the content width.
+        // A list with a fact too long to share a row (the 101's date and times) runs one fact to a row instead.
         expect(await page.locator(".hero-facts .run-facts > li:nth-child(2)").evaluate((el) => getComputedStyle(el, "::before").content)).toBe("none");
         const narrow = await facts(page);
         const [a, b] = narrow;
-        expect(Math.abs(a.top - b.top)).toBeLessThanOrEqual(1);
-        expect(b.left).toBeGreaterThan(a.right);
-        for (const p of narrow.filter((f) => f.price)) expect(p.right - p.left).toBeGreaterThan((a.right - a.left) * 1.5);
+        if (await page.locator(".hero-facts .run-facts .fact-wide").count()) {
+          expect(route).toBe("/training/power-bi-with-ai-agents-101/");
+          expect(b.top).toBeGreaterThanOrEqual(a.bottom);
+          for (const f of narrow) expect(Math.abs(f.left - a.left)).toBeLessThanOrEqual(1);
+        } else {
+          expect(Math.abs(a.top - b.top)).toBeLessThanOrEqual(1);
+          expect(b.left).toBeGreaterThan(a.right);
+          for (const p of narrow.filter((f) => f.price)) expect(p.right - p.left).toBeGreaterThan((a.right - a.left) * 1.5);
+        }
         if (action === ".run-action") expect(Math.abs(act.width - group.width)).toBeLessThanOrEqual(1);
         // A common phone (390x844, normal text size): the whole primary action is on the first screen.
         if (width === 390) {
@@ -193,7 +200,7 @@ test("the decision hero stays off the training chooser, Consultancy and the home
     await expect(page.locator(".decision-hero, .hero-facts, .decision-opening")).toHaveCount(0);
   }
   await page.goto("/power-bi/");
-  await expect(page.locator("aside.course-run")).toHaveCount(1);
+  await expect(page.locator("section.course-run")).toHaveCount(1);
 });
 
 test("priced variant puts no price outside the hero's price items on course pages", async ({ page }) => {

@@ -67,10 +67,10 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
   const hero = page.locator(".dark.stage .title-band.decision-hero");
   await expect(hero).toHaveCount(1);
-  expect(await hero.evaluate((el) => [...el.children].map((child) => child.tagName + (child.className ? "." + child.className : "")))).toEqual(["H1", "P.standfirst", "ASIDE.hero-facts"]);
-  const group = page.getByRole("complementary", { name: "Course facts" });
+  expect(await hero.evaluate((el) => [...el.children].map((child) => child.tagName + (child.className ? "." + child.className : "")))).toEqual(["H1", "P.standfirst", "SECTION.hero-facts"]);
+  const group = page.getByRole("region", { name: "Course facts" });
   await expect(group).toHaveCount(1);
-  await expect(hero.locator("aside.hero-facts")).toHaveAttribute("aria-label", "Course facts");
+  await expect(hero.locator("section.hero-facts")).toHaveAttribute("aria-label", "Course facts");
   await expect(page.locator(".course-run")).toHaveCount(0);
   expect(await group.evaluate((el) => [...el.children].map((child) => child.className))).toEqual(["run-facts", "button run-action"]);
   const facts = group.locator(".run-facts");

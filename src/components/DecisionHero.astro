@@ -19,8 +19,8 @@ const { heading, standfirst, label } = Astro.props;
 ---
 <TitleBand heading={heading} class="decision-hero">
   <Fragment slot="standfirst">{standfirst}</Fragment>
-  <aside slot="decision" class="hero-facts" aria-label={label}>
+  <section slot="decision" class="hero-facts" aria-label={label}>
     <ul class="run-facts" role="list"><slot name="facts" /></ul>
     <slot />
-  </aside>
+  </section>
 </TitleBand>
