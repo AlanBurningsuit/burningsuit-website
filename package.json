@@ -13,6 +13,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "check:brand": "node scripts/check-brand.mjs",
+    "check:copy": "node scripts/check-copy.mjs",
     "check:content": "node scripts/check-content.mjs",
     "check:budget": "node scripts/check-budget.mjs",
     "check:seo": "node scripts/check-seo.mjs",
@@ -25,7 +26,7 @@
     "test:links": "node scripts/check-links.mjs",
     "test:lh": "lhci autorun",
     "test:lh:mobile": "lhci autorun --config=./lighthouserc.mobile.cjs",
-    "gate": "npm run check:brand && npm run check:prices && npm run check && npm run build && npm run check:prices:dist && npm run test:links && npm run check:seo"
+    "gate": "npm run check:brand && npm run check:copy && npm run check:prices && npm run check && npm run build && npm run check:prices:dist && npm run test:links && npm run check:seo"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.3",
