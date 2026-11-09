@@ -2,6 +2,7 @@ import { test, expect, otherScripts } from "./analytics";
 import { priced, copy, knownValues, expectAmountsOnlyWhenPriced, expectNone, expectItems, expectText, expectSeatBooking } from "./prices";
 import { readFileSync } from "node:fs";
 import { PRICE_SLOTS } from "../src/lib/training-prices.mjs";
+import { RUN } from "../src/config/course-run.mjs";
 
 // The built site is either the Price on request variant or the priced variant (SHOW_TRAINING_PRICES=true at build and test time).
 // Every price-bearing comparison happens in memory and asserts a boolean with a fixed message: no failure prints an amount.
@@ -90,7 +91,7 @@ test("unpriced and priced items keep the approved private-course wording", async
   if (priced) {
     // The private 101 is one fact of its own, so the amounts above it cannot be read as its price.
     const facts = page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts > li");
-    await expectItems(facts, ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", copy!.publicSeat, "Private for your team: price on request"], "101 chooser facts");
+    await expectItems(facts, ["Half a day, live online", `Public course: ${RUN.longDate}, ${RUN.times}, ${RUN.people}`, copy!.publicSeat, "Private for your team: price on request"], "101 chooser facts");
     await expectText(page.locator(".training-intro > p").nth(1), copy!.trainingIntro, "training price statement");
   }
   // Consultancy shows its usual range only when priced; the free call never carries a price.

@@ -3,6 +3,7 @@ import { reportCspViolations, visualReview, expectIndexable } from "./helpers";
 import { pendingRoutes } from "../src/config/pending-routes.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, copy, expectItems, expectText, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
+import { RUN } from "../src/config/course-run.mjs";
 
 const course = "/training/power-bi-with-ai-agents-101/";
 
@@ -65,10 +66,10 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".do-steps > li")).toHaveCount(4);
   await expect(page.locator(".do-steps h3")).toHaveText(["Get your bearings.", "Understand a report you didn't build.", "Document its calculations.", "Build one new calculation and check it."]);
   await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toBeVisible();
-  await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText(["Wednesday 20 January 2027", "Wednesday 20 January 2027"]);
+  await expect(page.locator(`time[datetime="${RUN.date}"]`)).toHaveText([RUN.longDate, RUN.longDate]);
   // Seat rates (priced) or Price on request (unpriced); the private course has no price item on this page.
-  await expectItems(page.locator(".hero-facts .run-facts > li"), ["Half a day, live online", "Wednesday 20 January 2027, 9:30am to 12:30pm UK time", "4 to 8 people", ...(copy ? copy.seatFacts : [priceOnRequest])], "101 facts");
-  await expectText(page.locator(".book-facts"), `Wednesday 20 January 2027, 9:30am to 12:30pm UK time, live online. 4 to 8 people. ${copy ? copy.seatBookFacts : "Price on request."}`, "101 booking facts");
+  await expectItems(page.locator(".hero-facts .run-facts > li"), ["Half a day, live online", `${RUN.longDate}, ${RUN.times}`, RUN.people, ...(copy ? copy.seatFacts : [priceOnRequest])], "101 facts");
+  await expectText(page.locator(".book-facts"), `${RUN.longDate}, ${RUN.times}, ${RUN.modeText}. ${RUN.people}. ${copy ? copy.seatBookFacts : "Price on request."}`, "101 booking facts");
 
   // Booking: the Stripe link in the priced build; unavailable, explained controls that lead nowhere otherwise.
   await expectSeatBooking(page);
@@ -128,9 +129,9 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
     - list:
       - listitem: Half a day, live online
       - listitem:
-        - time: Wednesday 20 January 2027
-        - text: ", 9:30am to 12:30pm UK time"
-      - listitem: 4 to 8 people
+        - time: ${RUN.longDate}
+        - text: ", ${RUN.times}"
+      - listitem: ${RUN.people}
       - listitem: Price on request
   `);
   const text = await page.locator("main").innerText();
@@ -217,7 +218,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   // Priced output replaces "On site or online" and the price on request with one self-contained price item, and adds the public seat rates.
   const homeFacts: Record<string, string[]> = {
     "Power BI fundamentals": copy ? ["2 days", "Private, for your team", copy.homeFundamentals] : ["2 days", "Private, for your team", "On site or online", priceOnRequest],
-    "Power BI with AI agents 101": ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", ...(copy ? [copy.publicSeat] : []), "Private for your team: price on request"],
+    "Power BI with AI agents 101": ["Half a day, live online", `Public course: ${RUN.longDate}, ${RUN.times}, ${RUN.people}`, ...(copy ? [copy.publicSeat] : []), "Private for your team: price on request"],
   };
   // In the priced build the 101 card books on the course page; otherwise it asks through the form.
   for (const [name, ask] of [["Power BI fundamentals", "Ask about dates"], ["Power BI with AI agents 101", priced ? "Book a seat" : "Ask about a seat"]]) {
@@ -226,7 +227,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
     await expect(entry.getByRole("link", { name: "Read the course outline" })).toHaveCount(1);
     await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/power-bi-with-ai-agents-101/#book-title" : "#contact");
   }
-  await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
+  await expect(page.locator(`time[datetime="${RUN.date}"]`)).toHaveText(RUN.longDate);
   await expect(page.locator(".specialist-names > li")).toHaveText(["DAX fundamentals (1 day)", "DAX deep dive (2 days)"]);
   await expect(page.locator(".specialist-names")).toBeVisible();
   // Separators are decorative: hidden from assistive technology and never left at a line start or end.

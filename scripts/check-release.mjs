@@ -2,6 +2,7 @@
 // released: crawlable, listed in a sitemap, every page indexable except the deliberate few, and every form delivering.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { RUN, staleRunProblem } from "../src/config/course-run.mjs";
 
 const dist = process.argv[2] ?? "dist";
 const site = "https://burningsuit.co.uk";
@@ -14,6 +15,9 @@ const isNoindex = (html) => /<meta\b(?=[^>]*\bname=["']robots["'])(?=[^>]*\bcont
 const isRedirect = (html) => /<meta\b[^>]*http-equiv=["']refresh["']/i.test(html);
 const fileFor = (url) => { const path = new URL(url).pathname; return path.endsWith("/") ? `${path.slice(1)}index.html` : path.slice(1); };
 
+// A run left "open" after its date would keep selling a finished course. BURNINGSUIT_NOW (ISO) overrides the clock in tests.
+const runProblem = staleRunProblem(RUN, process.env.BURNINGSUIT_NOW ? Date.parse(process.env.BURNINGSUIT_NOW) : Date.now());
+if (runProblem) problems.push(runProblem);
 if (!files.includes("index.html")) problems.push("no homepage");
 for (const name of files) {
   const html = read(name);

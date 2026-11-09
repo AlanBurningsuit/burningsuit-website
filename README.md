@@ -49,6 +49,7 @@ Things to know:
 | `src/config/compatibility.mjs` | Legacy redirects, reserved routes and anchors (checked by `check:seo`), and `reserved404Routes`, the parked study routes that must return a real 404. |
 | `src/config/enquiry.mjs` | The Formspark endpoint. A null endpoint disables Send. |
 | `src/config/booking.mjs` | The 101's Stripe payment link (used only in the priced build). |
+| `src/config/course-run.mjs` | The 101's public run: dates, capacity and status (see Course run). |
 | `src/config/analytics.mjs` | The Umami tag, which also feeds the CSP, and the names of the counted click events. |
 | `src/config/starting-courses.mjs` | The wording Home and Training share for the two starting courses, used through `src/components/CourseEntry.astro`. |
 | `src/config/writing-routes.mjs` | Fixed public URLs for the two articles. |
@@ -77,7 +78,15 @@ Clicks towards a booking and on the enquiry form's Send are counted as named Uma
 
 ### Structured data and search
 
-`BaseLayout` gives every indexed page a canonical link, `og:url` and the JSON-LD identity graph; pages add their own nodes through its `schema` prop (a Course on each course page, a Service on `/power-bi/`, an ItemList on `/training/`, a ProfilePage on `/about/`, BreadcrumbLists below Training, Case studies and Privacy). Never put prices or offers in structured data. The 101's run date is typed in its schema and its `<time>` elements: change them together. `@astrojs/sitemap` lists indexed pages; `robots.txt` names the sitemap. `tests/structured-data.test.mjs` covers JSON-LD, `/llms.txt` and IndexNow.
+`BaseLayout` gives every indexed page a canonical link, `og:url` and the JSON-LD identity graph; pages add their own nodes through its `schema` prop (a Course on each course page, a Service on `/power-bi/`, an ItemList on `/training/`, a ProfilePage on `/about/`, BreadcrumbLists below Training, Case studies and Privacy). Never put prices or offers in structured data. The 101's run dates in its schema come from `src/config/course-run.mjs`. `@astrojs/sitemap` lists indexed pages; `robots.txt` names the sitemap. `tests/structured-data.test.mjs` covers JSON-LD, `/llms.txt` and IndexNow.
+
+### Course run
+
+The 101's one public run lives in `src/config/course-run.mjs`: start and end (UK local time with offset), the minimum-numbers date, capacity, mode and `status`. Home's and Training's cards, the 101's facts, booking band, booking terms and Course JSON-LD all read it; the refund deadline (14 days before) and the printed dates are derived. To change the date, edit that file only.
+
+- When the Stripe link closes (8 payments), set `status: "full"`. After the run, set `status: "past"`. Either removes every booking link and its click counting, and shows a status line with an ask about the next run (the 101's private-course email on its page, the enquiry form on Home and Training). `past` also drops the run's dates from the JSON-LD.
+- That status wording (`RUN_STATUS_WORDING`) is a draft: Alan approves it before a run is first marked full or past.
+- `check:release` blocks a deploy while the run is still `open` after it has ended. `tests/course-run.test.mjs` covers the derivations and the closed states without changing the committed status.
 
 ## Prices
 
