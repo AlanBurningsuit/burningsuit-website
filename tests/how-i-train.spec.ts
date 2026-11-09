@@ -7,7 +7,7 @@ const route = "/training/how-i-train/";
 const email = `mailto:${ENQUIRY.email}`;
 // The enquiry link targets the Contact page. That page is built on its own branch; until it is
 // integrated, /contact/ here is still the legacy redirect, so only the href itself is checked.
-const links = ["/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/power-bi/", "/training/agentic-development-for-power-bi/#need-title", "/training/", "/training/power-bi-fundamentals/", "/training/agentic-development-for-power-bi/", email, "/contact/", "/about/", "/work/"];
+const links = ["/training/#coaching", "/power-bi/", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/power-bi/", "/training/power-bi-with-ai-agents-101/#need-title", "/training/", "/training/power-bi-fundamentals/", "/training/power-bi-with-ai-agents-101/", email, "/contact/", "/about/", "/work/"];
 
 test("How I train stays static, private and CSP-clean, with no form or third-party request", async ({ page, baseURL }) => {
   const errors: string[] = [];
@@ -82,11 +82,11 @@ test("How I train links: coaching, consultancy, the courses, email, the Contact 
     ["we can work together", "/power-bi/"],
     ["all the courses", "/training/"],
     ["Power BI fundamentals", "/training/power-bi-fundamentals/"],
-    ["Power BI with AI agents 101", "/training/agentic-development-for-power-bi/"],
+    ["Power BI with AI agents 101", "/training/power-bi-with-ai-agents-101/"],
     ["email me", email],
     ["the enquiry form", "/contact/"],
     ["about me", "/about/"],
-    ["what you'll need for the 101", "/training/agentic-development-for-power-bi/#need-title"],
+    ["what you'll need for the 101", "/training/power-bi-with-ai-agents-101/#need-title"],
   ]) for (const link of await page.locator("main").getByRole("link", { name, exact: true }).all()) await expect(link).toHaveAttribute("href", href);
   // "we can work together" appears twice, in the own-work answer and the private course terms; both lead to consultancy.
   await expect(page.locator("main").getByRole("link", { name: "we can work together", exact: true })).toHaveCount(2);

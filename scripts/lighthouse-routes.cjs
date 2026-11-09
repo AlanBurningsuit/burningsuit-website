@@ -1,7 +1,7 @@
 // One audited route list for desktop and mobile; both use the existing fresh build.
 module.exports = [
   "/index.html",
-  "/training/agentic-development-for-power-bi/",
+  "/training/power-bi-with-ai-agents-101/",
   "/training/power-bi-fundamentals/",
   "/training/dax-fundamentals/",
   "/training/dax-deep-dive/",

@@ -96,7 +96,7 @@ test("both booking actions are the same ordinary same-tab link, styled as the sh
 
 test("the 101's closed booking button keeps its disabled state", async ({ page }) => {
   test.skip(priced, "Booking is a live link in the priced build.");
-  await page.goto("/training/agentic-development-for-power-bi/");
+  await page.goto("/training/power-bi-with-ai-agents-101/");
   const closed = page.locator("button.book-button").first();
   await expect(closed).toBeDisabled();
   const style = await closed.evaluate((el) => { const s = getComputedStyle(el); return { bg: s.backgroundColor, border: s.borderTopStyle, shadow: s.boxShadow }; });

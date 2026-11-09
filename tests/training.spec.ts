@@ -5,7 +5,7 @@ import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
 
 const route = "/training/";
-const course101 = "/training/agentic-development-for-power-bi/";
+const course101 = "/training/power-bi-with-ai-agents-101/";
 const fundamentals = "/training/power-bi-fundamentals/";
 const deepDive = "/training/dax-deep-dive/";
 const daxFundamentals = "/training/dax-fundamentals/";
@@ -125,7 +125,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
 
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", "#coaching", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
+  expect(mainLinks).toEqual([fundamentals, fundamentals, "#contact", "#coaching", course101, course101, ...(priced ? ["/training/power-bi-with-ai-agents-101/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/", ENQUIRY.privacyPath, email]);
   const text = await page.locator("main").innerText();
   // Developing and Claude courses stay off; no arrows, seats, booking or promises the copy doesn't make.
   // Priced output states the 101's per-seat rates, so "seat" is allowed there; booking wording stays absent in both.
@@ -359,7 +359,7 @@ test("training chooser works from the keyboard without JavaScript", async ({ bro
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(2);
   }
-  expect(reached).toEqual([fundamentals, fundamentals, "#contact", "#coaching", course101, course101, ...(priced ? ["/training/agentic-development-for-power-bi/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
+  expect(reached).toEqual([fundamentals, fundamentals, "#contact", "#coaching", course101, course101, ...(priced ? ["/training/power-bi-with-ai-agents-101/#book-title"] : []), email, daxFundamentals, daxFundamentals, deepDive, deepDive, "/work/dax-deep-dive/", "#contact", "#contact", "#contact", "/work/contact-centre/", "/work/individual-power-bi-coaching/", "/training/how-i-train/", "/about/", "/work/"]);
 
   // An inbound coaching link lands on its section without JavaScript; its ask reaches the shared form.
   await page.goto(route + "#coaching");

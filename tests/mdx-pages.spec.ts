@@ -73,7 +73,7 @@ for (const [route, kind, author] of [[essay, "essay", "Alan Harman-Box"], [archi
     await expect(page.locator('meta[property="article:published_time"], meta[property="article:modified_time"], form, iframe, astro-island, [style], [data-rebuild-placeholder]')).toHaveCount(0);
     await expect(page.locator(otherScripts)).toHaveCount(0);
     // The essay leads on to the course it bears on; the archive post to the offers only.
-    expect(await page.locator(".article-related a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual([...(kind === "essay" ? ["/training/agentic-development-for-power-bi/"] : []), "/about/", "/training/", "/power-bi/"]);
+    expect(await page.locator(".article-related a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual([...(kind === "essay" ? ["/training/power-bi-with-ai-agents-101/"] : []), "/about/", "/training/", "/power-bi/"]);
   });
 }
 

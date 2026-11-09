@@ -4,7 +4,7 @@ import { pendingRoutes } from "../src/config/pending-routes.mjs";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { priced, copy, expectItems, expectText, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
 
-const course = "/training/agentic-development-for-power-bi/";
+const course = "/training/power-bi-with-ai-agents-101/";
 
 for (const route of ["/", course]) {
   test(`built page stays static, private and CSP-clean: ${route}`, async ({ page, baseURL }) => {
@@ -220,7 +220,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
     const entry = page.getByRole("article", { name });
     await expectItems(entry.locator(".facts > li"), homeFacts[name], `home ${name} facts`);
     await expect(entry.getByRole("link", { name: "Read the course outline" })).toHaveCount(1);
-    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/agentic-development-for-power-bi/#book-title" : "#contact");
+    await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/power-bi-with-ai-agents-101/#book-title" : "#contact");
   }
   await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
   await expect(page.locator(".specialist-names > li")).toHaveText(["DAX fundamentals (1 day)", "DAX deep dive (2 days)"]);

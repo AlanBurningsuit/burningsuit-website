@@ -11,7 +11,7 @@ import { resolve } from "node:path";
 export const PRICES_FILE = "design/copy/training-prices.json";
 export const PRICES_FLAG = "SHOW_TRAINING_PRICES";
 
-/** Private file keys for the rate slots. */
+/** Private file keys for the rate slots. They name the private file's and the production secret's entries, not page routes: the 101 keeps its launch key after its page moved. */
 export const PRICE_SLOTS = [
   ["power-bi-fundamentals", "onSite"], ["power-bi-fundamentals", "online"],
   ["dax-fundamentals", "onSite"], ["dax-fundamentals", "online"],

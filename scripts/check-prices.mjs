@@ -96,7 +96,7 @@ function checkTracked() {
 }
 
 const routeFile = (route) => join(root, "dist", route, "index.html");
-const ROUTES = { home: "", training: "training", agents: "training/agentic-development-for-power-bi", fundamentals: "training/power-bi-fundamentals", daxDeepDive: "training/dax-deep-dive", daxFundamentals: "training/dax-fundamentals", consultancy: "power-bi" };
+const ROUTES = { home: "", training: "training", agents: "training/power-bi-with-ai-agents-101", fundamentals: "training/power-bi-fundamentals", daxDeepDive: "training/dax-deep-dive", daxFundamentals: "training/dax-fundamentals", consultancy: "power-bi" };
 const count = (text, needle) => text.split(needle).length - 1;
 
 function checkDist() {
@@ -139,14 +139,14 @@ function checkDist() {
   expect(has(training, copy.trainingFundamentals) && has(training, copy.publicSeat) && has(training, copy.trainingIntro), "priced-slot-missing", "dist/training/index.html");
   for (const text of Object.values(copy.specialists)) expect(has(training, text), "priced-slot-missing", "dist/training/index.html");
   expect(has(consultancy, copy.consultancyRange), "priced-slot-missing", "dist/power-bi/index.html");
-  expect(copy.seatFacts.every((text) => has(agents, text)) && agents.includes(copy.seatBookFacts), "priced-slot-missing", "dist/training/agentic-development-for-power-bi/index.html");
+  expect(copy.seatFacts.every((text) => has(agents, text)) && agents.includes(copy.seatBookFacts), "priced-slot-missing", "dist/training/power-bi-with-ai-agents-101/index.html");
   expect(has(fundamentals, copy.fundamentalsDetail), "priced-slot-missing", "dist/training/power-bi-fundamentals/index.html");
   expect(has(daxDeepDive, copy.daxDeepDiveDetail), "priced-slot-missing", "dist/training/dax-deep-dive/index.html");
   expect(has(daxFundamentals, copy.daxFundamentalsDetail), "priced-slot-missing", "dist/training/dax-fundamentals/index.html");
   // Price on request stays for the private 101 (Home, Training) and coaching (Training) only; "On site or online" is omitted from priced output.
   expect(count(home, ">Price on request<") === 1 && !home.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/index.html");
   expect(count(training, ">Price on request<") === 2 && !training.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/index.html");
-  expect(!agents.includes("Price on request"), "unpriced-phrase-in-priced-slot", "dist/training/agentic-development-for-power-bi/index.html");
+  expect(!agents.includes("Price on request"), "unpriced-phrase-in-priced-slot", "dist/training/power-bi-with-ai-agents-101/index.html");
   expect(!fundamentals.includes("Price on request") && !fundamentals.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/power-bi-fundamentals/index.html");
   expect(!daxDeepDive.includes("Price on request") && !daxDeepDive.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/dax-deep-dive/index.html");
   expect(!daxFundamentals.includes("Price on request") && !daxFundamentals.includes(">On site or online<"), "unpriced-phrase-in-priced-slot", "dist/training/dax-fundamentals/index.html");
