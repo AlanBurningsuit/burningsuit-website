@@ -43,5 +43,21 @@ export async function expectIndexable(page: Page, { article = false } = {}) {
   const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
   expect(blocks).toHaveLength(1);
   const types = (JSON.parse(blocks[0])["@graph"] as { "@type": string }[]).map((node) => node["@type"]);
-  expect(types).toEqual(["Organization", "Person", "WebSite", ...(article ? ["Article"] : [])]);
+  expect(types).toEqual(["Organization", "Person", "WebSite", ...(article ? ["Article"] : []), ...pageSchemaTypes(path)]);
+}
+
+/** The page-specific JSON-LD each route adds after the identity graph (and any Article), in emission order. */
+export function pageSchemaTypes(path: string): string[] {
+  const route = path.replace(/\/?$/, "/");
+  const own: Record<string, string> = {
+    "/about/": "ProfilePage",
+    "/training/": "ItemList",
+    "/power-bi/": "Service",
+    "/training/power-bi-fundamentals/": "Course",
+    "/training/agentic-development-for-power-bi/": "Course",
+    "/training/dax-fundamentals/": "Course",
+    "/training/dax-deep-dive/": "Course",
+  };
+  const nested = /^\/(training|work|privacy)\/[^/]+\/$/.test(route);
+  return [...(own[route] ? [own[route]] : []), ...(nested ? ["BreadcrumbList"] : [])];
 }

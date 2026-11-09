@@ -60,3 +60,86 @@ export function articleNode(opts: { siteUrl: string; pageUrl: string; headline: 
     inLanguage: "en-GB",
   });
 }
+
+/* Page-specific nodes. Every value comes from what the page shows: no prices or offers (training prices never enter
+   structured data), no dates or capacities the page doesn't state. */
+
+/** A course page: what it is, who runs it, and how and for how many it runs. */
+export function courseNode(opts: {
+  siteUrl: string;
+  pageUrl: string;
+  name: string;
+  description: string;
+  /** Visible delivery: "Onsite" and/or "Online". */
+  modes: ("Onsite" | "Online")[];
+  /** Visible length as an ISO 8601 duration (P2D for "2 days", PT3H for a three-hour half day). */
+  workload: string;
+  /** Visible group maximum. */
+  maxPeople: number;
+  /** A scheduled run, as the page dates it (ISO 8601 with offset). */
+  run?: { startDate: string; endDate: string };
+}): SchemaNode {
+  return compact({
+    "@type": "Course",
+    "@id": `${opts.pageUrl}#course`,
+    name: opts.name,
+    description: opts.description,
+    url: opts.pageUrl,
+    provider: { "@id": orgId(opts.siteUrl) },
+    inLanguage: "en-GB",
+    hasCourseInstance: compact({
+      "@type": "CourseInstance",
+      courseMode: opts.modes.length === 1 ? opts.modes[0] : opts.modes,
+      courseWorkload: opts.workload,
+      maximumAttendeeCapacity: opts.maxPeople,
+      instructor: { "@id": personId(opts.siteUrl) },
+      startDate: opts.run?.startDate,
+      endDate: opts.run?.endDate,
+    }),
+  });
+}
+
+/** The consultancy offer as a Service from the Organization. */
+export function serviceNode(opts: { siteUrl: string; pageUrl: string; name: string; description: string }): SchemaNode {
+  return {
+    "@type": "Service",
+    "@id": `${opts.pageUrl}#service`,
+    name: opts.name,
+    serviceType: opts.name,
+    description: opts.description,
+    url: opts.pageUrl,
+    provider: { "@id": orgId(opts.siteUrl) },
+    areaServed: "GB",
+  };
+}
+
+/** An ordered list of pages, by URL (the training chooser's courses). */
+export function itemListNode(opts: { pageUrl: string; name: string; items: { name: string; url: string }[] }): SchemaNode {
+  return {
+    "@type": "ItemList",
+    "@id": `${opts.pageUrl}#list`,
+    name: opts.name,
+    itemListElement: opts.items.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.name, url: item.url })),
+  };
+}
+
+/** About is Alan's profile page; its portrait is the page's main image. */
+export function profilePageNode(opts: { siteUrl: string; pageUrl: string; image?: string }): SchemaNode {
+  return compact({
+    "@type": "ProfilePage",
+    "@id": `${opts.pageUrl}#profile`,
+    url: opts.pageUrl,
+    mainEntity: { "@id": personId(opts.siteUrl) },
+    isPartOf: { "@id": websiteId(opts.siteUrl) },
+    primaryImageOfPage: opts.image ? { "@type": "ImageObject", url: opts.image } : undefined,
+  });
+}
+
+/** Breadcrumbs from the home page down, each crumb a built page. */
+export function breadcrumbNode(pageUrl: string, crumbs: { name: string; url: string }[]): SchemaNode {
+  return {
+    "@type": "BreadcrumbList",
+    "@id": `${pageUrl}#breadcrumbs`,
+    itemListElement: crumbs.map((crumb, index) => ({ "@type": "ListItem", position: index + 1, name: crumb.name, item: crumb.url })),
+  };
+}

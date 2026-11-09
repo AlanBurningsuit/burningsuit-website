@@ -3,6 +3,7 @@
 // The two starting points reuse the homepage's course entries (home.css); training.css holds this page's composition.
 // Fundamentals and How I train are pending routes (src/config/pending-routes.mjs); 101 booking stays on its own page.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { itemListNode } from "../../lib/schema";
 import TitleBand from "../../components/TitleBand.astro";
 import PullQuote from "../../components/PullQuote.astro";
 import EnquiryForm from "../../components/EnquiryForm.astro";
@@ -25,11 +26,19 @@ const specialists = [
   { name: "DAX fundamentals", length: "1 day", href: "/training/dax-fundamentals/" },
   { name: "DAX deep dive", length: "2 days", href: "/training/dax-deep-dive/" },
 ];
+// The four courses in the order the page lists them; each course page carries its own Course node.
+const courses = [
+  { name: "Power BI fundamentals", href: "/training/power-bi-fundamentals/" },
+  { name: "Power BI with AI agents 101", href: "/training/agentic-development-for-power-bi/" },
+  ...specialists,
+];
+const schema = [itemListNode({ pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI courses", items: courses.map((course) => ({ name: course.name, url: new URL(course.href, Astro.site).href })) })];
 ---
 <BaseLayout
   title="Power BI courses | burningsuit"
   description={description}
   placeholder={false}
+  schema={schema}
 >
   <TitleBand heading={{ before: "Power BI ", em: "courses" }} />
   <div class="training-intro wrap">

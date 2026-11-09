@@ -31,3 +31,10 @@ export const FOUNDER = {
   /** Alan's LinkedIn, the Person's only profile. */
   sameAs: ["https://www.linkedin.com/in/alan-harman-box"],
 } as const;
+
+/** Section pages that parent others in breadcrumbs, named by their page titles (a test keeps the two equal). */
+export const BREADCRUMB_SECTIONS: Record<string, string> = {
+  "/training/": "Power BI courses",
+  "/work/": "Case studies",
+  "/privacy/": "Privacy",
+};

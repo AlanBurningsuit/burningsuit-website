@@ -5,6 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import { ANALYTICS } from "./src/config/analytics.mjs";
 import { redirects } from "./src/config/compatibility.mjs";
 import { formActionSource } from "./src/config/enquiry.mjs";
+import llmsTxt from "./src/integrations/llms-txt.mjs";
 
 export default defineConfig({
   site: "https://burningsuit.co.uk",
@@ -14,6 +15,8 @@ export default defineConfig({
     mdx({ smartypants: false, syntaxHighlight: false }),
     // Indexable pages only: the 404 and the enquiry results stay out, as do legacy redirect stubs.
     sitemap({ filter: (page) => !/\/(404|enquiry-received|enquiry-error)\/?$/.test(new URL(page).pathname) && !Object.keys(redirects).some((from) => new URL(page).pathname.replace(/\/$/, "") === from) }),
+    // /llms.txt for AI answer engines, from the built pages' own titles and descriptions.
+    llmsTxt(),
   ],
   // No syntax highlighting anywhere: Shiki's inline styles would break the CSP.
   markdown: { syntaxHighlight: false },

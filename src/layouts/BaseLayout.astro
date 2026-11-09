@@ -1,8 +1,8 @@
 ---
 import { Font } from "astro:assets";
-import { SITE_NAME } from "../config/site";
+import { SITE_NAME, BREADCRUMB_SECTIONS } from "../config/site";
 import Schema from "../components/seo/Schema.astro";
-import { siteGraph, articleNode } from "../lib/schema";
+import { siteGraph, articleNode, breadcrumbNode, type SchemaNode } from "../lib/schema";
 import { ANALYTICS } from "../config/analytics.mjs";
 import Masthead from "../components/Masthead.astro";
 import Footer from "../components/Footer.astro";
@@ -17,6 +17,8 @@ interface Props {
   ogType?: "website" | "article";
   /** Keeps a page out of search: the 404 and the enquiry results. Every other page is indexed. */
   noindex?: boolean;
+  /** Page-specific JSON-LD nodes (a Course, the consultancy Service, About's ProfilePage), added to the identity graph. */
+  schema?: SchemaNode[];
 }
 const {
   title = SITE_NAME,
@@ -26,12 +28,24 @@ const {
   author,
   ogType = "website",
   noindex: noindexProp = false,
+  schema: pageNodes = [],
 } = Astro.props;
 // Placeholder pages never reach search either.
 const noindex = noindexProp || placeholder;
 const siteUrl = Astro.site!.href;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const graph = [...siteGraph(siteUrl), ...(ogType === "article" ? [articleNode({ siteUrl, pageUrl: canonical, headline: title.replace(/\s+[|–-]\s+burningsuit$/, ""), description, author })] : [])];
+const pageName = title.replace(/\s+[|–-]\s+burningsuit$/, "");
+// Breadcrumbs only below a section page that exists (Training, Work, Privacy); other paths have no built parent.
+const section = Astro.url.pathname.match(/^\/[^/]+\//)?.[0];
+const crumbs = section && BREADCRUMB_SECTIONS[section] && Astro.url.pathname.replace(/\/?$/, "/") !== section
+  ? [breadcrumbNode(canonical, [{ name: "Home", url: siteUrl }, { name: BREADCRUMB_SECTIONS[section], url: new URL(section, siteUrl).href }, { name: pageName, url: canonical }])]
+  : [];
+const graph = [
+  ...siteGraph(siteUrl),
+  ...(ogType === "article" ? [articleNode({ siteUrl, pageUrl: canonical, headline: pageName, description, author })] : []),
+  ...pageNodes,
+  ...crumbs,
+];
 ---
 <!doctype html>
 <html lang="en-GB">

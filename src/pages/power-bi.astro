@@ -3,6 +3,7 @@
 // Kept anchors: situations, how-the-work-runs, pricing (step 2), ai, ongoing, start; see src/config/compatibility.mjs.
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { serviceNode } from "../lib/schema";
 import TitleBand from "../components/TitleBand.astro";
 import PullQuote from "../components/PullQuote.astro";
 import StudyLinks from "../components/StudyLinks.astro";
@@ -15,11 +16,15 @@ import { loadTrainingPrices, trainingPriceCopy } from "../lib/training-prices.mj
 const call = "/call/";
 // The priced build shows the usual range (private prices file); otherwise the price stays on request.
 const priced = trainingPriceCopy(loadTrainingPrices());
+const summary = "Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards.";
+// No price or range in structured data, priced build included.
+const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI consultancy", description: summary })];
 ---
 <BaseLayout
   title="Power BI consultancy | burningsuit"
-  description={`Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards.${priced ? "" : " Price on request."}`}
+  description={`${summary}${priced ? "" : " Price on request."}`}
   placeholder={false}
+  schema={schema}
 >
   <TitleBand heading={{ before: "Power BI consultancy that leaves your team ", em: "independent" }}>
     <Fragment slot="standfirst">Got a Power BI problem training won't fix?</Fragment>
