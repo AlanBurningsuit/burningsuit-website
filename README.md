@@ -18,8 +18,8 @@ npm run test:functional
 
 | Command | What it does |
 | --- | --- |
-| `npm run gate` | Brand parity, the copy lint, the tracked-file price scan, `astro check`, build, the built-output price scan, links and SEO (reserved routes and anchors, redirects, metadata). |
-| `npm run test:functional` | Type-checks the tests, runs `tests/*.test.mjs` with Node, then Playwright against the existing `dist/`. Build first. |
+| `npm run gate` | Brand parity, the copy lint, the tracked-file price scan, `astro check`, build, the built-output price scan (on a priced route, only that route's approved values), links (pages with linkinator, then every internal `#fragment` against the built page's ids) and SEO (reserved routes and anchors, redirects, metadata). |
+| `npm run test:functional` | Type-checks the tests, runs `tests/*.test.mjs` with Node, then Playwright against the existing `dist/`: the full suite in Chromium (including axe on every page at 1366px and 390px, failing on serious or critical violations) and the `@smoke` subset in WebKit. Build first. |
 | `npm run check:release` | Run against `dist/`. Fails on a page noindexed (other than the 404 and the two enquiry results) or without a canonical link, a form with no endpoint, or a `robots.txt` or sitemap that doesn't match the build. |
 | `npm run test:lh`, `npm run test:lh:mobile` | Lighthouse over the routes in `scripts/lighthouse-routes.cjs`. Set `CHROME_PATH` if Chrome isn't on `PATH`; set `BURNINGSUIT_LH_URL` to audit a running preview instead. |
 | `npm run prep:images` | Rebuilds the committed photo derivatives from the brand checkout's photos. |
@@ -27,11 +27,15 @@ npm run test:functional
 
 Things to know:
 
-- **Brand parity and the copy lint are local only.** `check:brand` compares `src/styles/brand.css` with the brand checkout's `brand.css` only when that checkout exists, and skips the comparison silently when it doesn't (as in CI). It always checks that no source file uses a hex colour `brand.css` doesn't define. The brand checkout is found beside the original Git checkout (worktrees included); `BURNINGSUIT_BRAND_DIR` overrides it. `check:copy` runs the brand repo's `scripts/lint-copy.mjs` over `src/pages`, `src/content`, `src/components` and `src/layouts` from the same checkout: lint errors fail the gate, so every push is linted through the push hook; without the checkout (as in CI) it prints that it skipped and passes. Mark a deliberate exception with a `copy-lint-ignore <term>: <reason>` comment on or above the line.
+- **Brand parity and the copy lint are local only.** `check:brand` compares `src/styles/brand.css` with the brand checkout's `brand.css` only when that checkout exists, and skips the comparison silently when it doesn't (as in CI). It always checks that no source file uses a colour (hex, or `rgb()`, `hsl()`, `oklch()` and the like with literal arguments) that `brand.css` doesn't define; two older shadow literals are allow-listed by file and value in `scripts/check-brand.mjs`. The brand checkout is found beside the original Git checkout (worktrees included); `BURNINGSUIT_BRAND_DIR` overrides it. `check:copy` runs the brand repo's `scripts/lint-copy.mjs` over `src/pages`, `src/content`, `src/components` and `src/layouts` from the same checkout: lint errors fail the gate, so every push is linted through the push hook; without the checkout (as in CI) it prints that it skipped and passes. Mark a deliberate exception with a `copy-lint-ignore <term>: <reason>` comment on or above the line.
 - **Ports.** Playwright and the link checker each pick a free port. `BURNINGSUIT_TEST_PORT` pins Playwright's; `BURNINGSUIT_LINK_PORT` pins the link checker's (falling back to `BURNINGSUIT_TEST_PORT`).
 - **Isolation.** Run independent test builds in their own checkout and `dist/`; never overwrite another run's build or stop its server.
 - **Analytics in tests.** Tests never contact Umami: `tests/analytics.ts` serves the committed tracker copy in `tests/fixtures/umami/script.js` and fails on any other Umami request. `UMAMI_LIVE=1` loads the real tag (beacons stay blocked). To refresh the copy, replace the code under its header and update the date, version, ETag and hash.
-- **Screenshots** that functional tests attach (1366px and 390px) are for review, not approved baselines.
+- **Every page.** The shell checks (`tests/shell.spec.ts`), axe and the WebKit smoke run over every HTML page in `dist/` except redirect stubs, so a new page is covered without a list to edit.
+- **WebKit.** The `webkit-smoke` project runs only tests tagged `@smoke` (`tests/smoke.spec.ts`). It runs wherever WebKit is installed (`npx playwright install webkit`, and once on Linux `sudo npx playwright install-deps webkit`) and always in CI; without it, Playwright prints one line and skips the project.
+- **Screenshots.** `VISUAL_REVIEW=1 npm run test:functional` adds full-page captures (1366px and 390px, more on some pages) to the report. They assert nothing, are for review rather than approved baselines, and are off by default.
+- **The push hook tests what you push.** It refuses to run while tracked files have uncommitted changes (staged or not), or when the pushed ref isn't the checked-out commit. Untracked files don't count, so don't leave a new file the commit needs uncommitted.
+- **Masked runs** print `run-masked: still running: N s` every 60 seconds while they hold the output back, so a hung priced run is visible.
 - **Checks prove behaviour, not approval.** Editorial approval is Alan's.
 
 ## Map
