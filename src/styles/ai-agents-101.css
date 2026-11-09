@@ -21,8 +21,6 @@
 /* What you'll need: the note under the list, then what you keep. */
 .need-note { margin-top: 18px; font-size: var(--compact-size); color: var(--text-dim); max-width: 64ch; }
 .keep { margin-top: 40px; font: 600 var(--lead-size) / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; max-width: 52ch; }
-/* A detail still to confirm: a quiet serif aside that flows in the line. */
-.to-confirm { font: 400 .98rem / 1.4 var(--ff-note); color: var(--text-dim); }
 
 /* Book a seat: the closing band. */
 .book-before { margin-top: 18px; font-size: var(--quiet-size); max-width: 52ch; }
