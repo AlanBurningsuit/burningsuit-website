@@ -20,7 +20,7 @@ npm run test:functional
 | --- | --- |
 | `npm run gate` | Brand parity, the copy lint, the tracked-file price scan, `astro check`, build, the built-output price scan, links and SEO (reserved routes and anchors, redirects, metadata). |
 | `npm run test:functional` | Type-checks the tests, runs `tests/*.test.mjs` with Node, then Playwright against the existing `dist/`. Build first. |
-| `npm run check:release` | Run against `dist/`. Fails on a rebuild placeholder, a page noindexed (other than the 404 and the two enquiry results) or without a canonical link, a form with no endpoint, or a `robots.txt` or sitemap that doesn't match the build. |
+| `npm run check:release` | Run against `dist/`. Fails on a page noindexed (other than the 404 and the two enquiry results) or without a canonical link, a form with no endpoint, or a `robots.txt` or sitemap that doesn't match the build. |
 | `npm run test:lh`, `npm run test:lh:mobile` | Lighthouse over the routes in `scripts/lighthouse-routes.cjs`. Set `CHROME_PATH` if Chrome isn't on `PATH`; set `BURNINGSUIT_LH_URL` to audit a running preview instead. |
 | `npm run prep:images` | Rebuilds the committed photo derivatives from the brand checkout's photos. |
 | `node diagrams/export.mjs` | Exports `diagrams/*.drawio` to SVG with the draw.io desktop app (`xvfb-run` on headless Linux). |
@@ -40,27 +40,24 @@ Things to know:
 | --- | --- |
 | `src/pages/*.astro`, `src/pages/training/*.astro`, `src/pages/privacy/*.astro` | Bespoke static pages: Home, Training, the four course pages, How I train, Consultancy (`power-bi.astro`), About, Contact, the free call (`call.astro`), the privacy notices, the enquiry results and the 404. |
 | `src/pages/work/`, `src/pages/writing/`, `src/pages/blog/2021/03/` | The Case studies index and study route, the essay route, and the Roche's Maxim archive article at its original URL. |
-| `src/pages/[...path].astro` | Rebuild-era catch-all. It emits no pages now: every route in the manifest has a real page, a collection entry or a 404 reservation. |
 | `src/content/work/`, `src/content/writing/` | MDX case studies and articles, with strict schemas in `src/lib/content-schema.ts` (`src/content.config.ts`). |
-| `src/layouts/BaseLayout.astro` | Every page's shell: head, CSP, canonical link, JSON-LD, masthead and footer. `placeholder` defaults to true, so every page passes `placeholder={false}`. |
+| `src/layouts/BaseLayout.astro` | Every page's shell: head, CSP, canonical link, JSON-LD, masthead and footer. `description` is required; `noindex` is only for the 404 and the enquiry results. |
 | `src/layouts/CaseStudyLayout.astro`, `EssayLayout.astro` | Layouts for the two MDX collections. |
-| `src/components/` | Shared parts: `Masthead`, `Footer`, `TitleBand` (every page's opening), `DecisionHero` (the four course pages' opening), `EnquiryForm`, `PullQuote`, `StudyLinks`, `CourseFigure`, `EssayFigure`, `Chapter` and the case-study kit. `mdx-components.ts` passes the kit to MDX. |
+| `src/components/` | Shared parts: `Masthead`, `Footer`, `TitleBand` (every page's opening), `DecisionHero` (the four course pages' opening), `EnquiryForm`, `PrivateCourseClose` (the three private course pages' close, with `src/lib/private-course.ts` for their price, description and Course schema), `SeatBooking` (the 101's booking control), `PullQuote`, `StudyLinks`, `CourseFigure`, `EssayFigure`, `Chapter` and the case-study kit. `mdx-components.ts` passes the kit to MDX. |
 | `src/components/seo/Schema.astro` | The only place JSON-LD is emitted. Builders are in `src/lib/schema.ts`; site identity is in `src/config/site.ts`. |
 | `src/config/compatibility.mjs` | Legacy redirects, reserved routes and anchors (checked by `check:seo`), and `reserved404Routes`, the parked study routes that must return a real 404. |
-| `src/config/enquiry.mjs` | The Formspark endpoint. A null endpoint disables Send. |
+| `src/config/enquiry.mjs` | The Formspark endpoint (a null endpoint disables Send) and the contact address everything else uses. |
 | `src/config/booking.mjs` | The 101's Stripe payment link (used only in the priced build). |
 | `src/config/course-run.mjs` | The 101's public run: dates, capacity and status (see Course run). |
 | `src/config/analytics.mjs` | The Umami tag, which also feeds the CSP, and the names of the counted click events. |
 | `src/config/starting-courses.mjs` | The wording Home and Training share for the two starting courses, used through `src/components/CourseEntry.astro`. |
 | `src/config/writing-routes.mjs` | Fixed public URLs for the two articles. |
-| `src/config/pending-routes.mjs` | Linked pages not yet built, allowed by the link check until they exist. Empty. |
 | `src/config/indexnow.mjs`, `src/integrations/llms-txt.mjs` | IndexNow key; `/llms.txt`, written after the build from indexed pages' titles and descriptions. |
 | `src/lib/training-prices.mjs` | Loads and validates the private prices and composes the price wording (see Prices). |
 | `src/styles/brand.css` | Brand tokens, copied byte for byte from the brand repo. Change them there first. |
 | `src/styles/tokens.css` | Web-only values: surface roles (dark and daylight), the one heading scale, card shadows, motion. Pages never set their own heading sizes. |
 | `src/styles/app.css` | Shared furniture: the one `.button`, the closing band, the footer, pull quotes, the sheet edges. |
 | `src/styles/<page>.css` | Page compositions. Some pages reuse others' sheets: course pages use `course.css`, and the DAX pages also use `fundamentals.css` and `dax-deep-dive.css`. |
-| `content/` | Archived original sources. Outside the build; never current copy. |
 | `diagrams/` | Editable draw.io sources for the shipped SVGs in `src/assets/diagrams/`. |
 | `public/` | Static files served as they are, including social images and the IndexNow key file. |
 | `scripts/` | Gate checks, the price tools, IndexNow submission and the push hook. |
