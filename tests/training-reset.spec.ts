@@ -276,6 +276,8 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.locator(".title-band > *")).toHaveCount(3);
   await expect(page.locator(".title-actions a")).toHaveText(["Find a course", "Get help with your own reports"]);
   expect(await page.locator(".title-actions a").evaluateAll((links) => links.map((link) => link.getAttribute("href")))).toEqual(["#training", "#consultancy"]);
+  // Both entries are buttons, not one button and a text link.
+  expect(await page.locator(".title-actions a").evaluateAll((links) => links.map((link) => link.className))).toEqual(["button", "button"]);
   expect(await bg("main")).not.toBe(await bg("body"));
   // The two primary entries sit side by side at equal width; the specialists follow beneath them.
   const [fundamentals, agents] = [await box('article[aria-labelledby="fundamentals-title"]'), await box('article[aria-labelledby="agents-101-title"]')];
