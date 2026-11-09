@@ -53,6 +53,14 @@ for (const route of routes) {
   });
 }
 
+test("a link after a counted link keeps its spacing", async ({ page }) => {
+  // The wrapper sits between the two links, so sibling rules have to allow for it (app.css).
+  await page.goto("/power-bi/");
+  const next = page.locator("#ai").locator("xpath=ancestor-or-self::section").locator(".tracked + .text-link");
+  await expect(next).toHaveCount(1);
+  expect(await next.evaluate((element) => getComputedStyle(element).marginTop)).toBe("0px");
+});
+
 test("a booking click is counted with its place and the link follows at once", async ({ browser, baseURL }) => {
   const context = await browser.newContext();
   const { bodies } = await servedAsProduction(context, baseURL!);
