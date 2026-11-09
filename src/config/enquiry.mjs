@@ -1,4 +1,7 @@
 // @ts-check
+/** The one public contact address: the enquiry fallbacks, the footer and the JSON-LD identity all use it. */
+export const CONTACT_EMAIL = "alan@burningsuit.co.uk";
+
 /**
  * Shared by the enquiry forms, Astro's CSP form-action and the release check.
  *
@@ -12,7 +15,7 @@ export const ENQUIRY = Object.freeze({
   successPath: "/enquiry-received/",
   errorPath: "/enquiry-error/",
   privacyPath: "/privacy/enquiries/",
-  email: "alan@burningsuit.co.uk",
+  email: CONTACT_EMAIL,
 });
 
 /**

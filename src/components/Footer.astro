@@ -1,8 +1,11 @@
+---
+import { CONTACT_EMAIL } from "../config/enquiry.mjs";
+---
 <footer class="footer-band">
 <div class="wrap footer">
   <p class="foot-legal">Burningsuit Limited&nbsp;· Registered in England and Wales, no. 05738130&nbsp;· Registered office: The Courtyard, Shoreham Road, Upper Beeding, West Sussex, BN44 3TN&nbsp;· VAT no. 770 3248 38</p>
   <span class="foot-links">
-    <a href="mailto:alan@burningsuit.co.uk">alan@burningsuit.co.uk</a>
+    <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
     <a href="/privacy/">Privacy</a>
     <a href="/work/">Case studies</a>
     <a href="/training/how-i-train/#private-courses">Booking terms</a>

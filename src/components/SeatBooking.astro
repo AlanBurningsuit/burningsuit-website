@@ -1,0 +1,25 @@
+---
+// The 101's booking control, in its hero and its booking band: a counted "Book a seat" link in the priced build while
+// the run is open, an unavailable control in unpriced builds, and the run's status line once it is full or past.
+import Tracked from "./Tracked.astro";
+import { ENQUIRY } from "../config/enquiry.mjs";
+import { SEAT_BOOKING_URL } from "../config/booking.mjs";
+import { EVENTS } from "../config/analytics.mjs";
+import type { seatAction } from "../config/course-run.mjs";
+
+interface Props {
+  seat: ReturnType<typeof seatAction>;
+  /** Where the click is counted from, and the id that ties the unavailable control to its status line. */
+  place: "top" | "bottom";
+  statusId: string;
+}
+const { seat, place, statusId } = Astro.props;
+const { email } = ENQUIRY;
+---
+<div class="booking">
+  {seat.kind === "book"
+    ? <Tracked event={EVENTS.bookSeat} place={place}><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
+    : seat.kind === "not-yet"
+      ? <><button class="button book-button" type="button" disabled aria-describedby={statusId}>Book a seat</button><p class="booking-status" id={statusId}>Booking isn't open yet.</p></>
+      : <p class="booking-status run-status">{seat.line} <a href={`mailto:${email}`}>{seat.ask}.</a></p>}
+</div>

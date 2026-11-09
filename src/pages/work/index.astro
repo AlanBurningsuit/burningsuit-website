@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TitleBand from "../../components/TitleBand.astro";
+import { headingText } from "../../lib/study-heading";
 import "../../styles/work.css";
 const studies = (await getCollection("work")).sort((a, b) => a.data.order - b.data.order);
 // Group lines reuse approved wording: the individual coaching study (courses), Training's coaching entry and the homepage's consultancy introduction.
@@ -10,7 +11,6 @@ const groups = [
   { category: "coaching", heading: "Power BI coaching", href: "/training/#coaching", lead: "For 1 to 3 people from the same organisation, learning Power BI on the work they actually do." },
   { category: "consultancy", heading: "Consultancy", href: "/power-bi/", lead: "I work alongside your team on your own reports and models, so they understand what we build." },
 ];
-const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => typeof heading === "string" ? heading : [heading.before, heading.em, heading.after].filter(Boolean).join("");
 const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() + descriptor.slice(1);
 ---
 <BaseLayout title="Case studies | burningsuit" description="Anonymous examples of Alan Harman-Box's Power BI courses, coaching and consultancy, and how each one ran.">
