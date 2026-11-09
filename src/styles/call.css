@@ -1,4 +1,5 @@
-/* Free call page: reuses the consultancy opening and numbered spine (course.css, consultancy.css); only the differences live here. */
+/* Free call page (/call/): this page's own rules, on top of the shared course page composition (course-page.css):
+   Consultancy's opening with its facts card, and the numbered spine. */
 
 /* The booking action is the shared .button (app.css): ochre on the facts card, amber in the dark booking band. */
 .course-run .book-link { margin-top: 24px; }

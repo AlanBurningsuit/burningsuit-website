@@ -9,9 +9,9 @@ import DecisionHero from "../../components/DecisionHero.astro";
 import PrivateCourseClose from "../../components/PrivateCourseClose.astro";
 import TeacherCard from "../../components/TeacherCard.astro";
 import { PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
-import "../../styles/course.css";
-import "../../styles/fundamentals.css";
-import "../../styles/dax-deep-dive.css";
+import "../../styles/course-page.css";
+import "../../styles/course-agenda.css";
+import "../../styles/dax-course.css";
 
 // The course facts below are the Course JSON-LD's source: keep its length (P1D) and the shared 8-person maximum in step with them.
 const { priced, description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {

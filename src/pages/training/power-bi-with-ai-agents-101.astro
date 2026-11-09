@@ -11,7 +11,8 @@ import { ENQUIRY } from "../../config/enquiry.mjs";
 import SeatBooking from "../../components/SeatBooking.astro";
 import { RUN, seatAction } from "../../config/course-run.mjs";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
-import "../../styles/course.css";
+import "../../styles/course-page.css";
+import "../../styles/ai-agents-101.css";
 
 const { email } = ENQUIRY;
 // Seat prices show only when SHOW_TRAINING_PRICES=true. The private course has no price slot on this page; its email ask stays.

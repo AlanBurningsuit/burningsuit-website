@@ -1,5 +1,5 @@
-/* DAX deep dive: reuses the Fundamentals composition (course.css, fundamentals.css); only this page's differences live here.
-   DAX fundamentals reuses this file too, for its demonstrated tag and proof line (without a study link). */
+/* The two DAX course pages (DAX fundamentals and the DAX deep dive), on top of course-page.css and course-agenda.css:
+   the demonstrated-topic tag and the proof line under the teacher card (the deep dive's with a study link). */
 
 /* Demonstrated topics: a quiet serif label at the end of the item, in the margin voice used for to-confirm notes. */
 .demo-tag { font: 400 .92rem / 1.4 var(--ff-note); color: var(--text-dim); }

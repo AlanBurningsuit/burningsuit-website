@@ -1,8 +1,7 @@
-/* Power BI consultancy page: reuses the course page composition in course.css; only the differences live here. */
+/* Power BI consultancy page (/power-bi/): this page's own rules, on top of the shared course page composition (course-page.css). */
 
 /* The opening panel's action is a text link, not the 101's booking button. */
 .run-action { margin-top: 18px; }
-.run-facts li { text-wrap: balance; }
 
 /* Lists whose entries open with a bold lead: display face, weight and a small size step; line-height is inherited so a wrapping lead keeps the paragraph's leading. */
 .lead-list strong { font-weight: 600; font-size: 1.05em; font-family: var(--ff-display); letter-spacing: var(--ls-display-tight); }
@@ -64,7 +63,8 @@
 .start { background: var(--surface-raised); }
 /* The enquiry band after it rounds the sheet's foot in the band's sage. */
 .start + .dark { --sheet-end: var(--sage); }
-.start .book-inner { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
+.book-inner { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 18px; padding-block: 60px 66px; align-items: start; }
+.book-inner h2 { margin-bottom: 16px; }
 .start-ask { font-size: 1.1rem; max-width: 40ch; }
 .start-link { font-size: 1.3rem; line-height: var(--lh-snug); }
 
@@ -72,6 +72,7 @@
   .consult-split { grid-template-columns: minmax(0, 1fr); row-gap: 22px; padding-block: 24px 56px; }
   .work-runs .do-inner { padding-block: 54px 40px; }
   .course-need.who-does { padding-block: 16px 60px; }
+  .book-inner { padding-block: 46px 52px; }
 }
 @media (max-width: 680px) {
   .pull-line { font-size: 1.4rem; }

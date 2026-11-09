@@ -1,4 +1,6 @@
-/* Power BI with AI agents 101: the course page composition. Shared furniture lives in app.css. */
+/* The course page composition, shared by the four course pages, Consultancy and the free call page: the opening with
+   its facts, the numbered spine, the diagram, the teacher card and the need list. Each page's own rules live in its own
+   sheet (ai-agents-101.css, course-agenda.css, consultancy.css, call.css); shared furniture lives in app.css. */
 
 /* Opening (Consultancy and the free call page): the title band on the dark stage; the introduction opens the daylight sheet
    with the deciding facts on a lifted card beside it on wide screens and after it on narrow ones. The course pages put
@@ -18,17 +20,10 @@ p + p.course-fit { margin-top: 1.4rem; }
 .course-run { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 18px 26px 24px; margin-top: 4px; }
 .run-facts { list-style: none; margin: 0; padding: 0; font: 400 1.05rem / var(--lh-relaxed) var(--ff-note); }
 .run-facts li { padding-block: 6px; }
+/* On the facts card (not in the decision hero), each fact balances its own lines. */
+.course-run .run-facts li { text-wrap: balance; }
 
-/* The 101's short requirements line, read before its first booking button; the full list is under What you'll need. */
-.before-book { margin-top: 20px; padding-top: 16px; border-top: var(--bw-hair) solid var(--rule); font-size: .96rem; }
-.before-book a { font-weight: 600; }
-.booking { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-top: 24px; }
-/* Booking uses the shared .button (app.css); paid booking is closed today, so it shows the disabled state. */
-.booking-status { font: 400 .98rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
-.private-ask { margin-top: 22px; font-size: 1rem; }
-.private-ask a { font-weight: 600; }
-
-/* What you'll do: a raised band with the four steps on a numbered spine. */
+/* What you'll do: a raised band with the steps on a numbered spine. */
 .course-do { background: var(--surface-raised); }
 .do-inner { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 64px 70px; align-items: start; }
 @media (min-width: 901px) { .do-lead, .course-need > h2 { position: sticky; top: 24px; } }
@@ -39,7 +34,6 @@ p + p.course-fit { margin-top: 1.4rem; }
 .do-steps li::before { content: counter(step, decimal-leading-zero); content: counter(step, decimal-leading-zero) / ""; position: absolute; left: 20px; top: 3px; font: 400 1rem / 1 var(--ff-note); color: var(--link); }
 .do-steps h3 { margin-bottom: 8px; }
 .do-steps p { font-size: 1rem; max-width: 62ch; }
-.do-next { margin-top: 10px; max-width: 62ch; }
 
 /* An explanatory diagram on a daylight plate, full content width: the wide drawing from about 900px, the phone
    drawing (redrawn, not shrunk) below that, kept to a readable width on tablets. Its text version opens below. */
@@ -54,10 +48,7 @@ p + p.course-fit { margin-top: 1.4rem; }
 .course-do > .wrap:first-child .course-figure { margin-block: 0; }
 @media (max-width: 895px) { .course-figure img { max-width: 460px; } }
 
-/* Why can I trust it: the checking, with who's teaching beside it as a margin note. */
-.course-trust { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: var(--column-gap); padding-block: 76px 64px; align-items: start; }
-.trust-check h2 { margin-bottom: 22px; }
-.trust-check p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
+/* Who's teaching (TeacherCard.astro): a lifted card on the warm spine. */
 .trust-teacher { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 22px 26px; margin-top: 10px; max-width: 42ch; }
 .trust-teacher h3 { font-size: 1.3rem; margin-bottom: 10px; }
 .trust-teacher p { font: 400 1.15rem / 1.5 var(--ff-note); }
@@ -68,7 +59,6 @@ p + p.course-fit { margin-top: 1.4rem; }
 .need-list { margin: 0; padding: 14px 30px; list-style: none; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
 .need-list li { position: relative; padding: 10px 0 10px 22px; max-width: 64ch; }
 .need-list li::before { content: ""; position: absolute; left: 0; top: calc(10px + .62em); width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-.need-note { margin-top: 18px; font-size: 1rem; color: var(--text-dim); max-width: 64ch; }
 /* A need section with a body (the 101's "What you'll need", fundamentals' "What to arrange") stacks its heading above
    the card on wide screens, so it doesn't repeat the side-by-side sections before it. */
 @media (min-width: 901px) {
@@ -76,39 +66,21 @@ p + p.course-fit { margin-top: 1.4rem; }
   .course-need:has(> .need-body) > h2 { position: static; }
   .need-body { max-width: 76ch; }
 }
-.keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; max-width: 52ch; }
-/* A detail still to confirm: a quiet serif aside that flows in the line. */
-.to-confirm { font: 400 .98rem / 1.4 var(--ff-note); color: var(--text-dim); }
 
-/* Book a seat: the closing band. */
-.book-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--column-gap); padding-block: 60px 66px; align-items: start; }
-.book-inner h2 { margin-bottom: 16px; }
+/* The booking band's facts line (the 101's Book a seat, the call page's Book your call). */
 .book-facts { font-size: 1.1rem; max-width: 40ch; }
-.book-before { margin-top: 18px; font-size: .96rem; max-width: 52ch; }
-.book-before a { font-weight: 600; }
-.book-inner .booking { margin-top: 6px; }
-.invoice { margin-top: 26px; font-size: 1rem; max-width: 52ch; }
-/* Booking terms: a short ruled list under the booking action, in the band's quieter text. */
-.booking-terms { margin-top: 26px; padding-top: 18px; border-top: var(--bw-hair) solid var(--rule); max-width: 56ch; }
-.booking-terms h3 { margin-bottom: 10px; }
-.booking-terms ul { margin: 0; padding-left: 1.2em; font-size: 1rem; color: var(--text-dim); }
-.booking-terms li + li { margin-top: 6px; }
 
 @media (max-width: 900px) {
-  .course-opening, .do-inner, .course-trust, .course-need, .book-inner { grid-template-columns: minmax(0, 1fr); row-gap: 30px; }
+  .course-opening, .do-inner, .course-need { grid-template-columns: minmax(0, 1fr); row-gap: 30px; }
   .course-opening { padding-block: 36px 52px; row-gap: 32px; }
   .course-run { margin-top: 0; }
   .do-inner { padding-block: 50px 54px; }
-  .course-trust { padding-block: 56px 40px; }
   .trust-teacher { margin-top: 0; }
   .course-need { padding-block: 24px 60px; row-gap: 22px; }
-  .book-inner { padding-block: 46px 52px; row-gap: 20px; }
 }
 @media (max-width: 680px) {
   .course-opening { padding-block: 28px 44px; }
   .do-steps li { padding-left: 46px; }
   .need-list { padding: 10px 20px; }
   .do-steps li::before { left: 14px; }
-  .trust-check p { font-size: 1.1rem; }
-  .keep { font-size: 1.1rem; margin-top: 32px; }
 }

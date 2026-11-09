@@ -1,0 +1,43 @@
+/* Power BI with AI agents 101: this page's own rules, on top of the shared course page composition (course-page.css).
+   Its opening is the decision hero (decision-hero.css), which also places the requirements line and booking control. */
+
+/* The 101's short requirements line, read before its first booking button; the full list is under What you'll need. */
+.before-book { margin-top: 20px; padding-top: 16px; border-top: var(--bw-hair) solid var(--rule); font-size: .96rem; }
+.before-book a { font-weight: 600; }
+.booking { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-top: 24px; }
+/* Booking uses the shared .button (app.css); while paid booking is closed it shows the disabled state. */
+.booking-status { font: 400 .98rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
+.private-ask { margin-top: 22px; font-size: 1rem; }
+.private-ask a { font-weight: 600; }
+
+/* What you'll do: the line after the four steps. */
+.do-next { margin-top: 10px; max-width: 62ch; }
+
+/* Why can I trust it: the checking, with who's teaching beside it as a margin note. */
+.course-trust { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: var(--column-gap); padding-block: 76px 64px; align-items: start; }
+.trust-check h2 { margin-bottom: 22px; }
+.trust-check p { font-size: 1.2rem; line-height: var(--lh-relaxed); max-width: 46ch; }
+
+/* What you'll need: the note under the list, then what you keep. */
+.need-note { margin-top: 18px; font-size: 1rem; color: var(--text-dim); max-width: 64ch; }
+.keep { margin-top: 40px; font: 600 1.2rem / var(--lh-relaxed) var(--ff-display); letter-spacing: var(--ls-display-tight); border-left: var(--bw-spine) solid var(--accent); padding-left: 22px; max-width: 52ch; }
+/* A detail still to confirm: a quiet serif aside that flows in the line. */
+.to-confirm { font: 400 .98rem / 1.4 var(--ff-note); color: var(--text-dim); }
+
+/* Book a seat: the closing band. */
+.book-before { margin-top: 18px; font-size: .96rem; max-width: 52ch; }
+.book-before a { font-weight: 600; }
+.invoice { margin-top: 26px; font-size: 1rem; max-width: 52ch; }
+/* Booking terms: a short ruled list under the booking action, in the band's quieter text. */
+.booking-terms { margin-top: 26px; padding-top: 18px; border-top: var(--bw-hair) solid var(--rule); max-width: 56ch; }
+.booking-terms h3 { margin-bottom: 10px; }
+.booking-terms ul { margin: 0; padding-left: 1.2em; font-size: 1rem; color: var(--text-dim); }
+.booking-terms li + li { margin-top: 6px; }
+
+@media (max-width: 900px) {
+  .course-trust { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 56px 40px; }
+}
+@media (max-width: 680px) {
+  .trust-check p { font-size: 1.1rem; }
+  .keep { font-size: 1.1rem; margin-top: 32px; }
+}
