@@ -8,6 +8,8 @@ import DecisionHero from "../../components/DecisionHero.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import { SEAT_BOOKING_URL } from "../../config/booking.mjs";
+import Tracked from "../../components/Tracked.astro";
+import { EVENTS } from "../../config/analytics.mjs";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import "../../styles/course.css";
 
@@ -30,21 +32,21 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
   <DecisionHero heading={{ before: "Power BI with AI ", em: "agents", after: " 101" }} standfirst="Want to be ready for where Power BI is going?" label="Course facts and booking">
     <Fragment slot="facts">
       <li>Half a day, live online</li>
-      <li><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
+      <li class="fact-wide"><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
       <li>4 to 8 people</li>
       {priced ? priced.seatFacts.map((fact) => <li class="fact-price">{fact}</li>) : <li class="fact-price">{price}</li>}
     </Fragment>
     <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
     <div class="booking">
       {priced
-        ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+        ? <Tracked event={EVENTS.bookSeat} place="top"><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
         : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>}
     </div>
     <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
   </DecisionHero>
   <div class="course-opening decision-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
-      <p>You've probably heard that AI agents are changing how Power BI reports get built. Join me for a morning to take your first steps in agentic development. You get an agent to explain a prepared report you've never seen and write notes on its calculations. Then you have it build one new calculation, and you check its answers yourself.</p>
+      <p>You've probably heard that AI agents are changing how Power BI reports get built. Join me for a morning to take your first steps with one. You get an agent to explain a prepared report you've never seen and write notes on its calculations. Then you have it build one new calculation, and you check its answers yourself.</p>
       <p>By the end, you can judge where Power BI is going from your own hands-on use, not from what you've read about it.</p>
       <p class="course-fit">If you've built a report in Power BI Desktop, even a simple one, you're ready. No coding or AI experience needed. If you already use coding agents on Power BI work every day, this covers ground you know.</p>
     </section>
@@ -58,7 +60,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       </div>
       <div class="do-body">
         <ol class="do-steps" role="list">
-          <li><h3>Get your bearings.</h3><p>You see what an agent is, how a Power BI report's files fit together and what to check before giving a tool access to work files. Then you point your agent (GitHub Copilot, Claude or ChatGPT/Codex) at the teaching report.</p></li>
+          <li><h3>Get your bearings.</h3><p>You see what an agent is, how a Power BI report's files fit together and what to check before giving a tool access to work files. Then you point your agent (Claude Desktop, ChatGPT or GitHub Copilot) at the teaching report.</p></li>
           <li><h3>Understand a report you didn't build.</h3><p>You ask the agent to explain the report: what each page shows, the tables behind it, how they connect, how the data is prepared and what each calculation does. Nothing changes yet.</p></li>
           <li><h3>Document its calculations.</h3><p>You give the agent a short set of house rules, then have it add comments and descriptions to the existing calculations, so whoever opens the report next can see what each one does. You bring the changes back into Power BI Desktop and check them there.</p></li>
           <li><h3>Build one new calculation and check it.</h3><p>You describe a new calculation and have the agent build it. Then you check its total, a filtered result and an awkward case. If an answer is wrong, you show the agent the evidence so it can put it right, and you can always go back to a clean copy.</p></li>
@@ -108,7 +110,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       <div>
         <div class="booking">
           {priced
-            ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+            ? <Tracked event={EVENTS.bookSeat} place="bottom"><a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a></Tracked>
             : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-book">Book a seat</button><p class="booking-status" id="booking-status-book">{bookingStatus}</p></>}
         </div>
         {priced && <section class="booking-terms" aria-labelledby="booking-terms-title">

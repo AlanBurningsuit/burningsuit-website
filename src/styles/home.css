@@ -57,7 +57,7 @@
    one that would start a wrapped line falls outside the list and is clipped. Hidden from assistive technology. */
 .dot-list { list-style: none; padding-inline: 0; display: flex; flex-wrap: wrap; column-gap: 1.2em; overflow: hidden; }
 .dot-list > li { position: relative; }
-.dot-list > li::before { content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
+.dot-list > li::before { content: "·"; content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
 .specialist-names { margin: 8px 0 10px; padding-block: 0; row-gap: 4px; font: 600 1.2rem / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display-tight); }
 .specialist-names .days { font: 400 .98rem / 1 var(--ff-note); color: var(--text-dim); }
 .specialists > p:last-child { font-size: .96rem; }

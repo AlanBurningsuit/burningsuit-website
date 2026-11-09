@@ -14,7 +14,7 @@ const headingText = (heading: (typeof studies)[number]["data"]["heading"]) => ty
 const sentenceCase = (descriptor: string) => descriptor.charAt(0).toUpperCase() + descriptor.slice(1);
 ---
 <BaseLayout title="Case studies | burningsuit" description="Anonymous examples of Alan Harman-Box's Power BI courses, coaching and consultancy, and how each one ran." placeholder={false}>
-  <TitleBand heading="Case studies">
+  <TitleBand heading={{ before: "Case ", em: "studies" }}>
     <Fragment slot="standfirst">What the courses, coaching and consultancy look like in practice.</Fragment>
   </TitleBand>
   <div id="cases" class="work-index wrap">

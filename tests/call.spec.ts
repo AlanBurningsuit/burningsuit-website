@@ -41,7 +41,7 @@ test("free call page answers the visitor's questions in order, in the approved w
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What happens", "Book your call"]);
   await expect(page.locator(".title-band .standfirst")).toHaveText("Got a problem with your own Power BI, and not sure whether I can help?");
   // Duration and lack of charge sit at the top, beside the introduction.
-  await expect(page.locator("aside.course-run")).toHaveAttribute("aria-label", "Call facts and booking");
+  await expect(page.locator("section.course-run")).toHaveAttribute("aria-label", "Call facts and booking");
   await expect(page.locator(".run-facts > li")).toHaveText(["30 minutes, free", "On Microsoft Teams", "You talk to me, Alan", "Follow-up afterwards if it needs more thought", "Any further work quoted separately"]);
   // Two unraised numbered steps; the counter is decorative, the list semantics carry the order.
   await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`

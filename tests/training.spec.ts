@@ -70,7 +70,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
     "Want this for your team? Ask about a private course.",
   ]);
   // The public group size is bound to the public date; private runs state no size or format of their own.
-  await expectItems(agents.locator(".facts > li"), ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", ...(copy ? [copy.publicSeat] : []), "Also private, for your team", priceOnRequest], "training 101 facts");
+  await expectItems(agents.locator(".facts > li"), ["Half a day, live online", "Public course: Wednesday 20 January 2027, 9:30am to 12:30pm UK time, 4 to 8 people", ...(copy ? [copy.publicSeat] : []), "Private for your team: price on request"], "training 101 facts");
   await expect(agents.locator('time[datetime="2027-01-20"]')).toHaveText("Wednesday 20 January 2027");
   // The 101 keeps booking on its own page: the outline link and the private-course email only, no form route.
   // The priced build adds "Book a seat", which leads to the course's setup list and booking.
@@ -92,7 +92,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(rows.nth(0).locator(".study-evidence")).toHaveCount(0);
   await expect(rows.nth(1).getByRole("link", { name: "DAX deep dive", exact: true })).toHaveAttribute("href", deepDive);
   await expect(rows.nth(1).getByRole("link", { name: "Read the course outline" })).toHaveAttribute("href", deepDive);
-  await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams on calculations. The DAX deep dive's first day covers the same topics as DAX fundamentals, and its second day goes further.");
+  await expect(page.locator(".specialist-courses .specialists-head p")).toHaveText("Private courses for teams, on Power BI's calculations. The DAX deep dive's first day covers the same topics as DAX fundamentals, and its second day goes further.");
   const ask = page.getByRole("link", { name: "Ask about one of these" });
   await expect(ask).toHaveAttribute("href", "#contact");
   await expect(ask).toHaveAccessibleDescription("Name the course in your message.");
@@ -113,7 +113,7 @@ test("training chooser shows the approved wording, facts and routes", async ({ p
   await expect(askCoaching).toHaveText(["Ask about coaching"]);
   await expect(askCoaching).toHaveAttribute("href", "#contact");
   await expect(askCoaching).toHaveAccessibleDescription("Mention coaching in your message.");
-  await expect(coaching.locator("p:not(.study-evidence-label)")).toHaveText([/^Coaching is for/, "“I’d never figured this out on my own.”", "Mention coaching in your message."]);
+  await expect(coaching.locator("p:not(.study-evidence-label)")).toHaveText([/^Coaching is for/, "\"I'd never figured this out on my own.\"", "Mention coaching in your message."]);
   await expect(coaching.locator("figure.pull-quote figcaption")).toHaveText("A contact-centre team lead");
   await expect(page.locator(".starting-points figure.pull-quote figcaption")).toHaveText("Corporate insights, a UK police force");
   expect(await page.locator("main > section").evaluateAll((all) => all.map((el) => el.className.split(" ")[0]))).toEqual(["starting-points", "specialist-courses", "coaching", "training-teacher", "contact"]);
@@ -145,7 +145,7 @@ test("training chooser structure reads in order for assistive technology", async
       await expect(row.getByRole("heading", { level: 3 })).toHaveCount(1);
       await expect(row.getByRole("list").first().getByRole("listitem")).toHaveCount(4);
     }
-    await expect(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts").getByRole("listitem")).toHaveCount(5);
+    await expect(page.getByRole("article", { name: "Power BI with AI agents 101" }).locator(".facts").getByRole("listitem")).toHaveCount(4);
   }
   if (!priced) await expectAriaWithoutAmounts(page.locator(".specialist-courses .specialist-rows"), `
     - list:
@@ -197,8 +197,7 @@ test("training chooser structure reads in order for assistive technology", async
         - text: "Public course:"
         - time: Wednesday 20 January 2027
         - text: ", 9:30am to 12:30pm UK time, 4 to 8 people"
-      - listitem: Also private, for your team
-      - listitem: Price on request
+      - listitem: "Private for your team: price on request"
   `);
 });
 

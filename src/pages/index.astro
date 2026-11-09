@@ -3,6 +3,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import TitleBand from "../components/TitleBand.astro";
 import PullQuote from "../components/PullQuote.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
+import CourseEntry from "../components/CourseEntry.astro";
+import { STARTING_COURSES } from "../config/starting-courses.mjs";
+import Tracked from "../components/Tracked.astro";
+import { EVENTS } from "../config/analytics.mjs";
 import { Image } from "astro:assets";
 import portrait from "../assets/photos/DSC08683-Edit.jpg";
 import { pages } from "../config/compatibility.mjs";
@@ -36,43 +40,24 @@ const priced = trainingPriceCopy(loadTrainingPrices());
   <section class="courses wrap" id="training" aria-labelledby="training-title">
       <h2 id="training-title">Find your starting point</h2>
       <div class="course-list">
-        <article class="course" aria-labelledby="fundamentals-title">
-          <p class="course-fit">New to Power BI?</p>
-          <h3 id="fundamentals-title"><a href="/training/power-bi-fundamentals/">Power BI fundamentals</a></h3>
-          <p>Learn to build an interactive report, prepare the data behind it and share it with the people who need it.</p>
-          <div class="deciding">
-            <ul class="facts dot-list">
-              <li>2 days</li>
-              <li>Private, for your team</li>
-              {priced ? <li>{priced.homeFundamentals}</li> : <><li>On site or online</li><li>Price on request</li></>}
-            </ul>
-            <p class="prereq">No Power BI experience needed.</p>
-            <p class="solo-ask">On your own? <a href="/training/#coaching">Coaching starts wherever you are.</a></p>
-          </div>
-          <div class="course-actions">
-            <a class="text-link" href="/training/power-bi-fundamentals/">Read the course outline</a>
-            <a class="text-link" href="#contact">Ask about dates</a>
-          </div>
-        </article>
-        <article class="course" aria-labelledby="agents-101-title">
-          <p class="course-fit">Want to be ready for where Power BI is going?</p>
-          <h3 id="agents-101-title"><a href="/training/power-bi-with-ai-agents-101/">Power BI with AI agents 101</a></h3>
-          <p>In one morning, you get an AI agent to explain a report you haven't seen before and write notes on its calculations. Then you have it build a new calculation and check its answers yourself.</p>
-          <div class="deciding">
-            <ul class="facts dot-list">
-              <li>Half a day, online</li>
-              <li><span class="fact-label">Public course:</span> <time datetime="2027-01-20">Wednesday 20 January 2027</time>, <span class="together">9:30am to 12:30pm UK time</span></li>
-              {priced && <li>{priced.publicSeat}</li>}
-              <li>Also private, for your team</li>
-              <li>Price on request</li>
-            </ul>
-            <p class="prereq">You've built a report in Power BI Desktop, even a simple one. No code or AI experience needed.</p>
-          </div>
-          <div class="course-actions">
-            <a class="text-link" href="/training/power-bi-with-ai-agents-101/">Read the course outline</a>
-            {priced ? <a class="text-link" href="/training/power-bi-with-ai-agents-101/#book-title">Book a seat</a> : <a class="text-link" href="#contact">Ask about a seat</a>}
-          </div>
-        </article>
+        <CourseEntry course={STARTING_COURSES.fundamentals}>
+          <Fragment slot="facts">
+            <li>2 days</li>
+            <li>Private, for your team</li>
+            {priced ? <li>{priced.homeFundamentals}</li> : <><li>On site or online</li><li>Price on request</li></>}
+          </Fragment>
+          <p slot="deciding" class="solo-ask">On your own? <a href="/training/#coaching">Coaching starts wherever you are.</a></p>
+          <a slot="actions" class="text-link" href="#contact">Ask about dates</a>
+        </CourseEntry>
+        <CourseEntry course={STARTING_COURSES.agents101}>
+          <Fragment slot="facts">
+            <li>{STARTING_COURSES.agents101.mode}</li>
+            <li><span class="fact-label">Public course:</span> <time datetime="2027-01-20">Wednesday 20 January 2027</time>, <span class="together">9:30am to 12:30pm UK time</span>, <span class="together">4 to 8 people</span></li>
+            {priced && <li>{priced.publicSeat}</li>}
+            <li>{STARTING_COURSES.agents101.privateFact}</li>
+          </Fragment>
+          <Fragment slot="actions">{priced ? <Tracked event={EVENTS.bookSeatLink}><a class="text-link" href="/training/power-bi-with-ai-agents-101/#book-title">Book a seat</a></Tracked> : <a class="text-link" href="#contact">Ask about a seat</a>}</Fragment>
+        </CourseEntry>
       </div>
 
       <div class="specialists">
@@ -81,7 +66,7 @@ const priced = trainingPriceCopy(loadTrainingPrices());
           <li><a href="/training/dax-fundamentals/">DAX fundamentals</a> <span class="days">(1 day)</span></li>
           <li><a href="/training/dax-deep-dive/">DAX deep dive</a> <span class="days">(2 days)</span></li>
         </ul>
-        <p>Private courses for teams on calculations. <a href="/training/">Compare all courses</a></p>
+        <p>Private courses for teams, on Power BI's calculations. <a href="/training/">Compare all courses</a></p>
       </div>
 
       <p class="not-sure">Not sure which fits? <a href="#contact">Tell me what you use Power BI for now, and I'll suggest where to start.</a></p>
@@ -107,7 +92,7 @@ const priced = trainingPriceCopy(loadTrainingPrices());
       <h2 id="consultancy-title">Help with your own reporting</h2>
       <div class="raised-copy">
         <p>If everything depends on the one person who understands the reports, or two reports give different answers to the same question, I can help. I work alongside your team on your own reports and models, so they understand what we build, can change it and know what will happen when they do.</p>
-        <a class="button" href="/call/">Book a free 30-minute call</a>
+        <Tracked event={EVENTS.bookCallLink}><a class="button" href="/call/">Book a free 30-minute call</a></Tracked>
       </div>
     </div>
   </section>

@@ -59,8 +59,10 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .button:disabled { color: var(--text-dim); background: var(--surface-raised); cursor: not-allowed; }
 .text-link { display: inline-block; font-weight: 600; padding-block: 7px; }
 /* A text link leads on with a warm arrow (an external one points out), which steps forward on hover. */
-.text-link::after { content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); }
-.text-link[href^="http"]::after { content: "↗" / ""; }
+.text-link::after { content: "→"; content: "→" / ""; display: inline-block; margin-left: .45em; color: var(--accent); }
+.text-link[href^="http"]::after { content: "↗"; content: "↗" / ""; }
+/* Tracked.astro wraps a link so its click is counted; the wrapper takes no part in layout. */
+.tracked { display: contents; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 14px; }
 .links a { font-weight: 600; padding-block: 6px; }
 .study-evidence { margin-top: 28px; padding-top: 18px; border-top: var(--bw-hair) solid var(--rule); }
@@ -155,7 +157,8 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .raised-copy .text-link { margin-top: 14px; }
 .raised-copy .button { margin-top: 20px; }
 /* A second link straight after the first sits close beneath it. */
-:is(.raised-copy, .trust-teacher) .text-link + .text-link { margin-top: 0; }
+/* A counted link sits in a Tracked wrapper, so the link after it follows the wrapper, not the link. */
+:is(.raised-copy, .trust-teacher) :is(.text-link, .tracked) + .text-link { margin-top: 0; }
 
 .contact { background: var(--bg-band); }
 .contact-inner { display: grid; grid-template-columns: var(--home-columns); column-gap: var(--column-gap); padding-block: 54px; align-items: center; }

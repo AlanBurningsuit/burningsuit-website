@@ -5,6 +5,7 @@
 // email fallback below the form when the introduction already offers it.
 import "../styles/enquiry.css";
 import { ENQUIRY } from "../config/enquiry.mjs";
+import { EVENTS } from "../config/analytics.mjs";
 
 interface Props {
   headingLevel?: 1 | 2;
@@ -13,7 +14,7 @@ interface Props {
 const { headingLevel = 2, fallback = true } = Astro.props;
 const Heading = headingLevel === 1 ? "h1" : "h2";
 ---
-<section id="contact" class="contact dark" aria-labelledby="contact-title">
+<section id="contact" class="contact dark">
   <div class="wrap contact-inner enquiry">
     <div class="enquiry-intro">
       <Heading id="contact-title"><slot name="heading" /></Heading>
@@ -44,7 +45,7 @@ const Heading = headingLevel === 1 ? "h1" : "h2";
         {fallback && <p class="hint reply-time">I'll reply within two working days.</p>}
         <p class="hint" id="enquiry-privacy">I use your details to reply to your enquiry. Formspark delivers this form. <a href={ENQUIRY.privacyPath}>Read how I handle your information</a>.</p>
         {/* A missing endpoint makes Send unavailable rather than silently failing. */}
-        <button class="button send" type="submit" disabled={!ENQUIRY.action}>Send</button>
+        <button class="button send" type="submit" disabled={!ENQUIRY.action} data-umami-event={EVENTS.enquirySend}>Send</button>
       </form>
       {fallback && <p class="fallback">Or email <a href={`mailto:${ENQUIRY.email}`}>{ENQUIRY.email}</a>.</p>}
     </div>

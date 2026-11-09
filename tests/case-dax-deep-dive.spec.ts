@@ -6,7 +6,7 @@ const route = "/work/dax-deep-dive/";
 const primary = "Ask about the DAX deep dive";
 const secondary = "Read the DAX deep dive course outline";
 const course = "/training/dax-deep-dive/";
-const quote = "“Alan was highly praised for his clear explanations, engaging teaching style, and ability to make complex DAX concepts understandable.”";
+const quote = "\"Alan was highly praised for his clear explanations, engaging teaching style, and ability to make complex DAX concepts understandable.\"";
 
 test("case study stays static, private and CSP-clean, with no form, embed, image or script", async ({ page, baseURL }) => {
   const errors: string[] = [];

@@ -4,10 +4,8 @@
 // them, follow the attribution as plain text.
 interface Props { quote: string; cite: string; figures?: string; class?: string }
 const { quote, cite, figures, class: extra } = Astro.props;
-// Display quotes are set typographically: curly marks, and curly apostrophes inside them to match.
-const set = quote.replaceAll("'", "’");
 ---
 <figure class:list={["pull-quote evidence-rule", extra]}>
-  <blockquote><p>“{set}”</p></blockquote>
+  <blockquote><p>"{quote}"</p></blockquote>
   <figcaption>{cite}{figures && <span class="pull-figures">{figures}</span>}</figcaption>
 </figure>

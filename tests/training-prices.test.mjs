@@ -228,10 +228,10 @@ function distFixture(data, { pricedBuild, drop } = {}) {
   writeJson(join(dir, PRICES_FILE), data);
   const copy = trainingPriceCopy(loadTrainingPrices({ env: priced, file: join(dir, PRICES_FILE) }));
   const page = (...items) => `<html><body><ul>${items.join("")}</ul></body></html>`;
-  const home = pricedBuild ? page(li(copy.homeFundamentals), li(copy.publicSeat), li("Price on request")) : page(li("On site or online"), li("Price on request"), li("Price on request"));
+  const home = pricedBuild ? page(li(copy.homeFundamentals), li(copy.publicSeat), li("Private for your team: price on request")) : page(li("On site or online"), li("Price on request"), li("Private for your team: price on request"));
   const training = pricedBuild
-    ? page(li(copy.trainingFundamentals), li(copy.publicSeat), ...Object.values(copy.specialists).map(li), li(copy.trainingIntro), li("Price on request"), li("Price on request"))
-    : page(li("Price on request"), li("Price on request"));
+    ? page(li(copy.trainingFundamentals), li(copy.publicSeat), ...Object.values(copy.specialists).map(li), li(copy.trainingIntro), li("Private for your team: price on request"), li("Price on request"))
+    : page(li("Private for your team: price on request"), li("Price on request"));
   const agents = pricedBuild ? `<html><body>${copy.seatFacts.map(li).join("")}<p>${copy.seatBookFacts}</p></body></html>` : page(li("Price on request"));
   const fundamentals = pricedBuild ? page(li(copy.fundamentalsDetail)) : page(li("On site or online"), li("Price on request"));
   const daxDeepDive = pricedBuild ? page(li(copy.daxDeepDiveDetail)) : page(li("On site or online"), li("Price on request"));
