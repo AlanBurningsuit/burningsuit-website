@@ -1,7 +1,8 @@
 ---
 // Every page's opening: the title, with an optional eyebrow above and standfirst below, on the dark stage. Whatever
 // follows opens the daylight sheet. The title is `heading`: a string, or before / em / after for its one amber word.
-// The eyebrow, standfirst and actions (links under the standfirst) are named slots.
+// The eyebrow, standfirst and actions (links under the standfirst) are named slots; `decision` (DecisionHero.astro's facts
+// and primary action) follows them.
 type Heading = string | { before?: string; em?: string; after?: string };
 interface Props {
   heading: Heading;
@@ -23,5 +24,6 @@ const hasActions = Astro.slots.has("actions");
     <h1 id={id}>{parts.before}{parts.em && <span class="em">{parts.em}</span>}{parts.after}</h1>
     {standfirst && <p class:list={["standfirst", standfirstClass]} set:html={standfirst} />}
     {hasActions && <div class="title-actions"><slot name="actions" /></div>}
+    <slot name="decision" />
   </div>
 </div>

@@ -1,7 +1,8 @@
 /* Power BI with AI agents 101: the course page composition. Shared furniture lives in app.css. */
 
-/* Opening: the title band on the dark stage; the introduction opens the daylight sheet with the deciding facts on a
-   lifted card beside it on wide screens and after it on narrow ones. */
+/* Opening (Consultancy and the free call page): the title band on the dark stage; the introduction opens the daylight sheet
+   with the deciding facts on a lifted card beside it on wide screens and after it on narrow ones. The course pages put
+   their facts in the decision hero instead (decision-hero.css). */
 .course-opening {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr);

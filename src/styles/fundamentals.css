@@ -1,8 +1,5 @@
 /* Power BI fundamentals: reuses the 101 composition in course.css; only this page's differences live here. */
 
-/* The facts panel's action is a text link, not the 101's booking button. */
-.run-action { margin-top: 18px; }
-
 /* What you'll be able to do: the need-list card, straight after the opening, with no numbers of its own. */
 .course-need.outcomes { padding-block: 64px 76px; }
 /* Its quote sits under the list, in the list's column. */

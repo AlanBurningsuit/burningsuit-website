@@ -8,7 +8,8 @@ import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced
 // Approved wording: ops site/dax-deep-dive-page-copy.md, candidate 4 (7 Nov 2026). Pinned on purpose: changing it needs Alan's approval.
 const route = "/training/dax-deep-dive/";
 const email = "mailto:alan@burningsuit.co.uk";
-const links = ["/training/power-bi-fundamentals/", "/training/", "#contact", "/training/how-i-train/", "/about/", "/work/dax-deep-dive/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
+// The decision hero's action comes first: it sits on the dark stage, above the introduction.
+const links = ["#contact", "/training/power-bi-fundamentals/", "/training/", "/training/how-i-train/", "/about/", "/work/dax-deep-dive/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
 const demonstrated = "Demonstrated, not practised.";
 
 const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
@@ -68,17 +69,17 @@ test("DAX deep dive page renders the approved wording and question order", async
 
   // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
   const facts = page.getByRole("complementary", { name: "Course facts" }).locator(".run-facts");
-  await expectItems(page.locator(".course-run .run-facts > li"), copy
-    ? ["2 days", "Private, for your team", "Up to 8 people", copy.daxDeepDiveDetail, "9:30am to 4pm each day"]
-    : ["2 days", "Private, for your team", "On site or online", "Up to 8 people", priceOnRequest, "9:30am to 4pm each day"], "deep dive facts");
+  await expectItems(page.locator(".hero-facts .run-facts > li"), copy
+    ? ["2 days", "Private, for your team", "Up to 8 people", "9:30am to 4pm each day", copy.daxDeepDiveDetail]
+    : ["2 days", "Private, for your team", "On site or online", "Up to 8 people", "9:30am to 4pm each day", priceOnRequest], "deep dive facts");
   if (!priced) await expectAriaWithoutAmounts(facts, `
     - list:
       - listitem: 2 days
       - listitem: Private, for your team
       - listitem: On site or online
       - listitem: Up to 8 people
-      - listitem: Price on request
       - listitem: 9:30am to 4pm each day
+      - listitem: Price on request
   `);
   await expect(page.locator(".run-action")).toHaveText("Ask about dates");
   await expect(page.locator(".run-action")).toHaveAttribute("href", "#contact");
@@ -182,12 +183,12 @@ test("the old DAX advanced course URL redirects to the DAX deep dive page", asyn
   expect((redirects as Record<string, string>)["/fully-flexible-training-dax-skills/our-courses-power-bi-training/10-power-bi-dax-fundamentals"]).toBe("/training/dax-fundamentals/");
 });
 
-test("DAX deep dive layout: facts beside the introduction on wide screens, directly after it on phones", async ({ page }) => {
+test("DAX deep dive layout: facts and action in the decision hero, above the introduction at every width", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let intro = await box(page, ".course-intro"), facts = await box(page, ".course-run");
-  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
-  expect(facts.y).toBeLessThan(intro.y + intro.height);
+  // The facts and action sit in the decision hero (tests/decision-hero.spec.ts), above the introduction.
+  let intro = await box(page, ".course-intro"), facts = await box(page, ".hero-facts");
+  expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
   // The agenda is the page's raised band; outcomes and arrangements sit on the ground.
   const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(await bg(".agenda")).not.toBe(await bg("body"));
@@ -202,9 +203,9 @@ test("DAX deep dive layout: facts beside the introduction on wide screens, direc
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await box(page, ".course-intro"); facts = await box(page, ".course-run");
-    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    intro = await box(page, ".course-intro"); facts = await box(page, ".hero-facts");
+    expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
     for (const selector of [".agenda-steps", ".need-list", ".run-facts", ".course-proof"]) {
       for (const item of await page.locator(selector).all()) {
         const b = (await item.boundingBox())!;

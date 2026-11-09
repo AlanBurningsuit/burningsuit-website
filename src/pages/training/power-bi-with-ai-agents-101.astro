@@ -4,7 +4,7 @@
 // previews) it stays an unavailable control beside "Price on request".
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { courseNode } from "../../lib/schema";
-import TitleBand from "../../components/TitleBand.astro";
+import DecisionHero from "../../components/DecisionHero.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import { SEAT_BOOKING_URL } from "../../config/booking.mjs";
@@ -27,31 +27,27 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
   placeholder={false}
   schema={schema}
 >
-  <TitleBand heading={{ before: "Power BI with AI ", em: "agents", after: " 101" }}>
-    <Fragment slot="standfirst">Want to be ready for where Power BI is going?</Fragment>
-  </TitleBand>
-  <div class="course-opening wrap">
+  <DecisionHero heading={{ before: "Power BI with AI ", em: "agents", after: " 101" }} standfirst="Want to be ready for where Power BI is going?" label="Course facts and booking">
+    <Fragment slot="facts">
+      <li>Half a day, live online</li>
+      <li><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
+      <li>4 to 8 people</li>
+      {priced ? priced.seatFacts.map((fact) => <li class="fact-price">{fact}</li>) : <li class="fact-price">{price}</li>}
+    </Fragment>
+    <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
+    <div class="booking">
+      {priced
+        ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
+        : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>}
+    </div>
+    <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
+  </DecisionHero>
+  <div class="course-opening decision-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p>You've probably heard that AI agents are changing how Power BI reports get built. Join me for a morning to take your first steps in agentic development. You get an agent to explain a prepared report you've never seen and write notes on its calculations. Then you have it build one new calculation, and you check its answers yourself.</p>
       <p>By the end, you can judge where Power BI is going from your own hands-on use, not from what you've read about it.</p>
       <p class="course-fit">If you've built a report in Power BI Desktop, even a simple one, you're ready. No coding or AI experience needed. If you already use coding agents on Power BI work every day, this covers ground you know.</p>
     </section>
-
-    <aside class="course-run" aria-label="Course facts and booking">
-      <ul class="run-facts" role="list">
-        <li>Half a day, live online</li>
-        <li><time datetime="2027-01-20">Wednesday 20 January 2027</time>, 9:30am to 12:30pm UK time</li>
-        <li>4 to 8 people</li>
-        {priced ? priced.seatFacts.map((fact) => <li>{fact}</li>) : <li>{price}</li>}
-      </ul>
-      <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
-      <div class="booking">
-        {priced
-          ? <a class="button book-button" href={SEAT_BOOKING_URL}>Book a seat</a>
-          : <><button class="button book-button" type="button" disabled aria-describedby="booking-status-opening">Book a seat</button><p class="booking-status" id="booking-status-opening">{bookingStatus}</p></>}
-      </div>
-      <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
-    </aside>
   </div>
 
   <section class="course-do" aria-labelledby="do-title">

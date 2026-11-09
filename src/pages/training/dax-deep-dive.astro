@@ -5,7 +5,7 @@
 // this page's differences live in dax-deep-dive.css.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { courseNode } from "../../lib/schema";
-import TitleBand from "../../components/TitleBand.astro";
+import DecisionHero from "../../components/DecisionHero.astro";
 import StudyLinks from "../../components/StudyLinks.astro";
 import PullQuote from "../../components/PullQuote.astro";
 import EnquiryForm from "../../components/EnquiryForm.astro";
@@ -19,7 +19,7 @@ const priced = trainingPriceCopy(loadTrainingPrices());
 const price = PRICE_ON_REQUEST;
 const summary = "A two-day private course for teams who already write measures in Power BI: learn why your measures return the numbers they do, and how to make them return the ones you need.";
 const description = `${summary}${priced ? "" : " Price on request."}`;
-// Course facts as the page shows them (the run-facts list below); delivery stays "On site or online" in both variants.
+// Course facts as the page shows them (the decision hero's facts below); delivery stays "On site or online" in both variants.
 const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "DAX deep dive", description: summary, modes: ["Onsite", "Online"], workload: "P2D", maxPeople: 8 })];
 ---
 <BaseLayout
@@ -28,26 +28,22 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
   placeholder={false}
   schema={schema}
 >
-  <TitleBand heading={{ before: "DAX ", em: "deep dive" }}>
-    <Fragment slot="standfirst">Already writing measures, but not always sure why they return what they do?</Fragment>
-  </TitleBand>
-  <div class="course-opening wrap">
+  <DecisionHero heading={{ before: "DAX ", em: "deep dive" }} standfirst="Already writing measures, but not always sure why they return what they do?" label="Course facts">
+    <Fragment slot="facts">
+      <li>2 days</li>
+      <li>Private, for your team</li>
+      {!priced && <li>On site or online</li>}
+      <li>Up to 8 people</li>
+      <li>9:30am to 4pm each day</li>
+      <li class="fact-price">{priced ? priced.daxDeepDiveDetail : price}</li>
+    </Fragment>
+    <a class="button run-action" href="#contact">Ask about dates</a>
+  </DecisionHero>
+  <div class="course-opening decision-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p><strong>Write DAX you can explain, not just copy.</strong> A two-day course for people who already build reports in Power BI. You'll learn why your measures return the numbers they do, and how to make them return the ones you need.</p>
       <p class="course-fit">You'll get most from it if you've already written a few measures. If you haven't built a report yet, it's too early: start with <a href="/training/power-bi-fundamentals/">Power BI fundamentals</a>, or <a href="/training/">compare all the courses</a>.</p>
     </section>
-
-    <aside class="course-run" aria-label="Course facts">
-      <ul class="run-facts" role="list">
-        <li>2 days</li>
-        <li>Private, for your team</li>
-        {!priced && <li>On site or online</li>}
-        <li>Up to 8 people</li>
-        <li>{priced ? priced.daxDeepDiveDetail : price}</li>
-        <li>9:30am to 4pm each day</li>
-      </ul>
-      <a class="button run-action" href="#contact">Ask about dates</a>
-    </aside>
   </div>
 
   <section class="course-need outcomes wrap" aria-labelledby="outcomes-title">

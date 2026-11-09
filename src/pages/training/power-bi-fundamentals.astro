@@ -3,10 +3,11 @@
 // its {{ }} items render as visible to-confirm tags. Course scope follows the Fundamentals Outline in Practice;
 // confirmed practical details follow the approved page copy.
 // Private course only: no public run or booking control; its price shows only in the priced build (src/lib/training-prices.mjs). The 101 composition (course.css) is reused;
-// this page's differences live in fundamentals.css.
+// this page's differences live in fundamentals.css. The opening is the shared decision hero (DecisionHero.astro): facts and
+// the primary action on the dark stage, the price last on its own line.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { courseNode } from "../../lib/schema";
-import TitleBand from "../../components/TitleBand.astro";
+import DecisionHero from "../../components/DecisionHero.astro";
 import PullQuote from "../../components/PullQuote.astro";
 import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
 import EnquiryForm from "../../components/EnquiryForm.astro";
@@ -19,7 +20,7 @@ const priced = trainingPriceCopy(loadTrainingPrices());
 const price = PRICE_ON_REQUEST;
 const summary = "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.";
 const description = `${summary}${priced ? "" : " Price on request."}`;
-// Course facts as the page shows them (the run-facts list below); delivery stays "On site or online" in both variants.
+// Course facts as the page shows them (the decision hero's facts below); delivery stays "On site or online" in both variants.
 const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI fundamentals", description: summary, modes: ["Onsite", "Online"], workload: "P2D", maxPeople: 8 })];
 ---
 <BaseLayout
@@ -28,26 +29,22 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
   placeholder={false}
   schema={schema}
 >
-  <TitleBand heading={{ before: "Power BI ", em: "fundamentals" }}>
-    <Fragment slot="standfirst">New to Power BI?</Fragment>
-  </TitleBand>
-  <div class="course-opening wrap">
+  <DecisionHero heading={{ before: "Power BI ", em: "fundamentals" }} standfirst="New to Power BI?" label="Course facts">
+    <Fragment slot="facts">
+      <li>2 days</li>
+      <li>Private, for your team</li>
+      {!priced && <li>On site or online</li>}
+      <li>Up to 8 people</li>
+      <li>9:30am to 4pm each day</li>
+      <li class="fact-price">{priced ? priced.fundamentalsDetail : price}</li>
+    </Fragment>
+    <a class="button run-action" href="#contact">Ask about dates</a>
+  </DecisionHero>
+  <div class="course-opening decision-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p>This two-day course takes your team from preparing data to sharing reports and keeping them up to date. No Power BI experience, DAX or coding needed.</p>
       <p class="course-fit">Already building reports and looking for a day on calculations? <a href="/training/dax-fundamentals/">See DAX fundamentals</a>.</p>
     </section>
-
-    <aside class="course-run" aria-label="Course facts">
-      <ul class="run-facts" role="list">
-        <li>2 days</li>
-        <li>Private, for your team</li>
-        {!priced && <li>On site or online</li>}
-        <li>Up to 8 people</li>
-        <li>{priced ? priced.fundamentalsDetail : price}</li>
-        <li>9:30am to 4pm each day</li>
-      </ul>
-      <a class="button run-action" href="#contact">Ask about dates</a>
-    </aside>
   </div>
 
   <section class="course-need outcomes wrap" aria-labelledby="outcomes-title">

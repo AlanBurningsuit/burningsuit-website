@@ -1,0 +1,26 @@
+---
+// The decision hero (option A, chosen 9 Nov 2026): the page's title and standfirst, then the deciding facts and the
+// primary action grouped beneath them on the dark stage, so everything needed to decide sits in one place. It is
+// TitleBand with a `decision` group; the heading scale and the one .button stay shared.
+// Slots: `facts` takes the page's own <li> items, in reading order (mark a price item `fact-price` to give it its own
+// line); the default slot takes what follows the list: a single .button.run-action, or a course's Before you book line,
+// booking control and private-course ask. Prices come only from the page (src/lib/training-prices.mjs), never from here.
+import TitleBand from "./TitleBand.astro";
+import "../styles/decision-hero.css";
+
+type Heading = string | { before?: string; em?: string; after?: string };
+interface Props {
+  heading: Heading;
+  standfirst: string;
+  /** Accessible name of the facts group, e.g. "Course facts" or "Course facts and booking". */
+  label: string;
+}
+const { heading, standfirst, label } = Astro.props;
+---
+<TitleBand heading={heading} class="decision-hero">
+  <Fragment slot="standfirst">{standfirst}</Fragment>
+  <aside slot="decision" class="hero-facts" aria-label={label}>
+    <ul class="run-facts" role="list"><slot name="facts" /></ul>
+    <slot />
+  </aside>
+</TitleBand>

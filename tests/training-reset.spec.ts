@@ -67,7 +67,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toBeVisible();
   await expect(page.locator('time[datetime="2027-01-20"]')).toHaveText(["Wednesday 20 January 2027", "Wednesday 20 January 2027"]);
   // Seat rates (priced) or Price on request (unpriced); the private course has no price item on this page.
-  await expectItems(page.locator(".run-facts > li"), ["Half a day, live online", "Wednesday 20 January 2027, 9:30am to 12:30pm UK time", "4 to 8 people", ...(copy ? copy.seatFacts : [priceOnRequest])], "101 facts");
+  await expectItems(page.locator(".hero-facts .run-facts > li"), ["Half a day, live online", "Wednesday 20 January 2027, 9:30am to 12:30pm UK time", "4 to 8 people", ...(copy ? copy.seatFacts : [priceOnRequest])], "101 facts");
   await expectText(page.locator(".book-facts"), `Wednesday 20 January 2027, 9:30am to 12:30pm UK time, live online. 4 to 8 people. ${copy ? copy.seatBookFacts : "Price on request."}`, "101 booking facts");
 
   // Booking: the Stripe link in the priced build; unavailable, explained controls that lead nowhere otherwise.
@@ -140,28 +140,32 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a video recording of the morning, along with the teaching project and clean copies, so you can work through it again. How recordings work.");
 });
 
-test("the 101 puts facts beside the introduction on wide screens and after the prerequisite on narrow ones", async ({ page }) => {
+test("the 101 puts facts, Before you book and booking in the decision hero, above the introduction at every width", async ({ page }) => {
   const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(course);
-  let intro = await box(".course-intro"), facts = await box(".course-run");
-  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
-  expect(facts.y).toBeLessThan(intro.y + intro.height);
+  // One group on the dark stage: facts, then the requirements line, then booking, then the private-course ask.
+  const group = page.getByRole("complementary", { name: "Course facts and booking", exact: true });
+  expect(await group.evaluate((el) => [...el.children].map((child) => child.className))).toEqual(["run-facts", "before-book", "booking", "private-ask"]);
+  await expect(page.locator(".dark.stage .hero-facts .before-book")).toHaveText("Before you book: you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. See what you'll need.");
+  await expect(group.locator(".booking .book-button")).toHaveCount(1);
+  let intro = await box(".course-intro"), facts = await box(".hero-facts");
+  expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
+  // The requirements line is read before the booking control.
+  expect((await box(".hero-facts .booking")).y).toBeGreaterThanOrEqual((await box(".hero-facts .before-book")).y + (await box(".hero-facts .before-book")).height);
   const [check, teacher] = [await box(".trust-check"), await box(".trust-teacher")];
   expect(teacher.x).toBeGreaterThanOrEqual(check.x + check.width);
 
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await box(".course-intro"); facts = await box(".course-run");
-    const fit = await box(".course-fit");
-    expect(fit.y).toBeLessThan(facts.y);
-    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    expect((await box(".course-do")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    intro = await box(".course-intro"); facts = await box(".hero-facts");
+    expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    expect((await box(".course-do")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
     const [narrowCheck, narrowTeacher] = [await box(".trust-check"), await box(".trust-teacher")];
     expect(narrowTeacher.y).toBeGreaterThanOrEqual(narrowCheck.y + narrowCheck.height);
     // Steps, tags and the booking control stay inside the viewport.
-    for (const selector of [".do-steps", ".need-list", ".book-button"]) {
+    for (const selector of [".do-steps", ".need-list", ".book-button", ".hero-facts .run-facts > li", ".before-book", ".private-ask"]) {
       for (const item of await page.locator(selector).all()) {
         const b = (await item.boundingBox())!;
         expect(b.x).toBeGreaterThanOrEqual(0);

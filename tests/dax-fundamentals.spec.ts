@@ -8,7 +8,8 @@ import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced
 // Approved wording: ops site/dax-fundamentals-page-copy.md, candidate 6 (8 Nov 2026). Pinned on purpose: changing it needs Alan's approval.
 const route = "/training/dax-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
-const links = ["/training/power-bi-fundamentals/", "/training/", "#contact", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
+// The decision hero's action comes first: it sits on the dark stage, above the introduction.
+const links = ["#contact", "/training/power-bi-fundamentals/", "/training/", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
 const demonstrated = "Demonstrated, not practised.";
 
 const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
@@ -82,17 +83,17 @@ test("DAX fundamentals page renders the approved wording and question order", as
 
   // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
   const facts = page.getByRole("complementary", { name: "Course facts" }).locator(".run-facts");
-  await expectItems(page.locator(".course-run .run-facts > li"), copy
-    ? ["1 day", "Private, for your team", "Up to 8 people", copy.daxFundamentalsDetail, "9:30am to 4pm"]
-    : ["1 day", "Private, for your team", "On site or online", "Up to 8 people", priceOnRequest, "9:30am to 4pm"], "DAX fundamentals facts");
+  await expectItems(page.locator(".hero-facts .run-facts > li"), copy
+    ? ["1 day", "Private, for your team", "Up to 8 people", "9:30am to 4pm", copy.daxFundamentalsDetail]
+    : ["1 day", "Private, for your team", "On site or online", "Up to 8 people", "9:30am to 4pm", priceOnRequest], "DAX fundamentals facts");
   if (!priced) await expectAriaWithoutAmounts(facts, `
     - list:
       - listitem: 1 day
       - listitem: Private, for your team
       - listitem: On site or online
       - listitem: Up to 8 people
-      - listitem: Price on request
       - listitem: 9:30am to 4pm
+      - listitem: Price on request
   `);
   await expect(page.locator(".run-action")).toHaveText("Ask about dates");
   await expect(page.locator(".run-action")).toHaveAttribute("href", "#contact");
@@ -167,12 +168,12 @@ test("the old DAX fundamentals course URL redirects to the DAX fundamentals page
   expect(Object.entries(redirects).filter(([, to]) => to === route).map(([from]) => from)).toEqual([legacy]);
 });
 
-test("DAX fundamentals layout: facts beside the introduction on wide screens, directly after it on phones", async ({ page }) => {
+test("DAX fundamentals layout: facts and action in the decision hero, above the introduction at every width", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let intro = await box(page, ".course-intro"), facts = await box(page, ".course-run");
-  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
-  expect(facts.y).toBeLessThan(intro.y + intro.height);
+  // The facts and action sit in the decision hero (tests/decision-hero.spec.ts), above the introduction.
+  let intro = await box(page, ".course-intro"), facts = await box(page, ".hero-facts");
+  expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
   // The agenda is the page's raised band; outcomes and arrangements sit on the ground.
   const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(await bg(".agenda")).not.toBe(await bg("body"));
@@ -189,9 +190,9 @@ test("DAX fundamentals layout: facts beside the introduction on wide screens, di
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await box(page, ".course-intro"); facts = await box(page, ".course-run");
-    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    intro = await box(page, ".course-intro"); facts = await box(page, ".hero-facts");
+    expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
     for (const selector of [".agenda-steps", ".need-list", ".run-facts", ".course-proof"]) {
       for (const item of await page.locator(selector).all()) {
         const b = (await item.boundingBox())!;

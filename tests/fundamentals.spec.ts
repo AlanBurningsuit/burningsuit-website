@@ -6,7 +6,8 @@ import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced
 
 const route = "/training/power-bi-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
-const links = ["/training/dax-fundamentals/", "#contact", "#need-title", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
+// The decision hero's action comes first: it sits on the dark stage, above the introduction.
+const links = ["#contact", "/training/dax-fundamentals/", "#need-title", "/training/how-i-train/", "/about/", "/training/how-i-train/#private-courses", ENQUIRY.privacyPath, email];
 
 const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 
@@ -61,21 +62,38 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await expect(page.locator(".course-fit")).toHaveText("Already building reports and looking for a day on calculations? See DAX fundamentals.");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll be able to do", "The two days", "What to arrange", "Ask about dates"]);
 
+  // Decision hero: the facts and the one primary action sit in the title band on the dark stage, after the standfirst and
+  // before the introduction; no separate facts card remains. The price comes last, on its own line, in reading order too.
   // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
-  const facts = page.getByRole("complementary", { name: "Course facts" }).locator(".run-facts");
-  await expectItems(page.locator(".course-run .run-facts > li"), copy
-    ? ["2 days", "Private, for your team", "Up to 8 people", copy.fundamentalsDetail, "9:30am to 4pm each day"]
-    : ["2 days", "Private, for your team", "On site or online", "Up to 8 people", priceOnRequest, "9:30am to 4pm each day"], "fundamentals facts");
+  const hero = page.locator(".dark.stage .title-band.decision-hero");
+  await expect(hero).toHaveCount(1);
+  expect(await hero.evaluate((el) => [...el.children].map((child) => child.tagName + (child.className ? "." + child.className : "")))).toEqual(["H1", "P.standfirst", "ASIDE.hero-facts"]);
+  const group = page.getByRole("complementary", { name: "Course facts" });
+  await expect(group).toHaveCount(1);
+  await expect(hero.locator("aside.hero-facts")).toHaveAttribute("aria-label", "Course facts");
+  await expect(page.locator(".course-run")).toHaveCount(0);
+  expect(await group.evaluate((el) => [...el.children].map((child) => child.className))).toEqual(["run-facts", "button run-action"]);
+  const facts = group.locator(".run-facts");
+  await expectItems(facts.locator("> li"), copy
+    ? ["2 days", "Private, for your team", "Up to 8 people", "9:30am to 4pm each day", copy.fundamentalsDetail]
+    : ["2 days", "Private, for your team", "On site or online", "Up to 8 people", "9:30am to 4pm each day", priceOnRequest], "fundamentals facts");
+  await expect(facts.locator("> li.fact-price")).toHaveCount(1);
+  await expect(facts.locator("> li").last()).toHaveClass("fact-price");
   if (!priced) await expectAriaWithoutAmounts(facts, `
     - list:
       - listitem: 2 days
       - listitem: Private, for your team
       - listitem: On site or online
       - listitem: Up to 8 people
-      - listitem: Price on request
       - listitem: 9:30am to 4pm each day
+      - listitem: Price on request
   `);
-  await expect(page.locator(".run-action")).toHaveText("Ask about dates");
+  await expect(page.locator(".run-action")).toHaveCount(1);
+  await expect(group.locator(".button.run-action")).toHaveText("Ask about dates");
+  await expect(group.locator(".button.run-action")).toHaveAttribute("href", "#contact");
+  // The introduction opens the daylight sheet on its own, outside the dark stage.
+  await expect(page.locator(".dark.stage .course-intro")).toHaveCount(0);
+  await expect(page.locator(".course-opening.decision-opening > *")).toHaveCount(1);
 
   // Outcomes are ruled, not a second numbered sequence.
   await expect(page.locator(".outcomes ol")).toHaveCount(0);
@@ -147,12 +165,35 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   expect(mainLinks).toEqual(links);
 });
 
-test("Fundamentals layout: facts beside the introduction on wide screens, directly after it on phones", async ({ page }) => {
+test("Fundamentals layout: one decision group on the dark stage, the introduction below it on the daylight sheet", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let intro = await box(page, ".course-intro"), facts = await box(page, ".course-run");
-  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
-  expect(facts.y).toBeLessThan(intro.y + intro.height);
+  await page.evaluate(() => document.fonts.ready);
+  const stage = await box(page, ".dark.stage");
+  let standfirst = await box(page, ".title-band .standfirst"), group = await box(page, ".hero-facts"), action = await box(page, ".run-action"), intro = await box(page, ".course-intro");
+  expect(group.y).toBeGreaterThanOrEqual(standfirst.y + standfirst.height);
+  expect(group.y + group.height).toBeLessThanOrEqual(stage.y + stage.height);
+  expect(intro.y).toBeGreaterThanOrEqual(stage.y + stage.height - 1);
+  // Everything needed to decide, including the action, is in the first screen.
+  await expect(page.locator(".run-action")).toBeInViewport({ ratio: 1 });
+  // Wide screens: the non-price facts share one line; the price takes its own line beneath, then the action.
+  const factBoxes = await page.locator(".hero-facts .run-facts > li").evaluateAll((els) => els.map((el) => { const r = el.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, price: el.classList.contains("fact-price") }; }));
+  const line = factBoxes.filter((f) => !f.price), price = factBoxes.find((f) => f.price)!;
+  for (const fact of line) expect(Math.abs(fact.top - line[0].top)).toBeLessThanOrEqual(1);
+  expect(price.top).toBeGreaterThanOrEqual(Math.max(...line.map((f) => f.bottom)));
+  expect(action.y).toBeGreaterThanOrEqual(price.bottom);
+  // The hero keeps the shared heading scale and the one button: the same title size as another course's TitleBand and the
+  // same button as the homepage's dark title band.
+  const titleSize = await page.locator(".title-band h1").evaluate((el) => getComputedStyle(el).fontSize);
+  const button = await page.locator(".run-action").evaluate((el) => { const s = getComputedStyle(el); return [s.backgroundColor, s.color, s.fontSize, s.borderRadius]; });
+  await page.goto("/training/dax-fundamentals/");
+  await page.evaluate(() => document.fonts.ready);
+  expect(await page.locator(".title-band h1").evaluate((el) => getComputedStyle(el).fontSize)).toBe(titleSize);
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  const stageButton = await page.locator(".title-band .title-actions .button").first().evaluate((el) => { const s = getComputedStyle(el); return [s.backgroundColor, s.color, s.fontSize, s.borderRadius]; });
+  expect(button).toEqual(stageButton);
+  await page.goto(route);
   // The agenda is the page's raised band; outcomes and arrangements sit on the ground.
   const bg = (selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(await bg(".agenda")).not.toBe(await bg("body"));
@@ -174,11 +215,18 @@ test("Fundamentals layout: facts beside the introduction on wide screens, direct
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await box(page, ".course-intro"); facts = await box(page, ".course-run");
-    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    await page.evaluate(() => scrollTo(0, 0));
+    standfirst = await box(page, ".title-band .standfirst"); group = await box(page, ".hero-facts"); action = await box(page, ".run-action"); intro = await box(page, ".course-intro");
+    expect(group.y).toBeGreaterThanOrEqual(standfirst.y + standfirst.height);
+    expect(intro.y).toBeGreaterThanOrEqual(group.y + group.height);
+    expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
+    // Phones: the facts pair up in two columns, the price spans both, and the action spans the content width.
+    const price = await box(page, ".fact-price"), first = await box(page, ".run-facts > li:first-child");
+    expect(price.width).toBeGreaterThan(first.width * 1.5);
+    expect(Math.abs(action.width - group.width)).toBeLessThanOrEqual(1);
+    if (width === 390) await expect(page.locator(".run-action")).toBeInViewport({ ratio: 1 });
     // Steps, tags and links stay inside the viewport.
-    for (const selector of [".agenda-steps", ".need-list", ".run-facts"]) {
+    for (const selector of [".agenda-steps", ".need-list", ".run-facts", ".run-facts > li", ".run-action"]) {
       for (const item of await page.locator(selector).all()) {
         const b = (await item.boundingBox())!;
         expect(b.x).toBeGreaterThanOrEqual(0);
