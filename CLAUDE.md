@@ -31,10 +31,10 @@ If a source you need is missing, or a Practice decision or Training note is newe
 
 ## Never
 
-- **Nothing private in this repo.** It is public, history and commit messages included. No client names, permission states, training prices or internal economics. Source comments may say where private evidence lives, never what it says.
+- **Nothing private in this repo.** It is public, history and commit messages included. No client names, permission states, coaching figures or internal economics. Source comments may say where private evidence lives, never what it says.
 - **No invented claims.** No claim, metric, quote, date or profile URL without a source (the brief, an Outline, a dated Practice decision, the reference sheet or Alan), and none that crosses the ledger.
 - **No named client** without Alan's go-ahead, and no named text staged on a preview. `namePublished: true` renders nothing by itself; the schema rejects a `named` block while its gate is closed.
-- **No prices in tracked files.** Prices render only from the private `design/copy/training-prices.json` with `SHOW_TRAINING_PRICES=true` (see the README). Changing prices, the ledger or payment setup needs its own approval.
+- **No price change without Alan.** Published prices live in `src/config/training-prices.json` and nowhere else (see the README). Changing a price needs Alan's own approval with the before and after; so do the ledger and payment setup. Coaching figures are not public: never add them.
 - **No new legacy redirect** without checking the vault's slug list: some old URLs stay 404 on purpose because their slugs identify clients. Consultancy stays at `/power-bi/` with its anchors.
 - **No client-side rendering.** Static output only: no SSR, islands or client-rendered content or JSON-LD. Structured data goes through `src/components/seo/Schema.astro`.
 - **No Umami settings changes.** Analytics are read-only. Dashboard: `https://cloud.umami.is/analytics/eu/websites/7a27ff45-e9ce-4aec-8940-260c61c35dff`.

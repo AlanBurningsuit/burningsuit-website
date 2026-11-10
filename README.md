@@ -18,7 +18,7 @@ npm run test:functional
 
 | Command | What it does |
 | --- | --- |
-| `npm run gate` | Brand parity, the copy lint, the tracked-file price scan, `astro check`, build, the built-output price scan (on a priced route, only that route's approved values), links (pages with linkinator, then every internal `#fragment` against the built page's ids) and SEO (reserved routes and anchors, redirects, metadata). |
+| `npm run gate` | Brand parity, the copy lint, `astro check`, build, the price check (see Prices), links (pages with linkinator, then every internal `#fragment` against the built page's ids) and SEO (reserved routes and anchors, redirects, metadata). |
 | `npm run test:functional` | Type-checks the tests, runs `tests/*.test.mjs` with Node, then Playwright against the existing `dist/`: the full suite in Chromium (including axe on every page at 1366px and 390px, failing on serious or critical violations) and the `@smoke` subset in WebKit. Build first. |
 | `npm run check:release` | Run against `dist/`. Fails on a page noindexed (other than the 404 and the two enquiry results) or without a canonical link, a form with no endpoint, or a `robots.txt` or sitemap that doesn't match the build. |
 | `npm run test:lh`, `npm run test:lh:mobile` | Lighthouse over the routes in `scripts/lighthouse-routes.cjs`. Set `CHROME_PATH` if Chrome isn't on `PATH`; set `BURNINGSUIT_LH_URL` to audit a running preview instead. |
@@ -35,7 +35,6 @@ Things to know:
 - **WebKit.** The `webkit-smoke` project runs only tests tagged `@smoke` (`tests/smoke.spec.ts`). It runs wherever WebKit is installed (`npx playwright install webkit`, and once on Linux `sudo npx playwright install-deps webkit`) and always in CI; without it, Playwright prints one line and skips the project.
 - **Screenshots.** `VISUAL_REVIEW=1 npm run test:functional` adds full-page captures (1366px and 390px, more on some pages) to the report. They assert nothing, are for review rather than approved baselines, and are off by default.
 - **The push hook tests what you push.** It refuses to run while tracked files have uncommitted changes (staged or not), or when the pushed ref isn't the checked-out commit. Untracked files don't count, so don't leave a new file the commit needs uncommitted.
-- **Masked runs** print `run-masked: still running: N s` every 60 seconds while they hold the output back, so a hung priced run is visible.
 - **Checks prove behaviour, not approval.** Editorial approval is Alan's.
 
 ## Map
@@ -51,20 +50,20 @@ Things to know:
 | `src/components/seo/Schema.astro` | The only place JSON-LD is emitted. Builders are in `src/lib/schema.ts`; site identity is in `src/config/site.ts`. |
 | `src/config/compatibility.mjs` | Legacy redirects, reserved routes and anchors (checked by `check:seo`), and `reserved404Routes`, the parked study routes that must return a real 404. |
 | `src/config/enquiry.mjs` | The Formspark endpoint (a null endpoint disables Send) and the contact address everything else uses. |
-| `src/config/booking.mjs` | The 101's Stripe payment link (used only in the priced build). |
+| `src/config/booking.mjs` | The 101's Stripe payment link. |
 | `src/config/course-run.mjs` | The 101's public run: dates, capacity and status (see Course run). |
 | `src/config/analytics.mjs` | The Umami tag, which also feeds the CSP, and the names of the counted click events. |
 | `src/config/starting-courses.mjs` | The wording Home and Training share for the two starting courses, used through `src/components/CourseEntry.astro`. |
 | `src/config/writing-routes.mjs` | Fixed public URLs for the two articles. |
 | `src/config/indexnow.mjs`, `src/integrations/llms-txt.mjs` | IndexNow key; `/llms.txt`, written after the build from indexed pages' titles and descriptions. |
-| `src/lib/training-prices.mjs` | Loads and validates the private prices and composes the price wording (see Prices). |
+| `src/config/training-prices.json`, `src/lib/training-prices.mjs` | The published prices, and the code that validates them and composes the price wording (see Prices). |
 | `src/styles/brand.css` | Brand tokens, copied byte for byte from the brand repo. Change them there first. |
 | `src/styles/tokens.css` | Web-only values: surface roles (dark and daylight), the one heading scale, the repeated text sizes, card shadows, motion. Pages never set their own heading sizes. |
 | `src/styles/app.css` | Shared furniture: the one `.button`, the closing band, the footer, pull quotes, the sheet edges. |
 | `src/styles/<page>.css` | Page compositions. The four course pages, Consultancy and the call page share `course-page.css`; the 101 adds `ai-agents-101.css`, the three agenda-led course pages `course-agenda.css`, and the two DAX pages `dax-course.css`. Training reuses `home.css` for its course entries. A page rule that overrides a shared one wins by specificity, never by stylesheet order. |
 | `diagrams/` | Editable draw.io sources for the shipped SVGs in `src/assets/diagrams/`. |
 | `public/` | Static files served as they are, including social images and the IndexNow key file. |
-| `scripts/` | Gate checks, the price tools, IndexNow submission and the push hook. |
+| `scripts/` | Gate checks, IndexNow submission and the push hook. |
 | `tests/` | One Playwright spec per page or shared feature, plus Node tests for schemas, structured data, prices and the release check. |
 
 ### Enquiries
@@ -91,20 +90,16 @@ The 101's one public run lives in `src/config/course-run.mjs`: start and end (UK
 
 ## Prices
 
-Training prices are on the live site but never in tracked files.
+The published prices are the ten rates in `src/config/training-prices.json`: two each for Power BI fundamentals, DAX fundamentals and the DAX deep dive (on site and online), the 101's two seat rates and Consultancy's usual range. To change a price, edit that file only; the pages and the tests compose their wording from it.
 
-- They render only from the private `design/copy/training-prices.json` (a gitignored symlink into the ops repo), and only when `SHOW_TRAINING_PRICES` is exactly `true`. Every other build, including `npm run gate` and previews, is the "Price on request" variant.
-- `src/lib/training-prices.mjs` validates every rate slot and fails a priced build with a fixed message on any missing or malformed value. It never falls back and never prints a value.
-- Prices are static HTML on Home, Training, the four course pages and Consultancy. Coaching and the private 101 stay "Price on request" in both variants.
-- `npm run check:prices` fails on any monetary literal, price-like assignment or private file in tracked files. A few reviewed files that legitimately hold a currency-like token are pinned by SHA256 in `scripts/check-prices.mjs`, so editing one of them means updating its digest.
-- `npm run check:prices:dist` checks the built output: no amounts in the unpriced build; every slot on its routes and nowhere else in the priced one. Diagnostics name a rule and a path, never the matched text.
-- To test the priced variant: `SHOW_TRAINING_PRICES=true npm run test:functional` against a priced `dist/`. Pipe priced runs through `node scripts/run-masked.mjs <command>` to mask amounts in the log. Reports, traces and Lighthouse output from a priced build can hold prices: keep them out of the repo.
+- `src/lib/training-prices.mjs` validates the file and fails the build on a missing, extra or malformed rate. It never falls back to "Price on request".
+- Prices are static HTML on Home, Training, the four course pages and Consultancy, never in structured data. Coaching and the private 101 say "Price on request".
+- `npm run check:prices` (in the gate, after the build) fails when an amount in the built HTML or text is not a tracked rate, when a tracked rate renders nowhere, or when coaching or the private 101 stop saying price on request. The essay's one figure is allowed on its own route in `scripts/check-prices.mjs`.
 
 ## Publish
 
 - **Branches.** `main` is live; `dev` is integration. Branches and Netlify previews can be public (previews are noindexed by header).
 - **Push hook.** `scripts/hooks/pre-push` runs the gate and functional tests before every push, and `check:release` before a push to `main`.
-- **Validate** (`.github/workflows/validate.yml`): on pushes to `dev` and pull requests to `dev` or `main`, the unpriced gate and functional tests.
-- **Deploy** (`.github/workflows/deploy.yml`): on `main` only. Writes the `TRAINING_PRICES_JSON` Actions secret to the private file with `scripts/write-training-prices.mjs`, builds and tests the priced site through `run-masked.mjs`, runs `check:release`, uploads that same `dist/`, and removes the file whatever the outcome. A later job submits the sitemap to IndexNow; a failed submission leaves the deploy successful.
-- Changing a price means updating both the ops prices file and the `TRAINING_PRICES_JSON` secret.
+- **Validate** (`.github/workflows/validate.yml`): on pushes to `dev` and pull requests to `dev` or `main`, the gate, functional tests and release check.
+- **Deploy** (`.github/workflows/deploy.yml`): on `main` only. Runs the gate and functional tests, runs `check:release` and uploads that same `dist/`. A later job submits the sitemap to IndexNow; a failed submission leaves the deploy successful.
 - GitHub Pages can't enforce HSTS or `frame-ancestors` through a meta CSP.
