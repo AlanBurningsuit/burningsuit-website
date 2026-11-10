@@ -1,0 +1,16 @@
+---
+// Where Kit sends a new subscriber back to (the Kit form's "redirect to an external page" setting): off the index, like the enquiry result pages.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TitleBand from "../components/TitleBand.astro";
+import "../styles/service.css";
+---
+<BaseLayout title="Check your email | burningsuit" description="One more step to subscribe to Alan's newsletter." noindex>
+  <TitleBand heading="Check your email" id="result-title" />
+  <section class="wrap service-page" aria-labelledby="result-title">
+    <div class="service-copy">
+      <p>Thanks for subscribing. I've sent you an email with a link to confirm. Once you've clicked it, you're on the list.</p>
+      <p>If it hasn't arrived in a few minutes, have a look in your spam folder.</p>
+      <p class="links"><a href="/writing/we-are-all-middle-management-now/">Back to the essay</a><a href="/training/">Training</a><a href="/">Homepage</a></p>
+    </div>
+  </section>
+</BaseLayout>

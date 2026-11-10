@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { NEWSLETTER } from "../src/config/newsletter.mjs";
+import { EVENTS } from "../src/config/analytics.mjs";
 import { readFileSync } from "node:fs";
 import { test, expect, otherScripts } from "./analytics";
 import { visualReview, expectIndexable, forEachTextSize } from "./helpers";
@@ -79,6 +80,9 @@ for (const [route, kind, author] of [[essay, "essay", "Alan Harman-Box"], [archi
     if (kind === "essay") {
       await expect(signup).toHaveAttribute("action", NEWSLETTER.action);
       await expect(signup).toHaveAttribute("method", "post");
+      // Subscribe is counted as an event, like the enquiry form's Send; it is the page's only counted control.
+      await expect(signup.getByRole("button", { name: "Subscribe", exact: true })).toHaveAttribute("data-umami-event", EVENTS.newsletterSubscribe);
+      await expect(page.locator("[data-umami-event]")).toHaveCount(1);
       await expect(signup.locator("input")).toHaveCount(1);
       await expect(signup.getByLabel("Email")).toHaveAttribute("name", NEWSLETTER.field);
       await expect(signup.getByLabel("Email")).toHaveAttribute("required", "");
@@ -156,3 +160,16 @@ for (const route of ["/work/", essay, archive]) {
   }
   visualReview(route);
 }
+
+test("the newsletter's thank-you page is off the index and leads back into the site", async ({ page }) => {
+  expect((await page.goto(NEWSLETTER.successPath))?.status()).toBe(200);
+  await expect(page.locator("h1")).toHaveText("Check your email");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  await expect(page.locator(".service-copy p:not(.links)")).toHaveText([
+    "Thanks for subscribing. I've sent you an email with a link to confirm. Once you've clicked it, you're on the list.",
+    "If it hasn't arrived in a few minutes, have a look in your spam folder.",
+  ]);
+  expect(await page.locator(".service-copy .links a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual(["/writing/we-are-all-middle-management-now/", "/training/", "/"]);
+  await expect(page.locator("form, [data-umami-event]")).toHaveCount(0);
+  expect(await (await page.request.get("/sitemap-0.xml")).text()).not.toContain("/subscribed/");
+});

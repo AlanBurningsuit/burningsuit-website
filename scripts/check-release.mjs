@@ -7,7 +7,7 @@ import { RUN, staleRunProblem } from "../src/config/course-run.mjs";
 const dist = process.argv[2] ?? "dist";
 const site = "https://burningsuit.co.uk";
 // Pages kept out of search on purpose: the 404 and the enquiry results.
-const unindexed = new Set(["404.html", "enquiry-received/index.html", "enquiry-error/index.html"]);
+const unindexed = new Set(["404.html", "enquiry-received/index.html", "enquiry-error/index.html", "subscribed/index.html"]);
 const problems = [];
 const read = (name) => readFileSync(join(dist, name), "utf8");
 // Forward slashes on every platform, as the names compared below assume (readdirSync gives backslashes on Windows).

@@ -14,7 +14,7 @@ export default defineConfig({
   integrations: [
     mdx({ smartypants: false, syntaxHighlight: false }),
     // Indexable pages only: the 404 and the enquiry results stay out, as do legacy redirect stubs.
-    sitemap({ filter: (page) => !/\/(404|enquiry-received|enquiry-error)\/?$/.test(new URL(page).pathname) && !Object.keys(redirects).some((from) => new URL(page).pathname.replace(/\/$/, "") === from) }),
+    sitemap({ filter: (page) => !/\/(404|enquiry-received|enquiry-error|subscribed)\/?$/.test(new URL(page).pathname) && !Object.keys(redirects).some((from) => new URL(page).pathname.replace(/\/$/, "") === from) }),
     // /llms.txt for AI answer engines, from the built pages' own titles and descriptions.
     llmsTxt(),
   ],

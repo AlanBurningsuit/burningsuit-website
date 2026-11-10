@@ -8,4 +8,6 @@ export const NEWSLETTER = Object.freeze({
   /** The field name Kit's form expects. */
   field: "email_address",
   privacyPath: "/privacy/#newsletter",
+  /** The page the Kit form is set to send a new subscriber back to. The setting lives in Kit, not here. */
+  successPath: "/subscribed/",
 });
