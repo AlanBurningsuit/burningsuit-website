@@ -74,6 +74,7 @@ export const pages = {
     "booking",
     "seat",
     "recordings",
+    "newsletter",
     "email",
     "rights",
     "changes"

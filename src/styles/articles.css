@@ -27,3 +27,21 @@
 @media (max-width: 680px) {
   .essay-figure { padding: 12px; margin-inline: -6px; }
 }
+
+/* The newsletter sign-up after an essay (Newsletter.astro): the promise beside one field and its button, on the dark band. */
+.newsletter .closing-inner { padding-block: 52px 36px; align-items: start; }
+.newsletter-copy > p { max-width: 56ch; font-size: var(--raised-size); line-height: var(--lh-relaxed); }
+.newsletter-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: end; max-width: 520px; margin-top: 22px; }
+.newsletter-form .field { display: grid; gap: 7px; min-width: 0; }
+.newsletter-form label { font: 600 var(--compact-size) / var(--lh-snug) var(--ff-display); }
+.newsletter-form input { width: 100%; font: 400 var(--compact-size) / var(--lh-body) var(--ff-body); color: var(--fg); background: var(--bg); border: var(--bw-hair) solid var(--fg-dim); border-radius: var(--r-sm); padding: 10px 12px; }
+.newsletter-form input:focus-visible { outline-offset: 2px; border-color: var(--amber); }
+.newsletter-form .button { margin-top: 0; }
+.newsletter-form .hint { grid-column: 1 / -1; font-size: .9rem; color: var(--text-dim); max-width: 56ch; }
+/* The onward links follow the sign-up on the same band, under a rule. */
+.newsletter + .article-related .closing-inner { padding-top: 0; }
+.newsletter + .article-related .links { padding-top: 22px; border-top: var(--bw-hair) solid var(--rule); }
+@media (max-width: 480px) {
+  .newsletter-form { grid-template-columns: minmax(0, 1fr); }
+  .newsletter-form .button { justify-self: start; }
+}

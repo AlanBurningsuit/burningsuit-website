@@ -1,0 +1,21 @@
+---
+// The newsletter sign-up: a route for readers who aren't buying yet. A plain HTML POST to Kit (src/config/newsletter.mjs),
+// with no Kit script, so the page stays static and loads nothing from Kit.
+import { NEWSLETTER } from "../config/newsletter.mjs";
+---
+<section class="newsletter closing-band dark" aria-labelledby="newsletter-title">
+  <div class="wrap closing-inner">
+    <h2 id="newsletter-title">Get the newsletter</h2>
+    <div class="newsletter-copy">
+      <p>I'll write when I've got something worth saying. Mostly what I'm seeing where AI meets Power BI inside real teams: what it's genuinely good at now, where it quietly goes wrong, and what that means for whoever has to stand behind the numbers.</p>
+      <form class="newsletter-form" method="post" action={NEWSLETTER.action} aria-labelledby="newsletter-title" aria-describedby="newsletter-privacy">
+        <div class="field">
+          <label for="newsletter-email">Email</label>
+          <input id="newsletter-email" name={NEWSLETTER.field} type="email" autocomplete="email" spellcheck="false" required />
+        </div>
+        <button class="button" type="submit">Subscribe</button>
+        <p class="hint" id="newsletter-privacy">Kit sends the newsletter, and emails you a link to confirm first. Every issue has an unsubscribe link. <a href={NEWSLETTER.privacyPath}>Read how I handle your information</a>.</p>
+      </form>
+    </div>
+  </div>
+</section>

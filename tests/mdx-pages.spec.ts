@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { NEWSLETTER } from "../src/config/newsletter.mjs";
 import { readFileSync } from "node:fs";
 import { test, expect, otherScripts } from "./analytics";
 import { visualReview, expectIndexable, forEachTextSize } from "./helpers";
@@ -70,7 +71,22 @@ for (const [route, kind, author] of [[essay, "essay", "Alan Harman-Box"], [archi
     await expect(page.locator('meta[name="author"]')).toHaveAttribute("content", author);
     await expectIndexable(page, { article: true });
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "article");
-    await expect(page.locator('meta[property="article:published_time"], meta[property="article:modified_time"], form, iframe, astro-island, [style]')).toHaveCount(0);
+    await expect(page.locator('meta[property="article:published_time"], meta[property="article:modified_time"], iframe, astro-island, [style]')).toHaveCount(0);
+    // Only the essay ends with the newsletter sign-up: a plain POST to Kit with one email field and no Kit script.
+    const signup = page.locator("form.newsletter-form");
+    await expect(signup).toHaveCount(kind === "essay" ? 1 : 0);
+    await expect(page.locator("form")).toHaveCount(kind === "essay" ? 1 : 0);
+    if (kind === "essay") {
+      await expect(signup).toHaveAttribute("action", NEWSLETTER.action);
+      await expect(signup).toHaveAttribute("method", "post");
+      await expect(signup.locator("input")).toHaveCount(1);
+      await expect(signup.getByLabel("Email")).toHaveAttribute("name", NEWSLETTER.field);
+      await expect(signup.getByLabel("Email")).toHaveAttribute("required", "");
+      await expect(page.getByRole("heading", { name: "Get the newsletter" })).toBeVisible();
+      await expect(page.locator(".newsletter-copy > p")).toHaveText("I'll write when I've got something worth saying. Mostly what I'm seeing where AI meets Power BI inside real teams: what it's genuinely good at now, where it quietly goes wrong, and what that means for whoever has to stand behind the numbers.");
+      await expect(signup.getByRole("link", { name: "Read how I handle your information" })).toHaveAttribute("href", NEWSLETTER.privacyPath);
+      expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain("https://app.kit.com");
+    }
     await expect(page.locator(otherScripts)).toHaveCount(0);
     // The essay leads on to the course it bears on; the archive post to the offers only.
     expect(await page.locator(".article-related a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual([...(kind === "essay" ? ["/training/power-bi-with-ai-agents-101/"] : []), "/about/", "/training/", "/power-bi/"]);
@@ -119,7 +135,8 @@ for (const route of ["/work/", essay, archive]) {
     await page.keyboard.press("Enter");
     await expect(page.locator("main")).toBeFocused();
     await page.keyboard.press("Tab");
-    expect(await page.evaluate(() => document.activeElement?.tagName)).toBe("A");
+    // The essay has no link in its prose, so its first stop is the newsletter sign-up's email field.
+    expect(await page.evaluate(() => document.activeElement?.tagName)).toBe(route === essay ? "INPUT" : "A");
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(3);
     await context.close();
   });

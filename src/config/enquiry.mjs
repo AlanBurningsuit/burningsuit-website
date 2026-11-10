@@ -1,4 +1,5 @@
 // @ts-check
+import { NEWSLETTER } from "./newsletter.mjs";
 /** The one public contact address: the enquiry fallbacks, the footer and the JSON-LD identity all use it. */
 export const CONTACT_EMAIL = "alan@burningsuit.co.uk";
 
@@ -31,4 +32,5 @@ export function formActionFor(action) {
   if (url.protocol !== "https:") throw new Error("Enquiry form action must be HTTPS or a root-relative path.");
   return `${url.origin} 'self'`;
 }
-export const formActionSource = formActionFor(ENQUIRY.action);
+/** Every form on the site: the enquiry endpoint, then the newsletter's (src/config/newsletter.mjs). */
+export const formActionSource = `${formActionFor(ENQUIRY.action)} ${new URL(NEWSLETTER.action).origin}`;
