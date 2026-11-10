@@ -28,7 +28,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   // One emphasised word in the title, in amber like the other pages' titles.
   await expect(page.locator("h1 .em")).toHaveText("independent");
   // The last heading is the shared form's slot text, so a change to the form's heading slot fails here too.
-  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["The work I take on", "How I work with your team", "AI agents on your own Power BI", "How the work runs", "After the work", "Who does the work", "How to start", "Prefer to write?"]);
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["The work I take on", "AI agents on your own Power BI", "How the work runs", "After the work", "Who does the work", "How to start", "Prefer to write?"]);
 
   // Exactly the kept anchors from the route manifest, each on its own section, and none of the dropped ones.
   expect(pages["power-bi"]).toEqual(["situations", "how-the-work-runs", "pricing", "ai", "ongoing", "start"]);
@@ -64,7 +64,7 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".do-steps > li > p")).toHaveText([
     "We talk through what's going on. Sometimes that's enough: I can point you to what to do next, or tell you if it isn't something I can help with.",
     "Every job is different, so I quote case by case, usually as a fixed price. Getting to know your Power BI properly is part of the work, so there's nothing separate to pay for first.",
-    "They do as much of it as they can, with me alongside.",
+    "They do as much of it as they can, with me alongside. We work to the deadlines you actually have.",
     "Your team finishes knowing what we did and why, how to change it and what will happen when they do. You keep our notes and the session recordings, so there's something to fall back on. If you'd rather not be recorded, just say.",
   ]);
   // Alan's line leads the support column in display type; the options follow their own introduction.
@@ -86,7 +86,8 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator(".start-ask")).toHaveText("Tell me what's happening with your Power BI, and we'll work out what would help.");
   await expect(page.locator("#situations .lead-list > li")).toHaveText(["Thinking through your reporting as a whole. We look at what it's for, what it takes to run it and which skills your team needs. Then we agree what to do first.", "Owning the Power BI you've already got. It all rests on one person, or your experienced Power BI person has already left, or the reports have limped on for years and nobody is quite sure how they work. Or two reports disagree, and you can't tell which to trust. I go through the reports and models with you, find where the risks are and help your team take charge of the reporting.", "Building or moving something, together. That might be a new model or report your team can't build yet, or moving your reporting into Power BI. Either way, your team knows how it works before they rely on it. If you're moving to Microsoft Fabric (the wider data platform that Power BI is part of), I coach your team through its own migration. I don't do the Fabric migration work myself.", "Getting started with AI agents. I coach your team to use them on the Power BI you've got. More on that below."]);
   await expect(page.locator(".build-line")).toHaveText("If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.");
-  await expect(page.locator('[aria-labelledby="method-title"] .lead-list > li')).toHaveText(["Coaching your team to do it. I take your team through each part of the work and, wherever I can, have them do it themselves while I help and check.", "In your own setup. We work with your data, models and reports, and the deadlines you actually have."]);
+  // The two-card "How I work with your team" section repeated the introduction and step 3, so it is gone; its one distinct point sits in step 3.
+  await expect(page.locator("#method-title")).toHaveCount(0);
   await expect(page.locator("#ai .raised-copy p")).toHaveText("If your team wants to start using AI agents, we start from what you already have: your licences, tools, skills and setup. We work out what to hand to an agent, what to keep it away from, and how your team checks what it changed. Your team learns to use agents themselves, so you get work you can check, not new risks or a mess to clear up later.");
   await expect(page.locator("#ongoing p")).toHaveText(["The whole point is that you don't need me.", "I'll teach your team the tool; I won't teach them to wait for me.", "Some teams still want someone to call on. If you do, we shape the support to fit the work we've done, for example:", "It's priced on request."]);
   await expect(page.locator("#ongoing .lead-list > li")).toHaveText(["Retained support for your team.", "Strategic advice as your reporting changes.", "Regular office hours, such as a monthly call in a fixed window, where your team brings whatever has come up."]);

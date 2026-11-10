@@ -14,16 +14,6 @@
 .build-line { margin-top: 22px; max-width: 64ch; }
 .courses-line { margin-top: 26px; max-width: 64ch; }
 
-/* How I work with your team: the two principles as side-by-side cards under their heading. */
-@media (min-width: 901px) {
-  .course-need.method { grid-template-columns: minmax(0, 1fr); row-gap: 26px; }
-  .course-need.method > h2 { position: static; }
-  .method .need-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; padding: 0; background: none; box-shadow: none; }
-  .method .need-list li { max-width: none; padding: 24px 28px 26px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
-  .method .need-list li::before { display: none; }
-  .method .need-list strong { display: block; margin-bottom: 6px; }
-}
-
 /* AI agents: a raised band using the shared .raised-band from app.css. */
 
 /* How the work runs: the 101's numbered steps, turned into a left-to-right sequence on wide screens, each opening on the warm rule. */
