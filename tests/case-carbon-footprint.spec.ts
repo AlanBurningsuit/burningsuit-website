@@ -23,13 +23,15 @@ test("carbon-footprint study stays static, private and CSP-clean, with no form, 
 
 test("carbon-footprint study reads in the approved words and order", async ({ page }) => {
   await page.goto(route);
-  await expect(page.locator(".case-kicker")).toHaveText("How I work on a team's own reporting");
-  await expect(page.locator("h1")).toHaveText("Their own method, in a model they can check.");
-  await expect(page.locator("h1 .em")).toHaveText("check");
-  await expect(page.locator(".case-lead")).toHaveText("A UK university's sustainability team had the method behind their carbon reporting, and the corrections it needed, spread across spreadsheets. I built one model that does the sums their way and keeps its workings. We checked it together against their own totals, and I handed it over with the steps practised and written down.");
-  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Working out what was worth building", "Workings you can follow", "Checking it together", "Handing it over"]);
-  for (const [id, heading] of [["useful", "Working out what was worth building"], ["workings", "Workings you can follow"], ["checking", "Checking it together"], ["handover", "Handing it over"]]) {
-    await expect(page.locator(`section[aria-labelledby="${id}"] > h2#${id}`)).toHaveText(heading);
+  await expect(page.locator(".eyebrow")).toHaveCount(0);
+  await expect(page.locator("h1")).toHaveText("Carbon reporting for a UK university's sustainability team");
+  await expect(page.locator("h1 .em")).toHaveText("Carbon reporting");
+await expect(page.locator(".case-lead")).toHaveText("A UK university's sustainability team had the method behind their carbon reporting, and the corrections it needed, spread across spreadsheets. I built one model that does the sums their way and keeps its workings. We checked it together against their own totals, and I handed it over with the steps practised and written down.");
+  await expect(page.locator(".case-facts dt")).toHaveText(["Format", "Who", "Length", "Material"]);
+  await expect(page.locator(".case-facts dd")).toHaveText(["Power BI consultancy", "A UK university's sustainability team", "Three months", "Their own carbon reporting method and totals"]);
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Where they started", "Workings you can follow", "Checking it together", "Handing it over", "Does your reporting live in spreadsheets?"]);
+  for (const [id, heading] of [["started", "Where they started"], ["workings", "Workings you can follow"], ["checking", "Checking it together"], ["handover", "Handing it over"]]) {
+    await expect(page.locator(`section[aria-labelledby="${id}-title"] > h2#${id}-title`)).toHaveText(heading);
   }
   await expect(page.locator(".case-prose p")).toHaveText([
     "The team's method, and the corrections it relied on, were spread across several spreadsheets. Each report drew on that method, so a dashboard on its own would have left the method exactly where it was.",
@@ -42,8 +44,10 @@ test("carbon-footprint study reads in the approved words and order", async ({ pa
     "Handover meant the team practising the steps themselves: refreshing the data and building reports from the model.",
     "They also have documentation of how the model is designed, how the calculations work and what it needs each year to stay up to date.",
   ]);
-  await expect(page.locator(".case-return-copy p")).toHaveText("If your reporting depends on a method that lives in spreadsheets, this is how I'd work on it with you: agree what's worth building, write your method into something you can follow, check it together and hand it over properly.");
-  await expect(page.locator(".case-invite p")).toHaveText("Bring reporting like this to a free 30-minute call. We'll look at what would be useful to build, and I'll tell you if it isn't something I can help with.");
+  await expect(page.locator(".case-limits")).toHaveText("This shows how the work ran and what I handed over. It doesn't show how the team has used the model since.");
+  await expect(page.locator(".case-closing .raised-copy > p").first()).toHaveText("Bring reporting like this to a free 30-minute call. We'll look at what would be useful to build, and I'll tell you if it isn't something I can help with.");
+  // The paragraph that recapped the four sections is gone.
+  await expect(page.locator("main")).not.toContainText("this is how I'd work on it with you");
   // Straight quotes and hyphens exactly as approved: no typographic substitution.
   const text = await page.locator("main").innerText();
   expect(text).not.toMatch(/[‘’“”–—]/);
@@ -52,8 +56,8 @@ test("carbon-footprint study reads in the approved words and order", async ({ pa
 test("carbon-footprint study returns to consultancy and the free call as real links", async ({ page }) => {
   await page.goto(route);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => [link.textContent, link.getAttribute("href")]));
-  expect(mainLinks).toEqual([["More about Power BI consultancy", "/power-bi/"], ["Book a free 30-minute call", "/call/"], ["a free 30-minute call", "/call/"]]);
-  await expect(page.locator(".case-invite a")).toHaveAttribute("href", "/call/");
+  expect(mainLinks).toEqual([["Book a free 30-minute call", "/call/"], ["More about Power BI consultancy", "/power-bi/"]]);
+  await expect(page.locator(".case-closing .text-link")).toHaveAttribute("href", "/call/");
   for (const link of await page.locator("main a").all()) await expect(link).not.toHaveAttribute("target", /./);
 });
 
@@ -78,12 +82,12 @@ test("carbon-footprint study works without JavaScript and from the keyboard", as
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const reached: string[] = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 2; i++) {
     await page.keyboard.press("Tab");
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? ""));
   }
-  expect(reached).toEqual(["/power-bi/", "/call/", "/call/"]);
-  for (const [name, title] of [["More about Power BI consultancy", "Power BI consultancy that leaves your team independent"], ["Book a free 30-minute call", "A free 30-minute call about your Power BI"], ["a free 30-minute call", "A free 30-minute call about your Power BI"]]) {
+  expect(reached).toEqual(["/call/", "/power-bi/"]);
+  for (const [name, title] of [["More about Power BI consultancy", "Power BI consultancy that leaves your team independent"], ["Book a free 30-minute call", "A free 30-minute call about your Power BI"]]) {
     await page.goto(route);
     await page.getByRole("link", { name, exact: true }).click();
     await expect(page.locator("h1")).toHaveText(title);
@@ -94,18 +98,18 @@ test("carbon-footprint study works without JavaScript and from the keyboard", as
 test("carbon-footprint layout: headings beside their beats on wide screens, stacked on narrow ones", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  for (const id of ["useful", "workings", "checking", "handover"]) {
-    const [h, p] = [await firstBox(page, `#${id}`), await firstBox(page, `section[aria-labelledby="${id}"] .case-prose`)];
+  for (const id of ["started", "workings", "checking", "handover"]) {
+    const [h, p] = [await firstBox(page, `#${id}-title`), await firstBox(page, `section[aria-labelledby="${id}-title"] .case-prose`)];
     expect(p.x).toBeGreaterThanOrEqual(h.x + h.width);
   }
-  let [copy, links] = [await firstBox(page, ".case-return-copy"), await firstBox(page, ".case-return-links")];
-  expect(links.x).toBeGreaterThanOrEqual(copy.x + copy.width);
+  let [lead, facts] = [await firstBox(page, ".case-lead"), await firstBox(page, ".case-facts")];
+  expect(facts.x).toBeGreaterThanOrEqual(lead.x + lead.width);
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    const [h, p] = [await firstBox(page, "#useful"), await firstBox(page, 'section[aria-labelledby="useful"] .case-prose')];
+    const [h, p] = [await firstBox(page, "#started-title"), await firstBox(page, 'section[aria-labelledby="started-title"] .case-prose')];
     expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
-    [copy, links] = [await firstBox(page, ".case-return-copy"), await firstBox(page, ".case-return-links")];
-    expect(links.y).toBeGreaterThanOrEqual(copy.y + copy.height);
+    [lead, facts] = [await firstBox(page, ".case-lead"), await firstBox(page, ".case-facts")];
+    expect(facts.y).toBeGreaterThanOrEqual(lead.y + lead.height);
   }
 });
 

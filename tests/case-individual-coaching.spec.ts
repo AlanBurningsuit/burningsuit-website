@@ -21,22 +21,21 @@ test("Individual coaching study stays static, private and CSP-clean, with no for
 test("Individual coaching study keeps the approved wording and heading hierarchy", async ({ page }) => {
   await page.goto(route);
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to entry and test together.
-  await expect(page.locator(".cs-descriptor")).toHaveText("An individual learner developing Power BI reporting");
-  await expect(page.locator("h1")).toHaveText("He already built the reports. Coaching was about what's underneath them.");
+  await expect(page.locator(".eyebrow")).toHaveCount(0);
+  await expect(page.locator("h1")).toHaveText("Power BI coaching for someone already building reports");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText([
-    "The short version", "Where he started", "Written for one person", "Example data, built around his reporting",
-    "A session, then homework", "The rule I got wrong", "What he kept, and what changed", "Coaching for one person, or a few",
+    "Where he started", "How the coaching ran", "The rule I got wrong", "What he kept, and what changed",
+    "Thinking about coaching for one person, or a few?",
   ]);
   await expect(page.locator("h3, h4")).toHaveCount(0);
-  await expect(page.locator(".cs-facts dt")).toHaveText(["Format", "This engagement", "Material", "Kept"]);
-  await expect(page.locator(".cs-facts dd")).toHaveText([
+  await expect(page.locator(".case-facts dt")).toHaveText(["Format", "Who", "Length", "Material"]);
+  await expect(page.locator(".case-facts dd")).toHaveText([
     "Power BI coaching, one learner",
-    "eight weekly sessions, plus a recap",
-    "example data shaped around his reporting, with homework between sessions; his live model in the final session",
-    "reusable models, the sample data they run on, and the session notes",
+    "Someone already building Power BI reports",
+    "Eight weekly sessions, plus a recap",
+    "Example data shaped around his reporting, with homework between sessions; his live model in the final session",
   ]);
   await expect(page.locator("main p")).toHaveText([
-    "An individual learner developing Power BI reporting",
     "He was already building Power BI reports from several sources. A course that started at the beginning would have spent most of its time on things he could already do. So over eight weekly sessions and a recap, we worked on the parts underneath: the data model, DAX (Power BI's calculation language) and checking the numbers.",
     "He wasn't starting from zero. He was already building reports from several data sources, shaping data in Power Query, writing measures and thinking about how people would find their way around the finished report.",
     "He had a good eye for how a report looks and reads. The gap was underneath: a model that would hold up as more data arrived, DAX he could write and explain, and the habit of checking a number before anyone else sees it. A polished report with a wrong number in it is more dangerous than a scruffy one, because it looks right.",
@@ -52,9 +51,11 @@ test("Individual coaching study keeps the approved wording and heading hierarchy
     "The refusal reads: \"only columns from a single table can be used in a True/False expression that is used as a table filter expression.\" A test that genuinely reaches across two tables is where FILTER comes in.",
     "At the end I sent him the reusable models, the sample data they run on, and the notes from every session, so the examples still work without me.",
     "In the final session he showed me his live model and named a problem in it himself: for each new calculation he had been building a new table, where a better-shaped model would let a measure do the work. When I asked what had changed most, he said modelling and DAX. That's probably not what he'd have picked at the start, and I think that's where the value is.",
+    "This is my account of the coaching, with what he told me in the final session. It doesn't show what changed in his work afterwards.",
     "Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, online, or on site where it suits, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. Price on request.",
+    "Tell me who it's for and what they're building",
   ]);
-  await expect(page.locator(".cs-teaching pre code")).toHaveText([
+  await expect(page.locator(".case-teaching pre code")).toHaveText([
     "-- Accepted: two columns, one table", "Large online orders =", "CALCULATE (", "    [Orders],",
     "    Sales[Channel] = \"Online\" && Sales[Amount] > 1000", ")", "",
     "-- Refused: the test reaches across two tables", "Large northern orders =", "CALCULATE (", "    [Orders],",
@@ -85,7 +86,7 @@ test("Individual coaching study works without JavaScript and from the keyboard",
   const page = await context.newPage();
   await page.goto(route);
   await expect(page.locator("h1")).toBeVisible();
-  await expect(page.locator(".cs-teaching pre")).toBeVisible();
+  await expect(page.locator(".case-teaching pre")).toBeVisible();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
   await page.keyboard.press("Enter");
@@ -100,7 +101,7 @@ test("Individual coaching study works without JavaScript and from the keyboard",
     expect(ring.visible).toBe(true);
   }
   expect(reached).toEqual(links);
-  expect(await page.locator(".cs-teaching pre").getAttribute("tabindex")).toBeNull();
+  expect(await page.locator(".case-teaching pre").getAttribute("tabindex")).toBeNull();
   await context.close();
 });
 
@@ -108,19 +109,19 @@ test("Individual coaching study layout: facts beside the lead, teaching on a rai
   const style = (selector: string, property: string) => page.locator(selector).evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), property);
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  const [lead, facts] = [await box(page, ".cs-lead"), await box(page, ".cs-facts")];
+  const [lead, facts] = [await box(page, ".case-lead"), await box(page, ".case-facts")];
   expect(facts.x).toBeGreaterThanOrEqual(lead.x + lead.width);
   for (const id of ["started-title", "rule-title"]) {
-    const [h, p] = [await box(page, `#${id}`), await box(page, `[aria-labelledby="${id}"] .cs-prose`)];
+    const [h, p] = [await box(page, `#${id}`), await box(page, `[aria-labelledby="${id}"] .case-prose`)];
     expect(p.x).toBeGreaterThanOrEqual(h.x + h.width);
   }
-  expect(await style(".cs-teaching", "background-color")).not.toBe(await style("body", "background-color"));
-  expect(await style(".cs-teaching", "background-color")).not.toBe("rgb(241, 236, 217)"); // never the cream evidence surface
+  expect(await style(".case-teaching", "background-color")).not.toBe(await style("body", "background-color"));
+  expect(await style(".case-teaching", "background-color")).not.toBe("rgb(241, 236, 217)"); // never the cream evidence surface
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    const [leadPhone, factsPhone] = [await box(page, ".cs-lead"), await box(page, ".cs-facts")];
+    const [leadPhone, factsPhone] = [await box(page, ".case-lead"), await box(page, ".case-facts")];
     expect(factsPhone.y).toBeGreaterThanOrEqual(leadPhone.y + leadPhone.height);
-    const [h, p] = [await box(page, "#rule-title"), await box(page, '[aria-labelledby="rule-title"] .cs-prose')];
+    const [h, p] = [await box(page, "#rule-title"), await box(page, '[aria-labelledby="rule-title"] .case-prose')];
     expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     for (const item of await page.locator("main a, main h1, main h2, main p, main dl, main pre").all()) {
       const b = (await item.boundingBox())!;
@@ -135,7 +136,7 @@ for (const width of [320, 390, 768, 1366]) {
     await page.setViewportSize({ width, height: 768 });
     await page.goto(route);
     await forEachTextSize(page, async () => {
-      expect(await page.locator(".cs-teaching pre").evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+      expect(await page.locator(".case-teaching pre").evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
       await expect(page.getByRole("link", { name: "Tell me who it's for and what they're building" })).toBeVisible();
     });
   });

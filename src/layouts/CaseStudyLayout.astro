@@ -1,75 +1,45 @@
 ---
+// Every case study in one shape: the title, the lead beside four facts, the entry's sections (and its one piece of
+// evidence, where it has one), a line on what the study shows and doesn't, then the closing band back to the offer.
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import TitleBand from "../components/TitleBand.astro";
+import Tracked from "../components/Tracked.astro";
+import { EVENTS } from "../config/analytics.mjs";
 import "../styles/case-study.css";
 
 interface Props { entry: CollectionEntry<"work"> }
 const { entry } = Astro.props;
 const study = entry.data;
 const heading = typeof study.heading === "string" ? { before: study.heading } : study.heading;
-const invite = study.presentation === "chapters" ? study.footerInvitation.split(study.footerLink.text) : [];
+const facts = [["Format", study.facts.format], ["Who", study.facts.who], ["Length", study.facts.length], ["Material", study.facts.material]];
+const { closing } = study;
 ---
 <BaseLayout title={study.title} description={study.description} ogImage={study.ogImage} ogType="article">
-  <div class={`case-${study.presentation}`}>
-    {study.presentation === "chapters" && <article class="case-study">
-      <TitleBand heading={heading} eyebrowClass="case-kicker">
-        <Fragment slot="eyebrow">{study.kicker}</Fragment>
-      </TitleBand>
-      <header class="case-opening wrap">
-        <p class="case-lead">{study.lead}</p>
-      </header>
-      <slot />
-    </article>}
-    {study.presentation === "chapters" && <div class="case-invite closing-band dark"><div class="wrap closing-inner">
-      <p>{invite[0]}<a href={study.footerLink.href}>{study.footerLink.text}</a>{invite[1]}</p>
-    </div></div>}
-
-    {study.presentation === "story" && <>
-      <TitleBand heading={heading} />
-      <div class="study-opening wrap">
-        <p class="study-lead">{study.lead}</p>
-        <dl class="study-facts">{study.facts.map(({ label, value }) => <div><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
-      </div>
-      <div class="study-story wrap"><slot /></div>
-      <section class="study-next closing-band dark" aria-labelledby="next-title">
-        <div class="wrap closing-inner">
-          <h2 id="next-title">{study.next.heading}</h2>
-          <div class="study-next-copy">
-            <p>{study.next.body}</p>
-            <a class="text-link" href={study.next.link.href}>{study.next.link.text}</a>
-            {study.next.then && <p class="study-then">
-              <a href={study.next.then.href} aria-describedby={study.next.then.hint ? "next-hint" : undefined}>{study.next.then.text}</a>{" "}
-              {study.next.then.hint && <span class="study-hint" id="next-hint">{study.next.then.hint}</span>}
-            </p>}
-          </div>
-        </div>
-      </section>
-    </>}
-
-    {study.presentation === "coaching" && <>
-      <TitleBand heading={heading} eyebrowClass="cs-descriptor">
-        <Fragment slot="eyebrow">{study.descriptor.charAt(0).toUpperCase() + study.descriptor.slice(1)}</Fragment>
-      </TitleBand>
-      <div class="cs-opening wrap">
-        <div class="cs-opening-grid">
-          <p class="cs-lead">{study.lead}</p>
-          <section class="cs-facts" aria-labelledby="facts-title">
-            <h2 id="facts-title">{study.facts.label}</h2>
-            <dl>{study.facts.rows.map((row) => <div><dt>{row.term}</dt><dd>{row.detail}</dd></div>)}</dl>
-          </section>
+  <div class="case-study">
+    <TitleBand heading={heading} />
+    <div class="case-opening wrap">
+      <p class="case-lead">{study.lead}</p>
+      <dl class="case-facts">{facts.map(([term, detail]) => <div><dt>{term}</dt><dd>{detail}</dd></div>)}</dl>
+    </div>
+    <slot />
+    <div class="case-limits-row wrap"><p class="case-limits">{study.limits}</p></div>
+    <section class="case-closing closing-band dark" aria-labelledby="closing-title">
+      <div class="wrap closing-inner">
+        <h2 id="closing-title">{closing.heading}</h2>
+        <div class="raised-copy">
+          <p>{closing.body}</p>
+          {closing.link.href === "/call/"
+            ? <Tracked event={EVENTS.bookCallLink}><a class="text-link" href={closing.link.href}>{closing.link.text}</a></Tracked>
+            : <a class="text-link" href={closing.link.href} aria-describedby={closing.link.hint ? "closing-hint" : undefined}>{closing.link.text}</a>}
+          {closing.link.hint && <p class="case-hint" id="closing-hint">{closing.link.hint}</p>}
+          <p class="case-then">
+            <a href={closing.then.href} aria-describedby={closing.then.hint ? "then-hint" : undefined}>{closing.then.text}</a>{" "}
+            {closing.then.hint && <span class="case-hint" id="then-hint">{closing.then.hint}</span>}
+          </p>
         </div>
       </div>
-      <slot />
-    </>}
-
-    {study.presentation === "course" && <>
-      <TitleBand heading={heading} />
-      <div class="case-opening wrap">
-        <ul class="facts dot-list case-facts">{study.facts.map((fact) => <li>{fact}</li>)}</ul>
-      </div>
-      <slot />
-    </>}
+    </section>
     {study.namePublished && study.named && <section class="mdx-named wrap">
       <h2>{study.named.client}</h2>
       <blockquote><p>{study.named.quote}</p></blockquote>

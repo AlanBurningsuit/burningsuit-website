@@ -1,9 +1,0 @@
----
-import CarbonReturn from "./CarbonReturn.astro";
-import CoachingReturn from "./CoachingReturn.astro";
-type Props = { heading?: string; links: { text: string; href: string }[] };
-const props = Astro.props;
----
-{props.heading !== undefined
-  ? <CoachingReturn heading={props.heading} links={props.links}><slot /></CoachingReturn>
-  : <CarbonReturn links={props.links}><slot /></CarbonReturn>}

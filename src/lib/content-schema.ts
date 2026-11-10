@@ -8,46 +8,34 @@ const heading = z.union([
     .refine((value) => [value.before, value.em, value.after].some((part) => part?.trim()), "heading needs text"),
 ]);
 const link = z.object({ text, href: z.string().regex(/^\/[a-z0-9/-]*(#[a-z0-9-]+)?$/, "must be a site path") }).strict();
-const common = z.object({
-  category: z.enum(["courses", "coaching", "consultancy"]),
-  order: z.number(),
-  title: text,
-  description: text,
-  heading,
-  /** A plain name for lists and links, when the page's own heading is a sentence that would read as a caption there. */
-  linkLabel: text.optional(),
-  descriptor: text,
-  datePublished: z.coerce.date().optional(),
-  dateModified: z.coerce.date().optional(),
-  ogImage: z.string().regex(/^\/social\/linkedin-work-[a-z0-9-]+\.png$/).optional(),
-  namePublished: z.boolean().default(false),
-  named: z.object({ client: text, quote: text, cite: text }).strict().optional(),
-});
+const action = link.extend({ hint: text.optional() }).strict();
 
-// Presentation variants retain the independently approved notebook compositions.
-// Unknown keys fail closed.
-export const workSchema = z.discriminatedUnion("presentation", [
-    common.extend({
-      presentation: z.literal("chapters"), kicker: text, lead: text, footerInvitation: text, footerLink: link,
-    }).strict(),
-    common.extend({
-      presentation: z.literal("story"), lead: text,
-      facts: z.array(z.object({ label: text, value: text }).strict()).min(1),
-      next: z.object({ heading: text, body: text, link, then: link.extend({ hint: text.optional() }).strict().optional() }).strict(),
-    }).strict(),
-    common.extend({
-      presentation: z.literal("coaching"), lead: text,
-      facts: z.object({ label: text, rows: z.array(z.object({ term: text, detail: text }).strict()).min(1) }).strict(),
-      returnLinks: z.array(link).min(1),
-    }).strict(),
-    common.extend({ presentation: z.literal("course"), facts: z.array(text).min(1) }).strict(),
-  ]).superRefine((study, ctx) => {
+// Every study has one shape (CaseStudyLayout.astro): heading, lead, the same four facts, its sections, a limits line
+// and one closing band. Unknown keys fail closed.
+export const workSchema = z.object({
+    category: z.enum(["courses", "coaching", "consultancy"]),
+    order: z.number(),
+    title: text,
+    description: text,
+    heading,
+    /** A plain name for lists and links, when it should differ from the page's own heading. */
+    linkLabel: text.optional(),
+    descriptor: text,
+    lead: text,
+    facts: z.object({ format: text, who: text, length: text, material: text }).strict(),
+    /** What the study shows and what it doesn't. */
+    limits: text,
+    /** The way back to the offer: a main link and a quieter one, each with an optional hint. */
+    closing: z.object({ heading: text, body: text, link: action, then: action }).strict(),
+    datePublished: z.coerce.date().optional(),
+    dateModified: z.coerce.date().optional(),
+    ogImage: z.string().regex(/^\/social\/linkedin-work-[a-z0-9-]+\.png$/).optional(),
+    namePublished: z.boolean().default(false),
+    named: z.object({ client: text, quote: text, cite: text }).strict().optional(),
+  }).strict().superRefine((study, ctx) => {
     if (study.named && !study.namePublished) {
       // Never echo the value in a validation message.
       ctx.addIssue({ code: "custom", path: ["named"], message: "named block requires an open publication gate; keep private material outside this public repo" });
-    }
-    if (study.presentation === "chapters" && study.footerInvitation.split(study.footerLink.text).length !== 2) {
-      ctx.addIssue({ code: "custom", path: ["footerLink", "text"], message: "footerLink.text must occur exactly once in footerInvitation" });
     }
   });
 

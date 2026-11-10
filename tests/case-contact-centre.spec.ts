@@ -24,11 +24,11 @@ test("The contact-centre study stays static, private and CSP-clean, with no form
 test("The contact-centre study keeps the approved wording and heading hierarchy", async ({ page }) => {
   await page.goto(route);
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to the entry and test together.
-  await expect(page.locator("h1")).toHaveText("Coaching a contact-centre team lead");
+  await expect(page.locator("h1")).toHaveText("Power BI coaching for a contact-centre team lead");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Where she started", "What she wanted", "What we worked on", "Where she'd got to by January 2026", "Stuck on your own data?"]);
   await expect(page.locator("h3, h4")).toHaveCount(0);
-  await expect(page.locator("main dt")).toHaveText(["Format", "Who", "Material"]);
-  await expect(page.locator("main dd")).toHaveText(["Power BI coaching", "A contact-centre team lead", "Her own reporting and data"]);
+  await expect(page.locator("main dt")).toHaveText(["Format", "Who", "Length", "Material"]);
+  await expect(page.locator("main dd")).toHaveText(["Power BI coaching", "A contact-centre team lead", "Several weeks", "Her own reporting and data"]);
   await expect(page.locator("main p")).toHaveText([
     "She could follow Power BI tutorials on the data they came with. On her own data, she got stuck. She wanted to do the work herself, so that's what we worked on.",
     "She'd worked through self-study Power BI examples and could follow them on the data provided. When she switched to her own data, things stopped working and she couldn't see why.",
@@ -38,6 +38,7 @@ test("The contact-centre study keeps the approved wording and heading hierarchy"
     "Because it was her own work, each explanation was about a problem she actually had, not one I'd prepared for her.",
     "When we spoke in January 2026, she told me she'd been opening Power BI almost every day, and she talked me through changes she'd made to her report.",
     "She'd also brought the problems she was stuck on. One was counting the blank entries in a column for each person and team. Another was blank values that had quietly disappeared when she'd reshaped her data in an earlier step. We worked through both in the session. She was doing more on her own, and coaching still helped with the problems she brought.",
+    "This is my account of the coaching, with what she told me in January 2026. It doesn't measure what changed in her work.",
     "If you, or someone on your team, can follow the examples but get stuck on your own data, coaching is built for that. The format, the length and who it's for are on the Training page.",
     /^\s*Or tell me what you're working on\s+Mention coaching in your message\.\s*$/,
   ]);
@@ -76,7 +77,7 @@ test("The contact-centre study works without JavaScript and from the keyboard", 
   const page = await context.newPage();
   await page.goto(route);
   await expect(page.locator("h1")).toBeVisible();
-  await expect(page.locator(".study-facts")).toBeVisible();
+  await expect(page.locator(".case-facts")).toBeVisible();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
   await page.keyboard.press("Enter");
@@ -97,27 +98,26 @@ test("The contact-centre study layout: headings beside their prose on wide scree
   const size = async (selector: string) => parseFloat(await page.locator(selector).first().evaluate((el) => getComputedStyle(el).fontSize));
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  for (const id of ["where-she-started", "what-we-worked-on"]) {
-    const [h, p] = [await box(page, `#${id}`), await box(page, `#${id} + p`)];
+  for (const id of ["started", "worked"]) {
+    const [h, p] = [await box(page, `#${id}-title`), await box(page, `[aria-labelledby="${id}-title"] .case-prose`)];
     expect(p.x).toBeGreaterThanOrEqual(h.x + h.width);
     expect(Math.abs(p.y - h.y)).toBeLessThan(2);
   }
-  // The three facts sit on one row, smaller than the lead.
-  const facts = await page.locator(".study-facts > div").all();
-  const ys = await Promise.all(facts.map(async (fact) => (await fact.boundingBox())!.y));
-  expect(Math.max(...ys) - Math.min(...ys)).toBeLessThan(2);
-  expect(await size(".study-facts dd")).toBeLessThan(await size(".study-lead"));
-  expect(await page.locator(".study-next").evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(await page.locator("body").evaluate((el) => getComputedStyle(el).backgroundColor));
+  // The four facts sit beside the lead, smaller than it.
+  const [lead, facts] = [await box(page, ".case-lead"), await box(page, ".case-facts")];
+  expect(facts.x).toBeGreaterThanOrEqual(lead.x + lead.width);
+  expect(await size(".case-facts dd")).toBeLessThan(await size(".case-lead"));
+  expect(await page.locator(".case-closing").evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(await page.locator("body").evaluate((el) => getComputedStyle(el).backgroundColor));
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    for (const id of ["where-she-started", "what-we-worked-on"]) {
-      const [h, p] = [await box(page, `#${id}`), await box(page, `#${id} + p`)];
+    for (const id of ["started", "worked"]) {
+      const [h, p] = [await box(page, `#${id}-title`), await box(page, `[aria-labelledby="${id}-title"] .case-prose`)];
       expect(p.y).toBeGreaterThanOrEqual(h.y + h.height);
     }
     // On phones the facts follow the lead, one per row.
-    const lead = await box(page, ".study-lead");
-    const [first, second] = [await box(page, ".study-facts > div:nth-child(1)"), await box(page, ".study-facts > div:nth-child(2)")];
-    expect(first.y).toBeGreaterThanOrEqual(lead.y + lead.height);
+    const leadPhone = await box(page, ".case-lead");
+    const [first, second] = [await box(page, ".case-facts > div:nth-child(1)"), await box(page, ".case-facts > div:nth-child(2)")];
+    expect(first.y).toBeGreaterThanOrEqual(leadPhone.y + leadPhone.height);
     expect(second.y).toBeGreaterThanOrEqual(first.y + first.height - 1);
     for (const item of await page.locator("main a, main h1, main h2, main p, main dt, main dd").all()) {
       const b = (await item.boundingBox())!;

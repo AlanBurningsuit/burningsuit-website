@@ -31,11 +31,19 @@ test('headings and strict fields fail closed for every study composition', () =>
   }
 });
 
-test('the carbon invitation link occurs exactly once and OG images use the supported path', () => {
-  const study = studies.find((study) => study.presentation === 'chapters');
-  assert.equal(workSchema.safeParse({ ...study, footerLink: { text: 'absent', href: '/call/' } }).success, false);
-  assert.equal(workSchema.safeParse({ ...study, ogImage: 'https://example.com/image.png' }).success, false);
-  assert.equal(workSchema.safeParse({ ...study, ogImage: '/social/linkedin-work-example.png' }).success, true);
+test('every study needs all four facts, a limits line and both closing links; OG images use the supported path', () => {
+  for (const study of studies) {
+    assert.deepEqual(Object.keys(study.facts), ['format', 'who', 'length', 'material']);
+    for (const fact of ['format', 'who', 'length', 'material']) {
+      assert.equal(workSchema.safeParse({ ...study, facts: { ...study.facts, [fact]: undefined } }).success, false);
+    }
+    assert.equal(workSchema.safeParse({ ...study, facts: { ...study.facts, kept: 'extra' } }).success, false);
+    assert.equal(workSchema.safeParse({ ...study, limits: ' ' }).success, false);
+    assert.equal(workSchema.safeParse({ ...study, closing: { ...study.closing, then: undefined } }).success, false);
+    assert.equal(workSchema.safeParse({ ...study, closing: { ...study.closing, link: { text: 'Example', href: 'https://example.com/' } } }).success, false);
+    assert.equal(workSchema.safeParse({ ...study, ogImage: 'https://example.com/image.png' }).success, false);
+    assert.equal(workSchema.safeParse({ ...study, ogImage: '/social/linkedin-work-example.png' }).success, true);
+  }
 });
 
 test('essay dates remain optional, require an original date and preserve chronological order', () => {

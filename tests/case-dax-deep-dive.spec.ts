@@ -29,10 +29,12 @@ test("case study stays static, private and CSP-clean, with no form, embed, image
 test("case study tells the approved story in order, anonymously", async ({ page }) => {
   await page.goto(route);
   await expect(page.locator("h1")).toHaveText("DAX deep dive for a local-authority team");
-  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["The team", "The two days", "Afterwards", "Thinking about a DAX deep dive for your team?"]);
-  await expect(page.locator(".case-facts > li")).toHaveText(["A local-authority team", "2 days", "Private", "On site", "DAX deep dive"]);
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Where they started", "The two days", "Afterwards", "Thinking about a DAX deep dive for your team?"]);
+  await expect(page.locator(".case-lead")).toHaveText("In 2025 I ran the DAX deep dive privately for a team at a local authority. Over two days they worked through exercises in the room. Afterwards I sent a worked example, and the organiser surveyed the people who'd attended.");
+  await expect(page.locator(".case-facts dt")).toHaveText(["Format", "Who", "Length", "Material"]);
+  await expect(page.locator(".case-facts dd")).toHaveText(["DAX deep dive, private, on site", "A local-authority team", "2 days", "Exercises on laptops I provided"]);
   await expect(page.locator(".case-prose p")).toHaveText([
-    "In 2025 I ran the DAX deep dive privately for a team at a local authority. DAX is the language behind Power BI's calculations, most of which live in measures. The people in the room already worked with Power BI, and the course was about the DAX behind their reports.",
+    "DAX is the language behind Power BI's calculations, most of which live in measures. The people in the room already worked with Power BI, and the course was about the DAX behind their reports.",
     "I ran it on site, with exercises for people to work through on laptops I provided. The organiser's summary describes it as starting from the basics and progressing to more advanced topics.",
     "One person arrived on the first day confident in what they could already do. They told me they were there to get their head around the advanced material. By mid-morning on the second day, they said they thought they'd go back and rewrite all their old measures.",
     "After the course I sent a worked version of the variables exercise for reference. Variables let you name a step inside a measure and use it again, which makes a long measure easier to read and check.",
@@ -47,7 +49,7 @@ test("case study tells the approved story in order, anonymously", async ({ page 
   await expect(panel.locator("img, svg, meter, progress, [role=img]")).toHaveCount(0);
   expect(await panel.evaluate((el) => [getComputedStyle(el).backgroundColor, getComputedStyle(el).boxShadow, getComputedStyle(el).borderLeftStyle])).toEqual(["rgba(0, 0, 0, 0)", "none", "solid"]);
   await expect(page.locator(".case-limits")).toHaveText("This shows how the two days ran and how people said they found them. It doesn't show what changed in their work afterwards.");
-  await expect(page.locator(".case-ask .raised-copy > p").first()).toHaveText("What the course covers today, with its length, delivery and group size, is on its own page.");
+  await expect(page.locator(".case-closing .raised-copy > p").first()).toHaveText("What the course covers today, with its length, delivery and group size, is on its own page.");
   const text = await page.locator("main").innerText();
   for (const absent of [/★|☆|⭐/, /\[|\]/, /—/, /[£$€]\s*\d/, /february|feb\b/i, /101/, /free call/i, /consultancy/i]) expect(text).not.toMatch(absent);
 });
@@ -60,7 +62,7 @@ test("the enquiry action and the route to the course page are ordinary links to 
   await expect(ask).toHaveAccessibleDescription("Name the course in your message.");
   // The ask closes the study on the shared dark closing band, so the link is amber.
   expect(await ask.evaluate((el) => getComputedStyle(el).color)).toBe("rgb(230, 152, 117)");
-  await expect(page.locator("#name-course")).toHaveText("Name the course in your message.");
+  await expect(page.locator("#closing-hint")).toHaveText("Name the course in your message.");
   await expect(page.getByRole("link", { name: secondary, exact: true })).toHaveAttribute("href", course);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   expect(mainLinks).toEqual([`${course}#contact`, course]);
@@ -116,13 +118,13 @@ test("case study works without JavaScript and from the keyboard", async ({ brows
 test("case study layout: headings beside prose and figures beside the quote on wide screens, stacked on narrow ones", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let heading = await firstBox(page, ".case-beat > h2"), prose = await firstBox(page, ".case-prose");
+  let heading = await firstBox(page, ".case-section > h2"), prose = await firstBox(page, ".case-prose");
   expect(prose.x).toBeGreaterThanOrEqual(heading.x + heading.width);
   let quoteBox = await firstBox(page, ".case-evidence blockquote"), figures = await firstBox(page, ".case-figures");
   expect(figures.x).toBeGreaterThanOrEqual(quoteBox.x + quoteBox.width);
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    heading = await firstBox(page, ".case-beat > h2"); prose = await firstBox(page, ".case-prose");
+    heading = await firstBox(page, ".case-section > h2"); prose = await firstBox(page, ".case-prose");
     expect(prose.y).toBeGreaterThanOrEqual(heading.y + heading.height);
     quoteBox = await firstBox(page, ".case-evidence blockquote"); figures = await firstBox(page, ".case-figures");
     expect(figures.y).toBeGreaterThanOrEqual(quoteBox.y + quoteBox.height);
