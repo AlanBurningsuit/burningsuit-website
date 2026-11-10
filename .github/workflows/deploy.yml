@@ -30,22 +30,13 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      # Only a push or dispatch on main receives the secret and builds the priced site. Any other ref (a dispatch from a branch)
-      # never reads the secret, builds the Price on request variant and cannot deploy (the deploy job is main-only).
-      # The writer validates without printing, registers each rate as a masked value and sets SHOW_TRAINING_PRICES for later steps.
-      - name: Prepare private training prices
-        if: github.ref == 'refs/heads/main'
-        env:
-          TRAINING_PRICES_JSON: ${{ secrets.TRAINING_PRICES_JSON }}
-        run: node scripts/write-training-prices.mjs
-      # Output of priced steps passes through the masking runner; failures print structure only, and no test artifacts are uploaded.
       - name: Check, build and validate the site
-        run: node scripts/run-masked.mjs npm run gate
+        run: npm run gate
       - name: Install Playwright Chromium, WebKit and OS dependencies
         run: npx playwright install --with-deps chromium webkit
-      # Functional checks serve the same fresh artifact that is uploaded below. A priced slot reading Price on request fails the run.
+      # Functional checks serve the same fresh artifact that is uploaded below.
       - name: Test the built artifact
-        run: node scripts/run-masked.mjs npm run test:functional
+        run: npm run test:functional
       - name: Check the build is fit to release
         run: npm run check:release
       - name: Configure Pages
@@ -56,10 +47,6 @@ jobs:
         with:
           path: dist
           include-hidden-files: true # Preserve the generated .nojekyll file.
-      # Runs on every outcome, including a failed or blocked run, so the private input never outlives the job.
-      - name: Remove private training prices
-        if: always()
-        run: rm -f design/copy/training-prices.json
 
   deploy:
     needs: build
