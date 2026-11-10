@@ -107,15 +107,13 @@ export function courseRun(run = COURSE_RUN) {
 }
 
 /**
- * What a "Book a seat" place shows: the booking link only while the run is open in the priced build; the existing
- * "not open yet" control while it is open but unpriced; otherwise the status line and the next-run ask.
+ * What a "Book a seat" place shows: the booking link while the run is open; otherwise the status line and the next-run ask.
  * @param {ReturnType<typeof courseRun>} run
- * @param {{ priced: boolean }} options
- * @returns {{ kind: "book" } | { kind: "not-yet" } | { kind: "closed", line: string, ask: string }}
+ * @returns {{ kind: "book" } | { kind: "closed", line: string, ask: string }}
  */
-export function seatAction(run, { priced }) {
+export function seatAction(run) {
   if (!run.open) return { kind: "closed", line: /** @type {string} */ (run.statusLine), ask: run.nextRunAsk };
-  return priced ? { kind: "book" } : { kind: "not-yet" };
+  return { kind: "book" };
 }
 
 /**

@@ -1,8 +1,7 @@
 ---
 // Approved wording: ops site/101-page-copy.md (4 Nov 2026). Bracketed items there are gaps, not copy.
-// "Book a seat" links to the Stripe Payment Link in the priced production build only, and only while the run
-// (src/config/course-run.mjs) is open; in unpriced builds and previews it stays an unavailable control beside
-// "Price on request". A full or past run shows its status line and the next-run ask instead.
+// "Book a seat" links to the Stripe Payment Link while the run (src/config/course-run.mjs) is open. A full or past
+// run shows its status line and the next-run ask instead.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { courseNode } from "../../lib/schema";
 import DecisionHero from "../../components/DecisionHero.astro";
@@ -10,16 +9,15 @@ import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import SeatBooking from "../../components/SeatBooking.astro";
 import { RUN, seatAction } from "../../config/course-run.mjs";
-import { loadTrainingPrices, trainingPriceCopy, PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import { trainingPriceCopy } from "../../lib/training-prices.mjs";
 import "../../styles/course-page.css";
 import "../../styles/ai-agents-101.css";
 
 const { email } = ENQUIRY;
-// Seat prices show only when SHOW_TRAINING_PRICES=true. The private course has no price slot on this page; its email ask stays.
-const priced = trainingPriceCopy(loadTrainingPrices());
-const price = PRICE_ON_REQUEST;
+// The private course has no price slot on this page; its email ask stays.
+const priced = trainingPriceCopy();
 const description = "Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations.";
-const seat = seatAction(RUN, { priced: Boolean(priced) });
+const seat = seatAction(RUN);
 // The run's dates come from src/config/course-run.mjs (tests/structured-data.test.mjs compares them with the page).
 const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI with AI agents 101", description, modes: [RUN.schemaMode], workload: "PT3H", maxPeople: RUN.maxPeople, run: RUN.schemaRun })];
 ---
@@ -33,10 +31,10 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       <li>Half a day, live online</li>
       <li class="fact-wide"><time datetime={RUN.date}>{RUN.longDate}</time>, {RUN.times}</li>
       <li>{RUN.people}</li>
-      {priced ? priced.seatFacts.map((fact) => <li class="fact-price">{fact}</li>) : <li class="fact-price">{price}</li>}
+      {priced.seatFacts.map((fact) => <li class="fact-price">{fact}</li>)}
     </Fragment>
     <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
-    <SeatBooking seat={seat} place="top" statusId="booking-status-opening" />
+    <SeatBooking seat={seat} place="top" />
     <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
   </DecisionHero>
   <div class="course-opening decision-opening wrap">
@@ -99,13 +97,13 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
     <div class="wrap closing-inner">
       <div>
         <h2 id="book-title">Book a seat</h2>
-        <p class="book-facts"><time datetime={RUN.date}>{RUN.longDate}</time>, {RUN.times}, {RUN.modeText}. {RUN.people}. {priced ? priced.seatBookFacts : `${price}.`}</p>
+        <p class="book-facts"><time datetime={RUN.date}>{RUN.longDate}</time>, {RUN.times}, {RUN.modeText}. {RUN.people}. {priced.seatBookFacts}</p>
         <p class="book-before"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
       </div>
       <div>
-        <SeatBooking seat={seat} place="bottom" statusId="booking-status-book" />
+        <SeatBooking seat={seat} place="bottom" />
         {/* The terms stay while the run is full: people who have booked still need them. */}
-        {priced && RUN.status !== "past" && <section class="booking-terms" aria-labelledby="booking-terms-title">
+        {RUN.status !== "past" && <section class="booking-terms" aria-labelledby="booking-terms-title">
           <h3 id="booking-terms-title">Booking terms</h3>
           <ul role="list">
             <li>Cancel up to {RUN.refundDays} days before the course, by <time datetime={RUN.refundBy.date}>{RUN.refundBy.long}</time>, for a full refund.</li>

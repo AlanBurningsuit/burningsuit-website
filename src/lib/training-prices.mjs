@@ -1,17 +1,14 @@
-// Training prices: the one place that reads the private prices file and composes price wording.
+// Training prices: the one place that reads the tracked prices file and composes price wording.
 //
-// Prices are shown only when SHOW_TRAINING_PRICES is exactly "true". Otherwise the file is never read, even if it exists,
-// and every page keeps "Price on request". Requested but missing, unreadable, malformed or incomplete input stops the build
-// with a fixed message: it never falls back to "Price on request" and never repeats anything it read.
-// This file holds no amounts; the figures live only in the private design/copy/training-prices.json.
+// The rates live in src/config/training-prices.json. Missing, unreadable, malformed or incomplete data stops the build:
+// it never falls back to "Price on request". Coaching and the private 101 have no rates: they stay "Price on request".
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-/** Private source, relative to the project root. Gitignored through design/; never tracked. */
-export const PRICES_FILE = "design/copy/training-prices.json";
-export const PRICES_FLAG = "SHOW_TRAINING_PRICES";
+/** The tracked prices file, relative to the project root. */
+export const PRICES_FILE = "src/config/training-prices.json";
 
-/** Private file keys for the rate slots. They name the private file's and the production secret's entries, not page routes: the 101 keeps its launch key after its page moved. */
+/** The file's keys for the rate slots. They name the file's entries, not page routes: the 101 keeps its launch key after its page moved. */
 export const PRICE_SLOTS = [
   ["power-bi-fundamentals", "onSite"], ["power-bi-fundamentals", "online"],
   ["dax-fundamentals", "onSite"], ["dax-fundamentals", "online"],
@@ -23,12 +20,11 @@ export const PRICE_SLOTS = [
 /** A pound sign then digits and commas only: no VAT text, no spaces, no ranges. */
 export const PRICE_FORMAT = /^£(?:\d+|\d{1,3}(?:,\d{3})+)$/;
 
-// Fixed text only. Never add the offending value, key contents or parser output to these.
 const MESSAGES = {
-  missing: "Training prices were requested but the private prices file is missing or unreadable.",
-  invalid: "Training prices were requested but the private prices file is not valid JSON.",
-  incomplete: "Training prices were requested but the private prices file is missing a required rate.",
-  format: "Training prices were requested but a rate in the private prices file is not in the expected format.",
+  missing: `The training prices file (${PRICES_FILE}) is missing or unreadable.`,
+  invalid: `The training prices file (${PRICES_FILE}) is not valid JSON.`,
+  incomplete: `The training prices file (${PRICES_FILE}) is missing a required rate or holds an unknown one.`,
+  format: `A rate in the training prices file (${PRICES_FILE}) is not in the expected format.`,
 };
 
 export class TrainingPricesError extends Error {
@@ -40,30 +36,23 @@ export class TrainingPricesError extends Error {
   }
 }
 
-/** True only for the exact string "true". */
-export const pricesRequested = (env = process.env) => env[PRICES_FLAG] === "true";
-
-/** Every stored rate string in file order, for in-memory comparisons only. Validates the shape first. */
+/** Every rate string in slot order. Throws a TrainingPricesError on a missing, extra or malformed rate. */
 export function validatePrices(data) {
-  if (!data || typeof data !== "object" || Array.isArray(data)) throw new TrainingPricesError("incomplete");
-  const values = [];
-  for (const [course, key] of PRICE_SLOTS) {
-    const group = data[course];
-    if (!group || typeof group !== "object" || Array.isArray(group) || typeof group[key] !== "string" || group[key] === "") {
-      throw new TrainingPricesError("incomplete");
-    }
-    values.push(group[key]);
-  }
-  if (!values.every((value) => PRICE_FORMAT.test(value))) throw new TrainingPricesError("format");
+  const isGroup = (group) => Boolean(group) && typeof group === "object" && !Array.isArray(group);
+  if (!isGroup(data)) throw new TrainingPricesError("incomplete");
+  const expected = new Set(PRICE_SLOTS.map(([course, key]) => `${course}.${key}`));
+  const present = Object.entries(data).flatMap(([course, group]) => (isGroup(group) ? Object.keys(group).map((key) => `${course}.${key}`) : [course]));
+  if (present.length !== expected.size || !present.every((slot) => expected.has(slot))) throw new TrainingPricesError("incomplete");
+  const values = PRICE_SLOTS.map(([course, key]) => data[course][key]);
+  if (!values.every((value) => typeof value === "string" && PRICE_FORMAT.test(value))) throw new TrainingPricesError("format");
   return values;
 }
 
 /**
- * Returns null unless prices are requested. When requested, returns the validated rates or throws a TrainingPricesError.
- * @param {{ env?: Record<string, string | undefined>, file?: string }} [options]
+ * The validated rates, or a thrown TrainingPricesError.
+ * @param {{ file?: string }} [options]
  */
-export function loadTrainingPrices({ env = process.env, file = resolve(process.cwd(), PRICES_FILE) } = {}) {
-  if (!pricesRequested(env)) return null;
+export function loadTrainingPrices({ file = resolve(process.cwd(), PRICES_FILE) } = {}) {
   let text;
   try {
     text = readFileSync(file, "utf8");
@@ -91,10 +80,9 @@ const rate = ({ onSite, online }) => `${onSite} on site or ${online} online`;
 
 /**
  * Approved price wording (ops site/records/training-prices-amendment-copy-2026-11-06.md), filled from the validated rates.
- * Returns null for the unpriced variant, where every page keeps its baseline words.
+ * @param {ReturnType<typeof loadTrainingPrices>} [prices]
  */
-export function trainingPriceCopy(prices) {
-  if (!prices) return null;
+export function trainingPriceCopy(prices = loadTrainingPrices()) {
   const { founding, standard } = { founding: prices.agent101.seatFoundingRate, standard: prices.agent101.seat };
   return Object.freeze({
     // Home (H1, H2) and Training (T2, T3)
@@ -125,5 +113,5 @@ export function trainingPriceCopy(prices) {
   });
 }
 
-/** Closing sentence of the Training, Fundamentals, DAX fundamentals and DAX deep dive meta descriptions, kept only in the unpriced variant. */
+/** What coaching shows in place of a price. */
 export const PRICE_ON_REQUEST = "Price on request";

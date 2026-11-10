@@ -1,16 +1,16 @@
 import { type Page } from "@playwright/test";
 import { test, expect } from "./analytics";
 import { expectNoHorizontalScroll, expectNoSpills, firstBox } from "./helpers";
-import { priced, copy, expectItems } from "./prices";
+import { copy } from "./prices";
 
 // The decision hero (DecisionHero.astro) on the four course pages: title, standfirst, facts and the primary action
 // together on the dark stage, the introduction below on the daylight sheet. Each page's own spec pins its wording;
 // this one checks the shared structure, scale, layout, reflow and access. Training, Consultancy and Home keep their openings.
 const heroes = [
-  { route: "/training/power-bi-fundamentals/", label: "Course facts", action: ".run-action", price: () => [copy!.fundamentalsDetail] },
-  { route: "/training/dax-fundamentals/", label: "Course facts", action: ".run-action", price: () => [copy!.daxFundamentalsDetail] },
-  { route: "/training/dax-deep-dive/", label: "Course facts", action: ".run-action", price: () => [copy!.daxDeepDiveDetail] },
-  { route: "/training/power-bi-with-ai-agents-101/", label: "Course facts and booking", action: ".book-button", price: () => copy!.seatFacts },
+  { route: "/training/power-bi-fundamentals/", label: "Course facts", action: ".run-action", price: [copy.fundamentalsDetail] },
+  { route: "/training/dax-fundamentals/", label: "Course facts", action: ".run-action", price: [copy.daxFundamentalsDetail] },
+  { route: "/training/dax-deep-dive/", label: "Course facts", action: ".run-action", price: [copy.daxDeepDiveDetail] },
+  { route: "/training/power-bi-with-ai-agents-101/", label: "Course facts and booking", action: ".book-button", price: copy.seatFacts },
 ] as const;
 
 const facts = (page: Page) => page.locator(".hero-facts .run-facts > li").evaluateAll((els) => els.map((el) => {
@@ -38,8 +38,7 @@ for (const { route, label, action, price } of heroes) {
     const first = classes.indexOf(true);
     expect(first).toBeGreaterThan(0);
     expect(classes.slice(first).every(Boolean)).toBe(true);
-    if (copy) await expectItems(group.locator(".run-facts > li.fact-price"), [...price()], "hero price items");
-    else await expect(group.locator(".run-facts > li.fact-price")).toHaveText(["Price on request"]);
+    await expect(group.locator(".run-facts > li.fact-price")).toHaveText([...price]);
     // The primary action is inside the same group, after the facts.
     await expect(group.locator(action)).toHaveCount(1);
     expect(await group.locator(action).evaluate((el) => el.classList.contains("button"))).toBe(true);
@@ -55,13 +54,9 @@ for (const { route, label, action, price } of heroes) {
     await page.goto(route);
     expect(await page.locator(".title-band h1").evaluate((el) => { const s = getComputedStyle(el); return [s.fontSize, s.fontFamily, s.fontWeight, s.lineHeight]; })).toEqual(scale);
     expect(await page.locator(".title-band .standfirst").evaluate((el) => { const s = getComputedStyle(el); return [s.fontSize, s.fontFamily]; })).toEqual(standfirst);
-    // The live primary action is the one amber button of a dark title band (the unpriced 101's control is the shared disabled state).
+    // The live primary action is the one amber button of a dark title band.
     const button = page.locator(`.hero-facts ${action}`);
-    if (await button.evaluate((el) => (el as HTMLButtonElement).disabled === true)) {
-      await expect(button).toHaveAttribute("aria-describedby", "booking-status-opening");
-    } else {
-      expect(await button.evaluate((el) => { const s = getComputedStyle(el); return [s.backgroundColor, s.color, s.fontSize, s.fontFamily, s.borderRadius, s.paddingTop]; })).toEqual(homeButton);
-    }
+    expect(await button.evaluate((el) => { const s = getComputedStyle(el); return [s.backgroundColor, s.color, s.fontSize, s.fontFamily, s.borderRadius, s.paddingTop]; })).toEqual(homeButton);
   });
 
   test(`decision hero layout from 1366px to 320px: ${route}`, async ({ page }) => {
@@ -202,14 +197,12 @@ test("the decision hero stays off the training chooser, Consultancy and the home
   await expect(page.locator("section.course-run")).toHaveCount(1);
 });
 
-test("priced variant puts no price outside the hero's price items on course pages", async ({ page }) => {
-  test.skip(!priced, "priced build only");
+test("no price outside the hero's price items on course pages", async ({ page }) => {
   for (const { route, price } of heroes) {
     await page.goto(route);
     const other = await page.locator(".hero-facts .run-facts > li:not(.fact-price)").allInnerTexts();
-    expect(other.every((text) => !/[£€$]\s*\d/.test(text)), "non-price facts hold no amount").toBe(true);
-    const shown = await page.locator(".hero-facts .run-facts > li.fact-price").allInnerTexts();
-    expect(shown.map((t) => t.trim()).join("|") === [...price()].join("|"), "hero price items match the private copy").toBe(true);
+    for (const text of other) expect(text, "non-price facts hold no amount").not.toMatch(/[£€$]\s*\d/);
+    await expect(page.locator(".hero-facts .run-facts > li.fact-price")).toHaveText([...price]);
   }
 });
 
@@ -220,7 +213,7 @@ test("the 101's whole Book a seat control is in the first 390x844 phone screen",
   await page.evaluate(() => document.fonts.ready);
   const book = page.locator(".hero-facts .booking .book-button");
   await expect(book).toHaveCount(1);
-  if (priced) await expect(book).toHaveAttribute("href", (await import("../src/config/booking.mjs")).SEAT_BOOKING_URL);
+  await expect(book).toHaveAttribute("href", (await import("../src/config/booking.mjs")).SEAT_BOOKING_URL);
   await expect(book).toBeInViewport({ ratio: 1 });
   const b = (await book.boundingBox())!;
   expect(b.y).toBeGreaterThanOrEqual(0);

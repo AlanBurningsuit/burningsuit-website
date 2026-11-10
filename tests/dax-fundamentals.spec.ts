@@ -2,7 +2,7 @@ import { test, expect, otherScripts } from "./analytics";
 import { visualReview, expectIndexable, box, expectNoSpills, forEachTextSize, watchPage, agendaNumbers } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { redirects } from "../src/config/compatibility.mjs";
-import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
+import { copy, expectOnlyTrackedAmounts, expectNone } from "./prices";
 
 // Approved wording: ops site/dax-fundamentals-page-copy.md, candidate 6 (8 Nov 2026). Pinned on purpose: changing it needs Alan's approval.
 const route = "/training/dax-fundamentals/";
@@ -18,7 +18,7 @@ test("DAX fundamentals page stays static, private, price-safe and CSP-clean", as
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("DAX fundamentals | burningsuit");
   const baseDescription = "A one-day private course for teams who build reports in Power BI but haven't written DAX yet: learn why a measure returns the number it does, and when to use a measure instead of a calculated column.";
-  await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "DAX fundamentals description");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", baseDescription);
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
   // No portrait, figure or diagram: the brief allows none.
@@ -29,12 +29,11 @@ test("DAX fundamentals page stays static, private, price-safe and CSP-clean", as
   await expect(page.locator("form")).toHaveCount(1);
   await expect(page.locator("nav a[aria-current]:not(.nav-menu a)")).toHaveText("Training");
   await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("DAX fundamentals");
-  // Private only: no public run, booking or payment route. Unpriced output says Price on request once; priced output shows the private rates and never that phrase.
+  // Private only: no public run, booking or payment route. It shows its tracked rates and never says Price on request.
   // The shared footer's "Booking terms" link is site furniture, not this page's wording.
   const body = (await page.locator("body").innerText()).replace(await page.locator("footer").innerText(), "");
-  await expectAmountsOnlyWhenPriced(page, "DAX fundamentals");
-  if (!priced) expectNone(body, [/\d\s*(GBP|ex VAT)/i], "DAX fundamentals unpriced");
-  await expect(page.getByText(priceOnRequest, { exact: true })).toHaveCount(priced ? 0 : 1);
+  await expectOnlyTrackedAmounts(page, "DAX fundamentals");
+  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(0);
   await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
   // No quote, rating, count or case study; no "next step", bundle or prerequisite framing. The teaching-data name is kept out of tracked source, so it isn't asserted here.
   // Alan approved the delivery-history line (8 Nov 2026); it names past public courses, not a public run of this one.
@@ -71,20 +70,9 @@ test("DAX fundamentals page renders the approved wording and question order", as
   await expect(fit.getByRole("link", { name: "compare all the courses" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll be able to do", "The day", "What to arrange", "Ask about dates"]);
 
-  // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
+  // No "On site or online" fact: the price item names both.
   const facts = page.getByRole("region", { name: "Course facts" }).locator(".run-facts");
-  await expectItems(page.locator(".hero-facts .run-facts > li"), copy
-    ? ["1 day", "Private, for your team", "Up to 8 people", "9:30am to 4pm", copy.daxFundamentalsDetail]
-    : ["1 day", "Private, for your team", "On site or online", "Up to 8 people", "9:30am to 4pm", priceOnRequest], "DAX fundamentals facts");
-  if (!priced) await expectAriaWithoutAmounts(facts, `
-    - list:
-      - listitem: 1 day
-      - listitem: Private, for your team
-      - listitem: On site or online
-      - listitem: Up to 8 people
-      - listitem: 9:30am to 4pm
-      - listitem: Price on request
-  `);
+  await expect(page.locator(".hero-facts .run-facts > li")).toHaveText(["1 day", "Private, for your team", "Up to 8 people", "9:30am to 4pm", copy.daxFundamentalsDetail]);
   await expect(page.locator(".run-action")).toHaveText("Ask about dates");
   await expect(page.locator(".run-action")).toHaveAttribute("href", "#contact");
 

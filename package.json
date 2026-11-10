@@ -19,14 +19,13 @@
     "check:seo": "node scripts/check-seo.mjs",
     "check:release": "node scripts/check-release.mjs",
     "check:prices": "node scripts/check-prices.mjs",
-    "check:prices:dist": "node scripts/check-prices.mjs --dist",
     "check:tests": "tsc --noEmit -p tsconfig.tests.json",
     "prep:images": "node scripts/prep-images.mjs",
     "test:functional": "npm run check:tests && node --test tests/*.test.mjs && playwright test",
     "test:links": "node scripts/check-links.mjs",
     "test:lh": "lhci autorun",
     "test:lh:mobile": "lhci autorun --config=./lighthouserc.mobile.cjs",
-    "gate": "npm run check:brand && npm run check:copy && npm run check:prices && npm run check && npm run build && npm run check:prices:dist && npm run test:links && npm run check:seo"
+    "gate": "npm run check:brand && npm run check:copy && npm run check && npm run build && npm run check:prices && npm run test:links && npm run check:seo"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.3",

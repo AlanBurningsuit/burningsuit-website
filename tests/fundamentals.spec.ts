@@ -1,7 +1,7 @@
 import { test, expect, otherScripts } from "./analytics";
 import { visualReview, expectIndexable, box, expectNoSpills, forEachTextSize, watchPage, agendaNumbers } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
-import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
+import { copy, expectOnlyTrackedAmounts, expectNone } from "./prices";
 
 const route = "/training/power-bi-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
@@ -15,7 +15,7 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("Power BI fundamentals | burningsuit");
   const baseDescription = "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.";
-  await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "fundamentals description");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", baseDescription);
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
   // The only image is the parts-of-Power-BI diagram: described by its alt, captioned, with a text version a keyboard can open.
@@ -30,12 +30,11 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   await expect(page.locator("form")).toHaveCount(1);
   await expect(page.locator("nav a[aria-current]:not(.nav-menu a)")).toHaveText("Training");
   await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("Power BI fundamentals");
-  // Private only: no public run, booking or payment route. Unpriced output says Price on request once; priced output shows the private rates and never that phrase.
+  // Private only: no public run, booking or payment route. It shows its tracked rates and never says Price on request.
   // The shared footer's "Booking terms" link is site furniture, not this page's wording.
   const body = (await page.locator("body").innerText()).replace(await page.locator("footer").innerText(), "");
-  await expectAmountsOnlyWhenPriced(page, "fundamentals");
-  if (!priced) expectNone(body, [/\d\s*(GBP|ex VAT)/i], "fundamentals unpriced");
-  await expect(page.getByText(priceOnRequest, { exact: true })).toHaveCount(priced ? 0 : 1);
+  await expectOnlyTrackedAmounts(page, "fundamentals");
+  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(0);
   await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
   // "per booking" is the approved price unit; any other booking wording stays absent.
   expectNone(body.replaceAll("per booking", ""), [/seat/i, /book/i, /public/i, /free hour/i, /Windows/i, /setup check/i, /\[|\]|\{|\}/, /founding/i], "fundamentals text");
@@ -54,7 +53,7 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
 
   // Decision hero: the facts and the one primary action sit in the title band on the dark stage, after the standfirst and
   // before the introduction; no separate facts card remains. The price comes last, on its own line, in reading order too.
-  // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
+  // No "On site or online" fact: the price item names both.
   const hero = page.locator(".dark.stage .title-band.decision-hero");
   await expect(hero).toHaveCount(1);
   expect(await hero.evaluate((el) => [...el.children].map((child) => child.tagName + (child.className ? "." + child.className : "")))).toEqual(["H1", "P.standfirst", "SECTION.hero-facts"]);
@@ -64,20 +63,9 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   await expect(page.locator(".course-run")).toHaveCount(0);
   expect(await group.evaluate((el) => [...el.children].map((child) => child.className))).toEqual(["run-facts", "button run-action"]);
   const facts = group.locator(".run-facts");
-  await expectItems(facts.locator("> li"), copy
-    ? ["2 days", "Private, for your team", "Up to 8 people", "9:30am to 4pm each day", copy.fundamentalsDetail]
-    : ["2 days", "Private, for your team", "On site or online", "Up to 8 people", "9:30am to 4pm each day", priceOnRequest], "fundamentals facts");
+  await expect(facts.locator("> li")).toHaveText(["2 days", "Private, for your team", "Up to 8 people", "9:30am to 4pm each day", copy.fundamentalsDetail]);
   await expect(facts.locator("> li.fact-price")).toHaveCount(1);
   await expect(facts.locator("> li").last()).toHaveClass("fact-price");
-  if (!priced) await expectAriaWithoutAmounts(facts, `
-    - list:
-      - listitem: 2 days
-      - listitem: Private, for your team
-      - listitem: On site or online
-      - listitem: Up to 8 people
-      - listitem: 9:30am to 4pm each day
-      - listitem: Price on request
-  `);
   await expect(page.locator(".run-action")).toHaveCount(1);
   await expect(group.locator(".button.run-action")).toHaveText("Ask about dates");
   await expect(group.locator(".button.run-action")).toHaveAttribute("href", "#contact");

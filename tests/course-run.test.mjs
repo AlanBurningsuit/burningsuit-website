@@ -41,23 +41,20 @@ test("a malformed run fails with a fixed message", () => {
 });
 
 for (const status of /** @type {const} */ (["full", "past"])) {
-  test(`a ${status} run offers no booking in either variant and shows its draft status line`, () => {
+  test(`a ${status} run offers no booking and shows its draft status line`, () => {
     const run = withRun({ status });
     assert.equal(run.open, false);
     assert.equal(run.statusLine, RUN_STATUS_WORDING[status]);
-    for (const priced of [true, false]) {
-      const seat = seatAction(run, { priced });
-      assert.deepEqual(seat, { kind: "closed", line: RUN_STATUS_WORDING[status], ask: RUN_STATUS_WORDING.nextRunAsk });
-      assert(!JSON.stringify(seat).includes(SEAT_BOOKING_URL));
-    }
+    const seat = seatAction(run);
+    assert.deepEqual(seat, { kind: "closed", line: RUN_STATUS_WORDING[status], ask: RUN_STATUS_WORDING.nextRunAsk });
+    assert(!JSON.stringify(seat).includes(SEAT_BOOKING_URL));
     assert.equal(run.schemaRun === undefined, status === "past", "only a past run drops its dates from JSON-LD");
   });
 }
 
-test("an open run books only in the priced build", () => {
+test("an open run books", () => {
   const run = withRun({ status: "open" });
-  assert.deepEqual(seatAction(run, { priced: true }), { kind: "book" });
-  assert.deepEqual(seatAction(run, { priced: false }), { kind: "not-yet" });
+  assert.deepEqual(seatAction(run), { kind: "book" });
 });
 
 test("a run still open after it ends is a release problem; a full or past one is not", () => {

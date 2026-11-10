@@ -1,7 +1,7 @@
 ---
 // Approved wording: ops site/dax-deep-dive-page-copy.md (candidate 4, 7 Nov 2026). Its field labels, layout notes and annotations are not copy.
-// Course scope follows the DAX deep dive Outline in Practice. Private course only: no public run or booking control; its price shows
-// only in the priced build (src/lib/training-prices.mjs). The Fundamentals composition (course-page.css, course-agenda.css) is reused;
+// Course scope follows the DAX deep dive Outline in Practice. Private course only: no public run or booking control; its price comes
+// from src/lib/training-prices.mjs. The Fundamentals composition (course-page.css, course-agenda.css) is reused;
 // this page's differences live in dax-course.css.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { privateCourse } from "../../lib/private-course";
@@ -10,13 +10,14 @@ import StudyLinks from "../../components/StudyLinks.astro";
 import PullQuote from "../../components/PullQuote.astro";
 import PrivateCourseClose from "../../components/PrivateCourseClose.astro";
 import TeacherCard from "../../components/TeacherCard.astro";
-import { PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import { trainingPriceCopy } from "../../lib/training-prices.mjs";
 import "../../styles/course-page.css";
 import "../../styles/course-agenda.css";
 import "../../styles/dax-course.css";
 
 // The course facts below are the Course JSON-LD's source: keep its length (P2D) and the shared 8-person maximum in step with them.
-const { priced, description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {
+const priced = trainingPriceCopy();
+const { description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {
   name: "DAX deep dive",
   summary: "A two-day private course for teams who already write measures in Power BI: learn why your measures return the numbers they do, and how to make them return the ones you need.",
   workload: "P2D",
@@ -31,10 +32,9 @@ const { priced, description, schema } = privateCourse(Astro.site!, Astro.url.pat
     <Fragment slot="facts">
       <li>2 days</li>
       <li>Private, for your team</li>
-      {!priced && <li>On site or online</li>}
       <li>Up to 8 people</li>
       <li>9:30am to 4pm each day</li>
-      <li class="fact-price">{priced ? priced.daxDeepDiveDetail : PRICE_ON_REQUEST}</li>
+      <li class="fact-price">{priced.daxDeepDiveDetail}</li>
     </Fragment>
     <a class="button run-action" href="#contact">Ask about dates</a>
   </DecisionHero>

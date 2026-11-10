@@ -1,6 +1,5 @@
 import { test, expect, otherScripts } from "./analytics";
 import { visualReview, expectIndexable, firstBox, forEachTextSize, watchPage } from "./helpers";
-import { priced } from "./prices";
 import { pages, redirects } from "../src/config/compatibility.mjs";
 
 const route = "/call/";
@@ -84,17 +83,6 @@ test("both booking actions are the same ordinary same-tab link, styled as the sh
   await expect(page.getByRole("link", { name: "Send me a message" })).toHaveAttribute("href", "/contact/");
   await expect(page.getByRole("link", { name: "More about my consultancy" })).toHaveAttribute("href", "/power-bi/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
-});
-
-test("the 101's closed booking button keeps its disabled state", async ({ page }) => {
-  test.skip(priced, "Booking is a live link in the priced build.");
-  await page.goto("/training/power-bi-with-ai-agents-101/");
-  const closed = page.locator("button.book-button").first();
-  await expect(closed).toBeDisabled();
-  const style = await closed.evaluate((el) => { const s = getComputedStyle(el); return { bg: s.backgroundColor, border: s.borderTopStyle, shadow: s.boxShadow }; });
-  expect(style.bg).not.toBe("rgb(230, 152, 117)");
-  expect(style.border).toBe("none");
-  expect(style.shadow).toBe("none");
 });
 
 test("Home and Consultancy route their call invitations through this page, which alone links to booking", async ({ page }) => {

@@ -1,5 +1,4 @@
 import { test, expect, servedAsProduction } from "./analytics";
-import { priced } from "./prices";
 import { EVENTS } from "../src/config/analytics.mjs";
 import { SEAT_BOOKING_URL } from "../src/config/booking.mjs";
 import { ENQUIRY } from "../src/config/enquiry.mjs";
@@ -21,13 +20,10 @@ const placements: Placement[] = [
   { route: "/work/carbon-footprint/", event: EVENTS.bookCallLink, name: call, href: "/call/" },
   { route: "/call/", event: EVENTS.bookCall, place: "top", name: call, href: callBooking },
   { route: "/call/", event: EVENTS.bookCall, place: "bottom", name: call, href: callBooking },
-  // Seat booking opens only in the priced build; the unpriced one has nothing to count.
-  ...(priced ? [
-    { route: "/", event: EVENTS.bookSeatLink, name: seat, href: `${course101}#book-title` },
-    { route: "/training/", event: EVENTS.bookSeatLink, name: seat, href: `${course101}#book-title` },
-    { route: course101, event: EVENTS.bookSeat, place: "top", name: seat, href: SEAT_BOOKING_URL },
-    { route: course101, event: EVENTS.bookSeat, place: "bottom", name: seat, href: SEAT_BOOKING_URL },
-  ] : []),
+  { route: "/", event: EVENTS.bookSeatLink, name: seat, href: `${course101}#book-title` },
+  { route: "/training/", event: EVENTS.bookSeatLink, name: seat, href: `${course101}#book-title` },
+  { route: course101, event: EVENTS.bookSeat, place: "top", name: seat, href: SEAT_BOOKING_URL },
+  { route: course101, event: EVENTS.bookSeat, place: "bottom", name: seat, href: SEAT_BOOKING_URL },
 ];
 const formRoutes = ["/", "/training/", "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/power-bi/", "/contact/"];
 const routes = [...new Set([...placements.map(({ route }) => route), ...formRoutes, "/training/", course101])];

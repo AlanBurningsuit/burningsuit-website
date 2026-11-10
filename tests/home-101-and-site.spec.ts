@@ -1,7 +1,7 @@
 import { test, expect, otherScripts } from "./analytics";
 import { visualReview, expectIndexable, box, forEachTextSize, watchPage } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
-import { priced, copy, expectItems, expectText, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest, expectSeatBooking } from "./prices";
+import { copy, expectOnlyTrackedAmounts, expectNone, expectSeatBooking } from "./prices";
 import { RUN } from "../src/config/course-run.mjs";
 
 const course = "/training/power-bi-with-ai-agents-101/";
@@ -20,7 +20,7 @@ for (const route of ["/", course]) {
     await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");
     expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
-    await expectAmountsOnlyWhenPriced(page, `static page ${route}`);
+    await expectOnlyTrackedAmounts(page, `static page ${route}`);
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
     await page.keyboard.press("Enter");
@@ -55,11 +55,11 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".do-steps h3")).toHaveText(["Get your bearings.", "Understand a report you didn't build.", "Document its calculations.", "Build one new calculation and check it."]);
   await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toBeVisible();
   await expect(page.locator(`time[datetime="${RUN.date}"]`)).toHaveText([RUN.longDate, RUN.longDate]);
-  // Seat rates (priced) or Price on request (unpriced); the private course has no price item on this page.
-  await expectItems(page.locator(".hero-facts .run-facts > li"), ["Half a day, live online", `${RUN.longDate}, ${RUN.times}`, RUN.people, ...(copy ? copy.seatFacts : [priceOnRequest])], "101 facts");
-  await expectText(page.locator(".book-facts"), `${RUN.longDate}, ${RUN.times}, ${RUN.modeText}. ${RUN.people}. ${copy ? copy.seatBookFacts : "Price on request."}`, "101 booking facts");
+  // Seat rates; the private course has no price item on this page.
+  await expect(page.locator(".hero-facts .run-facts > li")).toHaveText(["Half a day, live online", `${RUN.longDate}, ${RUN.times}`, RUN.people, ...copy.seatFacts]);
+  await expect(page.locator(".book-facts")).toHaveText(`${RUN.longDate}, ${RUN.times}, ${RUN.modeText}. ${RUN.people}. ${copy.seatBookFacts}`);
 
-  // Booking: the Stripe link in the priced build; unavailable, explained controls that lead nowhere otherwise.
+  // Booking: the Stripe link.
   await expectSeatBooking(page);
   await expect(page.locator("main form, main a[href*='pay']:not([href*='buy.stripe.com']), main a[href^='/contact'], main a[href='#contact']")).toHaveCount(0);
 
@@ -71,14 +71,12 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".invoice")).toContainText("Invoices are due within 30 days.");
   // The booking band repeats the setup line from the top of the page, so nobody pays before checking they can take part.
   await expect(page.locator(".course-book .book-before")).toHaveText("Before you book: you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. See what you'll need.");
-  if (priced) await expect(page.locator(".booking-terms li").last()).toHaveText("If I have to cancel for any other reason, you get a full refund.");
+  await expect(page.locator(".booking-terms li").last()).toHaveText("If I have to cancel for any other reason, you get a full refund.");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  // The priced build adds the two Stripe booking links, in reading order beside each "Book a seat".
+  // The two Stripe booking links, in reading order beside each "Book a seat".
   const { SEAT_BOOKING_URL } = await import("../src/config/booking.mjs");
-  expect(mainLinks).toEqual(priced
-    ? ["#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]
-    : ["#need-title", "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", "mailto:alan@burningsuit.co.uk"]);
+  expect(mainLinks).toEqual(["#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]);
 
   // The setup facts are settled (Alan, 7 Nov 2026): no open "to confirm" gaps remain.
   const needs = page.locator(".need-list > li");
@@ -111,21 +109,12 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
         - heading "Build one new calculation and check it." [level=3]
         - paragraph
   `);
-  // Priced facts carry amounts, which an ARIA snapshot would print on failure; the priced list is checked by role and in-memory text.
-  if (priced) await expect(page.locator(".run-facts").getByRole("listitem")).toHaveCount(6);
-  else await expectAriaWithoutAmounts(page.locator(".run-facts"), `
-    - list:
-      - listitem: Half a day, live online
-      - listitem:
-        - time: ${RUN.longDate}
-        - text: ", ${RUN.times}"
-      - listitem: ${RUN.people}
-      - listitem: Price on request
-  `);
+  await expect(page.locator(".run-facts").getByRole("listitem")).toHaveCount(6);
   const text = await page.locator("main").innerText();
-  // "Founding rate" is the approved wording for the priced seat facts only.
-  expectNone(text, [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, ...(priced ? [] : [/refund/i]), /checklist/i, /house-rules template/i, /setup notes/i, ...(priced ? [] : [/founding rate/i])], "101 text");
-  if (priced) expect(/founding rate/.test(text) && !/limited|save|early bird|discount|countdown/i.test(text), "101 states the founding rate as a plain fact").toBe(true);
+  expectNone(text, [/\[|\]/, /gap/i, /showcase/i, /If plans change/i, /barely write DAX/i, /checklist/i, /house-rules template/i, /setup notes/i], "101 text");
+  // "Founding rate" is the approved wording for the seat facts, stated as a plain fact.
+  expect(text).toMatch(/founding rate/);
+  expectNone(text, [/limited|save|early bird|discount|countdown/i], "101 founding rate");
   await expect(page.locator(".keep")).toHaveText("Afterwards, you keep a video recording of the morning, along with the teaching project and clean copies, so you can work through it again. How recordings work.");
 });
 
@@ -174,7 +163,7 @@ test("course discovery, facts and email routes work without JavaScript", async (
   await expectSeatBooking(page);
   await expect(page.locator('.course-book a[href="mailto:alan@burningsuit.co.uk"]')).toBeVisible();
   await expect(page.locator(".do-steps li").first()).toBeVisible();
-  // Keyboard order skips the unavailable controls and reaches each live link, and the agent diagram's text-version toggle.
+  // Keyboard order reaches each live link, and the agent diagram's text-version toggle.
   // Assumes the skip link is the first tab stop and moves focus to main.
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
@@ -184,9 +173,7 @@ test("course discovery, facts and email routes work without JavaScript", async (
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? document.activeElement?.tagName ?? ""));
   }
   const { SEAT_BOOKING_URL: booking } = await import("../src/config/booking.mjs");
-  expect(reached).toEqual(priced
-    ? ["#need-title", booking, "mailto:alan@burningsuit.co.uk", "SUMMARY"]
-    : ["#need-title", "mailto:alan@burningsuit.co.uk", "SUMMARY", "/training/how-i-train/"]);
+  expect(reached).toEqual(["#need-title", booking, "mailto:alan@burningsuit.co.uk", "SUMMARY"]);
   // The agent diagram is captioned, with an alt that leads with the main relationship.
   await expect(page.locator("main figure.course-figure img")).toHaveAttribute("alt", /^An agent combines an AI model running elsewhere/);
   await context.close();
@@ -202,15 +189,15 @@ test("homepage keeps the approved sections, order and starting points", async ({
   await expect(page.locator(".introduction strong")).toHaveText("someone");
   const courses = page.getByRole("article");
   await expect(courses.getByRole("heading", { level: 3 })).toHaveText(["Power BI fundamentals", "Power BI with AI agents 101"]);
-  // Priced output replaces "On site or online" and the price on request with one self-contained price item, and adds the public seat rates.
+  // One self-contained price item names both delivery methods; the 101 adds its public seat rates.
   const homeFacts: Record<string, string[]> = {
-    "Power BI fundamentals": copy ? ["2 days", "Private, for your team", copy.homeFundamentals] : ["2 days", "Private, for your team", "On site or online", priceOnRequest],
-    "Power BI with AI agents 101": ["Half a day, live online", `Public course: ${RUN.longDate}, ${RUN.times}, ${RUN.people}`, ...(copy ? [copy.publicSeat] : []), "Private for your team: price on request"],
+    "Power BI fundamentals": ["2 days", "Private, for your team", copy.homeFundamentals],
+    "Power BI with AI agents 101": ["Half a day, live online", `Public course: ${RUN.longDate}, ${RUN.times}, ${RUN.people}`, copy.publicSeat, "Private for your team: price on request"],
   };
-  // In the priced build the 101 card books on the course page; otherwise it asks through the form.
-  for (const [name, ask] of [["Power BI fundamentals", "Ask about dates"], ["Power BI with AI agents 101", priced ? "Book a seat" : "Ask about a seat"]]) {
+  // The 101 card books on the course page; Fundamentals asks through the form.
+  for (const [name, ask] of [["Power BI fundamentals", "Ask about dates"], ["Power BI with AI agents 101", "Book a seat"]]) {
     const entry = page.getByRole("article", { name });
-    await expectItems(entry.locator(".facts > li"), homeFacts[name], `home ${name} facts`);
+    await expect(entry.locator(".facts > li")).toHaveText(homeFacts[name]);
     await expect(entry.getByRole("link", { name: "Read the course outline" })).toHaveCount(1);
     await expect(entry.getByRole("link", { name: ask })).toHaveAttribute("href", ask === "Book a seat" ? "/training/power-bi-with-ai-agents-101/#book-title" : "#contact");
   }
@@ -292,7 +279,7 @@ test("enquiry form is a labelled plain POST with nothing preselected that valida
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
   await page.goto("/");
-  await page.getByRole("link", { name: priced ? "Ask about dates" : "Ask about a seat" }).click();
+  await page.getByRole("link", { name: "Ask about dates" }).click();
   await expect(page).toHaveURL(baseURL! + "/#contact");
   const form = page.getByRole("form", { name: "Tell me what you're looking for." });
   await expect(form).toBeVisible();

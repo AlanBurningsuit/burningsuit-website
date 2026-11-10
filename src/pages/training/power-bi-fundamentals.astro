@@ -2,14 +2,14 @@
 // Approved wording: ops site/fundamentals-page-copy.md (5 Nov 2026). Its field labels, layout notes and annotations are not copy;
 // Course scope follows the Fundamentals Outline in Practice;
 // confirmed practical details follow the approved page copy.
-// Private course only: no public run or booking control; its price shows only in the priced build (src/lib/training-prices.mjs). The 101 composition (course.css) is reused;
+// Private course only: no public run or booking control; its price comes from src/lib/training-prices.mjs. The 101 composition (course.css) is reused;
 // this page's differences live in course-agenda.css. The opening is the shared decision hero (DecisionHero.astro): facts and
 // the primary action on the dark stage, the price last on its own line.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { privateCourse } from "../../lib/private-course";
 import DecisionHero from "../../components/DecisionHero.astro";
 import PullQuote from "../../components/PullQuote.astro";
-import { PRICE_ON_REQUEST } from "../../lib/training-prices.mjs";
+import { trainingPriceCopy } from "../../lib/training-prices.mjs";
 import PrivateCourseClose from "../../components/PrivateCourseClose.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import TeacherCard from "../../components/TeacherCard.astro";
@@ -17,7 +17,8 @@ import "../../styles/course-page.css";
 import "../../styles/course-agenda.css";
 
 // The course facts below are the Course JSON-LD's source: keep its length (P2D) and the shared 8-person maximum in step with them.
-const { priced, description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {
+const priced = trainingPriceCopy();
+const { description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {
   name: "Power BI fundamentals",
   summary: "A two-day private course for teams new to Power BI: build an interactive report, prepare its data and learn how it's shared and kept up to date.",
   workload: "P2D",
@@ -32,10 +33,9 @@ const { priced, description, schema } = privateCourse(Astro.site!, Astro.url.pat
     <Fragment slot="facts">
       <li>2 days</li>
       <li>Private, for your team</li>
-      {!priced && <li>On site or online</li>}
       <li>Up to 8 people</li>
       <li>9:30am to 4pm each day</li>
-      <li class="fact-price">{priced ? priced.fundamentalsDetail : PRICE_ON_REQUEST}</li>
+      <li class="fact-price">{priced.fundamentalsDetail}</li>
     </Fragment>
     <a class="button run-action" href="#contact">Ask about dates</a>
   </DecisionHero>

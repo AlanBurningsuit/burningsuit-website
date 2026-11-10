@@ -2,7 +2,7 @@ import { test, expect, otherScripts } from "./analytics";
 import { visualReview, expectIndexable, box, expectNoSpills, forEachTextSize, watchPage, agendaNumbers } from "./helpers";
 import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { redirects } from "../src/config/compatibility.mjs";
-import { priced, copy, expectItems, expectAttribute, expectAmountsOnlyWhenPriced, expectNone, expectAriaWithoutAmounts, priceOnRequest } from "./prices";
+import { copy, expectOnlyTrackedAmounts, expectNone } from "./prices";
 
 // Approved wording: ops site/dax-deep-dive-page-copy.md, candidate 4 (7 Nov 2026). Pinned on purpose: changing it needs Alan's approval.
 const route = "/training/dax-deep-dive/";
@@ -18,7 +18,7 @@ test("DAX deep dive page stays static, private, price-safe and CSP-clean", async
   await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveTitle("DAX deep dive | burningsuit");
   const baseDescription = "A two-day private course for teams who already write measures in Power BI: learn why your measures return the numbers they do, and how to make them return the ones you need.";
-  await expectAttribute(page.locator('meta[name="description"]'), "content", priced ? baseDescription : `${baseDescription} Price on request.`, "deep dive description");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", baseDescription);
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
   // No portrait or new diagram: the brief allows none. The one figure is the organiser's quote (Alan cleared it, 8 Nov).
@@ -30,12 +30,11 @@ test("DAX deep dive page stays static, private, price-safe and CSP-clean", async
   await expect(page.locator("form")).toHaveCount(1);
   await expect(page.locator("nav a[aria-current]:not(.nav-menu a)")).toHaveText("Training");
   await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("DAX deep dive");
-  // Private only: no public run, booking or payment route. Unpriced output says Price on request once; priced output shows the private rates and never that phrase.
+  // Private only: no public run, booking or payment route. It shows its tracked rates and never says Price on request.
   // The shared footer's "Booking terms" link is site furniture, not this page's wording.
   const body = (await page.locator("body").innerText()).replace(await page.locator("footer").innerText(), "");
-  await expectAmountsOnlyWhenPriced(page, "deep dive");
-  if (!priced) expectNone(body, [/\d\s*(GBP|ex VAT)/i], "deep dive unpriced");
-  await expect(page.getByText(priceOnRequest, { exact: true })).toHaveCount(priced ? 0 : 1);
+  await expectOnlyTrackedAmounts(page, "deep dive");
+  await expect(page.getByText("Price on request", { exact: true })).toHaveCount(0);
   await expect(page.locator("main button:not(.send), main time, main a[href*='stripe'], main a[href*='pay'], main a[href*='cal.com']")).toHaveCount(0);
   // The rating and count appear only in the organiser's pull quote (Alan cleared it for this page, 8 Nov), never in the copy around it; no study wording ("praised"); no DAX fundamentals or "foundations" framing. The teaching-data name is kept out of tracked source, so it isn't asserted here.
   const quoteText = await page.locator(".outcomes figure.pull-quote").innerText();
@@ -57,20 +56,9 @@ test("DAX deep dive page renders the approved wording and question order", async
   await expect(fit.getByRole("link", { name: "compare all the courses" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll be able to do", "The two days", "What to arrange", "Ask about dates"]);
 
-  // Priced output omits "On site or online" (the price item names both) and carries amounts, so it is checked by in-memory text rather than an ARIA snapshot.
+  // No "On site or online" fact: the price item names both.
   const facts = page.getByRole("region", { name: "Course facts" }).locator(".run-facts");
-  await expectItems(page.locator(".hero-facts .run-facts > li"), copy
-    ? ["2 days", "Private, for your team", "Up to 8 people", "9:30am to 4pm each day", copy.daxDeepDiveDetail]
-    : ["2 days", "Private, for your team", "On site or online", "Up to 8 people", "9:30am to 4pm each day", priceOnRequest], "deep dive facts");
-  if (!priced) await expectAriaWithoutAmounts(facts, `
-    - list:
-      - listitem: 2 days
-      - listitem: Private, for your team
-      - listitem: On site or online
-      - listitem: Up to 8 people
-      - listitem: 9:30am to 4pm each day
-      - listitem: Price on request
-  `);
+  await expect(page.locator(".hero-facts .run-facts > li")).toHaveText(["2 days", "Private, for your team", "Up to 8 people", "9:30am to 4pm each day", copy.daxDeepDiveDetail]);
   await expect(page.locator(".run-action")).toHaveText("Ask about dates");
   await expect(page.locator(".run-action")).toHaveAttribute("href", "#contact");
 
