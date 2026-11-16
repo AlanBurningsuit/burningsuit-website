@@ -71,6 +71,8 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".invoice")).toContainText("Invoices are due within 30 days.");
   // The booking band repeats the setup line from the top of the page, so nobody pays before checking they can take part.
   await expect(page.locator(".course-book .book-before")).toHaveText("Before you book: you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. See what you'll need.");
+  await expect(page.locator(".booking-terms li").first()).toHaveText("Cancel up to 14 days before the course, by Wednesday 27 January 2027, for a full refund.");
+  await expect(page.locator(".booking-terms li").nth(3)).toHaveText("If fewer than 4 people have booked by Friday 29 January 2027, the course moves once to a date in March. If you can't make the new date, you get a full refund.");
   await expect(page.locator(".booking-terms li").last()).toHaveText("If I have to cancel for any other reason, you get a full refund.");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));

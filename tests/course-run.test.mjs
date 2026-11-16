@@ -6,16 +6,16 @@ import { COURSE_RUN, courseRun, longDate, seatAction, staleRunProblem, RUN_STATU
 import { SEAT_BOOKING_URL } from "../src/config/booking.mjs";
 
 const withRun = (changes) => courseRun({ ...COURSE_RUN, ...changes });
-const sample = { start: "2027-01-20T09:30:00+00:00", end: "2027-01-20T12:30:00+00:00", minimumNumbersDate: "2027-01-08" };
+const sample = { start: "2027-02-10T09:30:00+00:00", end: "2027-02-10T12:30:00+00:00", minimumNumbersDate: "2027-01-29" };
 
 test("a run's printed date, times, refund deadline and minimum-numbers date are derived as the pages print them", () => {
   const run = withRun({ ...sample, status: "open" });
-  assert.equal(run.date, "2027-01-20");
-  assert.equal(run.longDate, "Wednesday 20 January 2027");
+  assert.equal(run.date, "2027-02-10");
+  assert.equal(run.longDate, "Wednesday 10 February 2027");
   assert.equal(run.times, "9:30am to 12:30pm UK time");
   assert.equal(run.people, `${COURSE_RUN.minPeople} to ${COURSE_RUN.maxPeople} people`);
-  assert.deepEqual({ ...run.refundBy }, { date: "2027-01-06", long: "Wednesday 6 January 2027" });
-  assert.deepEqual({ ...run.minimumBy }, { date: "2027-01-08", long: "Friday 8 January 2027" });
+  assert.deepEqual({ ...run.refundBy }, { date: "2027-01-27", long: "Wednesday 27 January 2027" });
+  assert.deepEqual({ ...run.minimumBy }, { date: "2027-01-29", long: "Friday 29 January 2027" });
   assert.deepEqual({ ...run.schemaRun }, { startDate: sample.start, endDate: sample.end });
   assert.equal(run.statusLine, null);
 });
@@ -31,10 +31,10 @@ test("a summer run keeps its local date and times, and the refund deadline cross
 test("a malformed run fails with a fixed message", () => {
   for (const changes of [
     { status: "closed" },
-    { start: "2027-01-20T09:30:00Z" },
-    { end: "2027-01-21T12:30:00+00:00" },
-    { end: "2027-01-20T09:00:00+00:00" },
-    { minimumNumbersDate: "2027-01-20" },
+    { start: "2027-02-10T09:30:00Z" },
+    { end: "2027-02-11T12:30:00+00:00" },
+    { end: "2027-02-10T09:00:00+00:00" },
+    { minimumNumbersDate: "2027-02-10" },
     { minPeople: 9 },
     { mode: "onsite" },
   ]) assert.throws(() => withRun(changes), /^Error: Course run: /, JSON.stringify(changes));

@@ -10,10 +10,10 @@
  * "open" after it has ended.
  */
 export const COURSE_RUN = Object.freeze({
-  start: "2027-01-20T09:30:00+00:00",
-  end: "2027-01-20T12:30:00+00:00",
+  start: "2027-02-10T09:30:00+00:00",
+  end: "2027-02-10T12:30:00+00:00",
   // The booking terms' minimum-numbers date: fewer than minPeople booked by then and the run moves once.
-  minimumNumbersDate: "2027-01-08",
+  minimumNumbersDate: "2027-01-29",
   minPeople: 4,
   maxPeople: 8,
   mode: "online",
@@ -37,7 +37,7 @@ const ISO_WITH_OFFSET = /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2}):00([+-]\d{2}:\d{2}
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
- * "2027-01-20" → "Wednesday 20 January 2027" (a calendar date, read without a time zone).
+ * "2027-02-10" → "Wednesday 10 February 2027" (a calendar date, read without a time zone).
  * @param {string} isoDate
  */
 export function longDate(isoDate) {
