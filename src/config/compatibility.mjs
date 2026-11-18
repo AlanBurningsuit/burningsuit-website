@@ -49,7 +49,21 @@ export const redirects = {
   "/power-bi-training/power-bi-fundamentals": "/training/power-bi-fundamentals/",
   "/power-bi-training/power-bi-advanced": "/training/",
   "/about-us/our-trainers": "/about/",
-  "/hour": "/call/"
+  "/hour": "/call/",
+  // Seventh sweep, 18 Nov 2026: legacy URLs with human traffic in Umami (the checkout link first).
+  "/training/agentic-development-for-power-bi": "/training/power-bi-with-ai-agents-101/#booking-terms-title",
+  "/training/agentic-101": "/training/power-bi-with-ai-agents-101/",
+  "/blog/where-do-i-make-data-transformations-power-bi-roches-maxim": "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/",
+  "/blog/2018/12/power-bi-strictly-come-dancing-the-results": "/power-bi/",
+  "/blog/2019/12/strictly-come-dancing-series-17-report-version-2-is-here": "/power-bi/",
+  "/blog/2019/01/the-strictly-report-behind-the-scenes": "/power-bi/",
+  "/blog/2018/06/dax-how-to-group-measures-into-numeric-ranges": "/power-bi/",
+  "/blog/2020/11/how-dax-treats-nulls-zeros": "/power-bi/",
+  "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals": "/power-bi/",
+  "/blog/8th-secret-matrix-visual-controlling-calculations-and-labels-subtotals": "/power-bi/",
+  "/blog/2018/11/four-dax-functions-you-cant-live-without": "/power-bi/",
+  "/context-transition-where-the-row-context-becomes-a-filter-context": "/power-bi/",
+  "/blog/2013/06/powerpivot-5-measure-for-measure": "/power-bi/"
 };
 
 // Manifest routes that have their own page in src/pages; each keeps its reserved anchors (check:seo).
