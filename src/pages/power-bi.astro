@@ -18,12 +18,12 @@ import { trainingPriceCopy } from "../lib/training-prices.mjs";
 const call = "/call/";
 // The usual range comes from the tracked prices file.
 const priced = trainingPriceCopy();
-const summary = "Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards.";
+const summary = "Power BI consultancy in the UK, done with your team on your own data, models and reports, so the team can run it without me afterwards.";
 // No price or range in structured data.
 const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI consultancy", description: summary })];
 ---
 <BaseLayout
-  title="Power BI consultancy | burningsuit"
+  title="Power BI consultancy in the UK | burningsuit"
   description={summary}
   schema={schema}
 >

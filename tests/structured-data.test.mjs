@@ -52,7 +52,8 @@ for (const [path, expected] of Object.entries(courses)) {
   test(`${path} describes its course as the page does`, () => {
     const course = node(path, "Course");
     const title = decodeHTML(html(path).match(/<title>([^<]*)<\/title>/)[1]).replace(/ \| burningsuit$/, "");
-    assert.equal(course.name, title);
+    // Search titles add terms after the course name; the name itself stays exact.
+    assert(title === course.name || title.startsWith(`${course.name}:`) || title.startsWith(`${course.name} `), `title "${title}" starts with the course name "${course.name}"`);
     assert.equal(course.url, site + path);
     assert(metaDescription(path).startsWith(course.description), "course description is the page's approved description");
     const run = course.hasCourseInstance;
