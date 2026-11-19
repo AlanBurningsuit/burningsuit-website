@@ -11,7 +11,11 @@ const secrets = "/blog/2019/04/7-secrets-of-the-matrix-visual/";
 const eighth = "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/";
 const bins = "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/";
 const topN = "/blog/2019/05/find-top-or-bottom-n-percent-dax/";
-const prose = JSON.parse(readFileSync(new URL("./fixtures/archive-prose.json", import.meta.url), "utf8")) as Record<string, { paragraphCount: number; sha256: string }>;
+// Per post: a hash of her prose as built, and the approved copy's headings, alt text and update notes (taken from the
+// copy file, not from the build), each compared exactly.
+type Note = { paragraphs: string[]; code?: string; table?: string[][] };
+const prose = JSON.parse(readFileSync(new URL("./fixtures/archive-prose.json", import.meta.url), "utf8")) as Record<string, { paragraphCount: number; sha256: string; headings: string[]; alts: string[]; notes: Note[] }>;
+const squash = (text: string) => text.replace(/\s+/g, " ").trim();
 const redirectMap = redirects as Record<string, string>;
 
 test("Writing is an indexed list generated from the collection: articles, then the archive, newest first", async ({ page }) => {
@@ -93,18 +97,33 @@ for (const post of posts) {
     const graph = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!)["@graph"] as Record<string, unknown>[];
     expect(graph.find((node) => node["@type"] === "Article")?.author).toEqual({ "@type": "Person", name: "Alison Box" });
     // Her prose, unchanged: every paragraph and list item outside the notes.
+    const approved = prose[post.route];
     const paras = await page.locator(".archive-prose > p, .archive-prose > :is(ol, ul) > li").allTextContents();
     expect(paras).toHaveLength(prose[post.route].paragraphCount);
     expect(createHash("sha256").update(paras.map((p) => p.replace(/\s+/g, " ").trim()).join("\n")).digest("hex")).toBe(prose[post.route].sha256);
-    // Each update note is set apart and dated.
+    // Her headings, as approved.
+    expect((await page.locator(".archive-prose > :is(h2, h3)").allTextContents()).map(squash)).toEqual(approved.headings);
+    // Each update note is set apart, dated and exactly as approved: its sentences, any code and any table.
     const notes = page.locator(".update-note[role=note]");
     await expect(notes).toHaveCount(post.notes);
-    for (const text of await notes.allTextContents()) expect(text.trim()).toMatch(/^Update, November 2026: /);
-    // Screenshots: optimised, sized and lazy, each with its approved alt text.
+    expect(approved.notes).toHaveLength(post.notes);
+    for (const [index, expected] of approved.notes.entries()) {
+      const note = notes.nth(index);
+      expect((await note.locator(":scope > p").allTextContents()).map(squash)).toEqual(expected.paragraphs);
+      expect(expected.paragraphs[0]).toMatch(/^Update, November 2026: /);
+      await expect(note.locator(".case-code")).toHaveCount(expected.code ? 1 : 0);
+      if (expected.code) expect(await note.locator(".case-code").textContent()).toBe(expected.code);
+      const rows = await note.locator("tr").evaluateAll((trs) => trs.map((tr) => Array.from(tr.children, (cell) => cell.textContent!.trim())));
+      expect(rows).toEqual(expected.table ?? []);
+    }
+    // Screenshots: optimised, sized and lazy, each with exactly the approved alt text, in order, and each decodes once
+    // scrolled into view.
     const shots = page.locator(".screenshot img");
     await expect(shots).toHaveCount(post.screenshots);
+    expect(await shots.evaluateAll((imgs) => imgs.map((img) => img.getAttribute("alt")))).toEqual(approved.alts);
     for (const img of await shots.all()) {
-      await expect(img).toHaveAttribute("alt", /.{12,}/);
+      await img.scrollIntoViewIfNeeded();
+      await expect.poll(() => img.evaluate((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
       await expect(img).toHaveAttribute("loading", "lazy");
       await expect(img).toHaveAttribute("width", /^\d+$/);
       await expect(img).toHaveAttribute("height", /^\d+$/);

@@ -46,8 +46,8 @@ test('every study needs all four facts, a limits line and both closing links; OG
   }
 });
 
-test('essay dates remain optional, require an original date and preserve chronological order', () => {
-  const essay = { kind: 'essay', author: 'Alan Harman-Box', title: 'Example', description: 'Example', heading: { em: 'Example' }, lead: 'Example' };
+test('essay dates: a talk date suffices, a modification needs the original date and follows it', () => {
+  const essay = { kind: 'essay', author: 'Alan Harman-Box', title: 'Example', description: 'Example', heading: { em: 'Example' }, lead: 'Example', givenAt: [{ event: 'Example', date: '2026-02-19' }] };
   assert.equal(writingSchema.safeParse(essay).success, true);
   assert.equal(writingSchema.safeParse({ ...essay, dateModified: '2026-11-06' }).success, false);
   assert.equal(writingSchema.safeParse({ ...essay, datePublished: '2026-11-06', dateModified: '2026-11-05' }).success, false);
@@ -86,4 +86,14 @@ test('an essay keeps its marked heading and carries no archive context', () => {
   for (const extra of [{ heading: "We're all middle management now" }, { revisedMonth: '2026-11' }, { updateNotice: 'Example' }, { author: 'Alison Box' }]) {
     assert.equal(writingSchema.safeParse({ ...essay, ...extra }).success, false, JSON.stringify(extra));
   }
+});
+
+test('every Writing entry is dated: an essay needs a talk or a publication day, an archive post a day or a month', () => {
+  const essay = frontmatter('src/content/writing/we-are-all-middle-management-now.mdx');
+  for (const undated of [{ givenAt: undefined, datePublished: undefined }, { givenAt: [], datePublished: undefined }]) {
+    assert.equal(writingSchema.safeParse({ ...essay, ...undated }).success, false, JSON.stringify(undated));
+  }
+  assert.equal(writingSchema.safeParse({ ...essay, givenAt: undefined, datePublished: '2026-09-17' }).success, true);
+  const roche = frontmatter('src/content/writing/roches-maxim.mdx');
+  assert.equal(writingSchema.safeParse({ ...roche, archiveMonth: undefined }).success, false);
 });

@@ -65,11 +65,13 @@
    apart from the original author's text. Its code and tables sit recessed inside it. */
 .update-note { margin-block: 26px; padding: 18px 22px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); font: 400 var(--fact-size) / var(--lh-relaxed) var(--ff-note); }
 .update-note > * + * { margin-top: 12px; }
-.update-note strong:first-child { font: 600 1rem / var(--lh-snug) var(--ff-display); color: var(--accent-ink); }
+.update-note > p:first-child > strong:first-child { font: 600 1rem / var(--lh-snug) var(--ff-display); color: var(--accent-ink); }
 .update-note .case-code { margin-block: 14px 0; }
 .update-note table { border-collapse: collapse; font: 400 var(--compact-size) / var(--lh-snug) var(--ff-body); }
 .update-note :is(th, td) { padding: 6px 14px 6px 0; border-bottom: var(--bw-hair) solid var(--rule); text-align: left; vertical-align: top; }
 .update-note th { font-weight: 600; }
+/* A range label may wrap on a phone; the numbers beside it never break. */
+.update-note :is(th, td):not(:first-child) { white-space: nowrap; }
 @media (max-width: 680px) {
   .update-note { margin-inline: -6px; padding: 14px 14px; }
   .update-note :is(th, td) { padding-right: 8px; }

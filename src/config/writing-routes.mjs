@@ -1,4 +1,5 @@
-// Keep the original article URLs and the essay's established destination. Routes under blog/ are built by
+// Fixed public URLs: the archive posts' original addresses and the essay's established one. An entry not listed here is
+// served at writing/<id> (writingRoute in src/lib/writing.ts). Routes under blog/ are built by
 // src/pages/blog/[...slug].astro, routes under writing/ by src/pages/writing/[slug].astro.
 export const writingRoutes = {
   "we-are-all-middle-management-now": "writing/we-are-all-middle-management-now",

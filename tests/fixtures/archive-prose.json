@@ -1,18 +1,175 @@
 {
   "/blog/2019/04/7-secrets-of-the-matrix-visual/": {
     "paragraphCount": 28,
-    "sha256": "b74cbd6315ef28e97f54f4c46c9d834086bcaf88c87968b2a072c4fae8a5dd9b"
+    "sha256": "b74cbd6315ef28e97f54f4c46c9d834086bcaf88c87968b2a072c4fae8a5dd9b",
+    "headings": [
+      "Secret No.1 - Grand Totals are really Subtotals.",
+      "Secret No.2 - Expanding all down one level in the hierarchy.",
+      "Secret No.3 – Turn off \"Stepped layout\".",
+      "Secret No.4 - Only show the subtotals/grand totals you want to see.",
+      "Secret No.5 – Show Values on Rows",
+      "Secret No.6 – Show text in the Values area",
+      "Secret No.7 – Use Conditional Formatting,"
+    ],
+    "alts": [
+      "A Power BI matrix titled Dance Scores by Week beside an Excel PivotTable showing the same data: contestants in rows, weeks 1 to 13 in columns, each contestant's weekly score, and totals for each contestant and each week. The grand total is 3797 in both.",
+      "The matrix's field wells beside the PivotTable's field areas: Contestant in Rows, Week in Columns, and Scores (Sum of Scores in Excel) in Values.",
+      "The Grand Totals button on Excel's ribbon, open to show Off for Rows and Columns, On for Rows and Columns, On for Rows Only and On for Columns Only.",
+      "The Column grand total card in the format pane, with font, bold, text colour, background colour and Apply to labels settings, and no setting to turn the total off.",
+      "The Column subtotals and Row subtotals cards in the format pane, both switched off.",
+      "The Dance Scores by Week matrix with no total row and no total column.",
+      "The Rows field well holding Contestant and then Professional.",
+      "The icons above the matrix, with the fork-shaped icon outlined in red and its tooltip reading Expand all down one level in the hierarchy.",
+      "The expanded matrix: each contestant's name in bold with their scores, and their professional partner's name indented on the row below with the same scores.",
+      "The format pane's Row headers card, Options section, with the Stepped layout switch turned off and outlined in red. In the matrix, Contestant and Professional are now in separate columns, with a bold Total row under each contestant.",
+      "The matrix with Contestant and Professional side by side, no subtotal rows, and a bold Total column on the right giving each contestant's total score.",
+      "The Rows field well holding Contestant, Professional and Judge.",
+      "The matrix with a Judge column showing each judge's scores, and two identical bold Total rows under each contestant. In the format pane, the Row subtotals switch is on and outlined in red, with Per row level off and Series set to All.",
+      "The Values card under Row subtotals with a magenta text colour and Apply to labels on. In the matrix, the subtotal rows and their Total labels are magenta.",
+      "The Row subtotals card with Per row level on, Series set to Professional and, on the Rows card, Show subtotal off, each outlined in red. The matrix now has one Total row under each contestant.",
+      "Two matrices of the same data. On the left, Scores, Avg Dance Score and Avg Score are columns. On the right, they are listed in rows beside each contestant. The format pane shows Values, Options, with Switch values to rows on and outlined in red.",
+      "A matrix with contestants in rows and weeks in columns, where each cell holds the name of a dance, such as Cha Cha Cha, Quickstep or Rumba, instead of a number.",
+      "The field wells: Contestant in Rows, Week in Columns and the Dance Name measure in Values.",
+      "Two copies of a Scores by Week matrix. The left one is plain. In the right one, cells are shaded green or pink by a conditional formatting rule. The format pane shows the Cell elements card, with Series set to a field whose name begins Average Greater than, and Background color on."
+    ],
+    "notes": [
+      {
+        "paragraphs": [
+          "Update, November 2026: Power BI no longer has a Stepped layout switch. In the format pane, go to Layout, then Matrix layout, and choose Tabular to put each row field in its own column with no indentation. Compact is the indented layout, and Outline also gives each field its own column but shows subtotals at the top of each group."
+        ]
+      },
+      {
+        "paragraphs": [
+          "Update, November 2026: Power BI now labels this dropdown Row level, where the text and screenshots say Series. It is under Row subtotals, Apply settings to, Per row level."
+        ]
+      }
+    ]
   },
   "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/": {
     "paragraphCount": 17,
-    "sha256": "444d9a5506d492963157ea2d9b66b4e7f2e25c1166228b6e927c633906a0467e"
+    "sha256": "444d9a5506d492963157ea2d9b66b4e7f2e25c1166228b6e927c633906a0467e",
+    "headings": [],
+    "alts": [
+      "A matrix of Total Sales and % of Parent by year and wine, with slicers selecting Bordeaux, Champagne and Chardonnay and the years 2018 and 2019. In 2018 Bordeaux is £1,008,450 and 24.83%; the 2018 total is £4,060,900 and 46.25%; the grand total is £8,780,825 and 100.00%.",
+      "The same figures in an Excel PivotTable, with the right-click menu open at Show Values As and % of Parent Row Total ticked.",
+      "A matrix with columns Total Sales, All Wine, All Years, Sales Divided by ALL Wine and Sales Divided by ALL Years. Red boxes mark the wine rows of Sales Divided by ALL Wine (such as 24.83%) and the yearly subtotals of Sales Divided by ALL Years (46.25% and 53.75%).",
+      "A matrix of Is InScope Wine and Is InScope Year. Both are True on the wine rows. On the yearly Total rows, Is InScope Wine is False (outlined in red) and Is InScope Year is True. On the grand total both are False.",
+      "The finished matrix of Total Sales and % of Parent, with each wine as a percentage of its year (Bordeaux 24.83% in 2018) and each year as a percentage of both years (46.25% and 53.75%), totalling 100.00%.",
+      "The matrix with each year's subtotal row labelled % of Selected Years instead of Total. The older format pane shows Per row level on, and the WINE total label box set to % of Selected Years, both outlined in red."
+    ],
+    "notes": [
+      {
+        "paragraphs": [
+          "Update, November 2026: The paint roller is now the Format visual icon, and the setting has moved. In the format pane, open Row subtotals, and under Apply settings to, turn on Per row level. In the Row level list, choose WINE to relabel each year's subtotal, as in the screenshot (the label for Year, the first field, is the grand total's), then type the label in Subtotal label on the Rows card."
+        ]
+      }
+    ]
   },
   "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/": {
     "paragraphCount": 9,
-    "sha256": "3f1f953c0345bdedcb4ed25e962ee873ba5d96b98b1122eedb0580a9f436bdfc"
+    "sha256": "3f1f953c0345bdedcb4ed25e962ee873ba5d96b98b1122eedb0580a9f436bdfc",
+    "headings": [
+      "How did I do this?"
+    ],
+    "alts": [],
+    "notes": [
+      {
+        "paragraphs": [
+          "Update, November 2026: The screenshots in this post have been lost. The text still refers to them. The table of ranges and the measure are needed to follow the post, so they are given below in update notes."
+        ]
+      },
+      {
+        "paragraphs": [
+          "Update, November 2026: The screenshot of this table is lost. A table with these three columns works with the measure below. The ranges here are an example, not the original's: Min Value is the lowest total in the range, and Max Value is where the next range starts. Set the last Max Value above any customer's total so that \"and over\" holds; 1,000,000,000 is used here."
+        ],
+        "table": [
+          [
+            "Range Name",
+            "Min Value",
+            "Max Value"
+          ],
+          [
+            "0 to 49,999",
+            "0",
+            "50000"
+          ],
+          [
+            "50,000 to 99,999",
+            "50000",
+            "100000"
+          ],
+          [
+            "100,000 to 149,999",
+            "100000",
+            "150000"
+          ],
+          [
+            "150,000 to 199,999",
+            "150000",
+            "200000"
+          ],
+          [
+            "200,000 and over",
+            "200000",
+            "1000000000"
+          ]
+        ]
+      },
+      {
+        "paragraphs": [
+          "Update, November 2026: Sort by Column is now on the Column tools tab, which appears when you select the Range Name column."
+        ]
+      },
+      {
+        "paragraphs": [
+          "Update, November 2026: The original measure was a screenshot that has been lost. This version is rebuilt from Alison's reply to a reader in April 2021, which gave a percentage version of it; the percentage part is taken out here.",
+          "For each range, it counts the customers whose Total Sales are at least the Min Value and less than the Max Value. SUMX adds the ranges together, so the total row counts once each customer whose Total Sales falls inside one of the ranges. A customer with no sales in the year counts as zero, so they fall in a range that starts at 0."
+        ],
+        "code": "No of Customers with these Total Sales =\nSUMX (\n    Bins,\n    COUNTROWS (\n        FILTER (\n            Customers,\n            [Total Sales] >= Bins[Min Value]\n                && [Total Sales] < Bins[Max Value]\n        )\n    )\n)\n"
+      }
+    ]
   },
   "/blog/2019/05/find-top-or-bottom-n-percent-dax/": {
     "paragraphCount": 27,
-    "sha256": "222e95122276283aa0fe6d8f0ab3b3fe905fd992fb7579263761d68a99e5afda"
+    "sha256": "222e95122276283aa0fe6d8f0ab3b3fe905fd992fb7579263761d68a99e5afda",
+    "headings": [
+      "Approach No. 1 – Finding a Specific Percentage e.g. Top 10%",
+      "Approach No. 2 – Using Slicers to Find Different Percentages",
+      "Create slicers to select which Percentage and whether Top or Bottom",
+      "Create the Measure to Find the Top or Bottom Percent selected in the Slicers"
+    ],
+    "alts": [
+      "A table of ten customers and their _Total Sales, beside the Filters pane where CUSTOMERNAME has filter type Top N, showing the top 10 by _Total Sales.",
+      "A table of the eight customers returned by Top 10 Percent, from Morristown & Co at £822,468 down to Plattsburgh Ltd at £716,334, totalling £6,086,831.",
+      "A table of the eight customers returned by Bottom 10 Percent, from Landstuhl Ltd at £382,798 up to Fort Atkinson & Co at £422,392, totalling £3,252,872.",
+      "The Enter Data button.",
+      "The Percent table, a single Percent column holding 5.00%, 10.00% and 20.00%.",
+      "The Top or Bottom table, a single Top or Bottom column holding Top and Bottom.",
+      "Two slicers, Percent set to 5% and Top or Bottom set to Bottom, beside a table whose value column is headed Top or Bottom, listing four customers from Cheney & Co at £386,156 to Landstuhl Ltd at £362,998.",
+      "Slicers set to Bottom and 10.00%, beside a table whose value column is headed Bottom 10 Percent, listing eight customers from Barstow Ltd to Old Saybrook Ltd, totalling £3,252,872."
+    ],
+    "notes": [
+      {
+        "paragraphs": [
+          "Update, November 2026: 8.4 is rounded down to 8, not up. The filter keeps every rank that is 8.4 or less, which is ranks 1 to 8."
+        ]
+      },
+      {
+        "paragraphs": [
+          "Update, November 2026: The % button is now on the Column tools tab, in the Formatting group, when the Percent column is selected."
+        ]
+      },
+      {
+        "paragraphs": [
+          "Update, November 2026: This measure has its two rank columns the wrong way round. The corrected measure is in the update note below it."
+        ]
+      },
+      {
+        "paragraphs": [
+          "Update, November 2026: In this measure, Top_PC filters on the Customers Ranked Bottom column and Bottom_PC on Customers Ranked Top, so choosing Top returns the bottom customers and choosing Bottom returns the top ones. Swap the two columns, so that each matches the measures in Approach No. 1:"
+        ],
+        "code": "Top/Bottom Percent =\nVAR Rank_To_Find = COUNTROWS ( ALL ( Customers ) ) * SELECTEDVALUE ( 'Percent'[Percent] )\nVAR Top_or_Bottom = SELECTEDVALUE ( 'Top or Bottom'[Top or Bottom] )\nVAR Top_PC =\n    CALCULATE ( [_Total Sales],\n        FILTER ( Customers, Customers[Customers Ranked Top] <= Rank_To_Find ) )\nVAR Bottom_PC =\n    CALCULATE ( [_Total Sales],\n        FILTER ( Customers, Customers[Customers Ranked Bottom] <= Rank_To_Find ) )\nRETURN\n    IF ( Top_or_Bottom = \"top\", Top_PC, Bottom_PC )\n"
+      }
+    ]
   }
 }

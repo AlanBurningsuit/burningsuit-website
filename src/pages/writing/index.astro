@@ -19,7 +19,9 @@ const entryLine = ({ data }: CollectionEntry<"writing">) => [data.author, indexD
     <Fragment slot="standfirst">Articles on Power BI, DAX and AI, newest first. burningsuit's older posts are in the archive below.</Fragment>
   </TitleBand>
   <div class="writing-index wrap">
-    {lists.map((list) => <section class="writing-list" aria-labelledby={list.heading ? `${list.id}-title` : "page-title"}>
+    {lists.map((list) => {
+      const Wrapper = list.heading ? "section" : "div";
+      return <Wrapper class="writing-list" aria-labelledby={list.heading ? `${list.id}-title` : undefined}>
       {list.heading && <h2 id={`${list.id}-title`}>{list.heading}</h2>}
       <ul class="writing-entries" role="list">
         {list.entries.map((entry) => <li>
@@ -28,6 +30,7 @@ const entryLine = ({ data }: CollectionEntry<"writing">) => [data.author, indexD
           <p>{entry.data.summary ?? entry.data.description}</p>
         </li>)}
       </ul>
-    </section>)}
+    </Wrapper>;
+    })}
   </div>
 </BaseLayout>
