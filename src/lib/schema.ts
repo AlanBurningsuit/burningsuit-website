@@ -45,8 +45,9 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
   ];
 }
 
-/** An Article for an essay or case study; the author is Alan unless the page names another writer. */
-export function articleNode(opts: { siteUrl: string; pageUrl: string; headline: string; description: string; author?: string }): SchemaNode {
+/** An Article for an essay or case study; the author is Alan unless the page names another writer. Dates are ISO 8601
+    at the precision the source gives (an archive post's "2021-03"), never padded to a day the source doesn't state. */
+export function articleNode(opts: { siteUrl: string; pageUrl: string; headline: string; description: string; author?: string; datePublished?: string; dateModified?: string }): SchemaNode {
   return compact({
     "@type": "Article",
     "@id": `${opts.pageUrl}#article`,
@@ -57,12 +58,15 @@ export function articleNode(opts: { siteUrl: string; pageUrl: string; headline: 
     isPartOf: { "@id": websiteId(opts.siteUrl) },
     author: !opts.author || opts.author === FOUNDER.name ? { "@id": personId(opts.siteUrl) } : { "@type": "Person", name: opts.author },
     publisher: { "@id": orgId(opts.siteUrl) },
+    datePublished: opts.datePublished,
+    dateModified: opts.dateModified,
     inLanguage: "en-GB",
   });
 }
 
-/* Page-specific nodes. Every value comes from what the page shows: no prices or offers (training prices never enter
-   structured data), no dates or capacities the page doesn't state. */
+/* Page-specific nodes. Every value comes from what the page shows, except that structured data carries no prices or
+   offers: prices are public, but only as page text from src/config/training-prices.json. No dates or capacities the
+   page doesn't state. */
 
 /** A course page: what it is, who runs it, and how and for how many it runs. */
 export function courseNode(opts: {

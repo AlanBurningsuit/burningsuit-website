@@ -6,6 +6,7 @@ import { ANALYTICS } from "./src/config/analytics.mjs";
 import { redirects } from "./src/config/compatibility.mjs";
 import { formActionSource } from "./src/config/enquiry.mjs";
 import llmsTxt from "./src/integrations/llms-txt.mjs";
+import { lastmodFor } from "./src/integrations/sitemap-lastmod.mjs";
 
 export default defineConfig({
   site: "https://burningsuit.co.uk",
@@ -14,7 +15,11 @@ export default defineConfig({
   integrations: [
     mdx({ smartypants: false, syntaxHighlight: false }),
     // Indexable pages only: the 404 and the enquiry results stay out, as do legacy redirect stubs.
-    sitemap({ filter: (page) => !/\/(404|enquiry-received|enquiry-error|subscribed)\/?$/.test(new URL(page).pathname) && !Object.keys(redirects).some((from) => new URL(page).pathname.replace(/\/$/, "") === from) }),
+    // Each URL's lastmod comes from src/integrations/sitemap-lastmod.mjs, or is left out when it can't be stated accurately.
+    sitemap({
+      filter: (page) => !/\/(404|enquiry-received|enquiry-error|subscribed)\/?$/.test(new URL(page).pathname) && !Object.keys(redirects).some((from) => new URL(page).pathname.replace(/\/$/, "") === from),
+      serialize: (item) => ({ ...item, lastmod: lastmodFor(item.url)?.toISOString() }),
+    }),
     // /llms.txt for AI answer engines, from the built pages' own titles and descriptions.
     llmsTxt(),
   ],

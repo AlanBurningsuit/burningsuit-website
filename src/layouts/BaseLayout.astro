@@ -16,6 +16,9 @@ interface Props {
   ogType?: "website" | "article";
   /** Keeps a page out of search: the 404 and the enquiry results. Every other page is indexed. */
   noindex?: boolean;
+  /** An article's dates for its JSON-LD (ISO 8601, at the source's precision). */
+  datePublished?: string;
+  dateModified?: string;
   /** Page-specific JSON-LD nodes (a Course, the consultancy Service, About's ProfilePage), added to the identity graph. */
   schema?: SchemaNode[];
 }
@@ -26,6 +29,8 @@ const {
   author,
   ogType = "website",
   noindex = false,
+  datePublished,
+  dateModified,
   schema: pageNodes = [],
 } = Astro.props;
 const siteUrl = Astro.site!.href;
@@ -38,7 +43,7 @@ const crumbs = section && BREADCRUMB_SECTIONS[section] && Astro.url.pathname.rep
   : [];
 const graph = [
   ...siteGraph(siteUrl),
-  ...(ogType === "article" ? [articleNode({ siteUrl, pageUrl: canonical, headline: pageName, description, author })] : []),
+  ...(ogType === "article" ? [articleNode({ siteUrl, pageUrl: canonical, headline: pageName, description, author, datePublished, dateModified })] : []),
   ...pageNodes,
   ...crumbs,
 ];

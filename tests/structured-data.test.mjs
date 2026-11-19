@@ -2,13 +2,17 @@
 // Page-specific JSON-LD must match what each page shows, carry no prices, and reference only nodes in its own graph.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { parse } from "yaml";
 import { decodeHTML } from "entities";
 import { BREADCRUMB_SECTIONS } from "../src/config/site.ts";
 import { RUN } from "../src/config/course-run.mjs";
 import { INDEXNOW_KEY } from "../src/config/indexnow.mjs";
 import { indexedPages, llmsTxt } from "../src/integrations/llms-txt.mjs";
+import { hasFullHistory } from "../src/integrations/sitemap-lastmod.mjs";
+import { writingRoutes } from "../src/config/writing-routes.mjs";
 
 const dist = "dist";
 const site = "https://burningsuit.co.uk";
@@ -106,6 +110,53 @@ test("llms.txt is generated from the built pages and lists exactly the sitemap's
   const sitemap = locs(readFileSync(join(dist, "sitemap-0.xml"), "utf8")).filter((url) => url !== `${site}/`).sort();
   assert.deepEqual(listed, sitemap);
   assert.doesNotMatch(written, /[£$€]|\bGBP\b|ex VAT|founding rate/i);
+});
+
+const frontmatter = (id) => parse(readFileSync(`src/content/writing/${id}.mdx`, "utf8").match(/^---\n([\s\S]*?)\n---/)[1]);
+const isoDay = (value) => new Date(value).toISOString().slice(0, 10);
+
+test("each article's dates come from its frontmatter at the source's precision and agree with what the page shows", () => {
+  for (const [id, route] of Object.entries(writingRoutes)) {
+    const path = `/${route}/`;
+    const data = frontmatter(id);
+    const article = node(path, "Article");
+    if (data.kind === "archive") {
+      // Month only, as the byline shows it; no day or modification date the source doesn't give.
+      assert.match(article.datePublished, /^\d{4}-\d{2}$/);
+      assert.equal(article.datePublished, data.archiveMonth);
+      assert(html(path).includes(`<time datetime="${data.archiveMonth}">`), `${path}: the month is on the page`);
+      assert.equal(article.dateModified, undefined);
+    } else {
+      assert.equal(article.datePublished, isoDay(data.datePublished));
+      assert.equal(article.dateModified, isoDay(data.dateModified));
+      assert(article.dateModified >= article.datePublished);
+      // The page shows no publication date, so no visible date may contradict the JSON-LD's.
+      for (const [, datetime] of html(path).matchAll(/<time datetime="([^"]+)"/g)) {
+        assert(data.givenAt.some(({ date }) => isoDay(date) === datetime), `${path}: unexpected visible date ${datetime}`);
+      }
+    }
+  }
+});
+
+test("the sitemap's lastmod dates are accurate: content dates for writing, the last commit for other pages, or none", () => {
+  const entries = [...readFileSync(join(dist, "sitemap-0.xml"), "utf8").matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, entry]) => ({
+    url: entry.match(/<loc>([^<]+)<\/loc>/)[1],
+    lastmod: entry.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1],
+  }));
+  const lastmod = (path) => entries.find((entry) => entry.url === site + path)?.lastmod;
+  for (const entry of entries) if (entry.lastmod) assert(new Date(entry.lastmod) <= new Date(), `${entry.url}: lastmod in the future`);
+  for (const [id, route] of Object.entries(writingRoutes)) {
+    const data = frontmatter(id);
+    const expected = data.dateModified ?? data.datePublished;
+    assert.equal(lastmod(`/${route}/`), expected ? new Date(expected).toISOString() : undefined, `${route}: lastmod is its content date`);
+  }
+  const commitDate = (...files) => new Date(execFileSync("git", ["log", "-1", "--format=%cI", "--", ...files], { encoding: "utf8" }).trim()).toISOString();
+  const clean = (...files) => execFileSync("git", ["status", "--porcelain", "--", ...files], { encoding: "utf8" }) === "";
+  const standing = { "/about/": ["src/pages/about.astro"], "/work/contact-centre/": ["src/pages/work/[slug].astro", "src/content/work/contact-centre.mdx"], "/training/power-bi-with-ai-agents-101/": ["src/pages/training/power-bi-with-ai-agents-101.astro", "src/config/course-run.mjs", "src/lib/training-prices.mjs", "src/config/training-prices.json"] };
+  for (const [path, files] of Object.entries(standing)) {
+    // Without full history, or with an uncommitted change, the date isn't known, so there must be none.
+    assert.equal(lastmod(path), hasFullHistory() && clean(...files) ? commitDate(...files) : undefined, `${path}: lastmod`);
+  }
 });
 
 test("the IndexNow key file is published with the configured key", () => {
