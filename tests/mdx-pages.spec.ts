@@ -121,6 +121,7 @@ test("essay appearances and all four unchanged responsive diagrams retain their 
 
 test("archive retains month precision, original section anchors and fixed URL", async ({ page }) => {
   await page.goto(archive);
+  await expect(page.locator(".title-band .standfirst")).toHaveText("Roche's Maxim is Matthew Roche's rule for where to change your data in Power BI: as far upstream (near the source) as possible, and as far downstream (near the report) as necessary.");
   await expect(page.locator(".article-byline")).toHaveText("Stuart Box · March 2021");
   await expect(page.locator("time")).toHaveCount(1);
   await expect(page.locator("time")).toHaveAttribute("datetime", "2021-03");
