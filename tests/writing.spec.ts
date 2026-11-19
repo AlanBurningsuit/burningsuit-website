@@ -40,7 +40,7 @@ test("Writing is an indexed list generated from the collection: articles, then t
   ]);
   await expect(lists.nth(1).locator(".writing-entry-meta")).toHaveText(["Stuart Box · March 2021", "Alison Box · October 2020", "Alison Box · January 2020", "Alison Box · May 2019", "Alison Box · April 2019, revised July 2022"]);
   await expect(lists.nth(1).locator("p:not(.writing-entry-meta)")).toHaveText([
-    "Roche's Maxim: transform data as far upstream as possible, as far downstream as necessary. Stuart Box's 2021 post, which Matthew Roche credited as the first on it.",
+    "Roche's Maxim: transform data as far upstream as possible, as far downstream as necessary. Stuart Box's 2021 post, which Matthew Roche credited as the first.",
     "Use ISINSCOPE to give Power BI matrix subtotals their own calculation, such as % of parent row total, and give each subtotal level its own label.",
     "Count how many customers' total sales fall into each numeric range, or bin, with an unrelated table of ranges and one DAX measure in Power BI.",
     "Find your top or bottom 10 percent of customers by sales in DAX: rank them with RANKX, then use a fixed percentage or slicers that choose it.",

@@ -35,7 +35,7 @@ const paragraphs = [
 const links = [
   ENQUIRY.privacyPath, email, "https://umami.is/privacy", "https://umami.is/dpa", "#optout",
   "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
-  "https://cal.com/privacy", "#email", "https://stripe.com/gb/privacy", "https://kit.com/privacy", "https://kit.com/dpa", "https://privacy.microsoft.com/en-gb/privacystatement",
+  "https://cal.com/privacy", "#email", "https://stripe.com/gb/privacy", "https://kit.com/privacy", "https://kit.com/dpa", "https://www.microsoft.com/en-gb/privacy/privacystatement",
   "#optout", email, "https://ico.org.uk/make-a-complaint/",
 ];
 // Pages that render the shared footer.

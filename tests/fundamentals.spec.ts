@@ -13,7 +13,7 @@ test("Fundamentals page stays static, private, price-safe and CSP-clean", async 
   const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
-  await expect(page).toHaveTitle("Power BI fundamentals training course for teams | burningsuit");
+  await expect(page).toHaveTitle("Power BI fundamentals: training for teams | burningsuit");
   const baseDescription = "A two-day private Power BI course for teams new to it, online or on site: build an interactive report, prepare its data and learn how it's shared.";
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", baseDescription);
   await expectIndexable(page);
