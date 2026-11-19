@@ -16,8 +16,8 @@ test("DAX fundamentals page stays static, private, price-safe and CSP-clean", as
   const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
-  await expect(page).toHaveTitle("DAX fundamentals | burningsuit");
-  const baseDescription = "A one-day private course for teams who build reports in Power BI but haven't written DAX yet: learn why a measure returns the number it does, and when to use a measure instead of a calculated column.";
+  await expect(page).toHaveTitle("DAX fundamentals: Power BI DAX training course | burningsuit");
+  const baseDescription = "A one-day first DAX course for Power BI teams, online or on site: why a measure returns the number it does, and when to use one instead of a calculated column.";
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", baseDescription);
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);

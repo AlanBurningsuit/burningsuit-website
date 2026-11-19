@@ -11,8 +11,8 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
-  await expect(page).toHaveTitle("Power BI consultancy | burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", `Power BI consultancy done with your team, on your own data, models and reports, so the team can run it without me afterwards.`);
+  await expect(page).toHaveTitle("Power BI consultancy in the UK | burningsuit");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", `Power BI consultancy in the UK, done with your team on your own data, models and reports, so the team can run it without me afterwards.`);
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);

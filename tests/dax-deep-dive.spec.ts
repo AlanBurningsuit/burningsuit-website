@@ -16,8 +16,8 @@ test("DAX deep dive page stays static, private, price-safe and CSP-clean", async
   const watch = await watchPage(page);
   expect((await page.goto(route))?.status()).toBe(200);
   await page.evaluate(() => document.fonts.ready);
-  await expect(page).toHaveTitle("DAX deep dive | burningsuit");
-  const baseDescription = "A two-day private course for teams who already write measures in Power BI: learn why your measures return the numbers they do, and how to make them return the ones you need.";
+  await expect(page).toHaveTitle("DAX deep dive: two-day DAX course for Power BI | burningsuit");
+  const baseDescription = "A two-day DAX course for Power BI teams who already write measures, online or on site: why they return the numbers they do, and how to get the ones you need.";
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", baseDescription);
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);

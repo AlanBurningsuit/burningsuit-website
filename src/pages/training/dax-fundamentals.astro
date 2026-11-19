@@ -17,12 +17,12 @@ import "../../styles/dax-course.css";
 const priced = trainingPriceCopy();
 const { description, schema } = privateCourse(Astro.site!, Astro.url.pathname, {
   name: "DAX fundamentals",
-  summary: "A one-day private course for teams who build reports in Power BI but haven't written DAX yet: learn why a measure returns the number it does, and when to use a measure instead of a calculated column.",
+  summary: "A one-day first DAX course for Power BI teams, online or on site: why a measure returns the number it does, and when to use one instead of a calculated column.",
   workload: "P1D",
 });
 ---
 <BaseLayout
-  title="DAX fundamentals | burningsuit"
+  title="DAX fundamentals: Power BI DAX training course | burningsuit"
   description={description}
   schema={schema}
 >

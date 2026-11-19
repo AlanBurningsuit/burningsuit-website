@@ -16,13 +16,13 @@ import "../../styles/ai-agents-101.css";
 const { email } = ENQUIRY;
 // The private course has no price slot on this page; its email ask stays.
 const priced = trainingPriceCopy();
-const description = "Half a day, live online. You get an agent to explain a prepared report you've never seen and write notes on its calculations.";
+const description = "A half-day live online course for people who look after Power BI reports: get an AI agent to explain a report you've never seen and note its calculations.";
 const seat = seatAction(RUN);
 // The run's dates come from src/config/course-run.mjs (tests/structured-data.test.mjs compares them with the page).
 const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI with AI agents 101", description, modes: [RUN.schemaMode], workload: "PT3H", maxPeople: RUN.maxPeople, run: RUN.schemaRun })];
 ---
 <BaseLayout
-  title="Power BI with AI agents 101 | burningsuit"
+  title="Power BI with AI agents 101: live online course | burningsuit"
   description={description}
   schema={schema}
 >

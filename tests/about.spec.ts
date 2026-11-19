@@ -47,7 +47,7 @@ test("About keeps the approved wording, headings and anchors", async ({ page }) 
     "burningsuit was my parents' Power BI training business. My mum and dad, Alison and Stuart, handed it over to me and they're properly retired now, so it's me. It's still a training business at heart. I teach Power BI and how to work with AI agents on it, with consultancy alongside, and the reason it exists hasn't changed.",
     "As my mum said, burningsuit was for \"everyone else\": people who just want to get a job done. That's still who it's for.",
     "Last thing: this is Zelda, who I'm told is Chief Morale Officer. She's no use at all with the DAX, but she's very good at making me get up and go outside now and then, which honestly does more for the work than you'd think.",
-    "Find a course, or read about consultancy. You can also email me or use the enquiry form, and I'm on LinkedIn too.",
+    "Find a course, or read about Power BI consultancy. You can also email me or use the enquiry form, and I'm on LinkedIn too.",
   ]);
   // No inherited offer, unbuilt destination or invented signoff creeps back in.
   const text = await page.locator("main").innerText();
@@ -103,7 +103,7 @@ test("About links: courses first, consultancy second, then email, the form and L
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   expect(mainLinks).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
   await expect(page.getByRole("link", { name: "Find a course", exact: true })).toHaveAttribute("href", "/training/");
-  await expect(page.getByRole("link", { name: "read about consultancy", exact: true })).toHaveAttribute("href", "/power-bi/");
+  await expect(page.getByRole("link", { name: "Power BI consultancy", exact: true })).toHaveAttribute("href", "/power-bi/");
   // Profile aliases keep landing here; contact aliases now lead to the Contact page.
   for (const alias of ["/team-member/alan-harman-box", "/about-us/our-trainers"]) expect(redirects[alias as keyof typeof redirects]).toBe("/about/");
 });
