@@ -1,0 +1,36 @@
+---
+// Writing: every entry in the Writing collection, generated so a new article appears without editing this page. Archive
+// entries (`kind: archive`) are listed under "From the archive"; everything else in the main list. Newest first in both.
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TitleBand from "../../components/TitleBand.astro";
+import { headingText } from "../../lib/study-heading";
+import { indexDateLine, newestFirst, writingPath } from "../../lib/writing";
+import "../../styles/articles.css";
+const entries = (await getCollection("writing")).sort(newestFirst);
+const lists = [
+  { id: "articles", entries: entries.filter(({ data }) => data.kind !== "archive") },
+  { id: "archive", heading: "From the archive", entries: entries.filter(({ data }) => data.kind === "archive") },
+];
+const entryLine = ({ data }: CollectionEntry<"writing">) => [data.author, indexDateLine(data)].filter(Boolean).join(" · ");
+---
+<BaseLayout title="Writing | burningsuit" description="Articles on Power BI, DAX and AI from burningsuit, and an archive of older posts by Alison Box and Stuart Box.">
+  <TitleBand heading="Writing">
+    <Fragment slot="standfirst">Articles on Power BI, DAX and AI, newest first. burningsuit's older posts are in the archive below.</Fragment>
+  </TitleBand>
+  <div class="writing-index wrap">
+    {lists.map((list) => {
+      const Wrapper = list.heading ? "section" : "div";
+      return <Wrapper class="writing-list" aria-labelledby={list.heading ? `${list.id}-title` : undefined}>
+      {list.heading && <h2 id={`${list.id}-title`}>{list.heading}</h2>}
+      <ul class="writing-entries" role="list">
+        {list.entries.map((entry) => <li>
+          {list.heading ? <h3><a href={writingPath(entry)}>{headingText(entry.data.heading)}</a></h3> : <h2><a href={writingPath(entry)}>{headingText(entry.data.heading)}</a></h2>}
+          <p class="writing-entry-meta">{entryLine(entry)}</p>
+          <p>{entry.data.summary ?? entry.data.description}</p>
+        </li>)}
+      </ul>
+    </Wrapper>;
+    })}
+  </div>
+</BaseLayout>

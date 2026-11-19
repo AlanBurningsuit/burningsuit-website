@@ -1,0 +1,176 @@
+---
+kind: archive
+author: "Alison Box"
+datePublished: 2019-05-19
+# dateModified: when the dated update notes were added.
+dateModified: 2026-11-19
+title: "Top or bottom N percent in DAX | burningsuit"
+description: "Find your top or bottom 10 percent of customers by sales in DAX: rank them with RANKX, then use a fixed percentage or slicers that choose it."
+heading: "Best and worst: two approaches to finding top or bottom N percent using DAX"
+kicker: "Archive"
+updateNotice: "This post has dated update notes, including a correction to the measure in Approach No. 2."
+---
+{/* Alison Box's published text, kept word for word (source and removals: the ops repo's site/writing-restored-posts-copy.md). Update notes are the only added text. */}
+
+<div class="archive-prose wrap">
+
+Ever wanted to find which are your best or worst customers or best or worst products by a metric such as Total Sales? Finding a simple TopN or BottomN (e.g. Top 10 Customers) in Power BI Desktop couldn't be easier; just use the TopN Filter:-
+
+<Screenshot src="find-top-or-bottom-n-percent-dax/01-top-n-filter.png" alt="A table of ten customers and their _Total Sales, beside the Filters pane where CUSTOMERNAME has filter type Top N, showing the top 10 by _Total Sales." />
+
+But what about finding Top 10 ***Percent of a value like Total Sales***? As the number of our customers or our products grows over time, finding a simple Top 10 or Bottom 10 of a value may not be as insightful as finding the Top 10 ***Percent*** or Bottom 10 ***Percent***.
+
+So how do you go about finding Top or Bottom Percent of a value?
+
+There many ways to do this, here are a couple; a basic approach that just finds a specific percentage (e.g. Top 10% or Top 20%) and a more dynamic approach that allows you to use slicers to select the percentage you're after.
+
+Both these approaches require the creation of a ***calculated column*** that ranks your customers or products by best and by worst. To do this, go to your Customers or Products table and select the "**New Column**" button on the Modelling tab.
+
+For Top Percentage you'll need to rank your customers by best first, use this DAX expression:-
+
+```dax
+Customers Ranked Top = RANKX (Customers,[_Total Sales])
+```
+
+For bottom Percent, reverse the ranking to get worst first, use this DAX expression:-
+
+```dax
+Customers Ranked Bottom = RANKX (Customers,[_Total Sales] , , ASC)
+```
+
+Now let's look at calculating the Top 10% of Customers by their Total Sales, firstly by finding a specific percentage and then being able to select different percentages.
+
+{/* copy-lint-ignore –: Alison Box's original heading, preserved */}
+## Approach No. 1 – Finding a Specific Percentage e.g. Top 10%
+
+To do this, create two Measures using the New Measure button on the Modelling tab.
+
+This is the DAX measure you need for Top 10%:-
+
+```dax
+Top 10 Percent =
+VAR Rank_To_Find = COUNTROWS ( ALL ( Customers) ) * 0.1
+RETURN
+    CALCULATE ( [_Total Sales] ,
+         FILTER ( Customers,Customers[Customers Ranked Top]<= Rank_To_Find))
+```
+
+….And this is the measure for Bottom 10%:-
+
+```dax
+Bottom 10 Percent =
+VAR Rank_To_Find = COUNTROWS ( ALL ( Customers) ) * 0.1
+RETURN
+    CALCULATE ( [_Total Sales] ,
+         FILTER ( Customers,Customers[Customers Ranked Bottom]<= Rank_To_Find))
+```
+
+Now to explain the how these measures work. The **COUNTROWS** and **ALL** functions count ***all*** the rows of the Customers table e.g there are 84 row in the Customers table. The total number of customers is multiplied by the percent you want divided by 100 e.g. for our 84 Customers this would be 84 * (10 / 100) = 8.4. So we need to find the Top 8 Customers by Total Sales (I've rounded the 8.4 up to 8). The **CALCULATE** and **FILTER** functions filter out customers whose rank falls within this value i.e. ranked between 1 and 8. For Bottom 10%, this would just be the Customers whose Bottom rank falls from 1 to 8.
+
+<UpdateNote>
+
+**Update, November 2026:** 8.4 is rounded down to 8, not up. The filter keeps every rank that is 8.4 or less, which is ranks 1 to 8.
+
+</UpdateNote>
+
+These are what these measures look like when placed in Table Visuals.
+
+<Screenshot src="find-top-or-bottom-n-percent-dax/02-top-10-percent-table.png" alt="A table of the eight customers returned by Top 10 Percent, from Morristown & Co at £822,468 down to Plattsburgh Ltd at £716,334, totalling £6,086,831." />
+
+<Screenshot src="find-top-or-bottom-n-percent-dax/03-bottom-10-percent-table.png" alt="A table of the eight customers returned by Bottom 10 Percent, from Landstuhl Ltd at £382,798 up to Fort Atkinson & Co at £422,392, totalling £3,252,872." />
+
+However, this assumes that you want to find the Top TEN percent. What about Top 20%, 30%, 40% etc or even Bottom percentages?
+
+{/* copy-lint-ignore –: Alison Box's original heading, preserved */}
+## Approach No. 2 – Using Slicers to Find Different Percentages
+
+This approach requires two steps:-
+
+1. Create the slicers to select which Percentage and whether Top or Bottom
+2. Create the Measure for the Top or Bottom Percent selected from the slicers
+
+### Create slicers to select which Percentage and whether Top or Bottom
+
+To create these slicers, you need to create two tables, using the "**Enter Data**" button on the Home tab:-
+
+<Screenshot src="find-top-or-bottom-n-percent-dax/04-enter-data-button.png" alt="The Enter Data button." />
+
+I've called these tables "Percent" and "Top or Bottom". Both tables contain a single column (also called "Percent" and "Top or Bottom"), as show here:
+
+Percent Table
+
+Top or Bottom Table
+
+<Screenshot src="find-top-or-bottom-n-percent-dax/05-percent-table.png" alt="The Percent table, a single Percent column holding 5.00%, 10.00% and 20.00%." />
+
+<Screenshot src="find-top-or-bottom-n-percent-dax/06-top-or-bottom-table.png" alt="The Top or Bottom table, a single Top or Bottom column holding Top and Bottom." />
+
+*Note you will need to format the Percent column as Percentage (use the modelling tab and the % button in the formatting group)*
+
+<UpdateNote>
+
+**Update, November 2026:** The % button is now on the Column tools tab, in the Formatting group, when the Percent column is selected.
+
+</UpdateNote>
+
+Now create two slicers using the "Percent" column from the "Percent" table and the "Top or Bottom" column from the "Top or Bottom" table.
+
+<Screenshot src="find-top-or-bottom-n-percent-dax/07-slicers-bottom-5-percent.png" alt="Two slicers, Percent set to 5% and Top or Bottom set to Bottom, beside a table whose value column is headed Top or Bottom, listing four customers from Cheney & Co at £386,156 to Landstuhl Ltd at £362,998." />
+
+### Create the Measure to Find the Top or Bottom Percent selected in the Slicers
+
+Now create this measure:-
+
+<UpdateNote>
+
+**Update, November 2026:** This measure has its two rank columns the wrong way round. The corrected measure is in the update note below it.
+
+</UpdateNote>
+
+```dax
+Top/Bottom Percent =
+VAR Rank_To_Find = COUNTROWS ( ALL ( Customers) ) * SELECTEDVALUE('Percent'[Percent])
+VAR Top_or_Bottom = SELECTEDVALUE('Top or Bottom'[Top or Bottom])
+VAR Top_PC =CALCULATE ( [_Total Sales] ,
+                FILTER ( Customers,Customers[Customers Ranked Bottom]<= Rank_To_Find))
+VAR Bottom_PC = CALCULATE ( [_Total Sales] ,
+                FILTER ( Customers,Customers[Customers Ranked Top]<= Rank_To_Find))
+RETURN
+IF (Top_or_Bottom = "top", Top_PC, Bottom_PC)
+```
+
+<UpdateNote>
+
+**Update, November 2026:** In this measure, Top_PC filters on the Customers Ranked Bottom column and Bottom_PC on Customers Ranked Top, so choosing Top returns the bottom customers and choosing Bottom returns the top ones. Swap the two columns, so that each matches the measures in Approach No. 1:
+
+```dax
+Top/Bottom Percent =
+VAR Rank_To_Find = COUNTROWS ( ALL ( Customers ) ) * SELECTEDVALUE ( 'Percent'[Percent] )
+VAR Top_or_Bottom = SELECTEDVALUE ( 'Top or Bottom'[Top or Bottom] )
+VAR Top_PC =
+    CALCULATE ( [_Total Sales],
+        FILTER ( Customers, Customers[Customers Ranked Top] <= Rank_To_Find ) )
+VAR Bottom_PC =
+    CALCULATE ( [_Total Sales],
+        FILTER ( Customers, Customers[Customers Ranked Bottom] <= Rank_To_Find ) )
+RETURN
+    IF ( Top_or_Bottom = "top", Top_PC, Bottom_PC )
+```
+
+</UpdateNote>
+
+Use this measure in your Table visual and slice by Percent and Top or Bottom:-
+
+<Screenshot src="find-top-or-bottom-n-percent-dax/08-slicers-bottom-10-percent-result.png" alt="Slicers set to Bottom and 10.00%, beside a table whose value column is headed Bottom 10 Percent, listing eight customers from Barstow Ltd to Old Saybrook Ltd, totalling £3,252,872." />
+
+You'll see you can dynamically change whether to slice by Top percentage or Bottom percentage and you can also dynamically can change the Percentage value.
+
+So there it is; finding our best and worst with a little bit of DAX and slicers. This is what we love about Power BI that if we know how, getting to these insights is really quite simple.
+
+</div>
+
+<div class="archive-next wrap">
+
+To write measures like these yourself, [DAX fundamentals](/training/dax-fundamentals/) covers CALCULATE, FILTER and ALL, and [DAX deep dive](/training/dax-deep-dive/) covers writing measures with variables. Every course is on [Training](/training/).
+
+</div>

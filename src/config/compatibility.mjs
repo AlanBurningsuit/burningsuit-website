@@ -1,9 +1,7 @@
 // Existing URLs and anchors reserved during the rebuild; no page structure is prescribed.
 export const redirects = {
   "/ai-fit-for-teams": "/power-bi/#ai",
-  "/writing": "/writing/we-are-all-middle-management-now/",
-  "/blog/2019/04/7-secrets-of-the-matrix-visual": "/power-bi/",
-  "/blog/7-secrets-matrix-visual": "/power-bi/",
+  "/blog/7-secrets-matrix-visual": "/blog/2019/04/7-secrets-of-the-matrix-visual/",
   "/blog/7-secrets-line-chart": "/power-bi/",
   "/blog/2018/03/dax-how-to-use-a-slicer-to-select-different-measures": "/power-bi/",
   "/blog/2018/02/power-bi-free-vs-pro": "/power-bi/",
@@ -32,15 +30,14 @@ export const redirects = {
   "/who-we-are/person-power-bi-training": "/training/#coaching",
   "/who-we-are/how-we-train/online-powerbi-training": "/training/how-i-train/",
   "/who-we-are/our-clients": "/work/",
-  "/blog": "/power-bi/",
+  "/blog": "/writing/",
   "/blog/i-have-powerquery-using-power-query-call-rest-apis": "/power-bi/",
-  "/blog/categorising-measures-numeric-ranges-or-bins": "/power-bi/",
-  "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins": "/power-bi/",
+  "/blog/categorising-measures-numeric-ranges-or-bins": "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/",
   "/blog/2021/08/context-transition-where-the-row-context-becomes-a-filter-context": "/power-bi/",
   "/blog/2015/01/excel-power-pivot-just-how-big-is-big": "/power-bi/",
   "/blog/using-continuous-x-axis-column-charts-year-and-month-labels": "/power-bi/",
   "/power-bi-composite-models-whats-the-big-deal": "/power-bi/",
-  "/7-secrets-of-the-matrix-visual": "/power-bi/",
+  "/7-secrets-of-the-matrix-visual": "/blog/2019/04/7-secrets-of-the-matrix-visual/",
   "/training/power-bi-training/power-bi-fundamentals": "/training/power-bi-fundamentals/",
   "/blog/2020/07/7-secrets-of-the-pie-chart": "/power-bi/",
   "/blog/2021/06/charticulator-in-power-bi-1": "/power-bi/",
@@ -57,13 +54,16 @@ export const redirects = {
   "/blog/2018/12/power-bi-strictly-come-dancing-the-results": "/power-bi/",
   "/blog/2019/12/strictly-come-dancing-series-17-report-version-2-is-here": "/power-bi/",
   "/blog/2019/01/the-strictly-report-behind-the-scenes": "/power-bi/",
-  "/blog/2018/06/dax-how-to-group-measures-into-numeric-ranges": "/power-bi/",
+  "/blog/2018/06/dax-how-to-group-measures-into-numeric-ranges": "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/",
   "/blog/2020/11/how-dax-treats-nulls-zeros": "/power-bi/",
-  "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals": "/power-bi/",
-  "/blog/8th-secret-matrix-visual-controlling-calculations-and-labels-subtotals": "/power-bi/",
+  "/blog/8th-secret-matrix-visual-controlling-calculations-and-labels-subtotals": "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/",
   "/blog/2018/11/four-dax-functions-you-cant-live-without": "/power-bi/",
   "/context-transition-where-the-row-context-becomes-a-filter-context": "/power-bi/",
-  "/blog/2013/06/powerpivot-5-measure-for-measure": "/power-bi/"
+  "/blog/2013/06/powerpivot-5-measure-for-measure": "/power-bi/",
+  // 19 Nov 2026: Alison Box's restored posts take their aliases (and the 2018 numeric-ranges post, not restored, goes to
+  // its 2020 bins version); /blog leads to the Writing index.
+  "/blog/best-and-worst-two-approaches-finding-top-or-bottom-n-percent-using-dax": "/blog/2019/05/find-top-or-bottom-n-percent-dax/",
+  "/find-top-or-bottom-n-percent-dax": "/blog/2019/05/find-top-or-bottom-n-percent-dax/"
 };
 
 // Manifest routes that have their own page in src/pages; each keeps its reserved anchors (check:seo).
@@ -126,5 +126,10 @@ export const pages = {
   "work/individual-power-bi-coaching": [
     "rule-title"
   ],
-  "writing/we-are-all-middle-management-now": []
+  "writing/we-are-all-middle-management-now": [],
+  "writing": [],
+  "blog/2019/04/7-secrets-of-the-matrix-visual": [],
+  "blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals": [],
+  "blog/2020/01/categorising-measures-into-numeric-ranges-or-bins": [],
+  "blog/2019/05/find-top-or-bottom-n-percent-dax": []
 };

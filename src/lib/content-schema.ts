@@ -39,22 +39,42 @@ export const workSchema = z.object({
     }
   });
 
-// Fixed public paths are selected from the entry ID in writing-routes.mjs.
+const month = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/);
+
+// Public paths come from the entry ID: writingRoute in src/lib/writing.ts (writing-routes.mjs, else writing/<id>). `kind: archive` puts an entry in the
+// Writing index's "From the archive" list; every other entry joins the main list.
 export const writingSchema = z.object({
     kind: z.enum(["essay", "archive"]),
-    author: z.enum(["Alan Harman-Box", "Stuart Box"]),
+    author: z.enum(["Alan Harman-Box", "Stuart Box", "Alison Box"]),
     title: text, description: text,
-    heading: z.object({ before: z.string().optional(), em: text, after: z.string().optional() }).strict(),
+    /** The Writing index's line for the entry, when it should differ from the meta description. */
+    summary: text.optional(),
+    // An archive post's heading is plain unless its own title marks a word.
+    heading: z.union([text, z.object({ before: z.string().optional(), em: text, after: z.string().optional() }).strict()]),
     lead: text.optional(), kicker: text.default("Essay"),
-    archiveMonth: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).optional(),
+    archiveMonth: month.optional(),
+    /** The month an archive post's own author revised it, as its byline shows. */
+    revisedMonth: month.optional(),
+    /** The line under an archive post's byline saying it carries dated update notes. */
+    updateNotice: text.optional(),
     datePublished: z.coerce.date().optional(), dateModified: z.coerce.date().optional(),
-    givenAt: z.array(z.object({ event: text, date: z.coerce.date() }).strict()).optional(),
+    givenAt: z.array(z.object({ event: text, date: z.coerce.date() }).strict()).min(1).optional(),
   }).strict().superRefine((essay, ctx) => {
-    if (essay.kind === "archive" && (!essay.archiveMonth || essay.author !== "Stuart Box" || essay.datePublished || essay.dateModified || essay.givenAt)) {
-      ctx.addIssue({ code: "custom", message: "archive entries require their author and month-only context, without day-level metadata or appearances" });
+    // An archive post keeps its original author and the date precision its source gives: a month or a day, not both. Only
+    // a post dated to the day can carry a dateModified (when its update notes were added; see below).
+    if (essay.kind === "archive" && (essay.author === "Alan Harman-Box" || !essay.archiveMonth === !essay.datePublished || essay.givenAt)) {
+      ctx.addIssue({ code: "custom", message: "archive entries require their original author and either a month or a day of publication, without appearances" });
     }
-    if (essay.kind === "essay" && (essay.author !== "Alan Harman-Box" || !essay.lead || essay.archiveMonth)) {
-      ctx.addIssue({ code: "custom", message: "essays require their author and lead, without archive context" });
+    // Every entry is dated, so the Writing index can order and date it: an essay by a talk or its publication day (an
+    // archive post by its day or month, above).
+    if (essay.kind === "essay" && !essay.givenAt?.length && !essay.datePublished) {
+      ctx.addIssue({ code: "custom", message: "essays require a date: givenAt or datePublished" });
+    }
+    if (essay.kind === "essay" && (essay.author !== "Alan Harman-Box" || !essay.lead || essay.archiveMonth || essay.revisedMonth || essay.updateNotice || typeof essay.heading === "string")) {
+      ctx.addIssue({ code: "custom", message: "essays require their author, lead and marked heading, without archive context" });
+    }
+    if (essay.revisedMonth && (!essay.datePublished || essay.revisedMonth <= essay.datePublished.toISOString().slice(0, 7))) {
+      ctx.addIssue({ code: "custom", path: ["revisedMonth"], message: "revisedMonth must follow the day-level datePublished" });
     }
     if (essay.dateModified && !essay.datePublished) {
       ctx.addIssue({ code: "custom", path: ["dateModified"], message: "dateModified requires the original datePublished" });

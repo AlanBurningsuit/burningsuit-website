@@ -30,7 +30,7 @@ test("Work groups only the four active studies in the approved offer order", asy
   for (const link of await page.locator(".work-group h2 a").all()) expect(await link.evaluate(el => getComputedStyle(el).textDecorationLine)).toContain("underline");
 });
 
-test("contextual and footer links lead to the matching evidence and restored essay", async ({ page }) => {
+test("contextual and footer links lead to the matching evidence, the restored essay and Writing", async ({ page }) => {
   await page.goto("/work/");
   const headings = await page.locator(".work-entries h3 a").evaluateAll(all => Object.fromEntries(all.map(a => [a.getAttribute("href"), a.textContent])));
   const assertions: [string, string, string[]][] = [
@@ -51,7 +51,7 @@ test("contextual and footer links lead to the matching evidence and restored ess
   for (const route of ["/", "/work/", essay, archive]) {
     await page.goto(route);
     await expect(page.locator("footer").getByRole("link", { name: "Case studies", exact: true })).toHaveAttribute("href", "/work/");
-    await expect(page.locator("footer").getByRole("link", { name: "Essay: We're all middle management now", exact: true })).toHaveAttribute("href", essay);
+    await expect(page.locator("footer").getByRole("link", { name: "Writing", exact: true })).toHaveAttribute("href", "/writing/");
   }
 });
 

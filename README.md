@@ -42,8 +42,8 @@ Things to know:
 | Path | Role |
 | --- | --- |
 | `src/pages/*.astro`, `src/pages/training/*.astro`, `src/pages/privacy/*.astro` | Bespoke static pages: Home, Training, the four course pages, How I train, Consultancy (`power-bi.astro`), About, Contact, the free call (`call.astro`), the privacy notices, the enquiry results and the 404. |
-| `src/pages/work/`, `src/pages/writing/`, `src/pages/blog/2021/03/` | The Case studies index and study route, the essay route, and the Roche's Maxim archive article at its original URL. |
-| `src/content/work/`, `src/content/writing/` | MDX case studies and articles, with strict schemas in `src/lib/content-schema.ts` (`src/content.config.ts`). |
+| `src/pages/work/`, `src/pages/writing/`, `src/pages/blog/` | The Case studies index and study route; the Writing index (generated from the collection: archive entries, `kind: archive`, under "From the archive") and the essay route; and the archive articles (Stuart Box's and Alison Box's) at their original `/blog/` URLs. |
+| `src/content/work/`, `src/content/writing/` | MDX case studies and articles, with strict schemas in `src/lib/content-schema.ts` (`src/content.config.ts`). Archive articles' screenshots are PNGs in `src/assets/writing/<post>/`, placed with `<Screenshot>` (optimised to WebP at build); their dated notes use `<UpdateNote>`. |
 | `src/layouts/BaseLayout.astro` | Every page's shell: head, CSP, canonical link, JSON-LD, masthead and footer. `description` is required; `noindex` is only for the 404 and the enquiry results. |
 | `src/layouts/CaseStudyLayout.astro`, `EssayLayout.astro` | Layouts for the two MDX collections. |
 | `src/components/` | Shared parts: `Masthead`, `Footer`, `TitleBand` (every page's opening), `DecisionHero` (the four course pages' opening), `EnquiryForm`, `PrivateCourseClose` (the three private course pages' close, with `src/lib/private-course.ts` for their price, description and Course schema), `SeatBooking` (the 101's booking control), `PullQuote`, `StudyLinks`, `CourseFigure`, `EssayFigure`, `Chapter` and the case-study kit. `mdx-components.ts` passes the kit to MDX. |
@@ -54,7 +54,7 @@ Things to know:
 | `src/config/course-run.mjs` | The 101's public run: dates, capacity and status (see Course run). |
 | `src/config/analytics.mjs` | The Umami tag, which also feeds the CSP, and the names of the counted click events. |
 | `src/config/starting-courses.mjs` | The wording Home and Training share for the two starting courses, used through `src/components/CourseEntry.astro`. |
-| `src/config/writing-routes.mjs` | Fixed public URLs for the two articles. |
+| `src/config/writing-routes.mjs` | Fixed public URLs for the Writing entries. |
 | `src/config/indexnow.mjs`, `src/integrations/llms-txt.mjs` | IndexNow key; `/llms.txt`, written after the build from indexed pages' titles and descriptions. |
 | `src/config/training-prices.json`, `src/lib/training-prices.mjs` | The published prices, and the code that validates them and composes the price wording (see Prices). |
 | `src/styles/brand.css` | Brand tokens, copied byte for byte from the brand repo. Change them there first. |
@@ -78,7 +78,7 @@ Clicks towards a booking and on the enquiry form's Send are counted as named Uma
 
 ### Structured data and search
 
-`BaseLayout` gives every indexed page a canonical link, `og:url` and the JSON-LD identity graph; pages add their own nodes through its `schema` prop (a Course on each course page, a Service on `/power-bi/`, an ItemList on `/training/`, a ProfilePage on `/about/`, BreadcrumbLists below Training, Case studies and Privacy). Never put prices or offers in structured data. The 101's run dates in its schema come from `src/config/course-run.mjs`. The two articles' Article nodes carry `datePublished` and `dateModified` from their frontmatter; the Roche's Maxim archive has only its month (`archiveMonth`, as its byline shows) and no modification date. `@astrojs/sitemap` lists indexed pages; `robots.txt` names the sitemap. Each URL's `lastmod` comes from `src/integrations/sitemap-lastmod.mjs`: an article's content date, or for every other page the last commit touching its page file, case-study entry or the page data it imports (prices, the 101's run, the starting courses); shared layouts and components don't count. A page whose date isn't known (the month-only archive, a shallow clone, an uncommitted change) gets no `lastmod`, so both workflows check out full history. When an article's words change, update its `dateModified`. `tests/structured-data.test.mjs` covers JSON-LD, `/llms.txt` and IndexNow.
+`BaseLayout` gives every indexed page a canonical link, `og:url` and the JSON-LD identity graph; pages add their own nodes through its `schema` prop (a Course on each course page, a Service on `/power-bi/`, an ItemList on `/training/`, a ProfilePage on `/about/`, BreadcrumbLists below Training, Case studies and Privacy). Never put prices or offers in structured data. The 101's run dates in its schema come from `src/config/course-run.mjs`. Writing entries' Article nodes carry `datePublished` and `dateModified` from their frontmatter, at the precision the source gives: the Roche's Maxim archive has only its month (`archiveMonth`, as its byline shows) and no modification date; Alison Box's posts have their original day and, as `dateModified`, the day their dated update notes were added. `@astrojs/sitemap` lists indexed pages; `robots.txt` names the sitemap. Each URL's `lastmod` comes from `src/integrations/sitemap-lastmod.mjs`: an article's content date (found through `writingRoute` in `src/config/writing-routes.mjs`, so an essay at the default `/writing/<id>/` is covered), or for every other page the last commit touching its page file, case-study entry or the page data it imports (prices, the 101's run, the starting courses); shared layouts and components don't count. A page whose date isn't known (the month-only archive, a shallow clone, an uncommitted change) gets no `lastmod`, so both workflows check out full history. When an article's words change, update its `dateModified`. `tests/structured-data.test.mjs` covers JSON-LD, `/llms.txt` and IndexNow.
 
 ### Course run
 
@@ -94,7 +94,7 @@ The published prices are the ten rates in `src/config/training-prices.json`: two
 
 - `src/lib/training-prices.mjs` validates the file and fails the build on a missing, extra or malformed rate. It never falls back to "Price on request".
 - Prices are static HTML on Home, Training, the four course pages and Consultancy, never in structured data. Coaching and the private 101 say "Price on request".
-- `npm run check:prices` (in the gate, after the build) fails when an amount in the built HTML or text is not a tracked rate, when a tracked rate renders nowhere, or when coaching or the private 101 stop saying price on request. The essay's one figure is allowed on its own route in `scripts/check-prices.mjs`.
+- `npm run check:prices` (in the gate, after the build) fails when an amount in the built HTML or text is not a tracked rate, when a tracked rate renders nowhere, or when coaching or the private 101 stop saying price on request. The essay's one figure and the archive posts' sample sales figures are allowed on their own routes in `scripts/check-prices.mjs`.
 
 ## Publish
 
