@@ -68,6 +68,12 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 .study-evidence-label { color: var(--text-dim); font: 400 var(--label-size) / var(--lh-relaxed) var(--ff-note); }
 /* Evidence is marked by an amber rule down its left edge: no panel, ground or shadow, so it never competes with the cards. */
 .evidence-rule { border-left: var(--bw-spine) solid var(--accent); padding-left: 24px; }
+/* Code (case-study/Code.astro, MDX's <pre>): recessed on the raised surface behind an amber spine. Whitespace is kept; long
+   lines wrap, each source line hanging under its own indent. Case studies and archive articles share it. */
+.case-code { margin: 22px 0; padding: 18px 20px; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface-raised); border-left: var(--bw-spine) solid var(--accent); border-radius: var(--r-xs); font: 400 .9rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: 0; color: var(--text); }
+.case-code code { font: inherit; }
+.case-line { display: inline-block; width: 100%; padding-left: 6ch; text-indent: -6ch; }
+@media (max-width: 680px) { .case-code { margin-inline: -8px; padding: 14px 12px; font-size: .8rem; } }
 /* A pull quote: one anonymised line beside the offer it backs, smaller than a case study's evidence. */
 .pull-quote { max-width: 46rem; margin-top: 32px; padding-block: 4px; }
 .pull-quote blockquote p { max-width: 40ch; color: var(--text); font: 600 clamp(1.2rem, 1.9vw, 1.45rem) / var(--lh-tight) var(--ff-display); letter-spacing: var(--ls-display-tight); text-wrap: pretty; }

@@ -16,8 +16,13 @@ const fail = (rule, path) => failures.push(`${rule}  ${path}`);
 
 // An amount: a currency symbol, digits, separators and any decimals, or digits before a currency word.
 const AMOUNT = /[£€$]\s*\d+(?:,\d{3})*(?:\.\d+)?(?!\d)|\d+(?:,\d{3})*(?:\.\d+)?\s*(?:GBP|pounds|quid)\b/giu;
-// Amounts that are not prices, by built path. The essay's figure is part of an argument, not an offer.
-const OTHER_AMOUNTS = new Map([["writing/we-are-all-middle-management-now/index.html", ["£50"]]]);
+// Amounts that are not prices, by built path. The essay's figure is part of an argument, not an offer; the archive posts'
+// figures are the sample sales data in Alison Box's screenshots and their alt text.
+const OTHER_AMOUNTS = new Map([
+  ["writing/we-are-all-middle-management-now/index.html", ["£50"]],
+  ["blog/2019/05/find-top-or-bottom-n-percent-dax/index.html", ["£822,468", "£716,334", "£6,086,831", "£382,798", "£422,392", "£3,252,872", "£386,156", "£362,998"]],
+  ["blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/index.html", ["£1,008,450", "£4,060,900", "£8,780,825", "£4,719,925"]],
+]);
 
 const posix = (path) => path.split(sep).join("/");
 function walk(directory) {

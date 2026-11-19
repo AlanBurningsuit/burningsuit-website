@@ -61,3 +61,29 @@ test('archive metadata preserves month precision and its original author', () =>
     assert.equal(writingSchema.safeParse({ ...article, ...extra }).success, false);
   }
 });
+
+test("Alison Box's restored posts keep her byline, the day they were published and her own revision month", () => {
+  const ids = ['7-secrets-of-the-matrix-visual', 'the-8th-secret-of-the-matrix-visual', 'categorising-measures-into-numeric-ranges-or-bins', 'find-top-or-bottom-n-percent-dax'];
+  for (const id of ids) {
+    const article = frontmatter(`src/content/writing/${id}.mdx`);
+    assert.equal(writingSchema.safeParse(article).success, true, id);
+    assert.equal(article.kind, 'archive');
+    assert.equal(article.author, 'Alison Box');
+    assert.ok(article.updateNotice, id);
+    // A day and a month together, a later modification date, or no publication date at all fail closed.
+    for (const extra of [{ archiveMonth: '2019-04' }, { dateModified: '2026-11-19' }, { datePublished: undefined }, { author: 'Alan Harman-Box' }]) {
+      assert.equal(writingSchema.safeParse({ ...article, ...extra }).success, false, `${id} ${JSON.stringify(extra)}`);
+    }
+  }
+  const revised = frontmatter('src/content/writing/7-secrets-of-the-matrix-visual.mdx');
+  assert.equal(revised.revisedMonth, '2022-07');
+  for (const revisedMonth of ['2019-04', '2018-12', '2022-7']) assert.equal(writingSchema.safeParse({ ...revised, revisedMonth }).success, false);
+});
+
+test('an essay keeps its marked heading and carries no archive context', () => {
+  const essay = frontmatter('src/content/writing/we-are-all-middle-management-now.mdx');
+  assert.equal(writingSchema.safeParse(essay).success, true);
+  for (const extra of [{ heading: "We're all middle management now" }, { revisedMonth: '2026-11' }, { updateNotice: 'Example' }, { author: 'Alison Box' }]) {
+    assert.equal(writingSchema.safeParse({ ...essay, ...extra }).success, false, JSON.stringify(extra));
+  }
+});

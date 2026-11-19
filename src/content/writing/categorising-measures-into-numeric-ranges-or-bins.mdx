@@ -1,0 +1,93 @@
+---
+kind: archive
+author: "Alison Box"
+datePublished: 2020-01-22
+title: "Group a DAX measure into numeric ranges (bins) | burningsuit"
+description: "Count how many customers' total sales fall into each numeric range, or bin, with an unrelated table of ranges and one DAX measure in Power BI."
+heading: 'Categorising measures into numeric ranges or "bins"'
+kicker: "Archive"
+updateNotice: "This post has dated update notes where Power BI has changed, and where its screenshots have been lost."
+---
+{/* Alison Box's published text, kept word for word (source and removals: the ops repo's site/writing-restored-posts-copy.md). Update notes are the only added text. */}
+
+<div class="archive-prose wrap">
+
+<UpdateNote>
+
+**Update, November 2026:** The screenshots in this post have been lost. The text still refers to them. The table of ranges and the measure are needed to follow the post, so they are given below in update notes.
+
+</UpdateNote>
+
+We've often been asked if it's possible to group the results of a DAX measure into numeric ranges. For example, to group a Total Sales measure for each Customer into various numeric ranges, sometimes referred to as "bins". The answer is, yes it is, as you can see from the screenshot below:-
+
+In this screenshot, we can see that we have **five** customers whose Total Sales fall between 150,000 and 199,999 in 2019.
+
+## How did I do this?
+
+Firstly, my Data Model has a Customer's dimension related to the Sales Fact Table, as shown here. (So, if you wanted to create bins for your Product Totals, you would need to have a Product Dimension, for Regions, a Regions Dimension and so on)
+
+The measure I want to put into the bins is called "**Total Sales**" and uses this expression:-
+
+```dax
+Total Sales =SUM (Sales[TOTALSALES] )
+```
+
+Next up, I created a table that holds my Range names and Bin ranges. To do this, you could use an Excel Table, or use the "**Enter Data**" option on the Home Tab.
+
+<UpdateNote>
+
+**Update, November 2026:** The screenshot of this table is lost. A table with these three columns works with the measure below. The ranges here are an example, not the original's: Min Value is the lowest total in the range, and Max Value is where the next range starts. Set the last Max Value above any customer's total so that "and over" holds; 1,000,000,000 is used here.
+
+| Range Name | Min Value | Max Value |
+| --- | --- | --- |
+| 0 to 49,999 | 0 | 50000 |
+| 50,000 to 99,999 | 50000 | 100000 |
+| 100,000 to 149,999 | 100000 | 150000 |
+| 150,000 to 199,999 | 150000 | 200000 |
+| 200,000 and over | 200000 | 1000000000 |
+
+</UpdateNote>
+
+So it appears correctly sorted in the Table Visual, you'll need to sort the Range Name column by the Min Value column. To do this, use the "Sort by Column" button on the Modelling tab.
+
+<UpdateNote>
+
+**Update, November 2026:** Sort by Column is now on the Column tools tab, which appears when you select the Range Name column.
+
+</UpdateNote>
+
+I called this table "**Bins**" and it's **not** related to any other tables in the Model.
+
+The measure for "**No of Customers with these Total Sales**" is as follows
+
+<UpdateNote>
+
+**Update, November 2026:** The original measure was a screenshot that has been lost. This version is rebuilt from Alison's reply to a reader in April 2021, which gave a percentage version of it; the percentage part is taken out here.
+
+```dax
+No of Customers with these Total Sales =
+SUMX (
+    Bins,
+    COUNTROWS (
+        FILTER (
+            Customers,
+            [Total Sales] >= Bins[Min Value]
+                && [Total Sales] < Bins[Max Value]
+        )
+    )
+)
+```
+
+For each range, it counts the customers whose Total Sales are at least the Min Value and less than the Max Value. SUMX adds the ranges together, so the total row counts once each customer whose Total Sales falls inside one of the ranges. A customer with no sales in the year counts as zero, so they fall in a range that starts at 0.
+
+</UpdateNote>
+
+To see the bin results, I created a Table visual and placed the Range Names in the first column, then put the "No of Customers with these Total Sales" in the second column. I then used a slicer to slice by 2019
+
+</div>
+
+<div class="archive-next wrap">
+
+SUMX, COUNTROWS and FILTER, which this measure is built from, are covered in [DAX fundamentals](/training/dax-fundamentals/). Every course is on [Training](/training/).
+
+</div>

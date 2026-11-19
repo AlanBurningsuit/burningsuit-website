@@ -45,3 +45,43 @@
   .newsletter-form { grid-template-columns: minmax(0, 1fr); }
   .newsletter-form .button { justify-self: start; }
 }
+
+/* An archive post (Alison Box's restored posts): one reading column of preserved prose, its screenshots and code a
+   little wider, then the closing course line under a rule. */
+.archive-prose { padding-bottom: 20px; }
+.archive-prose > * { max-width: 66ch; }
+.archive-prose > :is(.screenshot, .case-code, .update-note) { max-width: 760px; }
+.archive-prose > * + * { margin-top: 1rem; }
+.archive-prose > h2 { margin-top: 52px; padding-top: 20px; border-top: var(--bw-spine) solid var(--text); }
+.archive-prose > h3 { margin-top: 36px; }
+.archive-prose > :is(ol, ul) { padding-left: 1.4em; }
+.archive-prose li + li { margin-top: 6px; }
+.screenshot { margin-block: 26px; }
+.screenshot img { border: var(--bw-hair) solid var(--rule); border-radius: var(--r-xs); }
+.archive-next { padding-block: 0 56px; }
+.archive-next p { max-width: 66ch; padding-top: 20px; border-top: var(--bw-hair) solid var(--rule); font-size: var(--raised-size); }
+
+/* A dated update note in an archive post: a lifted daylight card in the margin voice, so it reads as added later and
+   apart from the original author's text. Its code and tables sit recessed inside it. */
+.update-note { margin-block: 26px; padding: 18px 22px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); font: 400 var(--fact-size) / var(--lh-relaxed) var(--ff-note); }
+.update-note > * + * { margin-top: 12px; }
+.update-note strong:first-child { font: 600 1rem / var(--lh-snug) var(--ff-display); color: var(--accent-ink); }
+.update-note .case-code { margin-block: 14px 0; }
+.update-note table { border-collapse: collapse; font: 400 var(--compact-size) / var(--lh-snug) var(--ff-body); }
+.update-note :is(th, td) { padding: 6px 14px 6px 0; border-bottom: var(--bw-hair) solid var(--rule); text-align: left; vertical-align: top; }
+.update-note th { font-weight: 600; }
+@media (max-width: 680px) {
+  .update-note { margin-inline: -6px; padding: 14px 14px; }
+  .update-note :is(th, td) { padding-right: 8px; }
+}
+
+/* Writing: the generated list of articles, then "From the archive", as plain ruled entries. */
+.writing-index { padding-block: clamp(28px, 4vw, 48px) 72px; }
+.writing-list + .writing-list { margin-top: 56px; }
+.writing-list > h2 { padding-top: 20px; border-top: var(--bw-spine) solid var(--text); }
+.writing-entries { list-style: none; margin: 0; padding: 0; max-width: 72ch; }
+.writing-entries li { padding-block: 22px; border-bottom: var(--bw-hair) solid var(--rule); }
+/* A main-list title is an h2 (no section heading above it) at the note size, so both lists' titles match the item size. */
+.writing-entries h2 { font-size: var(--h2-note-size); line-height: var(--lh-snug); }
+.writing-entries p { margin-top: 8px; }
+.writing-entry-meta { color: var(--text-dim); font: 400 var(--fact-size) / var(--lh-relaxed) var(--ff-note); }

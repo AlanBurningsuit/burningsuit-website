@@ -18,13 +18,10 @@
 .case-study .case-prose { padding-top: 22px; border-top: var(--bw-hair) solid var(--rule); }
 .case-study .case-prose > p { max-width: 62ch; }
 
-/* A worked example: a lifted daylight card, the code recessed into it on the raised surface. */
+/* A worked example: a lifted daylight card, the code (app.css) recessed into it on the raised surface. */
 .case-teaching { margin-top: 30px; padding: 28px 30px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); }
 .case-teaching p { max-width: 60ch; }
 .case-teaching strong { font-family: var(--ff-display); font-weight: 600; color: var(--accent-ink); }
-.case-code { margin: 22px 0; padding: 18px 20px; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface-raised); border-left: var(--bw-spine) solid var(--accent); border-radius: var(--r-xs); font: 400 .9rem / var(--lh-relaxed) var(--ff-mono); letter-spacing: 0; color: var(--text); }
-.case-code code { font: inherit; }
-.case-line { display: inline-block; width: 100%; padding-left: 6ch; text-indent: -6ch; }
 
 /* The evidence, marked by the amber evidence rule (app.css): the quote, its attribution and the figures as plain text. */
 .case-evidence {
@@ -68,7 +65,6 @@ p.case-hint { margin-top: 0; }
   .case-opening { padding-block: 24px 36px; }
   .case-evidence blockquote p { font-size: 1.35rem; }
   .case-teaching { margin-inline: calc(var(--page-gutter) * -0.5); padding: 22px 18px; }
-  .case-code { margin-inline: -8px; padding: 14px 12px; font-size: .8rem; }
 }
 
 /* A named study's quote block, shown only once a client is cleared for naming. */
