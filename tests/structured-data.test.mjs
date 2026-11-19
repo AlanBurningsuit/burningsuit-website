@@ -121,7 +121,13 @@ test("each article's dates come from its frontmatter at the source's precision a
     const path = `/${route}/`;
     const data = frontmatter(id);
     const article = node(path, "Article");
-    if (data.kind === "archive") {
+    if (data.kind === "archive" && data.datePublished) {
+      // A post dated to the day: that day, as the byline shows it, and when its update notes were added.
+      assert.equal(article.datePublished, isoDay(data.datePublished));
+      assert(html(path).includes(`<time datetime="${article.datePublished}">`), `${path}: the day is on the page`);
+      assert.equal(article.dateModified, isoDay(data.dateModified));
+      assert(article.dateModified >= article.datePublished);
+    } else if (data.kind === "archive") {
       // Month only, as the byline shows it; no day or modification date the source doesn't give.
       assert.match(article.datePublished, /^\d{4}-\d{2}$/);
       assert.equal(article.datePublished, data.archiveMonth);
@@ -163,4 +169,19 @@ test("the sitemap's lastmod dates are accurate: content dates for writing, the l
 test("the IndexNow key file is published with the configured key", () => {
   assert.match(INDEXNOW_KEY, /^[0-9a-f]{32}$/);
   assert.equal(readFileSync(join(dist, `${INDEXNOW_KEY}.txt`), "utf8").trim(), INDEXNOW_KEY);
+});
+
+test("Alison Box's restored posts credit her, with her original day and the day the update notes were added", () => {
+  const expected = {
+    "7-secrets-of-the-matrix-visual": "2019-04-09",
+    "the-8th-secret-of-the-matrix-visual": "2020-10-26",
+    "categorising-measures-into-numeric-ranges-or-bins": "2020-01-22",
+    "find-top-or-bottom-n-percent-dax": "2019-05-19",
+  };
+  for (const [id, datePublished] of Object.entries(expected)) {
+    const article = node(`/${writingRoutes[id]}/`, "Article");
+    assert.deepEqual(article.author, { "@type": "Person", name: "Alison Box" }, id);
+    assert.equal(article.datePublished, datePublished, id);
+    assert.equal(article.dateModified, "2026-11-19", id);
+  }
 });

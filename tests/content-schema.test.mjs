@@ -70,8 +70,10 @@ test("Alison Box's restored posts keep her byline, the day they were published a
     assert.equal(article.kind, 'archive');
     assert.equal(article.author, 'Alison Box');
     assert.ok(article.updateNotice, id);
-    // A day and a month together, a later modification date, or no publication date at all fail closed.
-    for (const extra of [{ archiveMonth: '2019-04' }, { dateModified: '2026-11-19' }, { datePublished: undefined }, { author: 'Alan Harman-Box' }]) {
+    // The update notes date the modification; it may not precede the original day.
+    assert.equal(article.dateModified, '2026-11-19', id);
+    // A day and a month together, a modification before publication, or no publication date at all fail closed.
+    for (const extra of [{ archiveMonth: '2019-04' }, { dateModified: '2018-12-31' }, { datePublished: undefined }, { author: 'Alan Harman-Box' }]) {
       assert.equal(writingSchema.safeParse({ ...article, ...extra }).success, false, `${id} ${JSON.stringify(extra)}`);
     }
   }

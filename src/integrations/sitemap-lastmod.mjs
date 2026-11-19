@@ -4,11 +4,11 @@
 // page-specific data the page imports). Shared layouts and components don't count. With no full git history (a
 // shallow clone) or an uncommitted change to a source, the page gets no lastmod rather than a wrong one.
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, posix } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
-import { writingRoutes } from "../config/writing-routes.mjs";
+import { writingRoute } from "../config/writing-routes.mjs";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
 
@@ -55,8 +55,9 @@ function writingDate(id) {
 /** The lastmod for a built page URL, or undefined when it can't be stated accurately. */
 export function lastmodFor(url) {
   const route = new URL(url).pathname.replace(/^\/+|\/+$/g, "");
-  const writing = Object.entries(writingRoutes).find(([, path]) => path === route);
-  if (writing) return writingDate(writing[0]);
+  // Every Writing entry, at its fixed URL or the default writing/<id> (writingRoute), dates itself.
+  const writing = readdirSync(join(root, "src/content/writing")).filter((file) => file.endsWith(".mdx")).map((file) => file.slice(0, -4)).find((id) => writingRoute(id) === route);
+  if (writing) return writingDate(writing);
   const sources = pageSources(route);
   if (!sources.length || !hasFullHistory() || git(["status", "--porcelain", "--", ...sources]) !== "") return undefined;
   const date = git(["log", "-1", "--format=%cI", "--", ...sources]);

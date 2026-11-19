@@ -1,8 +1,9 @@
 /* Writing entries' dates and URLs, shared by EssayLayout (the byline), the Writing index (its lists) and the two
-   article routes. Each date is
-   shown at the precision its source gives: a day, or only a month. */
+   article routes. Each date is shown at the precision its source gives: a day, or only a month. */
 import type { CollectionEntry } from "astro:content";
-import { writingRoutes } from "../config/writing-routes.mjs";
+import { writingRoute } from "../config/writing-routes.mjs";
+
+export { writingRoute };
 
 type Writing = CollectionEntry<"writing">;
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -12,16 +13,6 @@ export const monthText = (month: string) => `${MONTHS[Number(month.slice(5, 7)) 
 /** A UTC date → "9 April 2019". */
 export const dayText = (date: Date) => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(date);
 export const isoDay = (date: Date) => date.toISOString().slice(0, 10);
-
-/** The entry's route without slashes: its fixed legacy URL from writing-routes.mjs, else writing/<id>. A route that
-    neither page file can build fails the build rather than linking somewhere that doesn't exist. */
-export function writingRoute(id: string): string {
-  const route: string = writingRoutes[id as keyof typeof writingRoutes] ?? `writing/${id}`;
-  if (!/^(writing\/[a-z0-9-]+|blog(\/[a-z0-9-]+)+)$/.test(route)) {
-    throw new Error(`Writing entry "${id}" has no buildable route (got "${route}"): use writing/<slug> or blog/<path> in src/config/writing-routes.mjs.`);
-  }
-  return route;
-}
 
 /** The entry's public path, with its trailing slash. */
 export const writingPath = (entry: Writing) => `/${writingRoute(entry.id)}/`;
