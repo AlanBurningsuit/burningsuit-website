@@ -2,10 +2,12 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { test, expect, otherScripts } from "./analytics";
 import { visualReview, expectIndexable, expectNoHorizontalScroll } from "./helpers";
+import { NEWSLETTER } from "../src/config/newsletter.mjs";
 import { redirects } from "../src/config/compatibility.mjs";
 
 // The Writing index and Alison Box's restored posts (approved copy: the ops repo's site/writing-restored-posts-copy.md).
 const essay = "/writing/we-are-all-middle-management-now/";
+const threeNumbers = "/writing/three-numbers/";
 const roche = "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/";
 const secrets = "/blog/2019/04/7-secrets-of-the-matrix-visual/";
 const eighth = "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/";
@@ -27,8 +29,8 @@ test("Writing is an indexed list generated from the collection: articles, then t
   await expect(page.locator(".title-band .standfirst")).toHaveText("Articles on Power BI, DAX and AI, newest first. burningsuit's older posts are in the archive below.");
   const lists = page.locator(".writing-entries");
   await expect(lists).toHaveCount(2);
-  expect(await lists.nth(0).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([essay]);
-  await expect(lists.nth(0).locator("li")).toHaveText(["We're all middle management now Alan Harman-Box · Talk, February 2026 Agentic development in Power BI: what an agent is, how far to trust its work, and what handing work to it costs."], { useInnerText: true });
+  expect(await lists.nth(0).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([threeNumbers, essay]);
+  await expect(lists.nth(0).locator("li")).toHaveText(["Data democracy or data demagoguery? Alan Harman-Box · November 2026 Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.", "We're all middle management now Alan Harman-Box · Talk, February 2026 Agentic development in Power BI: what an agent is, how far to trust its work, and what handing work to it costs."], { useInnerText: true });
   await expect(page.getByRole("heading", { level: 2, name: "From the archive" })).toBeVisible();
   expect(await lists.nth(1).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([roche, eighth, bins, topN, secrets]);
   await expect(lists.nth(1).locator("h3")).toHaveText([
@@ -50,7 +52,7 @@ test("Writing is an indexed list generated from the collection: articles, then t
   await expect(page.locator("main img, main form")).toHaveCount(0);
   await expect(page.locator(otherScripts)).toHaveCount(0);
   const sitemap = await (await page.request.get("/sitemap-0.xml")).text();
-  for (const route of ["/writing/", secrets, eighth, bins, topN]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
+  for (const route of ["/writing/", threeNumbers, secrets, eighth, bins, topN]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
 });
 
 test("/blog leads to Writing, and the restored posts' old addresses lead to them", async ({ page }) => {
@@ -156,3 +158,32 @@ test("DAX keeps its line breaks and indentation, and the corrected measure follo
 });
 
 visualReview("/writing/");
+
+// Alan's essay as approved (the ops repo's site/writing-three-numbers-copy.md): the prose as built hashes to the approved
+// text, its section headings are h2s, and it ends with the related links and the newsletter sign-up.
+test("the three-numbers essay renders Alan's approved prose, dated, with its headings and links", async ({ page }) => {
+  const articleProse = JSON.parse(readFileSync(new URL("./fixtures/article-prose.json", import.meta.url), "utf8"))["three-numbers"] as { paragraphCount: number; sha256: string };
+  expect((await page.goto(threeNumbers))?.status()).toBe(200);
+  await expectIndexable(page, { article: true });
+  await expect(page).toHaveTitle("AI dashboards: data democracy or demagoguery? | burningsuit");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.");
+  await expect(page.locator("h1")).toHaveText("Data democracy or data demagoguery?");
+  await expect(page.locator("h1 .em")).toHaveText("demagoguery");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("When anyone can have a dashboard by teatime");
+  await expect(page.locator(".article-byline")).toHaveText("Alan Harman-Box · 19 November 2026");
+  await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-19");
+  await expect(page.locator(".case-chapter h2")).toHaveText([
+    "I can see clearly now", "So what's new?", "Lies, damned lies, and dashboards", "Kicking and screaming",
+    "Say why before anything gets built", "Find out what has been decided for you", "Run a pre-mortem",
+    "Make the counter-dashboard ordinary", "Keep fewer dashboards, for longer, and look at them together", "Plus ça change",
+  ]);
+  const paras = (await page.locator(".article-intro p, .case-prose p").allTextContents()).map(squash);
+  expect(paras).toHaveLength(articleProse.paragraphCount);
+  expect(createHash("sha256").update(paras.join("\n")).digest("hex")).toBe(articleProse.sha256);
+  expect(await page.locator(".case-prose a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual(["/training/power-bi-with-ai-agents-101/", "/power-bi/", essay]);
+  await expect(page.locator("form.newsletter-form")).toHaveAttribute("action", NEWSLETTER.action);
+  await expect(page.locator("main img, iframe, astro-island, [style]")).toHaveCount(0);
+  await expect(page.locator(otherScripts)).toHaveCount(0);
+  await expectNoHorizontalScroll(page);
+});
+visualReview(threeNumbers);

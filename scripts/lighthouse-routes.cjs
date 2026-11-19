@@ -22,6 +22,7 @@ module.exports = [
   "/work/dax-deep-dive/",
   "/work/",
   "/writing/we-are-all-middle-management-now/",
+  "/writing/three-numbers/",
   "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/",
   "/writing/",
   "/blog/2019/04/7-secrets-of-the-matrix-visual/",
