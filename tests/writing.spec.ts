@@ -172,11 +172,19 @@ test("the three-numbers essay renders Alan's approved prose, dated, with its hea
   await expect(page.locator(".title-band .standfirst")).toHaveText("When anyone can have a dashboard by teatime");
   await expect(page.locator(".article-byline")).toHaveText("Alan Harman-Box · 19 November 2026");
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-19");
-  await expect(page.locator(".case-chapter h2")).toHaveText([
-    "I can see clearly now", "So what's new?", "Lies, damned lies, and dashboards", "Kicking and screaming",
+  await expect(page.locator(".case-chapter h2")).toHaveText(["I can see clearly now", "So what's new?", "Lies, damned lies, and dashboards", "Kicking and screaming", "Plus ça change"]);
+  // The five practices sit under "Kicking and screaming" as h3s in the prose column, not beside it.
+  await expect(page.locator('section[aria-labelledby="kicking-and-screaming"] .case-prose h3')).toHaveText([
     "Say why before anything gets built", "Find out what has been decided for you", "Run a pre-mortem",
-    "Make the counter-dashboard ordinary", "Keep fewer dashboards, for longer, and look at them together", "Plus ça change",
+    "Make the counter-dashboard ordinary", "Keep fewer dashboards, for longer, and look at them together",
   ]);
+  await expect(page.locator("h3")).toHaveCount(5);
+  // On wide screens a section's heading stays in view while its section is on screen; stacked on phones it scrolls normally.
+  const position = () => page.locator(".case-chapter h2").first().evaluate((el) => getComputedStyle(el).position);
+  await page.setViewportSize({ width: 1366, height: 900 });
+  expect(await position()).toBe("sticky");
+  await page.setViewportSize({ width: 390, height: 900 });
+  expect(await position()).toBe("static");
   const paras = (await page.locator(".article-intro p, .case-prose p").allTextContents()).map(squash);
   expect(paras).toHaveLength(articleProse.paragraphCount);
   expect(createHash("sha256").update(paras.join("\n")).digest("hex")).toBe(articleProse.sha256);

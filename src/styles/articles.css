@@ -7,7 +7,8 @@
 .article-intro p { max-width: 66ch; font-size: var(--lead-size); }
 .reading-article { padding-bottom: 36px; }
 .reading-article .case-chapter { display: grid; grid-template-columns: minmax(0, .55fr) minmax(0, 1.45fr); gap: var(--column-gap); align-items: start; padding-block: 26px 52px; }
-.reading-article .case-chapter h2 { padding-top: 20px; border-top: var(--bw-spine) solid var(--text); }
+.reading-article .case-chapter h2 { padding-top: 20px; border-top: var(--bw-spine) solid var(--text); position: sticky; top: 24px; }
+.reading-article .case-prose h3 { max-width: 66ch; margin-block: 44px 14px; }
 .reading-article .case-prose { min-width: 0; padding-top: 20px; border-top: var(--bw-hair) solid var(--rule); }
 .reading-article .case-prose > p { max-width: 66ch; }
 .reading-article blockquote { margin-block: 24px; padding-left: 22px; border-left: var(--bw-spine) solid var(--accent); font-size: 1.15rem; }
@@ -23,6 +24,7 @@
 @media (max-width: 900px) {
   .reading-article .case-chapter { grid-template-columns: minmax(0, 1fr); gap: 18px; padding-block: 16px 36px; }
   .reading-article .case-prose { padding-top: 0; border-top: 0; }
+  .reading-article .case-chapter h2 { position: static; }
 }
 @media (max-width: 680px) {
   .essay-figure { padding: 12px; margin-inline: -6px; }
