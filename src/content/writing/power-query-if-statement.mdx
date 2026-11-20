@@ -7,7 +7,7 @@ heading:
   before: "How to write a Power Query "
   em: "if statement"
   after: " in Power BI"
-lead: "Use the Conditional column button on the Add column tab, or write `if condition then result else result` in a custom column. No brackets, all lowercase, and the else is required."
+lead: "Use the Conditional column button on the Add column tab, or write `if condition then result else result` in a custom column. No `IF()` brackets, lowercase keywords, and the else is required."
 # Provisional: set to the day it first goes live.
 datePublished: 2026-11-20
 course:
@@ -41,7 +41,7 @@ if [Amount] > 500 then "Large" else "Standard"
 
 Three things catch people:
 
-1. **Everything is lowercase.** `if`, `then` and `else`. M is case-sensitive: capitals give you an error, not a result.
+1. **The keywords are lowercase.** `if`, `then` and `else`. M is case-sensitive: capitalise a keyword and you get an error, not a result.
 2. **No brackets.** This isn't Excel's `IF(condition, true, false)`. It's `if condition then result else result`, flat on the line.
 3. **The else is required.** Every if needs one. Leave it out and the formula won't save.
 
@@ -59,7 +59,7 @@ And once you're in M you can do things the dialog can't. Say you want the discou
 if [Amount] > 500 and [CustomerGroup] = "Gold" then 0.1 else 0
 ```
 
-The dialog tests one column per clause. M can test whatever you can express. The [Power Query M reference](https://learn.microsoft.com/powerquery-m/m-spec-conditionals) has the full rules, if you want them.
+The dialog runs one test per clause. M can test whatever you can express. The [Power Query M reference](https://learn.microsoft.com/powerquery-m/m-spec-conditionals) has the full rules, if you want them.
 
 </Chapter>
 

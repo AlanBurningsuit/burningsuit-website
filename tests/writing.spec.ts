@@ -219,7 +219,7 @@ test("the MCP server article renders Alan's approved prose, its figure and its l
   await expect(page.locator("h1")).toHaveText("The Power BI MCP server, explained for people who don't code");
   await expect(page.locator(".title-band .eyebrow")).toHaveText("Article");
   await expect(page.locator("h1 .em")).toHaveText("explained");
-  await expect(page.locator(".title-band .standfirst")).toHaveText("A Power BI MCP server gives an AI agent tools to work on your Power BI model directly, querying it and changing it. Here's what that means, and why you don't necessarily need one to start.");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("A Power BI MCP server gives an AI agent tools to work on your Power BI model directly: querying it and, with Microsoft's Authoring server, changing it. Here's what that means, and why you don't necessarily need one to start.");
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
   await expect(page.locator(".case-chapter h2")).toHaveText(["We've got to install Microwave Ovens", "What you'd actually be setting up", "The risk you should know about", "Start with files", "The gap you'll feel", "Where to start"]);
   const paras = (await page.locator(".article-intro p, .case-prose > p").allTextContents()).map(squash);
@@ -230,7 +230,9 @@ test("the MCP server article renders Alan's approved prose, its figure and its l
   await expect(figure.locator("figcaption")).toHaveText("Figure 1: Three steps. Start with files. Climb to the next step when checking by hand starts to grate, not before.");
   await expect(figure.locator("img")).toHaveAttribute("alt", /Files only.*MCP server.*Desktop Bridge/);
   expect(await page.locator(".case-prose a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([
+    "https://learn.microsoft.com/power-bi/developer/mcp/power-bi-authoring-mcp",
     "https://learn.microsoft.com/en-us/power-bi/developer/mcp/mcp-servers-overview",
+    "https://learn.microsoft.com/power-bi/developer/agentic/power-bi-desktop-bridge-overview",
     essay, "/training/power-bi-with-ai-agents-101/", "/training/",
   ]);
   await expect(page.locator("form.newsletter-form")).toHaveAttribute("action", NEWSLETTER.action);
@@ -252,9 +254,9 @@ test("the Power Query if statement article renders Alan's approved prose, code, 
   await expect(page.locator("h1 .em")).toHaveText("if statement");
   await expect(page.locator(".title-band .eyebrow")).toHaveText("Article");
   // The lead's backtick span is code on the page; no backticks reach the head (meta or JSON-LD) or the visible lead.
-  await expect(page.locator(".title-band .standfirst code")).toHaveText(["if condition then result else result"]);
+  await expect(page.locator(".title-band .standfirst code")).toHaveText(["if condition then result else result", "IF()"]);
   expect(await page.locator("head").innerHTML()).not.toContain("`");
-  await expect(page.locator(".title-band .standfirst")).toHaveText("Use the Conditional column button on the Add column tab, or write if condition then result else result in a custom column. No brackets, all lowercase, and the else is required.");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("Use the Conditional column button on the Add column tab, or write if condition then result else result in a custom column. No IF() brackets, lowercase keywords, and the else is required.");
   // The closing band points to the course this article leads to, not the 101.
   await expect(page.locator(".article-related .links a").first()).toHaveAttribute("href", "/training/power-bi-fundamentals/");
   await expect(page.locator(".article-related")).not.toContainText("Power BI with AI agents 101");
