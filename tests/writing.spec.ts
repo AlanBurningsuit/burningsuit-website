@@ -180,7 +180,16 @@ test("the three-numbers essay renders Alan's approved prose, dated, with its hea
   const paras = (await page.locator(".article-intro p, .case-prose p").allTextContents()).map(squash);
   expect(paras).toHaveLength(articleProse.paragraphCount);
   expect(createHash("sha256").update(paras.join("\n")).digest("hex")).toBe(articleProse.sha256);
-  expect(await page.locator(".case-prose a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual(["/training/power-bi-with-ai-agents-101/", "/power-bi/", essay]);
+  expect(await page.locator(".case-prose a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([
+    "https://community.fabric.microsoft.com/blog/fbc_pbiupdatesblog/power-bi%E2%80%99s-next-chapter-the-evolution-of-business-intelligence/5369131",
+    "https://claude.com/resources/articles/dashboards-and-motion",
+    "https://doi.org/10.1006/ccog.1999.0386",
+    "https://doi.org/10.48550/arXiv.2310.13548",
+    "https://doi.org/10.1016/0005-1098(83)90046-8",
+    "https://hbr.org/2007/09/performing-a-project-premortem",
+    "https://doi.org/10.1037/a0016755",
+    "/training/power-bi-with-ai-agents-101/", "/power-bi/", essay,
+  ]);
   await expect(page.locator("form.newsletter-form")).toHaveAttribute("action", NEWSLETTER.action);
   await expect(page.locator("main img, iframe, astro-island, [style]")).toHaveCount(0);
   await expect(page.locator(otherScripts)).toHaveCount(0);
