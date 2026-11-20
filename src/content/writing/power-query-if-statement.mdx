@@ -1,0 +1,94 @@
+---
+kind: essay
+author: "Alan Harman-Box"
+title: "Power Query if statement in Power BI | burningsuit"
+description: "Use the Conditional column button or write if then else in M. How the Power Query if statement works in Power BI, with the common mistake that trips people up."
+heading:
+  before: "How to write a Power Query "
+  em: "if statement"
+  after: " in Power BI"
+lead: "Use the Conditional column button on the Add column tab, or write if condition then result else result in a custom column. No brackets, all lowercase, and the else is required."
+kicker: "Essay"
+# Provisional: set to the day it first goes live.
+datePublished: 2026-11-20
+---
+
+<Chapter id="the-button-that-writes-it-for-you" kicker="The button that writes it for you">
+
+Someone in a training room last week asked me how to write a Power Query if statement. They had a table of orders from half a dozen shops and wanted a new column: "Large" when the amount was over 500, something else for the rest. They were already reaching for the formula bar. I said: there's a button for that.
+
+In Power Query Editor, go to Add column and choose Conditional column. You pick the column, the operator and the value from dropdown lists, type your output, and fill in the else. For that order table: column name Amount, operator is greater than, value 500, output "Large", otherwise "Standard". Hit OK and the new column appears. The step runs again every time your data refreshes, so when new orders come in next week the column is already there.
+
+<Screenshot src="power-query-if-statement/add-conditional-column.png" alt="The Add conditional column dialog, with one clause testing whether Amount is greater than 500 and an else value of Standard." />
+
+Need more than two outcomes? Add clauses. The dialog tests them top to bottom: first match wins. Amount is greater than 1000, output "Priority"; Amount is greater than 500, output "Large"; otherwise "Standard". Three tiers, no code at all.
+
+Behind the button, Power Query wrote a line of M code. You can see it in the formula bar if you're curious. But you didn't need to type it, and for most if-then-else logic on a report, the dialog is the whole job.
+
+</Chapter>
+
+<Chapter id="when-you-need-to-write-it-yourself" kicker="When you need to write it yourself">
+
+The dialog runs out when your condition uses something the dropdowns can't express: checking whether text contains a word, comparing two columns with each other, or combining conditions the clause list can't handle. That's when you write M.
+
+Go to Add column, Custom column, and type the formula. Power Query's language is called M, and its if statement looks like this:
+
+```
+if [Amount] > 500 then "Large" else "Standard"
+```
+
+Three things catch people:
+
+1. **Everything is lowercase.** `if`, `then` and `else`. M is case-sensitive: capitals give you an error, not a result.
+2. **No brackets.** This isn't Excel's `IF(condition, true, false)`. It's `if condition then result else result`, flat on the line.
+3. **The else is required.** Every if needs one. Leave it out and the formula won't save.
+
+Nest them when you need more branches:
+
+```
+if [Amount] > 1000 then "Priority"
+else if [Amount] > 500 then "Large"
+else "Standard"
+```
+
+And once you're in M you can do things the dialog can't. Say you want the discount to depend on both the amount and the customer group:
+
+```
+if [Amount] > 500 and [CustomerGroup] = "Gold" then 0.1 else 0
+```
+
+The dialog tests one column per clause. M can test whatever you can express. The [Power Query M reference](https://learn.microsoft.com/powerquery-m/m-spec-conditionals) has the full rules, if you want them.
+
+</Chapter>
+
+<Chapter id="excel-muscle-memory" kicker="Excel muscle memory">
+
+Here's how it usually goes. Someone opens the Custom column box and types what they know from Excel:
+
+```
+IF([Amount] > 500, "Large", "Standard")
+```
+
+Expression.Error. M doesn't have an `IF()` function. So they close Power Query, switch to the model, and write a DAX calculated column instead:
+
+```dax
+Order Size = IF(Sales[Amount] > 500, "Large", "Standard")
+```
+
+That works, because DAX borrowed Excel's `IF()` syntax. The column appears, the report looks fine, and everyone moves on. Nothing is broken, and a modest model will cope with a few columns like this. But the logic has ended up in the model because the syntax felt familiar, not because the model was the best place for it.
+
+Both give you a column. Both recalculate on refresh. The difference is where the logic lives. In Power Query, the step sits alongside every other piece of data preparation: anyone who opens the editor can see it, check it, change it. Each step has a name, and the applied steps panel shows the whole pipeline in order. When someone inherits the report six months from now, they can read the preparation from top to bottom.
+
+A DAX calculated column sits in the model, away from the shaping steps, where you only find it if you go looking. If your logic is "categorise this row based on its own values", that's a structural change to the data, and by [Roche's maxim](/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/) it's best made as far upstream as you can, which in Power BI usually means Power Query. It isn't a rule you must follow. But when you have the choice, put it in Power Query.
+
+M's lowercase `if then else` looks strange if you're used to Excel's `IF()`. It stops looking strange after the second time.
+
+</Chapter>
+
+<Chapter id="where-to-practise-this" kicker="Where to practise this">
+
+Power Query conditional columns are part of [Power BI fundamentals](/training/power-bi-fundamentals/), a two-day private course for teams. You clean and reshape data in Power Query so the steps run again when the data changes, including the if-then-else logic this article covers. The [Training page](/training/) has everything I teach.
+
+The dialog writes the code. The code runs on refresh. And the person whose job isn't Power BI gets back to their actual job, with the column already there. No brackets required.
+
+</Chapter>

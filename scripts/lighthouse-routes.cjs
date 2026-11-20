@@ -24,6 +24,7 @@ module.exports = [
   "/writing/we-are-all-middle-management-now/",
   "/writing/three-numbers/",
   "/writing/the-power-bi-mcp-server-explained/",
+  "/writing/power-query-if-statement/",
   "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/",
   "/writing/",
   "/blog/2019/04/7-secrets-of-the-matrix-visual/",

@@ -9,6 +9,7 @@ import { redirects } from "../src/config/compatibility.mjs";
 const essay = "/writing/we-are-all-middle-management-now/";
 const threeNumbers = "/writing/three-numbers/";
 const mcp = "/writing/the-power-bi-mcp-server-explained/";
+const pqIf = "/writing/power-query-if-statement/";
 const roche = "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/";
 const secrets = "/blog/2019/04/7-secrets-of-the-matrix-visual/";
 const eighth = "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/";
@@ -30,8 +31,8 @@ test("Writing is an indexed list generated from the collection: articles, then t
   await expect(page.locator(".title-band .standfirst")).toHaveText("Articles on Power BI, DAX and AI, newest first. burningsuit's older posts are in the archive below.");
   const lists = page.locator(".writing-entries");
   await expect(lists).toHaveCount(2);
-  expect(await lists.nth(0).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([mcp, threeNumbers, essay]);
-  await expect(lists.nth(0).locator("li")).toHaveText(["The Power BI MCP server, explained for people who don't code Alan Harman-Box · November 2026 What Power BI's MCP servers do, why the agent already knows plenty without one, and when to bother setting one up.", "Data democracy or data demagoguery? Alan Harman-Box · November 2026 Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.", "We're all middle management now Alan Harman-Box · Talk, February 2026 Agentic development in Power BI: what an agent is, how far to trust its work, and what handing work to it costs."], { useInnerText: true });
+  expect(await lists.nth(0).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([pqIf, mcp, threeNumbers, essay]);
+  await expect(lists.nth(0).locator("li")).toHaveText(["How to write a Power Query if statement in Power BI Alan Harman-Box · November 2026 Use the Conditional column button or write if then else in M. How the Power Query if statement works in Power BI, with the common mistake that trips people up.", "The Power BI MCP server, explained for people who don't code Alan Harman-Box · November 2026 What Power BI's MCP servers do, why the agent already knows plenty without one, and when to bother setting one up.", "Data democracy or data demagoguery? Alan Harman-Box · November 2026 Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.", "We're all middle management now Alan Harman-Box · Talk, February 2026 Agentic development in Power BI: what an agent is, how far to trust its work, and what handing work to it costs."], { useInnerText: true });
   await expect(page.getByRole("heading", { level: 2, name: "From the archive" })).toBeVisible();
   expect(await lists.nth(1).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([roche, eighth, bins, topN, secrets]);
   await expect(lists.nth(1).locator("h3")).toHaveText([
@@ -53,7 +54,7 @@ test("Writing is an indexed list generated from the collection: articles, then t
   await expect(page.locator("main img, main form")).toHaveCount(0);
   await expect(page.locator(otherScripts)).toHaveCount(0);
   const sitemap = await (await page.request.get("/sitemap-0.xml")).text();
-  for (const route of ["/writing/", mcp, threeNumbers, secrets, eighth, bins, topN]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
+  for (const route of ["/writing/", pqIf, mcp, threeNumbers, secrets, eighth, bins, topN]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
 });
 
 test("/blog leads to Writing, and the restored posts' old addresses lead to them", async ({ page }) => {
@@ -235,3 +236,50 @@ test("the MCP server article renders Alan's approved prose, its figure and its l
   await expectNoHorizontalScroll(page);
 });
 visualReview(mcp);
+
+// Alan's Power Query if statement article as approved (the ops repo's site/writing-power-query-if-statement-approved.md):
+// the prose as built hashes to the approved text, its code keeps its lines, and its one screenshot is optimised and lazy.
+test("the Power Query if statement article renders Alan's approved prose, code, screenshot and links", async ({ page }) => {
+  const articleProse = JSON.parse(readFileSync(new URL("./fixtures/article-prose.json", import.meta.url), "utf8"))["power-query-if-statement"] as { paragraphCount: number; sha256: string };
+  expect((await page.goto(pqIf))?.status()).toBe(200);
+  await expectIndexable(page, { article: true });
+  await expect(page).toHaveTitle("Power Query if statement in Power BI | burningsuit");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Use the Conditional column button or write if then else in M. How the Power Query if statement works in Power BI, with the common mistake that trips people up.");
+  await expect(page.locator("h1")).toHaveText("How to write a Power Query if statement in Power BI");
+  await expect(page.locator("h1 .em")).toHaveText("if statement");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("Use the Conditional column button on the Add column tab, or write if condition then result else result in a custom column. No brackets, all lowercase, and the else is required.");
+  await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
+  await expect(page.locator(".case-chapter h2")).toHaveText(["The button that writes it for you", "When you need to write it yourself", "Excel muscle memory", "Where to practise this"]);
+  const paras = (await page.locator(".case-prose > p, .case-prose > ol > li").allTextContents()).map(squash);
+  expect(paras).toHaveLength(articleProse.paragraphCount);
+  expect(createHash("sha256").update(paras.join("\n")).digest("hex")).toBe(articleProse.sha256);
+  expect(await page.locator(".case-code").allTextContents()).toEqual([
+    'if [Amount] > 500 then "Large" else "Standard"\n',
+    'if [Amount] > 1000 then "Priority"\nelse if [Amount] > 500 then "Large"\nelse "Standard"\n',
+    'if [Amount] > 500 and [CustomerGroup] = "Gold" then 0.1 else 0\n',
+    'IF([Amount] > 500, "Large", "Standard")\n',
+    'Order Size = IF(Sales[Amount] > 500, "Large", "Standard")\n',
+  ]);
+  const shot = page.locator('section[aria-labelledby="the-button-that-writes-it-for-you"] .screenshot img');
+  await expect(page.locator(".screenshot img")).toHaveCount(1);
+  await expect(shot).toHaveAttribute("alt", "The Add conditional column dialog, with one clause testing whether Amount is greater than 500 and an else value of Standard.");
+  await expect(shot).toHaveAttribute("loading", "lazy");
+  await expect(shot).toHaveAttribute("width", /^\d+$/);
+  await expect(shot).toHaveAttribute("height", /^\d+$/);
+  expect(await shot.getAttribute("src")).toMatch(/\.webp$/);
+  await shot.scrollIntoViewIfNeeded();
+  await expect.poll(() => shot.evaluate((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await expect(page.locator(".screenshot figcaption")).toHaveCount(0);
+  expect(await page.locator(".case-prose a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([
+    "https://learn.microsoft.com/powerquery-m/m-spec-conditionals",
+    roche, "/training/power-bi-fundamentals/", "/training/",
+  ]);
+  await expect(page.locator("form.newsletter-form")).toHaveAttribute("action", NEWSLETTER.action);
+  await expect(page.locator("iframe, astro-island, [style]")).toHaveCount(0);
+  await expect(page.locator(otherScripts)).toHaveCount(0);
+  for (const width of [390, 1366]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expectNoHorizontalScroll(page);
+  }
+});
+visualReview(pqIf);

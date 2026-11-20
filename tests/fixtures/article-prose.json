@@ -14,5 +14,9 @@
   "the-power-bi-mcp-server-explained": {
     "paragraphCount": 21,
     "sha256": "f83f4c37220aad0c4fff53bba41dcd3263185bad0237eb8bc8e95ae1bb8d2731"
+  },
+  "power-query-if-statement": {
+    "paragraphCount": 21,
+    "sha256": "b4f6be87e60d6756e8127a813df221051324628d6f649da5849ed515bfe9d264"
   }
 }
