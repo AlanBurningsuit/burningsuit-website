@@ -170,8 +170,8 @@ test("the three-numbers essay renders Alan's approved prose, dated, with its hea
   await expect(page.locator("h1")).toHaveText("Data democracy or data demagoguery?");
   await expect(page.locator("h1 .em")).toHaveText("demagoguery");
   await expect(page.locator(".title-band .standfirst")).toHaveText("When anyone can have a dashboard by teatime");
-  await expect(page.locator(".article-byline")).toHaveText("Alan Harman-Box · 19 November 2026");
-  await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-19");
+  await expect(page.locator(".article-byline")).toHaveText("Alan Harman-Box · 20 November 2026");
+  await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
   await expect(page.locator(".case-chapter h2")).toHaveText(["I can see clearly now", "So what's new?", "Lies, damned lies, and dashboards", "Kicking and screaming", "Plus ça change"]);
   // The five practices sit under "Kicking and screaming" as h3s in the prose column, not beside it.
   await expect(page.locator('section[aria-labelledby="kicking-and-screaming"] .case-prose h3')).toHaveText([
