@@ -257,13 +257,17 @@
       "Filtering Categories Returned by a Measure",
       "Filtering Numerical Values Returned by a Measure"
     ],
-    "alts": [],
-    "notes": [
-      {
-        "paragraphs": [
-          "Update, November 2026: The screenshots in this post have been lost. The text still refers to them."
-        ]
-      }
-    ]
+    "alts": [
+      "A table of WINE and Total Sales for 1 to 7 January 2021, with the empty Total Sales cells for Bordeaux, Chenin Blanc and Lambrusco outlined in red, beside the WINE field's menu with Show items with no data ticked and outlined.",
+      "The table now lists only Bordeaux, Chenin Blanc and Lambrusco, with Total Sales removed. In Filters on this visual, Total Sales is set to show items when the value is blank, outlined in red.",
+      "A table of WINE and the ABC Products measure, showing wines classed A and B, beside the Filters pane where ABC Products shows items when the value is A or is B.",
+      "Two matrices of Total Qty by Year and Qtr in rows. With the visual filter Total Qty is greater than 50,000, outlined in red, the filtered matrix keeps only quarters above 50,000, with red arrows from the filter to three of them, and totals 472,029.",
+      "A matrix with Year in rows and Qtr 1 to Qtr 4 in columns. With the same filter, every year is still shown with all its quarters, including values below 50,000; the Total column of yearly totals, all above 50,000, is outlined in red.",
+      "With the filter changed to Total Qty is greater than 150,000, outlined in red, the matrix shows only 2019, 2020 and 2021, the years whose totals are above 150,000.",
+      "The matrix with the Filtered Qty measure in values: only quarters above 50,000 have a value, and the yearly totals and grand total (472,029) add up only those quarters.",
+      "A table in Data view with one column, Quantity, holding 30,000, 50,000, 70,000 and 90,000.",
+      "A Quantity slicer set to 30,000 beside the matrix, which now shows only quarters above 30,000, totalling 796,270."
+    ],
+    "notes": []
   }
 }

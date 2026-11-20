@@ -2,23 +2,14 @@
 kind: archive
 author: "Alison Box"
 datePublished: 2022-08-17
-# dateModified: when the dated update note was added.
-dateModified: 2026-11-20
 title: "Filtering using DAX measures | burningsuit"
 description: "You can't put a DAX measure in a slicer, but you can filter on one in the Filters pane, and with SUMX and FILTER where a matrix's columns need it."
 heading: "Filtering using DAX measures"
 kicker: "Archive"
-updateNotice: "This post has a dated update note: its screenshots have been lost."
 ---
-{/* Alison Box's published text, kept word for word (source and removals: the ops repo's site/writing-restored-posts-2-copy.md). The update note is the only added text. */}
+{/* Alison Box's published text, kept word for word (source and removals: the ops repo's site/writing-restored-posts-2-copy.md). */}
 
 <div class="archive-prose wrap">
-
-<UpdateNote>
-
-Update, November 2026: The screenshots in this post have been lost. The text still refers to them.
-
-</UpdateNote>
 
 A question that we are often asked is this; can you put a measure into a Slicer? The answer of course is no, only columns from tables can be populated into Slicers. The reason why this question so often arises is that most people see the Slicer as the most important filtering tool on the report.
 
@@ -30,19 +21,37 @@ Let's now look at some examples of using measures in the Visual Level filter buc
 
 If you want to analyse data for which there are no values to show, for example, products for which there are no sales, using a measure in the Visual Level filter makes this analysis easy. For example, you can see in the Table visual below that we are using the WINE column from a dimension table and "Total Sales" is a DAX measure. We are looking at the first seven days in January 2021 and have used the "Show items with no data" on the WINE column of the table visual to see that "Bordeaux", "Chenin Blanc" and "Lambrusco" have no Total Sales for these days.
 
+
+<Screenshot src="filtering-using-dax-measures/01-show-items-with-no-data.png" alt="A table of WINE and Total Sales for 1 to 7 January 2021, with the empty Total Sales cells for Bordeaux, Chenin Blanc and Lambrusco outlined in red, beside the WINE field's menu with Show items with no data ticked and outlined." />
+
 If we now only want to show items with no data in the visual, we can use the visual level filter in the Filters pane to filter values that are blank. We can then remove the "Total Sales" measure from the Table visual because there are no values to see:-
+
+
+<Screenshot src="filtering-using-dax-measures/02-filter-is-blank.png" alt="The table now lists only Bordeaux, Chenin Blanc and Lambrusco, with Total Sales removed. In Filters on this visual, Total Sales is set to show items when the value is blank, outlined in red." />
 
 ## Filtering Categories Returned by a Measure
 
 For example, we may have a measure ("ABC Products") that categorizes our wine products by A, B or C based on Pareto analysis. We want to browse our products by classification on an ad hoc basis so restricting the measure to return a specific category is not what we want. We could instead use a visual level filter to filter the products accordingly: -
 
+
+<Screenshot src="filtering-using-dax-measures/03-abc-products-filter.png" alt="A table of WINE and the ABC Products measure, showing wines classed A and B, beside the Filters pane where ABC Products shows items when the value is A or is B." />
+
 ## Filtering Numerical Values Returned by a Measure
 
 Although this may seem to be the most obvious reason to use a measure in a visual level filter, all is not plain sailing when you do this. For example, in the Matrix visual below, we have the "Year" and "Qtr" fields sitting in the "rows" of the matrix. We are using the "Total Qty" measure in the Visual Level filter card and filtering values that are greater than 50,000. This works fine all the while the values being filtered sit in the "rows" of the Matrix: -
 
+
+<Screenshot src="filtering-using-dax-measures/04-qty-filter-rows.png" alt="Two matrices of Total Qty by Year and Qtr in rows. With the visual filter Total Qty is greater than 50,000, outlined in red, the filtered matrix keeps only quarters above 50,000, with red arrows from the filter to three of them, and totals 472,029." />
+
 However, if we move the "Qtr" field onto the "columns" of the matrix, the filter appears to no longer work. In fact, the filter is working; it is filtering the Total values sitting in the Year "rows" of the Matrix.
 
+
+<Screenshot src="filtering-using-dax-measures/05-qty-filter-columns.png" alt="A matrix with Year in rows and Qtr 1 to Qtr 4 in columns. With the same filter, every year is still shown with all its quarters, including values below 50,000; the Total column of yearly totals, all above 50,000, is outlined in red." />
+
 Therefore, if we change the filter criterion to "greater than 150,000", we can see the filter is correct:-
+
+
+<Screenshot src="filtering-using-dax-measures/06-qty-filter-150000.png" alt="With the filter changed to Total Qty is greater than 150,000, outlined in red, the matrix shows only 2019, 2020 and 2021, the years whose totals are above 150,000." />
 
 What we must understand from this scenario is that the Visual Level filter is only applied to values sitting in the "rows" of a matrix visual, not to values sitting in the "columns"
 
@@ -61,7 +70,13 @@ SUMX (
 
 If we put this measure into the "values" bucket of the matrix, we now have the correct filtered values.
 
+
+<Screenshot src="filtering-using-dax-measures/07-filtered-qty-measure.png" alt="The matrix with the Filtered Qty measure in values: only quarters above 50,000 have a value, and the yearly totals and grand total (472,029) add up only those quarters." />
+
 But of course, we are now stuck having the analysed quantities greater than 50,000. We can't browse the data by filtering by different quantities. To remedy this, you could create a parameter table that holds various filtering criteria: -
+
+
+<Screenshot src="filtering-using-dax-measures/08-filtering-values-table.png" alt="A table in Data view with one column, Quantity, holding 30,000, 50,000, 70,000 and 90,000." />
 
 Parameter tables are not related to any other tables in the data model. You could then populate a slicer with the "Quantity" column from this table and simply edit the "Total Qty" measure as follows:
 
@@ -78,6 +93,9 @@ RETURN
         [Total Qty]
     )
 ```
+
+
+<Screenshot src="filtering-using-dax-measures/09-quantity-slicer.png" alt="A Quantity slicer set to 30,000 beside the matrix, which now shows only quarters above 30,000, totalling 796,270." />
 
 So now we are back to using Slicers to filter data, rather than the visual level filter!
 

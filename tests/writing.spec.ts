@@ -109,7 +109,7 @@ const posts: { route: string; title: string; heading: string; author?: string; b
   { route: narrative, title: "Smart narrative and text box dynamic values | burningsuit", heading: "Using dynamic values in the smart narrative and text box", byline: "Alison Box · 3 October 2022", notes: 0, screenshots: 14, closing: ["/training/power-bi-fundamentals/", "/training/"] },
   { route: xAxis, title: "Continuous x-axis on a column chart by month | burningsuit", heading: "Using a continuous x-axis on column charts for year and month labels", byline: "Alison Box · 28 April 2022", notes: 0, screenshots: 6, closing: ["/training/power-bi-fundamentals/", "/training/"] },
   { route: restApis, title: "Call a REST API from Power Query | burningsuit", heading: "I have the Power(query): using Power Query to call REST APIs", author: "Alan Harman-Box", byline: "Alan Harman-Box · 27 September 2021", notes: 0, screenshots: 13, closing: ["/training/power-bi-fundamentals/", "/training/"] },
-  { route: filtering, title: "Filtering using DAX measures | burningsuit", heading: "Filtering using DAX measures", byline: "Alison Box · 17 August 2022", notice: "This post has a dated update note: its screenshots have been lost.", notes: 1, screenshots: 0, closing: ["/training/dax-fundamentals/", "/training/"] },
+  { route: filtering, title: "Filtering using DAX measures | burningsuit", heading: "Filtering using DAX measures", byline: "Alison Box · 17 August 2022", notes: 0, screenshots: 9, closing: ["/training/dax-fundamentals/", "/training/"] },
 ];
 
 for (const post of posts) {
