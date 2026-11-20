@@ -10,6 +10,9 @@ heading:
 lead: "Use the Conditional column button on the Add column tab, or write `if condition then result else result` in a custom column. No brackets, all lowercase, and the else is required."
 # Provisional: set to the day it first goes live.
 datePublished: 2026-11-20
+course:
+  href: "/training/power-bi-fundamentals/"
+  name: "Power BI fundamentals"
 ---
 
 <Chapter id="the-button-that-writes-it-for-you" kicker="The button that writes it for you">
@@ -28,7 +31,7 @@ Behind the button, Power Query wrote a line of M code. You can see it in the for
 
 <Chapter id="when-you-need-to-write-it-yourself" kicker="When you need to write it yourself">
 
-The dialog runs out when your condition uses something the dropdowns can't express: checking whether text contains a word, comparing two columns with each other, or combining conditions the clause list can't handle. That's when you write M.
+The dialog runs out when one clause needs two tests at once (an amount over 500 *and* a Gold customer), or when the output has to be calculated rather than typed. That's when you write M.
 
 Go to Add column, Custom column, and type the formula. Power Query's language is called M, and its if statement looks like this:
 

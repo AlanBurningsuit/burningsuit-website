@@ -43,7 +43,7 @@ const crumbs = section && BREADCRUMB_SECTIONS[section] && Astro.url.pathname.rep
   : [];
 const graph = [
   ...siteGraph(siteUrl),
-  ...(ogType === "article" ? [articleNode({ siteUrl, pageUrl: canonical, headline: pageName, description, author, datePublished, dateModified })] : []),
+  ...(ogType === "article" ? [articleNode({ siteUrl, pageUrl: canonical, headline: pageName, description, author, datePublished, dateModified, image: new URL(ogImage, Astro.site).href })] : []),
   ...pageNodes,
   ...crumbs,
 ];

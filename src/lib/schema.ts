@@ -47,7 +47,7 @@ export function siteGraph(siteUrl: string): SchemaNode[] {
 
 /** An Article for an essay or case study; the author is Alan unless the page names another writer. Dates are ISO 8601
     at the precision the source gives (an archive post's "2021-03"), never padded to a day the source doesn't state. */
-export function articleNode(opts: { siteUrl: string; pageUrl: string; headline: string; description: string; author?: string; datePublished?: string; dateModified?: string }): SchemaNode {
+export function articleNode(opts: { siteUrl: string; pageUrl: string; headline: string; description: string; author?: string; datePublished?: string; dateModified?: string; image?: string }): SchemaNode {
   return compact({
     "@type": "Article",
     "@id": `${opts.pageUrl}#article`,
@@ -55,6 +55,7 @@ export function articleNode(opts: { siteUrl: string; pageUrl: string; headline: 
     description: opts.description,
     url: opts.pageUrl,
     mainEntityOfPage: opts.pageUrl,
+    image: opts.image,
     isPartOf: { "@id": websiteId(opts.siteUrl) },
     author: !opts.author || opts.author === FOUNDER.name ? { "@id": personId(opts.siteUrl) } : { "@type": "Person", name: opts.author },
     publisher: { "@id": orgId(opts.siteUrl) },

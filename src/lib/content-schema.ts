@@ -54,6 +54,8 @@ export const writingSchema = z.object({
     heading: z.union([text, z.object({ before: z.string().optional(), em: text, after: z.string().optional() }).strict()]),
     /** The standfirst. A `backtick span` renders as code there; Nothing else quotes the lead: meta, index and JSON-LD use description and summary. */
     lead: text.optional(), kicker: text.optional(),
+    /** The course the closing band links to, when it isn't the 101 (an essay's or article's default). */
+    course: z.object({ href: z.string().regex(/^\/training\/[a-z0-9-]+\/$/), name: text }).strict().optional(),
     archiveMonth: month.optional(),
     /** The month an archive post's own author revised it, as its byline shows. */
     revisedMonth: month.optional(),

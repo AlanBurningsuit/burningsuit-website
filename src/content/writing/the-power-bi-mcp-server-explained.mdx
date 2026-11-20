@@ -7,7 +7,7 @@ heading:
   before: "The Power BI MCP server, "
   em: "explained"
   after: " for people who don't code"
-lead: "What MCP servers actually do, and why you don't necessarily need one to start working with an agent on Power BI."
+lead: "A Power BI MCP server gives an AI agent tools to work on your Power BI model directly, querying it and changing it. Here's what that means, and why you don't necessarily need one to start."
 # Provisional: set to the day it first goes live.
 datePublished: 2026-11-20
 ---
@@ -36,7 +36,7 @@ The agent already knows plenty about Power BI from its training data. What it do
 
 As of November 2026, Microsoft has two MCP servers for Power BI.
 
-The **Authoring server** lets an agent create and change objects in a semantic model (the part of a Power BI file that holds the tables, relationships and calculations): measures, tables, relationships, the lot. It can also run DAX queries to test what it built. The **Fabric IQ** server is the consumption side: it provides an agent with read-only tools to discover your Power BI reports and semantic models, inspect their metadata, and run DAX queries against the data. The agent does the reasoning; Fabric IQ gives it access. Microsoft's [overview page](https://learn.microsoft.com/en-us/power-bi/developer/mcp/mcp-servers-overview) compares them.
+The **Authoring server** (called the Power BI Modeling MCP server on GitHub and npm) lets an agent create and change objects in a semantic model (the part of a Power BI file that holds the tables, relationships and calculations): measures, tables, relationships, the lot. It can also run DAX queries to test what it built. The **Fabric IQ** server is the consumption side: it provides an agent with read-only tools to discover your Power BI reports and semantic models, inspect their metadata, and run DAX queries against the data. The agent does the reasoning; Fabric IQ gives it access. Microsoft's [overview page](https://learn.microsoft.com/en-us/power-bi/developer/mcp/mcp-servers-overview) compares them.
 
 A separate piece, the **Desktop Bridge** (preview), isn't an MCP server but works alongside one. It reloads your project and takes screenshots so the agent can check its own work visually. I'll come back to that.
 
@@ -46,7 +46,7 @@ A separate piece, the **Desktop Bridge** (preview), isn't an MCP server but work
 
 When you start using MCP servers with your Power BI reports, there's a significant change in what the agent can see that is worth understanding.
 
-With files alone, the agent reads your Power BI project's table names, relationships and measure definitions, which is structure rather than data.
+With files alone, the agent mostly reads your Power BI project's structure: table names, relationships and measure definitions. The project folder can also hold a cached copy of your data, so files aren't a free pass either.
 
 Once you connect an MCP server, the agent can run queries and read actual numbers: revenue, headcount, whatever your model holds. I've had someone get quite far into a setup before realising their organisation's data policy had something to say about that. Those query results get passed to your AI provider. Check your rules before you connect a work model.
 

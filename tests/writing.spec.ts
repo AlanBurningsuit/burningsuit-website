@@ -219,7 +219,7 @@ test("the MCP server article renders Alan's approved prose, its figure and its l
   await expect(page.locator("h1")).toHaveText("The Power BI MCP server, explained for people who don't code");
   await expect(page.locator(".title-band .eyebrow")).toHaveText("Article");
   await expect(page.locator("h1 .em")).toHaveText("explained");
-  await expect(page.locator(".title-band .standfirst")).toHaveText("What MCP servers actually do, and why you don't necessarily need one to start working with an agent on Power BI.");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("A Power BI MCP server gives an AI agent tools to work on your Power BI model directly, querying it and changing it. Here's what that means, and why you don't necessarily need one to start.");
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
   await expect(page.locator(".case-chapter h2")).toHaveText(["We've got to install Microwave Ovens", "What you'd actually be setting up", "The risk you should know about", "Start with files", "The gap you'll feel", "Where to start"]);
   const paras = (await page.locator(".article-intro p, .case-prose > p").allTextContents()).map(squash);
@@ -255,6 +255,11 @@ test("the Power Query if statement article renders Alan's approved prose, code, 
   await expect(page.locator(".title-band .standfirst code")).toHaveText(["if condition then result else result"]);
   expect(await page.locator("head").innerHTML()).not.toContain("`");
   await expect(page.locator(".title-band .standfirst")).toHaveText("Use the Conditional column button on the Add column tab, or write if condition then result else result in a custom column. No brackets, all lowercase, and the else is required.");
+  // The closing band points to the course this article leads to, not the 101.
+  await expect(page.locator(".article-related .links a").first()).toHaveAttribute("href", "/training/power-bi-fundamentals/");
+  await expect(page.locator(".article-related")).not.toContainText("Power BI with AI agents 101");
+  // Article structured data carries an image.
+  expect(await page.locator('script[type="application/ld+json"]').allTextContents()).toEqual(expect.arrayContaining([expect.stringContaining('"image":"https://')]));
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
   await expect(page.locator(".case-chapter h2")).toHaveText(["The button that writes it for you", "When you need to write it yourself", "Excel muscle memory", "Where to practise this"]);
   const paras = (await page.locator(".case-prose > p, .case-prose > ol > li").allTextContents()).map(squash);
