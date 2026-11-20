@@ -223,7 +223,7 @@ test("the MCP server article renders Alan's approved prose, its figure and its l
   expect(createHash("sha256").update(paras.join("\n")).digest("hex")).toBe(articleProse.sha256);
   const figure = page.locator('section[aria-labelledby="the-gap-youll-feel"] figure.essay-figure');
   await expect(figure).toHaveCount(1);
-  await expect(figure.locator("figcaption")).toHaveText("Figure 1: Start with files. Start with files. Climb to the next step when checking by hand starts to grate, not before.");
+  await expect(figure.locator("figcaption")).toHaveText("Figure 1: Three steps. Start with files. Climb to the next step when checking by hand starts to grate, not before.");
   await expect(figure.locator("img")).toHaveAttribute("alt", /Files only.*MCP server.*Desktop Bridge/);
   expect(await page.locator(".case-prose a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([
     "https://learn.microsoft.com/en-us/power-bi/developer/mcp/mcp-servers-overview",
