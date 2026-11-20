@@ -63,7 +63,7 @@
 .screenshot-enlarge { display: block; cursor: zoom-in; }
 .screenshot-enlarge:focus-visible { outline-offset: 4px; }
 /* A code span in the lead, on the dark header. */
-.article-lead code { padding: .05em .3em; font-size: .8em; background: var(--bg-2); border: var(--bw-hair) solid var(--line); border-radius: var(--r-xs); overflow-wrap: anywhere; }
+.article-lead code { padding: .05em .3em; font-size: .8em; background: var(--bg-2); border: var(--bw-hair) solid var(--line); border-radius: var(--r-xs); overflow-wrap: anywhere; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .archive-next { padding-block: 0 56px; }
 .archive-next p { max-width: 66ch; padding-top: 20px; border-top: var(--bw-hair) solid var(--rule); font-size: var(--raised-size); }
 
