@@ -1,5 +1,5 @@
 ---
-/** Static, accessible adaptations of the diagrams in Alan's supplied talk. */
+/** Static, accessible figures for the essays: the diagrams adapted from Alan's talk, and the MCP article's steps. */
 import agentWide from "../assets/diagrams/agent-system-wide.svg?url";
 import agentNarrow from "../assets/diagrams/agent-system-narrow.svg?url";
 import validationWide from "../assets/diagrams/visual-validation-wide.svg?url";
@@ -8,8 +8,10 @@ import delegationWide from "../assets/diagrams/delegation-wide.svg?url";
 import delegationNarrow from "../assets/diagrams/delegation-narrow.svg?url";
 import experienceWide from "../assets/diagrams/domain-experience-wide.svg?url";
 import experienceNarrow from "../assets/diagrams/domain-experience-narrow.svg?url";
+import stepsWide from "../assets/diagrams/mcp-steps-wide.svg?url";
+import stepsNarrow from "../assets/diagrams/mcp-steps-narrow.svg?url";
 interface Props {
-  kind: "agent" | "validation" | "delegation" | "experience";
+  kind: "agent" | "validation" | "delegation" | "experience" | "steps";
 }
 const { kind } = Astro.props;
 const figures = {
@@ -17,6 +19,7 @@ const figures = {
   validation: { number: 2, title: "The visual validation loop", caption: "The screenshot returns to the agent, which checks the result and can revise the report." },
   delegation: { number: 3, title: "The vibe zone", caption: "The shaded area is the vibe zone. As consequences grow, specify more of the decisions yourself." },
   experience: { number: 4, title: "Domain experience", caption: "With less domain experience, the vibe zone shrinks. Delegate fewer decisions at the same level of consequence." },
+  steps: { number: 1, title: "Start with files", caption: "Start with files. Climb to the next step when checking by hand starts to grate, not before." },
 };
 const figure = figures[kind];
 const id = `essay-figure-${kind}`;
@@ -25,6 +28,7 @@ const diagrams = {
   validation: { wide: validationWide, narrow: validationNarrow, wideWidth: 943, wideHeight: 538, width: 588, height: 1163, alt: "A loop: the agent updates the report files, commits and pushes them, and syncs the Fabric workspace. The report pages are requested through the API. Playwright saves a screenshot, which returns to the agent's context. The agent checks the image and can revise the report, starting the loop again." },
   delegation: { wide: delegationWide, narrow: delegationNarrow, wideWidth: 960, wideHeight: 923, width: 600, height: 923, alt: "A conceptual chart with consequence of failure increasing to the right and decisions delegated increasing upwards. The entire area beneath a descending line is shaded and labelled Vibe zone. Above it is the region of risk, where too much has been delegated for the consequences. The left is more vibey: let the agent choose more. The right is less vibey: specify more decisions up front. The line is illustrative, not a measured threshold." },
   experience: { wide: experienceWide, narrow: experienceNarrow, wideWidth: 960, wideHeight: 881, width: 600, height: 881, alt: "The same conceptual chart compares two vibe zones. A dashed cream line bounds the larger zone for more domain experience. A solid amber line falls more steeply and bounds a smaller shaded zone for less experience. A downward arrow at a fixed level of consequence shows the reduction in decisions to delegate. The slopes are illustrative, not measured thresholds." },
+  steps: { wide: stepsWide, narrow: stepsNarrow, wideWidth: 942, wideHeight: 651, width: 637, height: 848, alt: "Three steps rise from left to right, with an amber arrow climbing them. The lowest step, outlined in amber and marked Start here, is Files only: the agent reads and edits your project files, and you check in Desktop. The middle step is MCP server: Microsoft's Authoring server lets the agent query and change the open model. The top step is Desktop Bridge: the agent can reload the report and see a screenshot." },
 };
 const diagram = diagrams[kind];
 ---

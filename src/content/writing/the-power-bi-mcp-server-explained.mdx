@@ -1,0 +1,86 @@
+---
+kind: essay
+author: "Alan Harman-Box"
+title: "The Power BI MCP server, explained | burningsuit"
+description: "What Power BI's MCP servers do, why the agent already knows plenty without one, and when to bother setting one up."
+heading:
+  before: "The Power BI MCP server, "
+  em: "explained"
+  after: " for people who don't code"
+lead: "What MCP servers actually do, and why you don't necessarily need one to start working with an agent on Power BI."
+kicker: "Essay"
+# Provisional: set to the day it first goes live.
+datePublished: 2026-11-20
+---
+
+<div class="article-intro wrap">
+
+A few weeks ago I was talking to someone who'd been building Power BI reports for years, about working with an agent for the first time. The first thing they wanted to know was whether they should be setting up an MCP server.
+
+No, not yet, and not for most people dipping their toes into using agents. But the reason is worth understanding, because it tells you what an MCP server does and when you'd want one.
+
+</div>
+
+<Chapter id="weve-got-to-install-microwave-ovens" kicker="We've got to install Microwave Ovens">
+
+MCP stands for Model Context Protocol. In plain terms, it's a way for an AI agent to connect to other software and use the tools that software provides.
+
+Think of it like a kitchen. The agent is a chef with Michelin stars, broad knowledge and years of training under its belt. The harness it runs in (Claude Desktop, ChatGPT, VS Code with GitHub Copilot) provides a basic kitchen: a knife, a cutting board, a dishwasher. With that kit, the chef can already do useful work.
+
+An MCP server is a specific appliance you install in that kitchen. It might be a stand mixer with a dough hook, or a smoker and a grill. Each one lets the chef apply its talent to a specific outcome it couldn't reach with the basics alone.
+
+The agent already knows plenty about Power BI from its training data. What it doesn't have, until you install an MCP server, is specialised tools for acting on a Power BI model: running a DAX query against live data, or changing objects while a model is open in Power BI Desktop.
+
+</Chapter>
+
+<Chapter id="what-youd-actually-be-setting-up" kicker="What you'd actually be setting up">
+
+As of November 2026, Microsoft has two MCP servers for Power BI.
+
+The **Authoring server** lets an agent create and change objects in a semantic model (the part of a Power BI file that holds the tables, relationships and calculations): measures, tables, relationships, the lot. It can also run DAX queries to test what it built. The **Fabric IQ** server is the consumption side: it provides an agent with read-only tools to discover your Power BI reports and semantic models, inspect their metadata, and run DAX queries against the data. The agent does the reasoning; Fabric IQ gives it access. Microsoft's [overview page](https://learn.microsoft.com/en-us/power-bi/developer/mcp/mcp-servers-overview) compares them.
+
+A separate piece, the **Desktop Bridge** (preview), isn't an MCP server but works alongside one. It reloads your project and takes screenshots so the agent can check its own work visually. I'll come back to that.
+
+</Chapter>
+
+<Chapter id="the-risk-you-should-know-about" kicker="The risk you should know about">
+
+When you start using MCP servers with your Power BI reports, there's a significant change in what the agent can see that is worth understanding.
+
+With files alone, the agent reads your Power BI project's table names, relationships and measure definitions, which is structure rather than data.
+
+Once you connect an MCP server, the agent can run queries and read actual numbers: revenue, headcount, whatever your model holds. I've had someone get quite far into a setup before realising their organisation's data policy had something to say about that. Those query results get passed to your AI provider. Check your rules before you connect a work model.
+
+</Chapter>
+
+<Chapter id="start-with-files" kicker="Start with files">
+
+An agent that can read and edit files in a folder is already useful without an MCP server. You open your Power BI project as a folder, point the agent at it, and it can read every table, relationship and measure in the model. I've had someone ask an agent to document every measure in a model that had been accumulating undocumented measures for three years. It took two minutes and produced a clean table with descriptions for all of them. There was no MCP server involved.
+
+The catch is that the agent can't test what it writes. It can add a measure, but it can't run a DAX query to check the numbers come out right. It can add a bar chart to a report page, but it can't look at the result to see whether it makes sense. When getting started with agents, that's your job. You open the project in Power BI Desktop, look at the report, and decide whether the values are right and whether the visuals the agent added actually look the way they should. Then you tell it what you found, it has another go, you check again.
+
+This sounds clunky. It is clunky. It is also exactly the right way to start.
+
+You learn three things in that clumsiness that you'll need no matter what you install later. First, how to brief an agent clearly enough that it doesn't wander off and restructure your entire data model because you said "tidy this up". Second, how to check work you didn't write, which is a skill most of us report builders have never needed to practise. And third, how to get back to a clean copy when you want to undo a change and try a different approach, because that will happen and it's much easier when you've practised it once already.
+
+Skip the file-only stage and you'll spend your time debugging changes you don't understand. I watched someone get stuck for twenty minutes trying to work out whether the agent's DAX was wrong or their data was. They'd never had to check someone else's measures before. The MCP server didn't help with that.
+
+</Chapter>
+
+<Chapter id="the-gap-youll-feel" kicker="The gap you'll feel">
+
+At some point, switching between the agent's output and Power BI Desktop to test every single change starts to grate. You want the agent to run a quick DAX query and tell you the answer, or take a look at the visuals it has added and decide if they look like what it intended, without you opening another window every time. That's the gap the next steps fill: the Authoring MCP server handles the DAX queries, and the Desktop Bridge takes the screenshots.
+
+<EssayFigure kind="steps" />
+
+But notice the order. You learn to brief and check first. The tools come after. It's the same pattern as everything else in BI: understanding what the numbers mean matters more than automating how they're produced. I wrote about that in [We are all middle management now](/writing/we-are-all-middle-management-now/), and it applies to agents building your measures too.
+
+</Chapter>
+
+<Chapter id="where-to-start" kicker="Where to start">
+
+If you build reports but don't write code, [Power BI with AI agents 101](/training/power-bi-with-ai-agents-101/) follows this exact order: point an agent at a project folder, have it explain the model, document the measures and build a new one, check the answers yourself. There is no MCP server in the setup. The [Training page](/training/) has everything I teach.
+
+Do you need to install an MCP server? Not yet. Start with a folder and an agent. The server will still be there when you're ready for it.
+
+</Chapter>

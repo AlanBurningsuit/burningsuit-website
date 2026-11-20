@@ -10,5 +10,9 @@
   "three-numbers": {
     "paragraphCount": 45,
     "sha256": "659e616dc18ed0b975d0621d0667a2c023cc3ed35dd203655ad326d5f20037b5"
+  },
+  "the-power-bi-mcp-server-explained": {
+    "paragraphCount": 21,
+    "sha256": "f83f4c37220aad0c4fff53bba41dcd3263185bad0237eb8bc8e95ae1bb8d2731"
   }
 }

@@ -8,6 +8,7 @@ import { redirects } from "../src/config/compatibility.mjs";
 // The Writing index and Alison Box's restored posts (approved copy: the ops repo's site/writing-restored-posts-copy.md).
 const essay = "/writing/we-are-all-middle-management-now/";
 const threeNumbers = "/writing/three-numbers/";
+const mcp = "/writing/the-power-bi-mcp-server-explained/";
 const roche = "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/";
 const secrets = "/blog/2019/04/7-secrets-of-the-matrix-visual/";
 const eighth = "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/";
@@ -29,8 +30,8 @@ test("Writing is an indexed list generated from the collection: articles, then t
   await expect(page.locator(".title-band .standfirst")).toHaveText("Articles on Power BI, DAX and AI, newest first. burningsuit's older posts are in the archive below.");
   const lists = page.locator(".writing-entries");
   await expect(lists).toHaveCount(2);
-  expect(await lists.nth(0).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([threeNumbers, essay]);
-  await expect(lists.nth(0).locator("li")).toHaveText(["Data democracy or data demagoguery? Alan Harman-Box · November 2026 Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.", "We're all middle management now Alan Harman-Box · Talk, February 2026 Agentic development in Power BI: what an agent is, how far to trust its work, and what handing work to it costs."], { useInnerText: true });
+  expect(await lists.nth(0).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([mcp, threeNumbers, essay]);
+  await expect(lists.nth(0).locator("li")).toHaveText(["The Power BI MCP server, explained for people who don't code Alan Harman-Box · November 2026 What Power BI's MCP servers do, why the agent already knows plenty without one, and when to bother setting one up.", "Data democracy or data demagoguery? Alan Harman-Box · November 2026 Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.", "We're all middle management now Alan Harman-Box · Talk, February 2026 Agentic development in Power BI: what an agent is, how far to trust its work, and what handing work to it costs."], { useInnerText: true });
   await expect(page.getByRole("heading", { level: 2, name: "From the archive" })).toBeVisible();
   expect(await lists.nth(1).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([roche, eighth, bins, topN, secrets]);
   await expect(lists.nth(1).locator("h3")).toHaveText([
@@ -52,7 +53,7 @@ test("Writing is an indexed list generated from the collection: articles, then t
   await expect(page.locator("main img, main form")).toHaveCount(0);
   await expect(page.locator(otherScripts)).toHaveCount(0);
   const sitemap = await (await page.request.get("/sitemap-0.xml")).text();
-  for (const route of ["/writing/", threeNumbers, secrets, eighth, bins, topN]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
+  for (const route of ["/writing/", mcp, threeNumbers, secrets, eighth, bins, topN]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
 });
 
 test("/blog leads to Writing, and the restored posts' old addresses lead to them", async ({ page }) => {
@@ -204,3 +205,33 @@ test("the three-numbers essay renders Alan's approved prose, dated, with its hea
   await expectNoHorizontalScroll(page);
 });
 visualReview(threeNumbers);
+
+// Alan's MCP article as approved (the ops repo's site/writing-power-bi-mcp-server-approved.md): the prose as built
+// hashes to the approved text, its section headings are h2s, and its one figure carries the approved caption.
+test("the MCP server article renders Alan's approved prose, its figure and its links", async ({ page }) => {
+  const articleProse = JSON.parse(readFileSync(new URL("./fixtures/article-prose.json", import.meta.url), "utf8"))["the-power-bi-mcp-server-explained"] as { paragraphCount: number; sha256: string };
+  expect((await page.goto(mcp))?.status()).toBe(200);
+  await expectIndexable(page, { article: true });
+  await expect(page).toHaveTitle("The Power BI MCP server, explained | burningsuit");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "What Power BI's MCP servers do, why the agent already knows plenty without one, and when to bother setting one up.");
+  await expect(page.locator("h1")).toHaveText("The Power BI MCP server, explained for people who don't code");
+  await expect(page.locator(".title-band .standfirst")).toHaveText("What MCP servers actually do, and why you don't necessarily need one to start working with an agent on Power BI.");
+  await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
+  await expect(page.locator(".case-chapter h2")).toHaveText(["We've got to install Microwave Ovens", "What you'd actually be setting up", "The risk you should know about", "Start with files", "The gap you'll feel", "Where to start"]);
+  const paras = (await page.locator(".article-intro p, .case-prose > p").allTextContents()).map(squash);
+  expect(paras).toHaveLength(articleProse.paragraphCount);
+  expect(createHash("sha256").update(paras.join("\n")).digest("hex")).toBe(articleProse.sha256);
+  const figure = page.locator('section[aria-labelledby="the-gap-youll-feel"] figure.essay-figure');
+  await expect(figure).toHaveCount(1);
+  await expect(figure.locator("figcaption")).toHaveText("Figure 1: Start with files. Start with files. Climb to the next step when checking by hand starts to grate, not before.");
+  await expect(figure.locator("img")).toHaveAttribute("alt", /Files only.*MCP server.*Desktop Bridge/);
+  expect(await page.locator(".case-prose a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([
+    "https://learn.microsoft.com/en-us/power-bi/developer/mcp/mcp-servers-overview",
+    essay, "/training/power-bi-with-ai-agents-101/", "/training/",
+  ]);
+  await expect(page.locator("form.newsletter-form")).toHaveAttribute("action", NEWSLETTER.action);
+  await expect(page.locator("iframe, astro-island, [style]")).toHaveCount(0);
+  await expect(page.locator(otherScripts)).toHaveCount(0);
+  await expectNoHorizontalScroll(page);
+});
+visualReview(mcp);
