@@ -34,3 +34,6 @@ export function indexDateLine(data: Writing["data"]): string | undefined {
 
 /** Newest first, by first appearance; ties keep the collection's order. */
 export const newestFirst = (a: Writing, b: Writing) => (firstDate(b.data) ?? "").localeCompare(firstDate(a.data) ?? "");
+
+/** A lead's parts: plain text, and the `backtick` spans the standfirst renders as code. */
+export const leadParts = (lead: string) => lead.split("`").map((text, i) => ({ text, code: i % 2 === 1 }));

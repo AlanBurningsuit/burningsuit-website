@@ -42,16 +42,18 @@ export const workSchema = z.object({
 const month = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/);
 
 // Public paths come from the entry ID: writingRoute in src/lib/writing.ts (writing-routes.mjs, else writing/<id>). `kind: archive` puts an entry in the
-// Writing index's "From the archive" list; every other entry joins the main list.
+// Writing index's "From the archive" list; every other entry joins the main list. An `article` (a short practical piece)
+// follows an essay's rules and layout; only its eyebrow differs. The eyebrow (`kicker`) defaults from the kind.
 export const writingSchema = z.object({
-    kind: z.enum(["essay", "archive"]),
+    kind: z.enum(["essay", "article", "archive"]),
     author: z.enum(["Alan Harman-Box", "Stuart Box", "Alison Box"]),
     title: text, description: text,
     /** The Writing index's line for the entry, when it should differ from the meta description. */
     summary: text.optional(),
     // An archive post's heading is plain unless its own title marks a word.
     heading: z.union([text, z.object({ before: z.string().optional(), em: text, after: z.string().optional() }).strict()]),
-    lead: text.optional(), kicker: text.default("Essay"),
+    /** The standfirst. A `backtick span` renders as code there; Nothing else quotes the lead: meta, index and JSON-LD use description and summary. */
+    lead: text.optional(), kicker: text.optional(),
     archiveMonth: month.optional(),
     /** The month an archive post's own author revised it, as its byline shows. */
     revisedMonth: month.optional(),
@@ -67,10 +69,10 @@ export const writingSchema = z.object({
     }
     // Every entry is dated, so the Writing index can order and date it: an essay by a talk or its publication day (an
     // archive post by its day or month, above).
-    if (essay.kind === "essay" && !essay.givenAt?.length && !essay.datePublished) {
+    if (essay.kind !== "archive" && !essay.givenAt?.length && !essay.datePublished) {
       ctx.addIssue({ code: "custom", message: "essays require a date: givenAt or datePublished" });
     }
-    if (essay.kind === "essay" && (essay.author !== "Alan Harman-Box" || !essay.lead || essay.archiveMonth || essay.revisedMonth || essay.updateNotice || typeof essay.heading === "string")) {
+    if (essay.kind !== "archive" && (essay.author !== "Alan Harman-Box" || !essay.lead || essay.archiveMonth || essay.revisedMonth || essay.updateNotice || typeof essay.heading === "string")) {
       ctx.addIssue({ code: "custom", message: "essays require their author, lead and marked heading, without archive context" });
     }
     if (essay.revisedMonth && (!essay.datePublished || essay.revisedMonth <= essay.datePublished.toISOString().slice(0, 7))) {
@@ -82,4 +84,7 @@ export const writingSchema = z.object({
     if (essay.datePublished && essay.dateModified && essay.dateModified < essay.datePublished) {
       ctx.addIssue({ code: "custom", path: ["dateModified"], message: "dateModified must not precede datePublished" });
     }
-  });
+    if (essay.lead && (essay.lead.split("`").length % 2 === 0 || essay.lead.includes("``"))) {
+      ctx.addIssue({ code: "custom", path: ["lead"], message: "lead backticks must pair around non-empty code" });
+    }
+  }).transform((essay) => ({ ...essay, kicker: essay.kicker ?? { essay: "Essay", article: "Article", archive: "Archive" }[essay.kind] }));

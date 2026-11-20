@@ -171,6 +171,7 @@ test("the three-numbers essay renders Alan's approved prose, dated, with its hea
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.");
   await expect(page.locator("h1")).toHaveText("Data democracy or data demagoguery?");
   await expect(page.locator("h1 .em")).toHaveText("demagoguery");
+  await expect(page.locator(".title-band .eyebrow")).toHaveText("Essay");
   await expect(page.locator(".title-band .standfirst")).toHaveText("When anyone can have a dashboard by teatime");
   await expect(page.locator(".article-byline")).toHaveText("Alan Harman-Box · 20 November 2026");
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
@@ -216,6 +217,8 @@ test("the MCP server article renders Alan's approved prose, its figure and its l
   await expect(page).toHaveTitle("The Power BI MCP server, explained | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "What Power BI's MCP servers do, why the agent already knows plenty without one, and when to bother setting one up.");
   await expect(page.locator("h1")).toHaveText("The Power BI MCP server, explained for people who don't code");
+  await expect(page.locator(".title-band .eyebrow")).toHaveText("Article");
+  await expect(page.locator("h1 .em")).toHaveText("explained");
   await expect(page.locator(".title-band .standfirst")).toHaveText("What MCP servers actually do, and why you don't necessarily need one to start working with an agent on Power BI.");
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
   await expect(page.locator(".case-chapter h2")).toHaveText(["We've got to install Microwave Ovens", "What you'd actually be setting up", "The risk you should know about", "Start with files", "The gap you'll feel", "Where to start"]);
@@ -247,6 +250,10 @@ test("the Power Query if statement article renders Alan's approved prose, code, 
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Use the Conditional column button or write if then else in M. How the Power Query if statement works in Power BI, with the common mistake that trips people up.");
   await expect(page.locator("h1")).toHaveText("How to write a Power Query if statement in Power BI");
   await expect(page.locator("h1 .em")).toHaveText("if statement");
+  await expect(page.locator(".title-band .eyebrow")).toHaveText("Article");
+  // The lead's backtick span is code on the page; no backticks reach the head (meta or JSON-LD) or the visible lead.
+  await expect(page.locator(".title-band .standfirst code")).toHaveText(["if condition then result else result"]);
+  expect(await page.locator("head").innerHTML()).not.toContain("`");
   await expect(page.locator(".title-band .standfirst")).toHaveText("Use the Conditional column button on the Add column tab, or write if condition then result else result in a custom column. No brackets, all lowercase, and the else is required.");
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
   await expect(page.locator(".case-chapter h2")).toHaveText(["The button that writes it for you", "When you need to write it yourself", "Excel muscle memory", "Where to practise this"]);
@@ -270,7 +277,16 @@ test("the Power Query if statement article renders Alan's approved prose, code, 
   await shot.scrollIntoViewIfNeeded();
   await expect.poll(() => shot.evaluate((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   await expect(page.locator(".screenshot figcaption")).toHaveCount(0);
-  expect(await page.locator(".case-prose a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([
+  // Tap to enlarge: a plain link to the full-size source file, named for what it opens.
+  const enlarge = page.locator(".screenshot a.screenshot-enlarge");
+  await expect(enlarge).toHaveCount(1);
+  await expect(enlarge).toHaveAccessibleName("The Add conditional column dialog, with one clause testing whether Amount is greater than 500 and an else value of Standard. (opens the full-size image)");
+  const full = await enlarge.getAttribute("href");
+  expect(full).toMatch(/^\/_astro\/add-conditional-column\.[\w-]+\.png$/);
+  const response = await page.request.get(full!);
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("image/png");
+  expect(await page.locator(".case-prose a:not(.screenshot-enlarge)").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([
     "https://learn.microsoft.com/powerquery-m/m-spec-conditionals",
     roche, "/training/power-bi-fundamentals/", "/training/",
   ]);

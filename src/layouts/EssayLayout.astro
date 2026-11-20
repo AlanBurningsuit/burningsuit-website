@@ -3,7 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import TitleBand from "../components/TitleBand.astro";
 import Newsletter from "../components/Newsletter.astro";
-import { dayText, isoDay, monthText } from "../lib/writing";
+import { dayText, isoDay, leadParts, monthText } from "../lib/writing";
 import "../styles/articles.css";
 interface Props { essay: CollectionEntry<"writing">["data"] }
 const { essay } = Astro.props;
@@ -19,7 +19,7 @@ const datePublished = essay.datePublished ? isoDay(essay.datePublished) : essay.
   <article class="reading-article" aria-labelledby="page-title">
     <TitleBand heading={essay.heading} standfirstClass="article-lead">
       <Fragment slot="eyebrow">{essay.kicker}</Fragment>
-      {essay.lead && <Fragment slot="standfirst">{essay.lead}</Fragment>}
+      {essay.lead && <Fragment slot="standfirst">{leadParts(essay.lead).map(({ text, code }) => code ? <code>{text}</code> : text)}</Fragment>}
     </TitleBand>
     <header class="article-opening wrap">
       <p class="article-byline">{essay.author}{bylineDate && <> · <time datetime={bylineDate.iso}>{bylineDate.text}</time></>}{essay.revisedMonth && <> · Revised by {essay.author}, <time datetime={essay.revisedMonth}>{monthText(essay.revisedMonth)}</time></>}</p>
@@ -28,9 +28,9 @@ const datePublished = essay.datePublished ? isoDay(essay.datePublished) : essay.
     </header>
     <slot />
   </article>
-  {essay.kind === "essay" && <Newsletter />}
+  {essay.kind !== "archive" && <Newsletter />}
   <div class="article-related closing-band dark"><div class="wrap closing-inner"><div class="links">
-    {essay.kind === "essay" && <a href="/training/power-bi-with-ai-agents-101/">Power BI with AI agents 101</a>}
+    {essay.kind !== "archive" && <a href="/training/power-bi-with-ai-agents-101/">Power BI with AI agents 101</a>}
     <a href="/about/">About</a>
     <a href="/training/">Training</a>
     <a href="/power-bi/">Consultancy</a>

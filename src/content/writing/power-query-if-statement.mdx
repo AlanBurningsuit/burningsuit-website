@@ -1,5 +1,5 @@
 ---
-kind: essay
+kind: article
 author: "Alan Harman-Box"
 title: "Power Query if statement in Power BI | burningsuit"
 description: "Use the Conditional column button or write if then else in M. How the Power Query if statement works in Power BI, with the common mistake that trips people up."
@@ -7,8 +7,7 @@ heading:
   before: "How to write a Power Query "
   em: "if statement"
   after: " in Power BI"
-lead: "Use the Conditional column button on the Add column tab, or write if condition then result else result in a custom column. No brackets, all lowercase, and the else is required."
-kicker: "Essay"
+lead: "Use the Conditional column button on the Add column tab, or write `if condition then result else result` in a custom column. No brackets, all lowercase, and the else is required."
 # Provisional: set to the day it first goes live.
 datePublished: 2026-11-20
 ---
@@ -19,7 +18,7 @@ Someone in a training room last week asked me how to write a Power Query if stat
 
 In Power Query Editor, go to Add column and choose Conditional column. You pick the column, the operator and the value from dropdown lists, type your output, and fill in the else. For that order table: column name Amount, operator is greater than, value 500, output "Large", otherwise "Standard". Hit OK and the new column appears. The step runs again every time your data refreshes, so when new orders come in next week the column is already there.
 
-<Screenshot src="power-query-if-statement/add-conditional-column.png" alt="The Add conditional column dialog, with one clause testing whether Amount is greater than 500 and an else value of Standard." />
+<Screenshot enlarge src="power-query-if-statement/add-conditional-column.png" alt="The Add conditional column dialog, with one clause testing whether Amount is greater than 500 and an else value of Standard." />
 
 Need more than two outcomes? Add clauses. The dialog tests them top to bottom: first match wins. Amount is greater than 1000, output "Priority"; Amount is greater than 500, output "Large"; otherwise "Standard". Three tiers, no code at all.
 
