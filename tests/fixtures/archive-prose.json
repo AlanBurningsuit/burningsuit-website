@@ -171,5 +171,99 @@
         "code": "Top/Bottom Percent =\nVAR Rank_To_Find = COUNTROWS ( ALL ( Customers ) ) * SELECTEDVALUE ( 'Percent'[Percent] )\nVAR Top_or_Bottom = SELECTEDVALUE ( 'Top or Bottom'[Top or Bottom] )\nVAR Top_PC =\n    CALCULATE ( [_Total Sales],\n        FILTER ( Customers, Customers[Customers Ranked Top] <= Rank_To_Find ) )\nVAR Bottom_PC =\n    CALCULATE ( [_Total Sales],\n        FILTER ( Customers, Customers[Customers Ranked Bottom] <= Rank_To_Find ) )\nRETURN\n    IF ( Top_or_Bottom = \"top\", Top_PC, Bottom_PC )\n"
       }
     ]
+  },
+  "/blog/2020/11/how-dax-treats-nulls-zeros/": {
+    "paragraphCount": 11,
+    "sha256": "4cef7f8da58b5a3a836f9e0b3b8e77e4ec81f41515ac26768a4613050a298700",
+    "headings": [],
+    "alts": [
+      "A Winesales table with a calculated column, 10 Percent, holding 10% of CASES SOLD (18.2 for 182 cases, 13.1 for 131) and blank where 100 or fewer cases were sold.",
+      "The Blank? column returns Blank on every row, both where CASES SOLD is empty and where it is 0.",
+      "The Zero? column returns Zero on every row, both where CASES SOLD is empty and where it is 0.",
+      "The Blank or Zero? column: Blank where CASES SOLD is empty, Zero where it is 0, and Other where it is 1 or 13.",
+      "The rewritten Zero? column: Zero only where CASES SOLD is 0, and Other where it is empty or above 0."
+    ],
+    "notes": []
+  },
+  "/blog/using-dynamic-values-smart-narrative-and-text-box/": {
+    "paragraphCount": 27,
+    "sha256": "4681528c7cb059e65c2c4aa54238e801909be53f78cd2d9acb9529fff19a1afd",
+    "headings": [],
+    "alts": [
+      "A wine sales report filtered to salesperson Abel and the region Germany, with six cards at the bottom left: Total Sales, Avg Sales, Max Sales, Total Qty, Avg Qty and Max Qty.",
+      "The same report with the six cards replaced by one text box headed In Germany for salesperson Abel, listing the six figures with each region, name and figure underlined as a dynamic value.",
+      "The Visualizations gallery with the Smart Narrative icon outlined in red.",
+      "A Smart Narrative visual beside the report, with generated sentences such as which wine had the highest and lowest Total Sales, Merlot's share of Total Qty and when Total Sales for each type started trending up, each figure underlined.",
+      "A red arrow from the first value in the narrative to its pane, which says the value was automatically generated while summarizing the report, as Max Total Sales by WINE, with currency formatting and the name V1.",
+      "The narrative's toolbar with the Value button outlined in red, above the typed text You are looking at data for.",
+      "The Value pane, Create a dynamic value that updates, with Name of salesperson typed under How would you calculate this value and suggestions below it.",
+      "The narrative now reads You are looking at data for Abel, with Abel outlined in red.",
+      "The Text box button.",
+      "The text box summary, now for Argentina and salesperson Abel, with its six figures underlined as dynamic values.",
+      "How would you calculate this value, with REGION name typed in it.",
+      "How would you calculate this value, with sum winesales quantity typed in it.",
+      "The Review pane, Review and edit the values in your narrative, listing #Value, #Value 2 and #Value 3, with the Review button and the first value's pen button outlined in red.",
+      "Slicers selecting Bordeaux and the dates 19 and 27 January 2017, beside a text box reading On 27 January 2017 the Qty for Bordeaux was reduced from 176 to 127, a difference of -49 from 19 January 2017, and a table of Total Qty by sale date with those two dates outlined in red."
+    ],
+    "notes": []
+  },
+  "/blog/using-continuous-x-axis-column-charts-year-and-month-labels/": {
+    "paragraphCount": 8,
+    "sha256": "3b6a6f3b738877525bd5e3d4967a03d8c6bda6139deff4b4a21db7edc9c97177",
+    "headings": [],
+    "alts": [
+      "A column chart, Sales by Year and Month, with a column for each month from January 2017 and x-axis labels every six months, Jan 2017, Jul 2017 and so on to Jul 2019, outlined in red.",
+      "A line chart of Sales by Year, Quarter and Month, with the DateKey date hierarchy (Year, Quarter, Month, Day) on the X-axis and labels every six months from Jan 2017 to Jul 2019.",
+      "The same data as a column chart, with a crowded categorical axis labelled for every month, each label cut short to 2017 Q... and so on, and a scroll bar under it.",
+      "A column chart of Sales by Year for 2017, 2018 and 2019, beside the format pane's X-axis card with Type set to Continuous.",
+      "The date table in Data view with a new column, Year and Month = STARTOFMONTH(DateTable[DateKey]), outlined in red. Every date in July 2017 returns 01/07/2017, and the column's data type is Date/time.",
+      "The finished column chart, Sales by Year and Month, with the Year and Month column on the X-axis and labels every six months from Jan 2017 to Jul 2019."
+    ],
+    "notes": []
+  },
+  "/blog/2021/09/i-have-the-powerquery-using-power-query-to-call-rest-apis/": {
+    "paragraphCount": 31,
+    "sha256": "a60756eebbe9f07f04ff140f5c81e42e02a90e0cd8749163270cdadeb8cd085a",
+    "headings": [
+      "Primer: APIs? REST!?",
+      "Calling an API through Custom Columns",
+      "Getting argumentative",
+      "Going further",
+      "Parameterisation",
+      "So what?"
+    ],
+    "alts": [
+      "The Power Query editor with one query, TranslationExample: a TextToTranslate column holding Hello, Aardvark and four pangrams such as The quick brown fox jumped over the lazy dog.",
+      "The Custom Column dialog: the new column is named TranslatedText and the formula is the Web.Contents call above.",
+      "The query with the new TranslatedText column showing Binary on every row.",
+      "A list drilled down from the JSON, its first item Bonjour and its second Hello, with the steps Imported JSON, Imported JSON1 and Imported JSON2 under Applied steps.",
+      "The Custom Column formula now wraps the Web.Contents call in Json.Document( ){0}{0}{0}.",
+      "The TranslatedText column now holds French text: Bonjour for Hello, Aardvark for Aardvark, and a French version of each pangram.",
+      "The formula rewritten: Web.Contents takes the base URL https://translate.googleapis.com and a record with RelativePath set to translate_a/single and a Query record of client gtx, dt t, sl en, tl fr and q set to the TextToTranslate column.",
+      "Sample data with three columns: the text to translate, its Language (English, French, Icelandic, Kannada) and that language's ISO639-1 code (en, fr, is, kn).",
+      "The Query record with sl now set to the column [#\"LanguageISO639-1Code\"], outlined in red.",
+      "Rows in English, Welsh, French, Icelandic and Kannada, each with an English translation in the TranslatedText column.",
+      "The Manage Parameters dialog with a required Text parameter named DestinationLanguage, described as the ISO639-1 code defining the language to translate TextToTranslate into, with the current value fr.",
+      "The Query record with tl now set to DestinationLanguage, outlined in red.",
+      "Power BI Desktop's Home tab with the Transform data menu open and Edit parameters circled in red."
+    ],
+    "notes": []
+  },
+  "/blog/filtering-using-dax-measures/": {
+    "paragraphCount": 15,
+    "sha256": "9ae889b9781e13c1ebfd7ba2c8c1224aa68e6a9dcb485b27a4efc1c6c1951c80",
+    "headings": [
+      "Using Measures to Filter Items with No Data",
+      "Filtering Categories Returned by a Measure",
+      "Filtering Numerical Values Returned by a Measure"
+    ],
+    "alts": [],
+    "notes": [
+      {
+        "paragraphs": [
+          "Update, November 2026: The screenshots in this post have been lost. The text still refers to them."
+        ]
+      }
+    ]
   }
 }

@@ -122,11 +122,14 @@ test("each article's dates come from its frontmatter at the source's precision a
     const data = frontmatter(id);
     const article = node(path, "Article");
     if (data.kind === "archive" && data.datePublished) {
-      // A post dated to the day: that day, as the byline shows it, and when its update notes were added.
+      // A post dated to the day: that day, as the byline shows it, and when its update notes were added (none without notes).
       assert.equal(article.datePublished, isoDay(data.datePublished));
       assert(html(path).includes(`<time datetime="${article.datePublished}">`), `${path}: the day is on the page`);
-      assert.equal(article.dateModified, isoDay(data.dateModified));
-      assert(article.dateModified >= article.datePublished);
+      assert.equal(Boolean(data.dateModified), Boolean(data.updateNotice), `${path}: a modification date only with update notes`);
+      if (data.dateModified) {
+        assert.equal(article.dateModified, isoDay(data.dateModified));
+        assert(article.dateModified >= article.datePublished);
+      } else assert.equal(article.dateModified, undefined);
     } else if (data.kind === "archive") {
       // Month only, as the byline shows it; no day or modification date the source doesn't give.
       assert.match(article.datePublished, /^\d{4}-\d{2}$/);

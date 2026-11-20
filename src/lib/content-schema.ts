@@ -64,10 +64,11 @@ export const writingSchema = z.object({
     datePublished: z.coerce.date().optional(), dateModified: z.coerce.date().optional(),
     givenAt: z.array(z.object({ event: text, date: z.coerce.date() }).strict()).min(1).optional(),
   }).strict().superRefine((essay, ctx) => {
-    // An archive post keeps its original author and the date precision its source gives: a month or a day, not both. Only
-    // a post dated to the day can carry a dateModified (when its update notes were added; see below).
-    if (essay.kind === "archive" && (essay.author === "Alan Harman-Box" || !essay.archiveMonth === !essay.datePublished || essay.givenAt)) {
-      ctx.addIssue({ code: "custom", message: "archive entries require their original author and either a month or a day of publication, without appearances" });
+    // An archive post keeps the date precision its source gives: a month or a day, not both. Its author is the original
+    // byline (Alan's own 2021 Power Query post among them), which tests/content-schema.test.mjs pins per post. Only a post
+    // dated to the day can carry a dateModified (when its update notes were added; see below).
+    if (essay.kind === "archive" && (!essay.archiveMonth === !essay.datePublished || essay.givenAt)) {
+      ctx.addIssue({ code: "custom", message: "archive entries require either a month or a day of publication, without appearances" });
     }
     // Every entry is dated, so the Writing index can order and date it: an essay by a talk or its publication day (an
     // archive post by its day or month, above).

@@ -1,0 +1,101 @@
+---
+kind: archive
+author: "Alison Box"
+datePublished: 2020-11-12
+title: "How DAX treats nulls and zeros | burningsuit"
+description: "DAX treats BLANK() and 0 as the same value in comparisons. How to tell blanks from zeros with ISBLANK in IF expressions and DAX measures."
+heading: "How DAX treats nulls and zeros"
+kicker: "Archive"
+---
+{/* Alison Box's published text, kept word for word (source and removals: the ops repo's site/writing-restored-posts-2-copy.md). */}
+
+<div class="archive-prose wrap">
+
+In DAX there is a special way to identify null or empty values and that's by using a value called "blank". In order to return blank values, we can use the BLANK() function e.g.
+
+```dax
+10 Percent =
+IF ( Winesales[CASES SOLD] > 100, Winesales[CASES SOLD] * 0.1, BLANK () )
+```
+
+<Screenshot src="how-dax-treats-nulls-zeros/01-10-percent.png" alt="A Winesales table with a calculated column, 10 Percent, holding 10% of CASES SOLD (18.2 for 182 cases, 13.1 for 131) and blank where 100 or fewer cases were sold." />
+
+When constructing DAX expressions using IF, if you want to return BLANK() on the "Value if false" argument, you can just close off on the bracket because BLANK() is the default if no value is supplied in the argument. So we could re-write the expression above like this:-
+
+```dax
+10 Percent =
+IF ( Winesales[CASES SOLD] > 100, Winesales[CASES SOLD] * 0.1 )
+```
+
+We can test for null or blank values as in the following expression:-
+
+```dax
+Blank? =
+IF ( Winesales[CASES SOLD] = BLANK(), "Blank", "Other")
+```
+
+<Screenshot src="how-dax-treats-nulls-zeros/02-blank-test.png" alt="The Blank? column returns Blank on every row, both where CASES SOLD is empty and where it is 0." />
+
+Notice that testing for BLANK() includes 0 (zero) so we never get "Other".
+
+What's surprising however, is that the reverse is true so in the expression below, testing for 0 includes BLANK(), so again we never get "Other":-
+
+```dax
+Zero? =
+IF ( Winesales[CASES SOLD] = 0, "Zero", "Other")
+```
+
+<Screenshot src="how-dax-treats-nulls-zeros/03-zero-test.png" alt="The Zero? column returns Zero on every row, both where CASES SOLD is empty and where it is 0." />
+
+Therefore, we can see that DAX treats BLANK() and 0 (zero) as the same value when used in comparisons, as in the above two examples.
+
+So what if you want to distinguish between 0 and blank? You can use a special function that will "weed out" blanks as compared to 0. That function is ISBLANK() as used in this following expression:-
+
+```dax
+Blank or Zero? =
+IF (
+    ISBLANK ( Winesales[CASES SOLD] ),
+    "Blank",
+    IF ( Winesales[CASES SOLD] = 0, "Zero", "Other" )
+)
+```
+
+<Screenshot src="how-dax-treats-nulls-zeros/04-blank-or-zero.png" alt="The Blank or Zero? column: Blank where CASES SOLD is empty, Zero where it is 0, and Other where it is 1 or 13." />
+
+If you want to find just 0, you can use this expression:-
+
+```dax
+Zero? =
+IF (
+    NOT ( ISBLANK ( Winesales[CASES SOLD] ) )
+        && Winesales[CASES SOLD] = 0,
+    "Zero",
+    "Other"
+)
+```
+
+<Screenshot src="how-dax-treats-nulls-zeros/05-zero-only.png" alt="The rewritten Zero? column: Zero only where CASES SOLD is 0, and Other where it is empty or above 0." />
+
+You can also put the name of a measure inside ISBLANK(). For example, to find out how many customers have no sales, as opposed to 0 (zero) sales, this would be the DAX expression:-
+
+```dax
+No of Customers with No Sales =
+COUNTROWS ( FILTER ( Customers, ISBLANK ( [Total Sales] ) ) )
+```
+
+Whereas this expression would find the number of customers who had either zero sales or no sales:-
+
+```dax
+No of Customers with Zero or No Sales =
+COUNTROWS ( FILTER ( Customers, [Total Sales] = 0 ) )
+```
+
+So just be careful about using the following….. `= IF ( [expression] = 0 )` …… because it will include blank values.
+
+</div>
+
+<div class="archive-next wrap">
+
+Blanks and zeros, and why a filter for zero also picks up blanks, are part of [DAX deep dive](/training/dax-deep-dive/). Every course is on [Training](/training/).
+
+</div>

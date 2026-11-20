@@ -30,5 +30,10 @@ module.exports = [
   "/blog/2019/04/7-secrets-of-the-matrix-visual/",
   "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/",
   "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/",
-  "/blog/2019/05/find-top-or-bottom-n-percent-dax/"
+  "/blog/2019/05/find-top-or-bottom-n-percent-dax/",
+  "/blog/2020/11/how-dax-treats-nulls-zeros/",
+  "/blog/using-dynamic-values-smart-narrative-and-text-box/",
+  "/blog/using-continuous-x-axis-column-charts-year-and-month-labels/",
+  "/blog/2021/09/i-have-the-powerquery-using-power-query-to-call-rest-apis/",
+  "/blog/filtering-using-dax-measures/"
 ];

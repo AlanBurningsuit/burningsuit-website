@@ -1,12 +1,12 @@
 ---
-// A screenshot in a Writing post, from src/assets/writing/<post>/. Optimised to WebP at the reading column's width
+// A screenshot in a Writing post, from src/assets/writing/<post>/ (PNG, or JPEG where only a JPEG survives). Optimised to WebP at the reading column's width
 // and twice that for sharp screens, never wider than the source; lazy-loaded, with its width and height set. `enlarge`
 // wraps it in a plain link to the full-size source file, so a phone reader can open it full size.
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 interface Props { src: string; alt: string; enlarge?: boolean }
 const { src, alt, enlarge = false } = Astro.props;
-const files = import.meta.glob<{ default: ImageMetadata }>("../assets/writing/**/*.png", { eager: true });
+const files = import.meta.glob<{ default: ImageMetadata }>("../assets/writing/**/*.{png,jpg}", { eager: true });
 const image = files[`../assets/writing/${src}`]?.default;
 if (!image) throw new Error(`Missing screenshot: ${src}`);
 const column = 760;

@@ -15,6 +15,12 @@ const secrets = "/blog/2019/04/7-secrets-of-the-matrix-visual/";
 const eighth = "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/";
 const bins = "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/";
 const topN = "/blog/2019/05/find-top-or-bottom-n-percent-dax/";
+// Five more restored posts, 20 Nov 2026 (source and removals: the ops repo's site/writing-restored-posts-2-copy.md).
+const nulls = "/blog/2020/11/how-dax-treats-nulls-zeros/";
+const narrative = "/blog/using-dynamic-values-smart-narrative-and-text-box/";
+const xAxis = "/blog/using-continuous-x-axis-column-charts-year-and-month-labels/";
+const restApis = "/blog/2021/09/i-have-the-powerquery-using-power-query-to-call-rest-apis/";
+const filtering = "/blog/filtering-using-dax-measures/";
 // Per post: a hash of her prose as built, and the approved copy's headings, alt text and update notes (taken from the
 // copy file, not from the build), each compared exactly.
 type Note = { paragraphs: string[]; code?: string; table?: string[][] };
@@ -34,17 +40,27 @@ test("Writing is an indexed list generated from the collection: articles, then t
   expect(await lists.nth(0).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([pqIf, mcp, threeNumbers, essay]);
   await expect(lists.nth(0).locator("li")).toHaveText(["How to write a Power Query if statement in Power BI Alan Harman-Box · November 2026 Use the Conditional column button or write if then else in M. How the Power Query if statement works in Power BI, with the common mistake that trips people up.", "The Power BI MCP server, explained for people who don't code Alan Harman-Box · November 2026 What Power BI's MCP servers do, why the agent already knows plenty without one, and when to bother setting one up.", "Data democracy or data demagoguery? Alan Harman-Box · November 2026 Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.", "We're all middle management now Alan Harman-Box · Talk, February 2026 Agentic development in Power BI: what an agent is, how far to trust its work, and what handing work to it costs."], { useInnerText: true });
   await expect(page.getByRole("heading", { level: 2, name: "From the archive" })).toBeVisible();
-  expect(await lists.nth(1).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([roche, eighth, bins, topN, secrets]);
+  expect(await lists.nth(1).locator("a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual([narrative, filtering, xAxis, restApis, roche, nulls, eighth, bins, topN, secrets]);
   await expect(lists.nth(1).locator("h3")).toHaveText([
+    "Using dynamic values in the smart narrative and text box",
+    "Filtering using DAX measures",
+    "Using a continuous x-axis on column charts for year and month labels",
+    "I have the Power(query): using Power Query to call REST APIs",
     "Where do I make data transformations in Power BI? Roche's Maxim",
+    "How DAX treats nulls and zeros",
     "The 8th secret of the matrix visual: controlling calculations and labels on subtotals",
     'Categorising measures into numeric ranges or "bins"',
     "Best and worst: two approaches to finding top or bottom N percent using DAX",
     "7 secrets of the matrix visual",
   ]);
-  await expect(lists.nth(1).locator(".writing-entry-meta")).toHaveText(["Stuart Box · March 2021", "Alison Box · October 2020", "Alison Box · January 2020", "Alison Box · May 2019", "Alison Box · April 2019, revised July 2022"]);
+  await expect(lists.nth(1).locator(".writing-entry-meta")).toHaveText(["Alison Box · October 2022", "Alison Box · August 2022", "Alison Box · April 2022", "Alan Harman-Box · September 2021", "Stuart Box · March 2021", "Alison Box · November 2020", "Alison Box · October 2020", "Alison Box · January 2020", "Alison Box · May 2019", "Alison Box · April 2019, revised July 2022"]);
   await expect(lists.nth(1).locator("p:not(.writing-entry-meta)")).toHaveText([
+    "Replace a row of card visuals with one Power BI text box or smart narrative, using dynamic values from measures or natural language.",
+    "You can't put a DAX measure in a slicer, but you can filter on one in the Filters pane, and with SUMX and FILTER where a matrix's columns need it.",
+    "Give a Power BI column chart a continuous x-axis labelled by month and year: a STARTOFMONTH calculated column in your date table does it.",
+    "Call a REST API from Power Query with Web.Contents and Json.Document: translate a column of text, then make the target language a parameter.",
     "Roche's Maxim: transform data as far upstream as possible, as far downstream as necessary. Stuart Box's 2021 post, which Matthew Roche credited as the first.",
+    "DAX treats BLANK() and 0 as the same value in comparisons. How to tell blanks from zeros with ISBLANK in IF expressions and DAX measures.",
     "Use ISINSCOPE to give Power BI matrix subtotals their own calculation, such as % of parent row total, and give each subtotal level its own label.",
     "Count how many customers' total sales fall into each numeric range, or bin, with an unrelated table of ranges and one DAX measure in Power BI.",
     "Find your top or bottom 10 percent of customers by sales in DAX: rank them with RANKX, then use a fixed percentage or slicers that choose it.",
@@ -54,7 +70,7 @@ test("Writing is an indexed list generated from the collection: articles, then t
   await expect(page.locator("main img, main form")).toHaveCount(0);
   await expect(page.locator(otherScripts)).toHaveCount(0);
   const sitemap = await (await page.request.get("/sitemap-0.xml")).text();
-  for (const route of ["/writing/", pqIf, mcp, threeNumbers, secrets, eighth, bins, topN]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
+  for (const route of ["/writing/", pqIf, mcp, threeNumbers, secrets, eighth, bins, topN, nulls, narrative, xAxis, restApis, filtering]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
 });
 
 test("/blog leads to Writing, and the restored posts' old addresses lead to them", async ({ page }) => {
@@ -68,6 +84,10 @@ test("/blog leads to Writing, and the restored posts' old addresses lead to them
     "/blog/2018/06/dax-how-to-group-measures-into-numeric-ranges": bins,
     "/blog/best-and-worst-two-approaches-finding-top-or-bottom-n-percent-using-dax": topN,
     "/find-top-or-bottom-n-percent-dax": topN,
+    "/blog/how-dax-treats-nulls-zeros": nulls,
+    "/how-dax-treats-nulls-zeros": nulls,
+    "/blog/i-have-powerquery-using-power-query-call-rest-apis": restApis,
+    "/i-have-the-powerquery-using-power-query-to-call-rest-apis": restApis,
   };
   for (const [from, to] of Object.entries(expected)) {
     expect(redirectMap[from], from).toBe(to);
@@ -75,31 +95,37 @@ test("/blog leads to Writing, and the restored posts' old addresses lead to them
     await expect(page, from).toHaveURL(new RegExp(`${to.replaceAll("/", "\\/")}$`));
   }
   // The restored pages are pages again, not redirect stubs; other old posts still lead to Consultancy.
-  for (const route of [secrets, eighth, bins, topN]) expect(redirectMap[route.replace(/\/$/, "")]).toBeUndefined();
+  for (const route of [secrets, eighth, bins, topN, nulls, narrative, xAxis, restApis, filtering]) expect(redirectMap[route.replace(/\/$/, "")]).toBeUndefined();
   expect(redirectMap["/blog/7-secrets-line-chart"]).toBe("/power-bi/");
   expect(redirectMap["/blog/2020/07/7-secrets-of-the-pie-chart"]).toBe("/power-bi/");
 });
 
-const posts: { route: string; title: string; heading: string; byline: string; notice: string; notes: number; screenshots: number; closing: string[] }[] = [
+const posts: { route: string; title: string; heading: string; author?: string; byline: string; notice?: string; notes: number; screenshots: number; closing: string[] }[] = [
   { route: secrets, title: "7 secrets of the matrix visual in Power BI | burningsuit", heading: "7 secrets of the matrix visual", byline: "Alison Box · 9 April 2019 · Revised by Alison Box, July 2022", notice: "This post has dated update notes where Power BI has changed since it was written.", notes: 2, screenshots: 19, closing: ["/training/dax-fundamentals/", "/training/"] },
   { route: eighth, title: "The 8th secret of the matrix visual: subtotals | burningsuit", heading: "The 8th secret of the matrix visual: controlling calculations and labels on subtotals", byline: "Alison Box · 26 October 2020", notice: "This post has a dated update note where Power BI has changed since it was written.", notes: 1, screenshots: 6, closing: ["/training/dax-deep-dive/", "/training/"] },
   { route: bins, title: "Group a DAX measure into numeric ranges (bins) | burningsuit", heading: 'Categorising measures into numeric ranges or "bins"', byline: "Alison Box · 22 January 2020", notice: "This post has dated update notes where Power BI has changed, and where its screenshots have been lost.", notes: 4, screenshots: 0, closing: ["/training/dax-fundamentals/", "/training/"] },
   { route: topN, title: "Top or bottom N percent in DAX | burningsuit", heading: "Best and worst: two approaches to finding top or bottom N percent using DAX", byline: "Alison Box · 19 May 2019", notice: "This post has dated update notes, including a correction to the measure in Approach No. 2.", notes: 4, screenshots: 8, closing: ["/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/"] },
+  { route: nulls, title: "How DAX treats nulls and zeros | burningsuit", heading: "How DAX treats nulls and zeros", byline: "Alison Box · 12 November 2020", notes: 0, screenshots: 5, closing: ["/training/dax-deep-dive/", "/training/"] },
+  { route: narrative, title: "Smart narrative and text box dynamic values | burningsuit", heading: "Using dynamic values in the smart narrative and text box", byline: "Alison Box · 3 October 2022", notes: 0, screenshots: 14, closing: ["/training/power-bi-fundamentals/", "/training/"] },
+  { route: xAxis, title: "Continuous x-axis on a column chart by month | burningsuit", heading: "Using a continuous x-axis on column charts for year and month labels", byline: "Alison Box · 28 April 2022", notes: 0, screenshots: 6, closing: ["/training/power-bi-fundamentals/", "/training/"] },
+  { route: restApis, title: "Call a REST API from Power Query | burningsuit", heading: "I have the Power(query): using Power Query to call REST APIs", author: "Alan Harman-Box", byline: "Alan Harman-Box · 27 September 2021", notes: 0, screenshots: 13, closing: ["/training/power-bi-fundamentals/", "/training/"] },
+  { route: filtering, title: "Filtering using DAX measures | burningsuit", heading: "Filtering using DAX measures", byline: "Alison Box · 17 August 2022", notice: "This post has a dated update note: its screenshots have been lost.", notes: 1, screenshots: 0, closing: ["/training/dax-fundamentals/", "/training/"] },
 ];
 
 for (const post of posts) {
-  test(`restored post keeps Alison Box's text, byline and dated notes: ${post.route}`, async ({ page }) => {
+  test(`restored post keeps its author's text, byline and dated notes: ${post.route}`, async ({ page }) => {
     expect((await page.goto(post.route))?.status()).toBe(200);
     await expectIndexable(page, { article: true });
     await expect(page).toHaveTitle(post.title);
     await expect(page.locator("h1")).toHaveText(post.heading);
     await expect(page.locator(".title-band .eyebrow")).toHaveText("Archive");
-    await expect(page.locator('meta[name="author"]')).toHaveAttribute("content", "Alison Box");
+    const author = post.author ?? "Alison Box";
+    await expect(page.locator('meta[name="author"]')).toHaveAttribute("content", author);
     await expect(page.locator(".article-byline")).toHaveText(post.byline);
-    await expect(page.locator(".article-appearances p")).toHaveText([post.notice, "Update notes are by Alan Harman-Box."]);
-    // The JSON-LD Article credits her, not the site's founder.
+    await expect(page.locator(".article-appearances p")).toHaveText(post.notice ? [post.notice, "Update notes are by Alan Harman-Box."] : []);
+    // The JSON-LD Article credits the post's own author.
     const graph = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!)["@graph"] as Record<string, unknown>[];
-    expect(graph.find((node) => node["@type"] === "Article")?.author).toEqual({ "@type": "Person", name: "Alison Box" });
+    expect(graph.find((node) => node["@type"] === "Article")?.author).toEqual(author === "Alan Harman-Box" ? { "@id": "https://burningsuit.co.uk/#person-alan" } : { "@type": "Person", name: author });
     // Her prose, unchanged: every paragraph and list item outside the notes.
     const approved = prose[post.route];
     const paras = await page.locator(".archive-prose > p, .archive-prose > :is(ol, ul) > li").allTextContents();

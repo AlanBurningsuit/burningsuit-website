@@ -8,6 +8,11 @@ export const writingRoutes = {
   "the-8th-secret-of-the-matrix-visual": "blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals",
   "categorising-measures-into-numeric-ranges-or-bins": "blog/2020/01/categorising-measures-into-numeric-ranges-or-bins",
   "find-top-or-bottom-n-percent-dax": "blog/2019/05/find-top-or-bottom-n-percent-dax",
+  "how-dax-treats-nulls-zeros": "blog/2020/11/how-dax-treats-nulls-zeros",
+  "using-dynamic-values-smart-narrative-and-text-box": "blog/using-dynamic-values-smart-narrative-and-text-box",
+  "using-continuous-x-axis-column-charts-year-and-month-labels": "blog/using-continuous-x-axis-column-charts-year-and-month-labels",
+  "i-have-the-powerquery-using-power-query-to-call-rest-apis": "blog/2021/09/i-have-the-powerquery-using-power-query-to-call-rest-apis",
+  "filtering-using-dax-measures": "blog/filtering-using-dax-measures",
 };
 
 /** An entry's route without slashes: its fixed URL above, else writing/<id>. A route that neither page file can build

@@ -54,10 +54,10 @@ test('essay dates: a talk date suffices, a modification needs the original date 
   assert.equal(writingSchema.safeParse({ ...essay, datePublished: '2026-11-05', dateModified: '2026-11-06' }).success, true);
 });
 
-test('archive metadata preserves month precision and its original author', () => {
+test('archive metadata preserves month precision', () => {
   const article = frontmatter('src/content/writing/roches-maxim.mdx');
   assert.equal(writingSchema.safeParse(article).success, true);
-  for (const extra of [{ archiveMonth: '2021-03-01' }, { author: 'Alan Harman-Box' }, { datePublished: '2021-03-01' }, { dateModified: '2026-11-06' }]) {
+  for (const extra of [{ archiveMonth: '2021-03-01' }, { datePublished: '2021-03-01' }, { dateModified: '2026-11-06' }]) {
     assert.equal(writingSchema.safeParse({ ...article, ...extra }).success, false);
   }
 });
@@ -73,7 +73,7 @@ test("Alison Box's restored posts keep her byline, the day they were published a
     // The update notes date the modification; it may not precede the original day.
     assert.equal(article.dateModified, '2026-11-19', id);
     // A day and a month together, a modification before publication, or no publication date at all fail closed.
-    for (const extra of [{ archiveMonth: '2019-04' }, { dateModified: '2018-12-31' }, { datePublished: undefined }, { author: 'Alan Harman-Box' }]) {
+    for (const extra of [{ archiveMonth: '2019-04' }, { dateModified: '2018-12-31' }, { datePublished: undefined }]) {
       assert.equal(writingSchema.safeParse({ ...article, ...extra }).success, false, `${id} ${JSON.stringify(extra)}`);
     }
   }
@@ -98,4 +98,24 @@ test('every Writing entry is dated: an essay needs a talk or a publication day, 
   assert.equal(writingSchema.safeParse({ ...essay, givenAt: undefined, datePublished: '2026-09-17' }).success, true);
   const roche = frontmatter('src/content/writing/roches-maxim.mdx');
   assert.equal(writingSchema.safeParse({ ...roche, archiveMonth: undefined }).success, false);
+});
+
+test('every archive post keeps its original byline and the day it was published', () => {
+  const bylines = {
+    'roches-maxim': 'Stuart Box',
+    '7-secrets-of-the-matrix-visual': 'Alison Box', 'the-8th-secret-of-the-matrix-visual': 'Alison Box',
+    'categorising-measures-into-numeric-ranges-or-bins': 'Alison Box', 'find-top-or-bottom-n-percent-dax': 'Alison Box',
+    'how-dax-treats-nulls-zeros': 'Alison Box', 'using-dynamic-values-smart-narrative-and-text-box': 'Alison Box',
+    'using-continuous-x-axis-column-charts-year-and-month-labels': 'Alison Box', 'filtering-using-dax-measures': 'Alison Box',
+    // Published under Alan's own byline in September 2021.
+    'i-have-the-powerquery-using-power-query-to-call-rest-apis': 'Alan Harman-Box',
+  };
+  const archive = readdirSync('src/content/writing').filter((file) => file.endsWith('.mdx')).map((file) => file.slice(0, -4))
+    .filter((id) => frontmatter(`src/content/writing/${id}.mdx`).kind === 'archive');
+  assert.deepEqual(archive.sort(), Object.keys(bylines).sort());
+  for (const [id, author] of Object.entries(bylines)) {
+    const article = frontmatter(`src/content/writing/${id}.mdx`);
+    assert.equal(writingSchema.safeParse(article).success, true, id);
+    assert.equal(article.author, author, id);
+  }
 });

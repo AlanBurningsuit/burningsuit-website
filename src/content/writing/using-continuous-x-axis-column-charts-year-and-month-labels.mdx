@@ -1,0 +1,48 @@
+---
+kind: archive
+author: "Alison Box"
+datePublished: 2022-04-28
+title: "Continuous x-axis on a column chart by month | burningsuit"
+description: "Give a Power BI column chart a continuous x-axis labelled by month and year: a STARTOFMONTH calculated column in your date table does it."
+heading: "Using a continuous x-axis on column charts for year and month labels"
+kicker: "Archive"
+---
+{/* Alison Box's published text, kept word for word (source and removals: the ops repo's site/writing-restored-posts-2-copy.md). */}
+
+<div class="archive-prose wrap">
+
+Ever wanted to do this on the x-axis of a Column chart…
+
+<Screenshot src="using-continuous-x-axis-column-charts-year-and-month-labels/01-continuous-column-chart.png" alt="A column chart, Sales by Year and Month, with a column for each month from January 2017 and x-axis labels every six months, Jan 2017, Jul 2017 and so on to Jul 2019, outlined in red." />
+
+…that is use a continuous x-axis for Month and Year labels?
+
+A continuous x-axis is used for date type data where Year and Month labels are incrementally spaced according to the number of data points plotted. This is compared to a categorical axis where there is a label for every data point.
+
+Luckily, Power BI will provide you with a continuous x-axis if you use a Date Hierarchy in conjunction with a Line chart. Here you can "expand down all one level in the hierarchy" to see data for each level and the axis labels respond accordingly, generating a continuous axis for each level in the hierarchy: -
+
+<Screenshot src="using-continuous-x-axis-column-charts-year-and-month-labels/02-line-chart-hierarchy.png" alt="A line chart of Sales by Year, Quarter and Month, with the DateKey date hierarchy (Year, Quarter, Month, Day) on the X-axis and labels every six months from Jan 2017 to Jul 2019." />
+
+However, what if you don't want a Line chart. What if you would prefer to plot your date data using a Column chart. If you convert the Line chart above to a column chart, you are given a categorical axis with no ability to change it to continuous: -
+
+<Screenshot src="using-continuous-x-axis-column-charts-year-and-month-labels/03-column-chart-categorical.png" alt="The same data as a column chart, with a crowded categorical axis labelled for every month, each label cut short to 2017 Q... and so on, and a scroll bar under it." />
+
+This is particularly frustrating. The rule is that if you are using a Column chart, only numerical data can be plotted on a continuous axis. At the Month level, the labels comprise both Quarter and Month names that are text values and so must be plotted on a categorical axis. However, if you drill back up to the Year level, you can change the axis from categorical to continuous because Year is a numerical value: -
+
+<Screenshot src="using-continuous-x-axis-column-charts-year-and-month-labels/04-year-level-continuous.png" alt="A column chart of Sales by Year for 2017, 2018 and 2019, beside the format pane's X-axis card with Type set to Continuous." />
+
+Now that we have established that in a Column chart, we can only use numerical data on the x-axis to render a continuous axis, how can we include both month name and year in the labels? The answer is quite simple; you generate a calculated column in your Date dimension that returns the first of every month using the DAX STARTOFMONTH function:-
+
+<Screenshot src="using-continuous-x-axis-column-charts-year-and-month-labels/05-startofmonth-column.png" alt="The date table in Data view with a new column, Year and Month = STARTOFMONTH(DateTable[DateKey]), outlined in red. Every date in July 2017 returns 01/07/2017, and the column's data type is Date/time." />
+
+This column will have a date/time data type and can be formatted as a simple date. You can now use this calculated column on the x-axis of your column chart and because the column is a date, and therefore a numerical value, it can be plotted on a continuous axis.:-
+
+<Screenshot src="using-continuous-x-axis-column-charts-year-and-month-labels/06-year-and-month-column-chart.png" alt="The finished column chart, Sales by Year and Month, with the Year and Month column on the X-axis and labels every six months from Jan 2017 to Jul 2019." />
+
+</div>
+
+<div class="archive-next wrap">
+
+Choosing visuals and formatting them so a report reads clearly is part of [Power BI fundamentals](/training/power-bi-fundamentals/). Every course is on [Training](/training/).
+
+</div>
