@@ -25,7 +25,7 @@ const placements: Placement[] = [
   { route: course101, event: EVENTS.bookSeat, place: "top", name: seat, href: SEAT_BOOKING_URL },
   { route: course101, event: EVENTS.bookSeat, place: "bottom", name: seat, href: SEAT_BOOKING_URL },
 ];
-const formRoutes = ["/", "/training/", "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/power-bi/", "/contact/"];
+const formRoutes = ["/", "/training/", "/training/power-bi-fundamentals/", course101, "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/power-bi/", "/contact/"];
 const routes = [...new Set([...placements.map(({ route }) => route), ...formRoutes, "/training/", course101])];
 
 for (const route of routes) {

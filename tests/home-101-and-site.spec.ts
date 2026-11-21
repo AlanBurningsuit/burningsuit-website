@@ -16,7 +16,7 @@ for (const route of ["/", course]) {
     await expect(page.locator("h1")).toHaveCount(1);
     await expectIndexable(page);
     await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
-    await expect(page.locator("form")).toHaveCount(route === "/" ? 1 : 0);
+    await expect(page.locator("form")).toHaveCount(1);
     await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
     expect(await page.locator("h1").evaluate((element) => getComputedStyle(element).textTransform)).toBe("none");
     expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
@@ -50,7 +50,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await page.goto(course);
   await expect(page.locator('nav a[aria-current]:not(.nav-menu a)')).toHaveText("Training");
   await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("Power BI with AI agents 101");
-  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll do", "How you'll check its answers", "What you'll need", "Book a seat"]);
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll do", "How you'll check its answers", "What you'll need", "Book a seat", "Not ready to book this date?"]);
   await expect(page.locator(".do-steps > li")).toHaveCount(4);
   await expect(page.locator(".do-steps h3")).toHaveText(["Get your bearings.", "Understand a report you didn't build.", "Document its calculations.", "Build one new calculation and check it."]);
   await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toBeVisible();
@@ -59,16 +59,21 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".hero-facts .run-facts > li")).toHaveText(["Half a day, live online", `${RUN.longDate}, ${RUN.times}`, RUN.people, ...copy.seatFacts]);
   await expect(page.locator(".book-facts")).toHaveText(`${RUN.longDate}, ${RUN.times}, ${RUN.modeText}. ${RUN.people}. ${copy.seatBookFacts}`);
 
-  // Booking: the Stripe link.
+  // Booking: the Stripe link, with the shared enquiry form below for people blocked by date, IT, PO or team needs.
   await expectSeatBooking(page);
-  await expect(page.locator("main form, main a[href*='pay']:not([href*='buy.stripe.com']), main a[href^='/contact'], main a[href='#contact']")).toHaveCount(0);
+  await expect(page.locator("main a[href*='pay']:not([href*='buy.stripe.com']), main a[href^='/contact']")).toHaveCount(0);
+  const enquiry = page.locator("main form.enquiry-form");
+  await expect(enquiry).toHaveCount(1);
+  await expect(enquiry).toHaveAttribute("action", ENQUIRY.action!);
+  await expect(enquiry.locator('input[name="page"]')).toHaveAttribute("value", course);
 
-  // Email is the private-course and invoice route; How I train is the one teaching-method link.
+  // Hero soft-exit reaches the enquiry form; email stays the invoice route and form fallback; How I train is the one teaching-method link.
   // The address is literal on purpose: a wrong config value must fail here.
-  await expect(page.getByRole("link", { name: "Ask about a private course." })).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
-  await expect(page.getByRole("link", { name: /private/i })).toHaveCount(1);
+  await expect(page.locator(".hero-facts .private-ask")).toHaveText("Can't make this date, need an invoice or IT check, or want this for your team? Send me a message.");
+  await expect(page.getByRole("link", { name: "Send me a message", exact: true })).toHaveAttribute("href", "#contact");
   await expect(page.locator(".invoice a")).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
   await expect(page.locator(".invoice")).toContainText("Invoices are due within 30 days.");
+  await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
   // The booking band repeats the setup line from the top of the page, so nobody pays before checking they can take part.
   await expect(page.locator(".course-book .book-before")).toHaveText("Before you book: you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. See what you'll need.");
   await expect(page.locator(".booking-terms li").first()).toHaveText("Cancel up to 14 days before the course, by Wednesday 27 January 2027, for a full refund.");
@@ -76,9 +81,9 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".booking-terms li").last()).toHaveText("If I have to cancel for any other reason, you get a full refund.");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  // The two Stripe booking links, in reading order beside each "Book a seat".
+  // The two Stripe booking links, in reading order beside each "Book a seat", plus the enquiry form's privacy and email fallback.
   const { SEAT_BOOKING_URL } = await import("../src/config/booking.mjs");
-  expect(mainLinks).toEqual(["#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk"]);
+  expect(mainLinks).toEqual(["#need-title", SEAT_BOOKING_URL, "#contact", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", ENQUIRY.privacyPath, "mailto:alan@burningsuit.co.uk"]);
 
   // The setup facts are settled (Alan, 7 Nov 2026): no open "to confirm" gaps remain.
   const needs = page.locator(".need-list > li");
@@ -175,7 +180,7 @@ test("course discovery, facts and email routes work without JavaScript", async (
     reached.push(await page.evaluate(() => document.activeElement?.getAttribute("href") ?? document.activeElement?.tagName ?? ""));
   }
   const { SEAT_BOOKING_URL: booking } = await import("../src/config/booking.mjs");
-  expect(reached).toEqual(["#need-title", booking, "mailto:alan@burningsuit.co.uk", "SUMMARY"]);
+  expect(reached).toEqual(["#need-title", booking, "#contact", "SUMMARY"]);
   // The agent diagram is captioned, with an alt that leads with the main relationship.
   await expect(page.locator("main figure.course-figure img")).toHaveAttribute("alt", /^An agent combines an AI model running elsewhere/);
   await context.close();

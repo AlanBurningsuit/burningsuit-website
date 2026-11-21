@@ -82,9 +82,10 @@ test("coaching and the private 101 keep the approved price on request wording", 
 test("the 101 books through the Stripe link", async ({ page }) => {
   await page.goto(routes.agents);
   await expectSeatBooking(page);
-  await expect(page.locator("main a[href*='pay']:not([href*='buy.stripe.com']), main a[href='#contact'], main form")).toHaveCount(0);
-  // The private email ask is unchanged and has no price item of its own on this page.
-  await expect(page.getByRole("link", { name: "Ask about a private course." })).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
+  await expect(page.locator("main a[href*='pay']:not([href*='buy.stripe.com'])")).toHaveCount(0);
+  // The hero soft-exit reaches the enquiry form and adds no private price item on this page.
+  await expect(page.getByRole("link", { name: "Send me a message", exact: true })).toHaveAttribute("href", "#contact");
+  await expect(page.locator("main form.enquiry-form")).toHaveCount(1);
   expectNone(await page.locator("main").innerText(), [/Also private/, /Price on request/], "101 detail private price");
 });
 

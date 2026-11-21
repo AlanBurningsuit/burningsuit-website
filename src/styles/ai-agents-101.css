@@ -31,6 +31,8 @@
 .booking-terms h3 { margin-bottom: 10px; }
 .booking-terms ul { margin: 0; padding-left: 1.2em; font-size: var(--compact-size); color: var(--text-dim); }
 .booking-terms li + li { margin-top: 6px; }
+/* The soft-exit enquiry form sits directly beneath the booking band on the same dark ground, under a hairline rule. */
+.course-book + .contact .contact-inner { border-top: var(--bw-hair) solid var(--rule); }
 
 @media (max-width: 900px) {
   .course-trust { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 56px 40px; }

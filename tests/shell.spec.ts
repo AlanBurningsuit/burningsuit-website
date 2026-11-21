@@ -38,8 +38,8 @@ for (const { route, indexed } of builtPages) {
     // Reserved routes keep their anchors; of those, About, the free call page and the privacy notice link onward instead of carrying the form.
     const path = route.replace(/^\/|\/$/g, "");
     if (path in reserved) {
-      // The essay ends with the newsletter sign-up, its only form.
-      await expect(page.locator("form")).toHaveCount(formRoutes.includes(path) || path.startsWith("writing/") ? 1 : 0);
+      // Writing pages (the index, essays, articles and archive posts) end with the newsletter sign-up, their only form.
+      await expect(page.locator("form")).toHaveCount(formRoutes.includes(path) || path === "writing" || path.startsWith("writing/") || path.startsWith("blog/") ? 1 : 0);
       for (const id of reserved[path]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
     }
     watch.expectClean();

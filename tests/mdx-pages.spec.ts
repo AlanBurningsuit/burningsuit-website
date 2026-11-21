@@ -73,24 +73,22 @@ for (const [route, kind, author] of [[essay, "essay", "Alan Harman-Box"], [archi
     await expectIndexable(page, { article: true });
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "article");
     await expect(page.locator('meta[property="article:published_time"], meta[property="article:modified_time"], iframe, astro-island, [style]')).toHaveCount(0);
-    // Only the essay ends with the newsletter sign-up: a plain POST to Kit with one email field and no Kit script.
+    // Essays and archive posts alike end with the newsletter sign-up: a plain POST to Kit with one email field and no Kit script.
     const signup = page.locator("form.newsletter-form");
-    await expect(signup).toHaveCount(kind === "essay" ? 1 : 0);
-    await expect(page.locator("form")).toHaveCount(kind === "essay" ? 1 : 0);
-    if (kind === "essay") {
-      await expect(signup).toHaveAttribute("action", NEWSLETTER.action);
-      await expect(signup).toHaveAttribute("method", "post");
-      // Subscribe is counted as an event, like the enquiry form's Send; it is the page's only counted control.
-      await expect(signup.getByRole("button", { name: "Subscribe", exact: true })).toHaveAttribute("data-umami-event", EVENTS.newsletterSubscribe);
-      await expect(page.locator("[data-umami-event]")).toHaveCount(1);
-      await expect(signup.locator("input")).toHaveCount(1);
-      await expect(signup.getByLabel("Email")).toHaveAttribute("name", NEWSLETTER.field);
-      await expect(signup.getByLabel("Email")).toHaveAttribute("required", "");
-      await expect(page.getByRole("heading", { name: "Get the newsletter" })).toBeVisible();
-      await expect(page.locator(".newsletter-copy > p")).toHaveText("I'll write when I've got something worth saying. Mostly what I'm seeing where AI meets Power BI inside real teams: what it's genuinely good at now, where it quietly goes wrong, and what that means for whoever has to stand behind the numbers.");
-      await expect(signup.getByRole("link", { name: "Read how I handle your information" })).toHaveAttribute("href", NEWSLETTER.privacyPath);
-      expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain("https://app.kit.com");
-    }
+    await expect(signup).toHaveCount(1);
+    await expect(page.locator("form")).toHaveCount(1);
+    await expect(signup).toHaveAttribute("action", NEWSLETTER.action);
+    await expect(signup).toHaveAttribute("method", "post");
+    // Subscribe is counted as an event, like the enquiry form's Send; it is the page's only counted control.
+    await expect(signup.getByRole("button", { name: "Subscribe", exact: true })).toHaveAttribute("data-umami-event", EVENTS.newsletterSubscribe);
+    await expect(page.locator("[data-umami-event]")).toHaveCount(1);
+    await expect(signup.locator("input")).toHaveCount(1);
+    await expect(signup.getByLabel("Email")).toHaveAttribute("name", NEWSLETTER.field);
+    await expect(signup.getByLabel("Email")).toHaveAttribute("required", "");
+    await expect(page.getByRole("heading", { name: "Get the newsletter" })).toBeVisible();
+    await expect(page.locator(".newsletter-copy > p")).toHaveText("I'll write when I've got something worth saying. Mostly what I'm seeing where AI meets Power BI inside real teams: what it's genuinely good at now, where it quietly goes wrong, and what that means for whoever has to stand behind the numbers.");
+    await expect(signup.getByRole("link", { name: "Read how I handle your information" })).toHaveAttribute("href", NEWSLETTER.privacyPath);
+    expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain("https://app.kit.com");
     await expect(page.locator(otherScripts)).toHaveCount(0);
     // The essay leads on to the course it bears on; the archive post to the offers only.
     expect(await page.locator(".article-related a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual([...(kind === "essay" ? ["/training/power-bi-with-ai-agents-101/"] : []), "/writing/", "/about/", "/training/", "/power-bi/"]);
@@ -171,7 +169,7 @@ test("the newsletter's thank-you page is off the index and leads back into the s
     "Thanks for subscribing. I've sent you an email with a link to confirm. Once you've clicked it, you're on the list.",
     "If it hasn't arrived in a few minutes, have a look in your spam folder.",
   ]);
-  expect(await page.locator(".service-copy .links a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual(["/writing/we-are-all-middle-management-now/", "/training/", "/"]);
+  expect(await page.locator(".service-copy .links a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual(["/writing/", "/training/", "/"]);
   await expect(page.locator("form, [data-umami-event]")).toHaveCount(0);
   expect(await (await page.request.get("/sitemap-0.xml")).text()).not.toContain("/subscribed/");
 });

@@ -4,6 +4,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TitleBand from "../../components/TitleBand.astro";
+import Newsletter from "../../components/Newsletter.astro";
 import { headingText } from "../../lib/study-heading";
 import { indexDateLine, newestFirst, writingPath } from "../../lib/writing";
 import "../../styles/articles.css";
@@ -33,4 +34,5 @@ const entryLine = ({ data }: CollectionEntry<"writing">) => [data.author, indexD
     </Wrapper>;
     })}
   </div>
+  <Newsletter />
 </BaseLayout>

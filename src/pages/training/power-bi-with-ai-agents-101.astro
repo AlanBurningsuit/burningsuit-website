@@ -8,6 +8,7 @@ import DecisionHero from "../../components/DecisionHero.astro";
 import CourseFigure from "../../components/CourseFigure.astro";
 import { ENQUIRY } from "../../config/enquiry.mjs";
 import SeatBooking from "../../components/SeatBooking.astro";
+import EnquiryForm from "../../components/EnquiryForm.astro";
 import { RUN, seatAction } from "../../config/course-run.mjs";
 import { trainingPriceCopy } from "../../lib/training-prices.mjs";
 import "../../styles/course-page.css";
@@ -35,7 +36,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
     </Fragment>
     <p class="before-book"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
     <SeatBooking seat={seat} place="top" />
-    <p class="private-ask">Want this for your team? <a href={`mailto:${email}`}>Ask about a private course.</a></p>
+    <p class="private-ask">Can't make this date, need an invoice or IT check, or want this for your team? <a href="#contact">Send me a message</a>.</p>
   </DecisionHero>
   <div class="course-opening decision-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
@@ -117,4 +118,9 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       </div>
     </div>
   </section>
+
+  <EnquiryForm>
+    <Fragment slot="heading">Not ready to book this date?</Fragment>
+    Tell me if you'd like to hear about later runs, need a private course for your team, want an invoice or purchase order, or need to check whether your IT setup will work.
+  </EnquiryForm>
 </BaseLayout>

@@ -28,7 +28,7 @@ const datePublished = essay.datePublished ? isoDay(essay.datePublished) : essay.
     </header>
     <slot />
   </article>
-  {essay.kind !== "archive" && <Newsletter />}
+  <Newsletter />
   <div class="article-related closing-band dark"><div class="wrap closing-inner"><div class="links">
     {essay.kind !== "archive" && <a href={essay.course?.href ?? "/training/power-bi-with-ai-agents-101/"}>{essay.course?.name ?? "Power BI with AI agents 101"}</a>}
     <a href="/writing/">Writing</a>

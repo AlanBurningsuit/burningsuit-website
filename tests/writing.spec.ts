@@ -66,8 +66,10 @@ test("Writing is an indexed list generated from the collection: articles, then t
     "Find your top or bottom 10 percent of customers by sales in DAX: rank them with RANKX, then use a fixed percentage or slicers that choose it.",
     "Seven matrix visual secrets in Power BI: grand totals, expanding a level, layout, per-level subtotals, values on rows, text values, conditional formatting.",
   ]);
-  // A plain list: no images, no scripts beyond the shared tag, no form.
-  await expect(page.locator("main img, main form")).toHaveCount(0);
+  // A plain list ending with the newsletter sign-up: no images, no scripts beyond the shared tag.
+  await expect(page.locator("main img")).toHaveCount(0);
+  await expect(page.locator("main form.newsletter-form")).toHaveCount(1);
+  await expect(page.locator("main form.newsletter-form")).toHaveAttribute("action", NEWSLETTER.action);
   await expect(page.locator(otherScripts)).toHaveCount(0);
   const sitemap = await (await page.request.get("/sitemap-0.xml")).text();
   for (const route of ["/writing/", pqIf, mcp, threeNumbers, secrets, eighth, bins, topN, nulls, narrative, xAxis, restApis, filtering]) expect(sitemap).toContain(`<loc>https://burningsuit.co.uk${route}</loc>`);
@@ -160,8 +162,10 @@ for (const post of posts) {
       expect(await img.getAttribute("src")).toMatch(/\.webp$/);
     }
     expect(await page.locator(".archive-next a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual(post.closing);
-    // No newsletter or other form on an archive post, no client rendering.
-    await expect(page.locator("form, astro-island, iframe, [style]")).toHaveCount(0);
+    // Archive posts carry the newsletter sign-up, and no client rendering.
+    await expect(page.locator("form.newsletter-form")).toHaveCount(1);
+    await expect(page.locator("form.newsletter-form")).toHaveAttribute("action", NEWSLETTER.action);
+    await expect(page.locator("astro-island, iframe, [style]")).toHaveCount(0);
     await expect(page.locator(otherScripts)).toHaveCount(0);
     for (const width of [390, 1366]) {
       await page.setViewportSize({ width, height: 900 });

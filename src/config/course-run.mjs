@@ -25,7 +25,7 @@ export const COURSE_RUN = Object.freeze({
 export const RUN_STATUS_WORDING = Object.freeze({
   full: "This run is full.",
   past: "This run has finished.",
-  // Links to the 101's private-course email on its own page and to the enquiry form on Home and Training.
+  // Links to the enquiry form on the 101, Home and Training.
   nextRunAsk: "Ask about the next run",
 });
 
