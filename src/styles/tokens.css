@@ -8,9 +8,13 @@
   --page-gutter: clamp(22px, 5vw, 72px);
   --content-width: 1280px;
   --column-gap: clamp(40px, 6vw, 82px);
-  --home-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  /* The notebook's two-column grids, by the weight of their columns; each collapses to one column at 900px (app.css).
+     sidebar: a heading beside its copy; aside: copy beside a narrower card; split: two near-equal halves. */
+  --grid-sidebar: minmax(0, .7fr) minmax(0, 1.3fr);
+  --grid-aside: minmax(0, 1.2fr) minmax(0, .8fr);
+  --grid-split: minmax(0, .9fr) minmax(0, 1.1fr);
+  --home-columns: var(--grid-split); /* older name for --grid-split, kept while page sheets move across */
   --body-size: 1.125rem;
-  --title-size: clamp(2.6rem, 4.2vw, 3.7rem);
   /* One heading scale for the whole site: the page title in its band, a section heading, a note heading (a short
      block's label, such as a facts card), an item heading, and a card title. Pages never set their own sizes. */
   --title-band-size: clamp(2.5rem, 4.8vw, 4.2rem);
@@ -29,13 +33,17 @@
   --quiet-size: .96rem; /* a quieter line or small link beside body copy */
   --caption-size: .95rem; /* captions and small print */
   --label-size: .92rem; /* eyebrows, labels, tags and hints */
+  --small-size: .9rem; /* form hints, bylines, appearance notes and code */
+  --micro-size: .82rem; /* the desktop footer and the smallest metadata labels */
   --masthead-h: 84px;
   /* A daylight card: a crisp pine edge, a contact shadow and a soft lift; raised is its hover and focus state, its edge warmed to ochre. */
   --lift: 0 0 0 1px color-mix(in srgb, var(--pine) 14%, transparent), 0 1px 2px color-mix(in srgb, var(--pine) 10%, transparent), 0 14px 32px -22px color-mix(in srgb, var(--pine) 45%, transparent);
   --lift-raised: 0 0 0 1px color-mix(in srgb, var(--ochre) 45%, transparent), 0 2px 4px color-mix(in srgb, var(--pine) 10%, transparent), 0 22px 40px -24px color-mix(in srgb, var(--pine) 55%, transparent);
   /* The daylight sheet's corner radius where it meets a dark bookend, and the shadow it casts on the dark. */
   --sheet-r: clamp(20px, 2.6vw, 36px);
-  --sheet-shadow: rgb(0 0 0 / 0.85);
+  --sheet-shadow: color-mix(in srgb, var(--deep) 88%, transparent);
+  /* A dark panel lifted over the page: the Training menu. */
+  --menu-shadow: 0 18px 40px -16px color-mix(in srgb, var(--deep) 75%, transparent);
   /* Motion: one easing for every settle and response; movement is switched off under prefers-reduced-motion. */
   --ease-out: cubic-bezier(.2, .7, .2, 1);
   --dur-micro: .1s;

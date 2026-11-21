@@ -102,3 +102,40 @@ test("no overflow from 320px to 1280px, including enlarged text", async ({ page 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   }
 });
+test("phone masthead: two rows of links, each at least 44px tall to tap", async ({ page }) => {
+  await page.goto("/");
+  const nav = page.getByRole("navigation", { name: "Main navigation" });
+  const targets = nav.locator(".nav-training > a, .nav-menu summary, :scope > a");
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 800 });
+    await expectNoHorizontalScroll(page);
+    const boxes = await targets.evaluateAll((els) => els.map((el) => { const b = el.getBoundingClientRect(); return { top: Math.round(b.top), height: b.height, size: parseFloat(getComputedStyle(el).fontSize) }; }));
+    for (const { height } of boxes) expect(height, `${width}px`).toBeGreaterThanOrEqual(44);
+    // Training, its chevron, Consultancy and Case studies share the first row; About and Contact the second.
+    const rows = boxes.map(({ top }) => top);
+    expect(new Set(rows.slice(0, 4)).size, `${width}px`).toBe(1);
+    expect(new Set(rows.slice(4)).size, `${width}px`).toBe(1);
+    expect(rows[4], `${width}px`).toBeGreaterThan(rows[0]);
+    for (const { size } of [boxes[0], ...boxes.slice(2)]) expect(size, `${width}px`).toBeGreaterThanOrEqual(14.4);
+  }
+});
+test("the Training menu closes on a click outside it, without JavaScript", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL, viewport: { width: 390, height: 800 } });
+  const page = await context.newPage();
+  await page.goto("/");
+  const menu = page.locator(".nav-menu");
+  await menu.locator("summary").click();
+  await expect(menu).toHaveAttribute("open", "");
+  await expect(menu.getByRole("link").first()).toBeVisible();
+  // A click inside the panel lands on its links, not on the dismiss layer beneath.
+  expect(await page.evaluate(() => { const a = document.querySelector(".nav-menu ul a")!; const b = a.getBoundingClientRect(); return document.elementFromPoint(b.x + b.width / 2, b.y + b.height / 2) === a; })).toBe(true);
+  await page.mouse.click(200, 600);
+  await expect(menu).not.toHaveAttribute("open", /.*/);
+  await expect(page).toHaveURL(baseURL + "/");
+  // The chevron itself still toggles it open and shut.
+  await menu.locator("summary").click();
+  await expect(menu).toHaveAttribute("open", "");
+  await menu.locator("summary").click();
+  await expect(menu).not.toHaveAttribute("open", /.*/);
+  await context.close();
+});
