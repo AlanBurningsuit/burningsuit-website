@@ -18,14 +18,13 @@
 }
 .start-list .course > p.private-ask { margin-top: 10px; font-size: var(--quiet-size); }
 .private-ask a { font-weight: 600; }
-/* The public group size stays in one piece when the date line wraps. */
 
 /* Specialists: a quieter recessed block of rows, name beside its facts on wide screens; no cards or fit questions. A course with its own page adds one outline link under its facts. */
 .specialist-courses { padding-block: 56px 88px; }
 .specialists-head h2 { padding-bottom: 14px; }
 .specialists-head p { max-width: 60ch; margin-bottom: 22px; }
 .specialist-rows { list-style: none; margin: 0 0 18px; padding: 12px 30px; background: var(--surface-raised); border-radius: var(--r); }
-.specialist-rows > li { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: baseline; padding-block: 13px; }
+.specialist-rows > li { display: grid; grid-template-columns: var(--grid-sidebar); column-gap: var(--column-gap); align-items: baseline; padding-block: 13px; }
 .specialist-rows h3 { font-weight: 600; letter-spacing: var(--ls-display-tight); }
 .specialist-rows .facts { margin: 0; }
 .specialist-rows .outline-link { justify-self: start; align-self: start; margin-top: 10px; }
@@ -43,9 +42,10 @@
 .coaching .text-link { font-size: var(--quiet-size); }
 .coaching .pull-quote { margin-block: 28px 26px; }
 
-/* Who's teaching: heading beside a quietly ruled note (warm spines belong to the two starting points), in the consultancy page's "Who does the work" proportions, without its photo. */
-.training-teacher { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 32px 96px; align-items: start; }
-.teacher-note { border-left: var(--bw-spine) solid var(--rule); padding-left: 22px; }
+/* Who's teaching: heading beside a lifted note with a clipped ochre left bar, the pattern Home's family note and the course pages' teacher card use, in the consultancy page's "Who does the work" proportions, without its photo. */
+.training-teacher { display: grid; grid-template-columns: var(--grid-sidebar); column-gap: var(--column-gap); padding-block: 32px 96px; align-items: start; }
+.teacher-note { position: relative; overflow: clip; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 24px 28px; }
+.teacher-note::before { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--bw-spine); background: var(--accent); pointer-events: none; }
 .teacher-note p { max-width: 64ch; }
 .teacher-note .course-actions { margin-top: 12px; }
 
@@ -65,4 +65,5 @@
   .starting-points .course { padding: 22px 20px 22px; }
   .specialist-rows { padding: 10px 20px; }
   .specialist-rows > li { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }
+  .teacher-note { padding: 20px 22px; }
 }

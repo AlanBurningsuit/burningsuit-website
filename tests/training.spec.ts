@@ -244,8 +244,7 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
   expect(Math.abs(actions[0].top - actions[1].top)).toBeLessThanOrEqual(1);
   // The links still follow the taller card's facts closely.
   expect(Math.min(...decidings.map((block, index) => actions[index].top - block.bottom))).toBeLessThanOrEqual(40);
-  // The cards open on the daylight warm accent (the ochre tick
-  // before each card's fit line), which the teacher note's rule does not carry.
+  // The cards open on the daylight warm accent (the ochre tick before each card's fit line).
   const size = (selector: string) => page.locator(selector).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
   // One heading scale: every section heading is the same size; the starting points carry their weight through the cards.
   expect(await size("#specialists-title")).toBe(await size("#start-points-title"));
@@ -256,8 +255,15 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
   const warm = await page.locator(".starting-points .course-fit").first().evaluate((el) => getComputedStyle(el, "::before").backgroundColor);
   const amber = await page.locator("h1 .em").evaluate((el) => getComputedStyle(el).color);
   expect(warm).not.toBe(amber);
-  expect(await page.locator(".teacher-note").evaluate((el) => getComputedStyle(el).borderLeftColor)).not.toBe(warm);
   expect(await page.getByRole("article").first().evaluate((el) => getComputedStyle(el, "::before").backgroundColor)).toBe(warm);
+  // Who's teaching is a lifted card with the clipped ochre left bar Home's family note and the course pages' teacher card use.
+  const note = await page.locator(".teacher-note").evaluate((el) => { const c = getComputedStyle(el), bar = getComputedStyle(el, "::before"); return { bg: c.backgroundColor, shadow: c.boxShadow, border: c.borderLeftStyle, bar: bar.backgroundColor, width: parseFloat(bar.width), height: parseFloat(bar.height), box: el.getBoundingClientRect().height }; });
+  expect(note.bg).toBe(band);
+  expect(note.shadow).not.toBe("none");
+  expect(note.border).toBe("none");
+  expect(note.bar).toBe(warm);
+  expect(note.width).toBeGreaterThan(0);
+  expect(Math.abs(note.height - note.box)).toBeLessThanOrEqual(1);
 });
 
 test("fact separators never start or end a wrapped line", async ({ page }) => {

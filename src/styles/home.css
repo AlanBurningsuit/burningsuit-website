@@ -5,7 +5,7 @@
 /* The introduction opens the daylight sheet: the copy beside a large portrait. */
 .home-opening {
   display: grid;
-  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  grid-template-columns: var(--grid-split);
   grid-template-areas: "copy photo";
   column-gap: var(--column-gap);
   padding-block: clamp(40px, 5vw, 72px) 0;
@@ -21,7 +21,7 @@
 .courses { padding-block: clamp(56px, 6vw, 88px) 76px; }
 .courses > h2 { padding-bottom: 28px; }
 .course-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start; }
-.course { background: var(--surface-card); border-top: var(--bw-spine) solid var(--accent); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
+.course { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 26px 30px 24px; }
 /* Side by side, the two cards share one height, and each card's links sit on the same line at its foot (Training does the same through a subgrid). */
 @media (min-width: 901px) {
   .courses .course-list { align-items: stretch; }
@@ -46,6 +46,15 @@
 /* Between facts, a small drawn ochre dot centred in the gap (a middot glyph is too faint to read as a mark). */
 .facts.dot-list { column-gap: 1.3em; }
 .facts.dot-list > li::before { content: ""; top: calc(.78em - 2px); left: calc(-.65em - 2px); width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+/* On the two entry cards the deciding facts read as a short ruled list, one fact to a row: no separator to strand
+   when a long fact wraps, and the public run's label sits above its date so the public run and private option read apart. */
+.course .facts.dot-list { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 0; margin-bottom: 12px; border-bottom: var(--bw-hair) solid var(--rule); }
+.course .facts.dot-list > li { padding-block: 7px; border-top: var(--bw-hair) solid var(--rule); }
+.course .facts.dot-list > li::before { content: none; }
+/* A phrase kept whole lets go only when the card is narrow for its text size (a phone, or enlarged text), rather than outrun the card. */
+.course .deciding { container-type: inline-size; }
+@container (max-width: 15em) { .course .facts .together { white-space: normal; } }
+.course .fact-label { display: block; line-height: var(--lh-label); margin-bottom: 1px; }
 .fact-label { font-size: .76em; letter-spacing: .07em; text-transform: uppercase; color: var(--text-dim); }
 .facts .together { white-space: nowrap; }
 .prereq { font-size: var(--caption-size); }
@@ -59,17 +68,17 @@
 .dot-list > li { position: relative; }
 .dot-list > li::before { content: "·"; content: "·" / ""; position: absolute; left: -.74em; color: var(--text-dim); }
 .specialist-names { margin: 8px 0 10px; padding-block: 0; row-gap: 4px; font: 600 var(--lead-size) / var(--lh-snug) var(--ff-display); letter-spacing: var(--ls-display-tight); }
-.specialist-names .days { font: 400 .98rem / 1 var(--ff-note); color: var(--text-dim); }
+.specialist-names .days { font: 400 var(--quiet-size) / 1 var(--ff-note); color: var(--text-dim); }
 .specialists > p:last-child { font-size: var(--quiet-size); }
 .specialists a { font-weight: 600; }
 .not-sure { margin-top: 26px; font-size: var(--compact-size); }
 
 /* The teacher: the method at reading width, with the family origin as a margin note. */
-.teacher { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); column-gap: var(--column-gap); padding-block: 24px 88px; align-items: start; }
+.teacher { display: grid; grid-template-columns: var(--grid-aside); column-gap: var(--column-gap); padding-block: 24px 88px; align-items: start; }
 .teacher-teaching h2 { margin-bottom: 26px; }
 .teacher-teaching p { max-width: 58ch; }
-.teacher-origin { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift), inset var(--bw-spine) 0 0 var(--accent); padding: 24px 28px; margin-top: 78px; max-width: 44ch; }
-.teacher-origin p { font: 400 1.18rem / 1.5 var(--ff-note); }
+.teacher-origin { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 24px 28px; margin-top: 78px; max-width: 44ch; }
+.teacher-origin p { font: 400 var(--raised-size) / 1.5 var(--ff-note); }
 .teacher-origin .text-link { margin-top: 12px; }
 
 @media (max-width: 900px) {
@@ -89,5 +98,4 @@
   .course { padding: 22px 20px 20px; }
   .specialists { padding: 20px; }
   .teacher-origin { padding: 20px 22px; }
-  .teacher-origin p { font-size: 1.1rem; }
 }
