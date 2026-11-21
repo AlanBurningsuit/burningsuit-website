@@ -30,8 +30,8 @@ const { closing } = study;
         <div class="raised-copy">
           <p>{closing.body}</p>
           {closing.link.href === "/call/"
-            ? <Tracked event={EVENTS.bookCallLink}><a class="text-link" href={closing.link.href}>{closing.link.text}</a></Tracked>
-            : <a class="text-link" href={closing.link.href} aria-describedby={closing.link.hint ? "closing-hint" : undefined}>{closing.link.text}</a>}
+            ? <Tracked event={EVENTS.bookCallLink}><a class="button" href={closing.link.href}>{closing.link.text}</a></Tracked>
+            : <a class="button" href={closing.link.href} aria-describedby={closing.link.hint ? "closing-hint" : undefined}>{closing.link.text}</a>}
           {closing.link.hint && <p class="case-hint" id="closing-hint">{closing.link.hint}</p>}
           <p class="case-then">
             <a href={closing.then.href} aria-describedby={closing.then.hint ? "then-hint" : undefined}>{closing.then.text}</a>{" "}

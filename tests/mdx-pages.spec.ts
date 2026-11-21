@@ -27,7 +27,12 @@ test("Work groups only the four active studies in the approved offer order", asy
   await expect(page.locator(".work-entries h3")).toHaveText(["DAX deep dive for a local-authority team", "Coaching a contact-centre team lead", "Individual Power BI coaching", "Carbon reporting in a model the team can check"]);
   await expect(page.locator("nav a:not(.nav-menu a)")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
   for (const path of reserved404Routes) await expect(page.locator(`a[href="/${path}/"]`)).toHaveCount(0);
-  for (const link of await page.locator(".work-group h2 a").all()) expect(await link.evaluate(el => getComputedStyle(el).textDecorationLine)).toContain("underline");
+  // Group and card titles read as headings at rest and underline on hover.
+  for (const link of await page.locator(":is(.work-group h2, .work-entries h3) a").all()) {
+    expect(await link.evaluate(el => getComputedStyle(el).textDecorationLine)).toBe("none");
+    await link.hover();
+    expect(await link.evaluate(el => getComputedStyle(el).textDecorationLine)).toContain("underline");
+  }
 });
 
 test("contextual and footer links lead to the matching evidence, the restored essay and Writing", async ({ page }) => {

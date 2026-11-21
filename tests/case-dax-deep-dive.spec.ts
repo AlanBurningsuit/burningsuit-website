@@ -58,10 +58,10 @@ test("the enquiry action and the route to the course page are ordinary links to 
   await page.goto(route);
   const ask = page.getByRole("link", { name: primary, exact: true });
   await expect(ask).toHaveAttribute("href", `${course}#contact`);
-  await expect(ask).toHaveClass(/text-link/);
+  await expect(ask).toHaveClass(/\bbutton\b/);
   await expect(ask).toHaveAccessibleDescription("Name the course in your message.");
-  // The ask closes the study on the shared dark closing band, so the link is amber.
-  expect(await ask.evaluate((el) => getComputedStyle(el).color)).toBe("rgb(230, 152, 117)");
+  // The ask closes the study as the one button on the shared dark closing band, so it is amber.
+  expect(await ask.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(230, 152, 117)");
   await expect(page.locator("#closing-hint")).toHaveText("Name the course in your message.");
   await expect(page.getByRole("link", { name: secondary, exact: true })).toHaveAttribute("href", course);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));

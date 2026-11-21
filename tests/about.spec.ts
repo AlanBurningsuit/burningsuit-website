@@ -186,3 +186,11 @@ test("About reflows from 320px to 1366px with enlarged text", async ({ page }) =
 });
 
 visualReview(route);
+
+test("Where to start closes About on the shared closing band", async ({ page }) => {
+  await page.goto(route);
+  const band = page.locator("section.closing-band.dark").last();
+  await expect(band.getByRole("heading", { level: 2 })).toHaveText("Where to start");
+  await expect(band.locator(".wrap.closing-inner")).toHaveCount(1);
+  expect(await band.evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(await page.locator("main").evaluate((el) => getComputedStyle(el).backgroundColor));
+});

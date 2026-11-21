@@ -13,8 +13,8 @@
 .case-facts dd { margin: 0; }
 
 /* A section: heading beside its prose under one rule. */
-.case-section { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); align-items: start; padding-block: 0 56px; }
-.case-section > h2 { padding-top: 22px; border-top: var(--bw-spine) solid var(--text); text-wrap: balance; }
+.case-section { display: grid; grid-template-columns: var(--grid-sidebar); column-gap: var(--column-gap); align-items: start; padding-block: 0 56px; }
+.case-section > h2 { padding-top: 22px; border-top: var(--bw-spine) solid var(--accent); text-wrap: balance; }
 .case-study .case-prose { padding-top: 22px; border-top: var(--bw-hair) solid var(--rule); }
 .case-study .case-prose > p { max-width: 62ch; }
 
@@ -37,28 +37,27 @@
 .case-evidence blockquote { grid-area: quote; margin: 0; }
 .case-evidence blockquote p { max-width: 34ch; color: var(--text); font: 600 clamp(1.45rem, 2.4vw, 1.9rem) / var(--lh-tight) var(--ff-display); letter-spacing: var(--ls-display-tight); text-wrap: pretty; }
 .case-attribution { grid-area: cite; color: var(--text-dim); font: 400 var(--caption-size) / var(--lh-relaxed) var(--ff-note); }
-.case-figures { grid-area: figures; padding-left: 22px; border-left: var(--bw-hair) solid var(--rule); font-size: 1.05rem; color: var(--text); }
+.case-figures { grid-area: figures; padding-left: 22px; border-left: var(--bw-hair) solid var(--rule); font-size: var(--fact-size); color: var(--text); }
 
 /* The limits line, in Alan's voice, under the prose column. */
-.case-limits-row { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: var(--column-gap); padding-block: 0 68px; }
+.case-limits-row { display: grid; grid-template-columns: var(--grid-sidebar); column-gap: var(--column-gap); padding-block: 0 68px; }
 .case-limits { grid-column: 2; max-width: 62ch; padding-left: 22px; border-left: var(--bw-spine) solid var(--rule); }
 
-/* Back to the offer: the main link, then a quieter one; either can carry a hint. */
+/* Back to the offer: the main action as the one button, then a quieter link under a rule; either can carry a hint. */
 .case-closing .raised-copy > p:first-child { font-size: var(--raised-size); line-height: var(--lh-relaxed); max-width: 56ch; }
-.case-closing .text-link { font-size: 1.1rem; }
 .case-hint { font-size: var(--quiet-size); color: var(--text-dim); }
-p.case-hint { margin-top: 0; }
-.case-then { margin-top: 22px; padding-top: 16px; border-top: var(--bw-hair) solid var(--rule); font-size: var(--compact-size); }
+p.case-hint { margin-top: 10px; }
+.case-then { margin-top: 26px; padding-top: 16px; border-top: var(--bw-hair) solid var(--rule); font-size: var(--compact-size); }
 .case-then a { font-weight: 600; }
 .case-then .case-hint { display: block; margin-top: 4px; }
 
 @media (max-width: 900px) {
   .case-opening { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 24px 44px; }
-  .case-section { grid-template-columns: minmax(0, 1fr); row-gap: 18px; padding-block: 0 44px; }
+  .case-section { row-gap: 18px; padding-block: 0 44px; }
   .case-study .case-prose { padding-top: 0; border-top: 0; }
   .case-evidence { grid-template-columns: minmax(0, 1fr); grid-template-areas: "quote" "cite" "figures"; margin-bottom: 44px; }
   .case-figures { padding: 16px 0 0; border-left: 0; border-top: var(--bw-hair) solid var(--rule); }
-  .case-limits-row { grid-template-columns: minmax(0, 1fr); padding-bottom: 52px; }
+  .case-limits-row { padding-bottom: 52px; }
   .case-limits { grid-column: 1; }
 }
 @media (max-width: 680px) {

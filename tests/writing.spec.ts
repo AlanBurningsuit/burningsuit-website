@@ -336,3 +336,18 @@ test("the Power Query if statement article renders Alan's approved prose, code, 
   }
 });
 visualReview(pqIf);
+
+test("the Writing index reads as a table of contents, and the newsletter field sits level with its button", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto("/writing/");
+  const title = page.locator(".writing-entries :is(h2, h3) a").first();
+  expect(await title.evaluate((el) => getComputedStyle(el).textDecorationLine)).toBe("none");
+  await title.hover();
+  expect(await title.evaluate((el) => getComputedStyle(el).textDecorationLine)).toContain("underline");
+  // Section rules are hairlines, not heavy bars.
+  expect(await page.locator(".writing-list > h2").first().evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe("1px");
+  const input = await page.locator(".newsletter-form input").boundingBox();
+  const button = await page.locator(".newsletter-form .button").boundingBox();
+  expect(input && button && Math.abs(input.height - button.height)).toBeLessThan(0.5);
+  expect(input && button && Math.abs(input.y + input.height - (button.y + button.height))).toBeLessThan(0.5);
+});

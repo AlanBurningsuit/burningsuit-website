@@ -57,7 +57,7 @@ test("carbon-footprint study returns to consultancy and the free call as real li
   await page.goto(route);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => [link.textContent, link.getAttribute("href")]));
   expect(mainLinks).toEqual([["Book a free 30-minute call", "/call/"], ["More about Power BI consultancy", "/power-bi/"]]);
-  await expect(page.locator(".case-closing .text-link")).toHaveAttribute("href", "/call/");
+  await expect(page.locator(".case-closing .raised-copy .button")).toHaveAttribute("href", "/call/");
   for (const link of await page.locator("main a").all()) await expect(link).not.toHaveAttribute("target", /./);
 });
 

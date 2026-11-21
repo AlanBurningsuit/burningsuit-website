@@ -1,26 +1,30 @@
 .article-opening { padding-block: clamp(28px, 4vw, 48px) 52px; }
 .title-band .eyebrow { margin: 0 0 14px; }
 .title-band .eyebrow a { display: inline-block; padding-block: 6px; margin-block: -6px; }
-.article-byline { margin-top: 0; color: var(--text-dim); font-size: .9rem; }
-.article-appearances { margin-top: 24px; color: var(--text-dim); font-size: .9rem; }
+.article-byline { margin-top: 0; color: var(--text-dim); font-size: var(--small-size); }
+.article-appearances { margin-top: 24px; color: var(--text-dim); font-size: var(--small-size); }
 .article-appearances p + p { margin-top: 4px; }
 .article-intro { padding-bottom: 36px; }
 .article-intro p { max-width: 66ch; font-size: var(--lead-size); }
 .reading-article { padding-bottom: 36px; }
 .reading-article .case-chapter { display: grid; grid-template-columns: minmax(0, .55fr) minmax(0, 1.45fr); gap: var(--column-gap); align-items: start; padding-block: 26px 52px; }
-.reading-article .case-chapter h2 { padding-top: 20px; border-top: var(--bw-spine) solid var(--text); position: sticky; top: 24px; }
+.reading-article .case-chapter h2 { padding-top: 20px; border-top: var(--bw-spine) solid var(--accent); position: sticky; top: 24px; }
 .reading-article .case-prose h3 { max-width: 66ch; margin-block: 44px 14px; }
 .reading-article .case-prose { min-width: 0; padding-top: 20px; border-top: var(--bw-hair) solid var(--rule); }
 .reading-article .case-prose > p { max-width: 66ch; }
-.reading-article blockquote { margin-block: 24px; padding-left: 22px; border-left: var(--bw-spine) solid var(--accent); font-size: 1.15rem; }
+.reading-article blockquote { margin-block: 24px; padding-left: 22px; border-left: var(--bw-spine) solid var(--accent); font-size: var(--raised-size); }
 .reading-article code { font: .88em var(--ff-mono); overflow-wrap: anywhere; }
 .article-related .links { margin-top: 0; }
-.essay-figure { margin-block: 34px; padding: 22px; background: var(--bg-2); border: var(--bw-hair) solid var(--line); border-radius: var(--r); }
+/* An essay figure: a lifted daylight plate like the cards, its heading in the text colour and its label and caption dim.
+   A figure still marked .dark (EssayFigure.astro, until its diagrams are re-exported on daylight) keeps its dark panel. */
+.essay-figure { margin-block: 34px; padding: 22px; border-radius: var(--r); }
+.essay-figure:not(.dark) { background: var(--surface-card); border: 0; box-shadow: var(--lift); }
+.essay-figure.dark { background: var(--bg-2); border: var(--bw-hair) solid var(--line); }
 .essay-figure-heading { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; margin-bottom: 20px; }
-.essay-figure-heading span { color: var(--fg-dim); font-size: .8rem; }
-.essay-figure-heading strong { font: 600 1.1rem / var(--lh-snug) var(--ff-display); }
+.essay-figure-heading span { color: var(--text-dim); font-size: var(--micro-size); }
+.essay-figure-heading strong { color: var(--text); font: 600 var(--raised-size) / var(--lh-snug) var(--ff-display); }
 .essay-diagram img { width: 100%; height: auto; }
-.essay-figure figcaption { margin-top: 18px; font: 400 var(--caption-size) / var(--lh-relaxed) var(--ff-note); color: var(--fg-dim); }
+.essay-figure figcaption { margin-top: 18px; font: 400 var(--caption-size) / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media (max-width: 900px) {
   .reading-article .case-chapter { grid-template-columns: minmax(0, 1fr); gap: 18px; padding-block: 16px 36px; }
@@ -39,8 +43,10 @@
 .newsletter-form label { font: 600 var(--compact-size) / var(--lh-snug) var(--ff-display); }
 .newsletter-form input { width: 100%; font: 400 var(--compact-size) / var(--lh-body) var(--ff-body); color: var(--fg); background: var(--bg); border: var(--bw-hair) solid var(--fg-dim); border-radius: var(--r-sm); padding: 10px 12px; }
 .newsletter-form input:focus-visible { outline-offset: 2px; border-color: var(--amber); }
-.newsletter-form .button { margin-top: 0; }
-.newsletter-form .hint { grid-column: 1 / -1; font-size: .9rem; color: var(--text-dim); max-width: 56ch; }
+/* The field and its button share one height, so they sit level beside each other. */
+.newsletter-form :is(input, .button) { min-height: 3.25rem; }
+.newsletter-form .button { display: inline-flex; align-items: center; justify-content: center; margin-top: 0; padding-block: 0; }
+.newsletter-form .hint { grid-column: 1 / -1; font-size: var(--small-size); color: var(--text-dim); max-width: 56ch; }
 /* The onward links follow the sign-up on the same band, under a rule. */
 .newsletter + .article-related .closing-inner { padding-top: 0; }
 .newsletter + .article-related .links { padding-top: 22px; border-top: var(--bw-hair) solid var(--rule); }
@@ -55,7 +61,7 @@
 .archive-prose > * { max-width: 66ch; }
 .archive-prose > :is(.screenshot, .case-code, .update-note) { max-width: 760px; }
 .archive-prose > * + * { margin-top: 1rem; }
-.archive-prose > h2 { margin-top: 52px; padding-top: 20px; border-top: var(--bw-spine) solid var(--text); }
+.archive-prose > h2 { margin-top: 52px; padding-top: 20px; border-top: var(--bw-hair) solid var(--rule); }
 .archive-prose > h3 { margin-top: 36px; }
 .archive-prose > :is(ol, ul) { padding-left: 1.4em; }
 .archive-prose li + li { margin-top: 6px; }
@@ -72,7 +78,7 @@
    apart from the original author's text. Its code and tables sit recessed inside it. */
 .update-note { margin-block: 26px; padding: 18px 22px; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); font: 400 var(--fact-size) / var(--lh-relaxed) var(--ff-note); }
 .update-note > * + * { margin-top: 12px; }
-.update-note > p:first-child > strong:first-child { font: 600 1rem / var(--lh-snug) var(--ff-display); color: var(--accent-ink); }
+.update-note > p:first-child > strong:first-child { font: 600 var(--compact-size) / var(--lh-snug) var(--ff-display); color: var(--accent-ink); }
 .update-note .case-code { margin-block: 14px 0; }
 .update-note table { border-collapse: collapse; font: 400 var(--compact-size) / var(--lh-snug) var(--ff-body); }
 .update-note :is(th, td) { padding: 6px 14px 6px 0; border-bottom: var(--bw-hair) solid var(--rule); text-align: left; vertical-align: top; }
@@ -87,10 +93,13 @@
 /* Writing: the generated list of articles, then "From the archive", as plain ruled entries. */
 .writing-index { padding-block: clamp(28px, 4vw, 48px) 72px; }
 .writing-list + .writing-list { margin-top: 56px; }
-.writing-list > h2 { padding-top: 20px; border-top: var(--bw-spine) solid var(--text); }
+.writing-list > h2 { padding-top: 20px; border-top: var(--bw-hair) solid var(--rule); }
 .writing-entries { list-style: none; margin: 0; padding: 0; max-width: 72ch; }
 .writing-entries li { padding-block: 22px; border-bottom: var(--bw-hair) solid var(--rule); }
 /* A main-list title is an h2 (no section heading above it) at the note size, so both lists' titles match the item size. */
 .writing-entries h2 { font-size: var(--h2-note-size); line-height: var(--lh-snug); }
+/* Titles read as a table of contents at rest, taking the link colour and underline on hover or focus. */
+.writing-entries :is(h2, h3) a { color: var(--text); text-decoration: none; }
+.writing-entries :is(h2, h3) a:is(:hover, :focus-visible) { color: var(--link); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .14em; }
 .writing-entries p { margin-top: 8px; }
 .writing-entry-meta { color: var(--text-dim); font: 400 var(--fact-size) / var(--lh-relaxed) var(--ff-note); }
