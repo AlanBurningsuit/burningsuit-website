@@ -199,10 +199,11 @@ test("Fundamentals layout: one decision group on the dark stage, the introductio
     expect(group.y).toBeGreaterThanOrEqual(standfirst.y + standfirst.height);
     expect(intro.y).toBeGreaterThanOrEqual(group.y + group.height);
     expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    // Phones: the facts pair up in two columns, the price spans both, and the action spans the content width.
+    // Phones: the facts pair up in two columns, the price spans both, and the action keeps its natural width at the left edge.
     const price = await box(page, ".fact-price"), first = await box(page, ".run-facts > li:first-child");
     expect(price.width).toBeGreaterThan(first.width * 1.5);
-    expect(Math.abs(action.width - group.width)).toBeLessThanOrEqual(1);
+    expect(Math.abs(action.x - group.x)).toBeLessThanOrEqual(1);
+    expect(action.width).toBeLessThan(group.width);
     if (width === 390) await expect(page.locator(".run-action")).toBeInViewport({ ratio: 1 });
     // Steps, tags and links stay inside the viewport.
     for (const selector of [".agenda-steps", ".need-list", ".run-facts", ".run-facts > li", ".run-action"]) {

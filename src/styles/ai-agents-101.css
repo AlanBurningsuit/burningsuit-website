@@ -1,20 +1,21 @@
 /* Power BI with AI agents 101: this page's own rules, on top of the shared course page composition (course-page.css).
    Its opening is the decision hero (decision-hero.css), which also places the requirements line and booking control. */
 
-/* The 101's short requirements line, read before its first booking button; the full list is under What you'll need. */
-.before-book { margin-top: 20px; padding-top: 16px; border-top: var(--bw-hair) solid var(--rule); font-size: var(--quiet-size); }
+/* The 101's short requirements line, read before its first booking button; the full list is under What you'll need.
+   Its spacing in the hero is decision-hero.css's. */
+.before-book { font-size: var(--quiet-size); }
 .before-book a { font-weight: 600; }
 .booking { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-top: 24px; }
 /* Booking uses the shared .button (app.css); while paid booking is closed it shows the disabled state. */
-.booking-status { font: 400 .98rem / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
-.private-ask { margin-top: 22px; font-size: var(--compact-size); }
+.booking-status { font: 400 var(--quiet-size) / var(--lh-relaxed) var(--ff-note); color: var(--text-dim); }
+.private-ask { font-size: var(--compact-size); }
 .private-ask a { font-weight: 600; }
 
 /* What you'll do: the line after the four steps. */
 .do-next { margin-top: 10px; max-width: 62ch; }
 
 /* Why can I trust it: the checking, with who's teaching beside it as a margin note. */
-.course-trust { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); column-gap: var(--column-gap); padding-block: 76px 64px; align-items: start; }
+.course-trust { display: grid; grid-template-columns: var(--grid-aside); column-gap: var(--column-gap); padding-block: 76px 64px; align-items: start; }
 .trust-check h2 { margin-bottom: 22px; }
 .trust-check p { font-size: var(--lead-size); line-height: var(--lh-relaxed); max-width: 46ch; }
 
@@ -35,7 +36,7 @@
 .course-book + .contact .contact-inner { border-top: var(--bw-hair) solid var(--rule); }
 
 @media (max-width: 900px) {
-  .course-trust { grid-template-columns: minmax(0, 1fr); row-gap: 30px; padding-block: 56px 40px; }
+  .course-trust { row-gap: 30px; padding-block: 56px 40px; }
 }
 @media (max-width: 680px) {
   .keep { margin-top: 32px; }

@@ -77,8 +77,13 @@ for (const { route, label, action, price } of heroes) {
     expect(await page.locator(".hero-facts .run-facts > li:first-child").evaluate((el) => getComputedStyle(el, "::before").content)).toBe("none");
     // Middots are decorative: the accessible text of the facts holds none.
     expect((await page.locator(".hero-facts .run-facts").ariaSnapshot()).includes("·")).toBe(false);
-    // Everything needed to decide is on the first screen on desktop.
+    // Everything needed to decide is on the first screen on desktop, and the hero stays compact enough for the daylight
+    // introduction to rise into it.
     await expect(page.locator(`.hero-facts ${action}`)).toBeInViewport({ ratio: 1 });
+    expect(stage.height).toBeLessThanOrEqual(620);
+    expect(intro.y).toBeLessThan(900);
+    // One hairline opens the group; nothing inside it draws a second, shorter rule.
+    expect(await page.locator(".hero-facts > *").evaluateAll((els) => els.filter((el) => getComputedStyle(el).borderTopStyle !== "none").length)).toBe(0);
 
     for (const width of [1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 844 });
@@ -104,7 +109,8 @@ for (const { route, label, action, price } of heroes) {
       expect(act.x).toBeGreaterThanOrEqual(0);
       expect(act.x + act.width).toBeLessThanOrEqual(width);
       if (width <= 390) {
-        // Phones: no middots; the facts pair in two columns and each price spans both; the action spans the content width.
+        // Phones: no middots; the facts pair in two columns and each price spans both; the action keeps its natural width
+        // at the group's left edge, as on wide screens (never centred).
         // A list with a fact too long to share a row (the 101's date and times) runs one fact to a row instead.
         expect(await page.locator(".hero-facts .run-facts > li:nth-child(2)").evaluate((el) => getComputedStyle(el, "::before").content)).toBe("none");
         const narrow = await facts(page);
@@ -118,15 +124,33 @@ for (const { route, label, action, price } of heroes) {
           expect(b.left).toBeGreaterThan(a.right);
           for (const p of narrow.filter((f) => f.price)) expect(p.right - p.left).toBeGreaterThan((a.right - a.left) * 1.5);
         }
-        if (action === ".run-action") expect(Math.abs(act.width - group.width)).toBeLessThanOrEqual(1);
+        expect(Math.abs(act.x - group.x)).toBeLessThanOrEqual(1);
+        expect(act.width).toBeLessThan(group.width);
         // A common phone (390x844, normal text size): the whole primary action is on the first screen.
         if (width === 390) {
           expect(await page.evaluate(() => scrollY)).toBe(0);
           expect(act.y).toBeGreaterThanOrEqual(0);
           expect(act.y + act.height).toBeLessThanOrEqual(844);
+          // The 101's private-course ask, the last line of its group, is on the first screen too.
+          if (await page.locator(".hero-facts .private-ask").count()) expect((await firstBox(page, ".hero-facts .private-ask")).y + (await firstBox(page, ".hero-facts .private-ask")).height).toBeLessThanOrEqual(844);
         }
       }
     }
+  });
+
+  test(`the need section keeps the notebook spine on wide screens and stacks on phones: ${route}`, async ({ page }) => {
+    await page.setViewportSize({ width: 1366, height: 900 });
+    await page.goto(route);
+    // The last need section (What you'll need, or What to arrange): its heading beside the body, as the sections before it.
+    const need = page.locator(".course-need:has(> .need-body)").last();
+    let heading = (await need.locator("> h2").boundingBox())!, body = (await need.locator("> .need-body").boundingBox())!;
+    expect(body.x).toBeGreaterThanOrEqual(heading.x + heading.width);
+    expect(Math.abs(body.y - heading.y)).toBeLessThanOrEqual(40);
+    expect(await need.locator("> h2").evaluate((el) => getComputedStyle(el).position)).toBe("sticky");
+    await page.setViewportSize({ width: 390, height: 844 });
+    heading = (await need.locator("> h2").boundingBox())!; body = (await need.locator("> .need-body").boundingBox())!;
+    expect(body.y).toBeGreaterThanOrEqual(heading.y + heading.height);
+    expect(Math.abs(body.x - heading.x)).toBeLessThanOrEqual(1);
   });
 
   test(`decision hero reflows with 200% text from 320px to 1366px: ${route}`, async ({ page }) => {
