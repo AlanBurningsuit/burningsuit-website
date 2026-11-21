@@ -30,6 +30,26 @@ test("Contact is a real static page: private, CSP-clean, with Contact current", 
   watch.expectClean();
 });
 
+test("Contact opens on the dark stage, then the form on the daylight sheet labelled by the page title", async ({ page }) => {
+  await page.goto(route);
+  // The title band carries the only h1 on the stage; the form section follows it on daylight, not as a dark band.
+  await expect(page.locator("main > .dark.stage .title-band h1#page-title")).toHaveText("Contact Alan");
+  await expect(page.locator("main > .dark.stage + section#contact.contact-daylight")).toHaveCount(1);
+  await expect(page.locator("#contact")).not.toHaveClass(/\bdark\b/);
+  await expect(page.locator("#contact-title")).toHaveCount(0);
+  await expect(page.locator("form.enquiry-form")).toHaveAttribute("aria-labelledby", "page-title");
+  // The sheet is the daylight mist, not the dark ground; fields are lifted leaf cards with pine text; Send is the daylight button.
+  const ground = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(await ground("#contact")).toBe("rgba(0, 0, 0, 0)");
+  expect(await ground("main")).not.toBe(await ground(".dark.stage"));
+  const field = await page.locator("#enquiry-email").evaluate((el) => { const s = getComputedStyle(el); return { bg: s.backgroundColor, color: s.color }; });
+  expect(field.bg).toBe("rgb(251, 252, 249)");
+  expect(field.color).not.toBe(field.bg);
+  if (ENQUIRY.action) expect(await page.locator("button.send").evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(127, 83, 10)");
+  // The page ends on daylight, so the footer gets the sheet's rounded foot.
+  expect(await page.locator(".footer-band").evaluate((el) => getComputedStyle(el, "::before").content)).toBe('""');
+});
+
 test("Contact replaces its redirect; the contact aliases lead here", async ({ browser, baseURL }) => {
   expect(bespokeRoutes).toContain("contact");
   expect(pages.contact).toEqual([]);

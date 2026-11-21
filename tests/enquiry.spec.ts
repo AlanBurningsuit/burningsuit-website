@@ -82,3 +82,18 @@ for (const path of [ENQUIRY.successPath, ENQUIRY.errorPath, ENQUIRY.privacyPath]
     await context.close();
   });
 }
+
+test("the shared form stays the dark closing band everywhere but Contact, labelled by its own heading", async ({ page }) => {
+  for (const route of ["/", "/power-bi/", "/training/"]) {
+    await page.goto(route);
+    const section = page.locator("main section#contact");
+    await expect(section).toHaveClass("contact dark");
+    await expect(section.locator("h2#contact-title")).toHaveCount(1);
+    await expect(section.locator("form.enquiry-form")).toHaveAttribute("aria-labelledby", "contact-title");
+    // Dark fields: cream text on the deep ground, never the daylight leaf card; Send is the amber button.
+    const field = await page.locator("#enquiry-email").evaluate((el) => { const s = getComputedStyle(el); return { bg: s.backgroundColor, color: s.color }; });
+    expect(field.bg).not.toBe("rgb(251, 252, 249)");
+    expect(field.color).not.toBe(field.bg);
+    if (ENQUIRY.action) expect(await page.locator("button.send").evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(230, 152, 117)");
+  }
+});

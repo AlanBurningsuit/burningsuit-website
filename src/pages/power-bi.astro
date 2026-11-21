@@ -4,7 +4,7 @@
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { serviceNode } from "../lib/schema";
-import TitleBand from "../components/TitleBand.astro";
+import DecisionHero from "../components/DecisionHero.astro";
 import PullQuote from "../components/PullQuote.astro";
 import StudyLinks from "../components/StudyLinks.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
@@ -27,24 +27,20 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
   description={summary}
   schema={schema}
 >
-  <TitleBand heading={{ before: "Power BI consultancy that leaves your team ", em: "independent" }}>
-    <Fragment slot="standfirst">Got a Power BI problem training won't fix?</Fragment>
-  </TitleBand>
-  <div class="course-opening wrap">
+  <DecisionHero heading={{ before: "Power BI consultancy that leaves your team ", em: "independent" }} standfirst="Got a Power BI problem training won't fix?" label="Consultancy facts and booking">
+    <Fragment slot="facts">
+      <li class="fact-price">{priced.consultancyRange}</li>
+      <li>You get me, working with your team</li>
+      <li>Built so your team can run it without me afterwards</li>
+      <li>It starts with a free 30-minute call</li>
+    </Fragment>
+    <Tracked event={EVENTS.bookCallLink} place="top"><a class="button run-action" href={call}>Book a free 30-minute call</a></Tracked>
+  </DecisionHero>
+  <div class="course-opening decision-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p>Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running, people rely on it, and it has become hard to change safely.</p>
       <p>That's what my consultancy is for. I work with your team on your own Power BI: how the data gets in, the models, the reports and how they reach the people who use them. I explain as I go, in your words rather than mine. The aim is a team that understands what was built and can change it, not one that relies on yet another contractor.</p>
       <p>Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free 30-minute call.</p>
-    </section>
-
-    <section class="course-run" aria-label="Consultancy facts and booking">
-      <ul class="run-facts" role="list">
-        <li>{priced.consultancyRange}</li>
-        <li>You get me, working with your team</li>
-        <li>Built so your team can run it without me afterwards</li>
-        <li>It starts with a free 30-minute call</li>
-      </ul>
-      <Tracked event={EVENTS.bookCallLink} place="top"><a class="button run-action" href={call}>Book a free 30-minute call</a></Tracked>
     </section>
   </div>
 
@@ -130,7 +126,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
         <p class="start-ask">Tell me what's happening with your Power BI, and we'll work out what would help.</p>
       </div>
       <div>
-        <Tracked event={EVENTS.bookCallLink} place="start"><a class="text-link start-link" href={call}>Book a free 30-minute call</a></Tracked>
+        <Tracked event={EVENTS.bookCallLink} place="start"><a class="button" href={call}>Book a free 30-minute call</a></Tracked>
       </div>
     </div>
   </section>

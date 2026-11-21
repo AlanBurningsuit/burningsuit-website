@@ -17,7 +17,8 @@ test("consultancy page stays static, private and CSP-clean", async ({ page, base
   await expect(page.locator(`${otherScripts}, astro-island`)).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Consultancy");
-  await expect(page.locator("section.course-run")).toHaveAttribute("aria-label", "Consultancy facts and booking");
+  await expect(page.locator(".dark.stage section.hero-facts")).toHaveAttribute("aria-label", "Consultancy facts and booking");
+  await expect(page.locator(".course-run")).toHaveCount(0);
   await expectOnlyTrackedAmounts(page, "consultancy");
   watch.expectClean();
 });
@@ -93,6 +94,18 @@ test("consultancy page follows the visitor questions with the kept anchors", asy
   await expect(page.locator("#ongoing .lead-list > li")).toHaveText(["Retained support for your team.", "Strategic advice as your reporting changes.", "Regular office hours, such as a monthly call in a fixed window, where your team brings whatever has come up."]);
   await expect(page.locator(".who-note p")).toHaveText("I'm Alan Harman-Box. The person you talk to on the free call is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway. Since 2022 I've done Power BI consultancy for 15 organisations, from a single scoping session to work that has run for more than three years.");
 
+  // Who does the work is a lifted card with the clipped accent bar every teacher block uses, not a bordered rule.
+  const note = await page.locator(".who-note").evaluate((el) => {
+    const s = getComputedStyle(el), bar = getComputedStyle(el, "::before");
+    return { shadow: s.boxShadow, rule: s.borderLeftStyle, overflow: s.overflow, bar: bar.content, barBg: bar.backgroundColor, ground: s.backgroundColor };
+  });
+  expect(note.shadow).not.toBe("none");
+  expect(note.rule).toBe("none");
+  expect(note.overflow).toBe("clip");
+  expect(note.bar).toBe('""');
+  expect(note.barBg).not.toBe("rgba(0, 0, 0, 0)");
+  expect(note.ground).not.toBe("rgba(0, 0, 0, 0)");
+
   // The AI band and the free call are raised off the daylight body; the sequence and lists sit on it.
   const background = (selector: string) => page.locator(selector).evaluate((el) => getComputedStyle(el).backgroundColor);
   const ground = await background("main");
@@ -127,6 +140,12 @@ test("consultancy links go to the free call page, the AI band, the courses and A
   await expect(page.getByRole("link", { name: "That's what the courses are for." })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: "That's what Power BI coaching is for." })).toHaveAttribute("href", "/training/#coaching");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
+  // Each page's main action is a button: the decision hero's and How to start's; the AI band's stays a text link.
+  await expect(page.locator(".hero-facts a.button.run-action")).toHaveText("Book a free 30-minute call");
+  await expect(page.locator("#start a.button")).toHaveText("Book a free 30-minute call");
+  await expect(page.locator(".start-link")).toHaveCount(0);
+  await expect(page.locator('[data-umami-event-place="start"] > a.button')).toHaveCount(1);
+  await expect(page.locator('[data-umami-event-place="top"] > a.button')).toHaveCount(1);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   expect(mainLinks).toEqual([call, "#ai", "/training/", "/training/#coaching", "/work/carbon-footprint/", "/work/", call, "/writing/we-are-all-middle-management-now/", call, "/about/", call, ENQUIRY.privacyPath, `mailto:${ENQUIRY.email}`]);
 });
@@ -180,27 +199,30 @@ test("consultancy page works without JavaScript, from keyboard and from a legacy
   await context.close();
 });
 
-test("consultancy layout: facts beside the introduction on wide screens, after it on narrow ones", async ({ page }) => {
+test("consultancy layout: facts and booking on the dark stage above the fold, the introduction after them on daylight", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let intro = await box(page, ".course-intro"), facts = await box(page, ".course-run");
-  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
-  expect(facts.y).toBeLessThan(intro.y + intro.height);
+  // The facts and the top booking button sit in the decision hero on the dark stage, above the daylight introduction and the fold.
+  let intro = await box(page, ".course-intro"), facts = await box(page, ".hero-facts"), top = await box(page, ".hero-facts .run-action");
+  expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
+  expect(top.y + top.height).toBeLessThanOrEqual(900);
   for (const [lead, body] of [["#situations .split-lead", "#situations .split-body"], ["#ongoing .ongoing-lead", "#ongoing .ongoing-body"], [".who-does h2", ".who-note"]]) {
     const [l, b] = [await box(page, lead), await box(page, body)];
     expect(b.x).toBeGreaterThanOrEqual(l.x + l.width);
   }
-  // How to start breaks the run of side-by-side sections: its heading and ask sit above the link.
-  expect((await box(page, ".start-link")).y).toBeGreaterThanOrEqual((await box(page, "#start .book-inner > div:first-child")).y + (await box(page, "#start .book-inner > div:first-child")).height);
+  // How to start breaks the run of side-by-side sections: its heading and ask sit above the page's closing button.
+  expect((await box(page, "#start .button")).y).toBeGreaterThanOrEqual((await box(page, "#start .book-inner > div:first-child")).y + (await box(page, "#start .book-inner > div:first-child")).height);
   // Who does the work reads at body width, not the 101's narrow aside.
   expect((await box(page, ".who-note")).width).toBeGreaterThan(600);
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await box(page, ".course-intro"); facts = await box(page, ".course-run");
-    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    expect((await box(page, "#situations")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
-    for (const selector of [".do-steps", ".lead-list", ".start-link", ".run-action", ".do-steps h3 a"]) {
+    intro = await box(page, ".course-intro"); facts = await box(page, ".hero-facts"); top = await box(page, ".hero-facts .run-action");
+    expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    // The top booking button sits wholly inside the first 390x844 screen.
+    if (width === 390) expect(top.y + top.height).toBeLessThanOrEqual(844);
+    expect((await box(page, "#situations")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
+    for (const selector of [".do-steps", ".lead-list", "#start .button", ".run-action", ".do-steps h3 a"]) {
       for (const item of await page.locator(selector).all()) {
         const b = (await item.boundingBox())!;
         expect(b.x).toBeGreaterThanOrEqual(0);

@@ -31,8 +31,9 @@ test("free call page answers the visitor's questions in order, in the approved w
   await expect(page.locator("h1")).toHaveText("A free 30-minute call about your Power BI");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What happens", "Book your call"]);
   await expect(page.locator(".title-band .standfirst")).toHaveText("Got a problem with your own Power BI, and not sure whether I can help?");
-  // Duration and lack of charge sit at the top, beside the introduction.
-  await expect(page.locator("section.course-run")).toHaveAttribute("aria-label", "Call facts and booking");
+  // Duration and lack of charge sit at the top, in the decision hero on the dark stage, with the booking button.
+  await expect(page.locator(".dark.stage section.hero-facts")).toHaveAttribute("aria-label", "Call facts and booking");
+  await expect(page.locator(".course-run")).toHaveCount(0);
   await expect(page.locator(".run-facts > li")).toHaveText(["30 minutes, free", "On Microsoft Teams", "You talk to me, Alan", "Follow-up afterwards if it needs more thought", "Any further work quoted separately"]);
   // Two unraised numbered steps; the counter is decorative, the list semantics carry the order.
   await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`
@@ -65,8 +66,8 @@ test("both booking actions are the same ordinary same-tab link, styled as the sh
   await page.goto(route);
   const actions = page.getByRole("link", { name: label, exact: true });
   await expect(actions).toHaveCount(2);
-  // On the daylight facts card the button is ochre with leaf text; in the dark booking band it is amber with deep text.
-  const grounds = [{ bg: "rgb(127, 83, 10)", color: "rgb(251, 252, 249)" }, { bg: "rgb(230, 152, 117)", color: "rgb(28, 34, 38)" }];
+  // Both sit on dark grounds (the decision hero and the booking band), so both are amber with deep text.
+  const grounds = [{ bg: "rgb(230, 152, 117)", color: "rgb(28, 34, 38)" }, { bg: "rgb(230, 152, 117)", color: "rgb(28, 34, 38)" }];
   for (const [index, action] of (await actions.all()).entries()) {
     await expect(action).toHaveAttribute("href", booking);
     await expect(action).not.toHaveAttribute("target", /./);
@@ -129,18 +130,19 @@ test("free call page works without JavaScript and from the keyboard", async ({ b
   await context.close();
 });
 
-test("free call layout: facts beside the introduction on wide screens, after it on narrow ones", async ({ page }) => {
+test("free call layout: facts and booking on the dark stage above the fold, then the introduction and steps on daylight", async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(route);
-  let intro = await firstBox(page, ".course-intro"), facts = await firstBox(page, ".course-run");
-  expect(facts.x).toBeGreaterThanOrEqual(intro.x + intro.width);
-  expect(facts.y).toBeLessThan(intro.y + intro.height);
-  // The steps run left to right under their heading, as on Consultancy; the booking copy sits beside its action.
+  // The facts and the top booking button sit on the stage, above the daylight introduction, inside the first screen.
+  let facts = await firstBox(page, ".hero-facts"), intro = await firstBox(page, ".course-intro");
+  let top = await firstBox(page, ".hero-facts .book-link");
+  expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
+  expect(top.y + top.height).toBeLessThanOrEqual(900);
+  // "What happens" flows under the introduction on the daylight sheet; its steps run left to right under their heading.
   const [lead, steps] = [await firstBox(page, "#happens-title"), await firstBox(page, ".do-steps")];
-  // "What happens" sits under the introduction, beside the facts card.
   const happens = await firstBox(page, ".call-steps");
   expect(happens.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-  expect(happens.x + happens.width).toBeLessThanOrEqual(facts.x);
+  expect(await page.locator(".course-opening.decision-opening > .call-steps").count()).toBe(1);
   expect(steps.y).toBeGreaterThanOrEqual(lead.y + lead.height);
   const [first, second] = await page.locator(".do-steps > li").all();
   expect((await second.boundingBox())!.x).toBeGreaterThan((await first.boundingBox())!.x);
@@ -148,9 +150,11 @@ test("free call layout: facts beside the introduction on wide screens, after it 
   expect(action.x).toBeGreaterThanOrEqual(copy.x + copy.width);
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    intro = await firstBox(page, ".course-intro"); facts = await firstBox(page, ".course-run");
-    expect(facts.y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    expect((await firstBox(page, ".call-steps")).y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    facts = await firstBox(page, ".hero-facts"); intro = await firstBox(page, ".course-intro"); top = await firstBox(page, ".hero-facts .book-link");
+    expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
+    // The top booking button sits wholly inside the first 390x844 screen.
+    if (width === 390) expect(top.y + top.height).toBeLessThanOrEqual(844);
+    expect((await firstBox(page, ".call-steps")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
     // Each booking action, its hard shadow and its focus ring stay on screen.
     for (const action of await page.locator("a.book-link").all()) {
       const edges = await action.evaluate((el) => {

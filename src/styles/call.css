@@ -1,17 +1,10 @@
 /* Free call page (/call/): this page's own rules, on top of the shared course page composition (course-page.css):
-   Consultancy's opening with its facts card, and the numbered spine. */
+   the shared decision hero (DecisionHero.astro) with the call's facts and booking button on the dark stage, then the
+   introduction and "What happens" on the daylight sheet. */
 
-/* The booking action is the shared .button (app.css): ochre on the facts card, amber in the dark booking band. */
-.course-run .book-link { margin-top: 24px; }
-
-/* The opening holds everything before the booking band: the introduction, then "What happens" under it, with the
-   facts card beside both on wide screens; on narrow ones the three stack in source order. */
-.course-opening.call-opening { padding-bottom: clamp(36px, 4vw, 52px); }
-@media (min-width: 901px) {
-  .call-opening { grid-template-rows: auto 1fr; }
-  .call-opening .course-run { grid-column: 2; grid-row: 1 / span 2; }
-  .call-steps { grid-column: 1; margin-top: 36px; }
-}
+/* The introduction opens the daylight sheet, with "What happens" beneath it at the sheet's reading width. */
+.course-opening.call-opening { row-gap: 0; }
+.call-steps { margin-top: clamp(32px, 3.6vw, 48px); max-width: 68rem; }
 .call-steps h2 { margin-bottom: 22px; }
 /* The two steps side by side, each opening on the warm rule, as on Consultancy's "How the work runs". */
 .call-steps .do-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }

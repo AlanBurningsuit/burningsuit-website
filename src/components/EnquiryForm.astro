@@ -1,27 +1,30 @@
 ---
 // A plain HTML POST: no JavaScript, prefill or client validation beyond the browser's own.
-// Callers set the heading level (Contact's is the page h1), may give the introduction as its
-// own paragraphs in the "intro" slot instead of one default-slot paragraph, and may drop the
-// email fallback below the form when the introduction already offers it.
+// On most pages it is the dark closing band, under its own h2 from the "heading" slot. On Contact it sits on the daylight
+// sheet (`surface="daylight"`) under the page's title band: there is no heading of its own, and the form is labelled by
+// the page title. Callers may give the introduction as its own paragraphs in the "intro" slot instead of one default-slot
+// paragraph, and may drop the email fallback below the form when the introduction already offers it.
 import "../styles/enquiry.css";
 import { ENQUIRY } from "../config/enquiry.mjs";
 import { EVENTS } from "../config/analytics.mjs";
 
 interface Props {
-  headingLevel?: 1 | 2;
+  surface?: "dark" | "daylight";
   fallback?: boolean;
 }
-const { headingLevel = 2, fallback = true } = Astro.props;
-const Heading = headingLevel === 1 ? "h1" : "h2";
+const { surface = "dark", fallback = true } = Astro.props;
+const hasHeading = Astro.slots.has("heading");
+// The form's accessible name: its own heading, or the page title when it has none.
+const labelledBy = hasHeading ? "contact-title" : "page-title";
 ---
-<section id="contact" class="contact dark">
+<section id="contact" class={surface === "daylight" ? "contact-daylight" : "contact dark"}>
   <div class="wrap contact-inner enquiry">
     <div class="enquiry-intro">
-      <Heading id="contact-title"><slot name="heading" /></Heading>
+      {hasHeading && <h2 id="contact-title"><slot name="heading" /></h2>}
       {Astro.slots.has("intro") ? <slot name="intro" /> : <p><slot /></p>}
     </div>
     <div class="enquiry-body">
-      <form class="enquiry-form" method="post" action={ENQUIRY.action ?? undefined} aria-labelledby="contact-title" aria-describedby="enquiry-privacy">
+      <form class="enquiry-form" method="post" action={ENQUIRY.action ?? undefined} aria-labelledby={labelledBy} aria-describedby="enquiry-privacy">
         <input type="hidden" name="_redirect" value={ENQUIRY.successPath} />
         <input type="hidden" name="_error" value={ENQUIRY.errorPath} />
         {/* Formspark otherwise appends the submitted personal data to the URL. */}
