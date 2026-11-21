@@ -229,7 +229,7 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
     expect(facts.transform).toBe("none");
     for (const label of await deciding.locator(".fact-label").all()) expect(await label.evaluate((el) => getComputedStyle(el).textTransform)).toBe("uppercase");
     expect(await deciding.locator(".prereq").evaluate((el) => getComputedStyle(el).fontFamily)).toBe(bodyFont);
-    const spine = await entry.evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth));
+    const spine = await entry.evaluate((el) => parseFloat(getComputedStyle(el, "::before").height));
     // A spine, heavier than the specialists' hairline rows.
     expect(spine).toBeGreaterThan(await page.locator(".specialist-rows > li").first().evaluate((el) => parseFloat(getComputedStyle(el).borderTopWidth)));
   }
@@ -257,7 +257,7 @@ test("the starting points carry the page's weight: lifted, spined cards with fie
   const amber = await page.locator("h1 .em").evaluate((el) => getComputedStyle(el).color);
   expect(warm).not.toBe(amber);
   expect(await page.locator(".teacher-note").evaluate((el) => getComputedStyle(el).borderLeftColor)).not.toBe(warm);
-  expect(await page.getByRole("article").first().evaluate((el) => getComputedStyle(el).borderTopColor)).toBe(warm);
+  expect(await page.getByRole("article").first().evaluate((el) => getComputedStyle(el, "::before").backgroundColor)).toBe(warm);
 });
 
 test("fact separators never start or end a wrapped line", async ({ page }) => {

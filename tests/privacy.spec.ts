@@ -169,7 +169,7 @@ test("privacy notice and footer reflow from 320px to 1366px with enlarged text",
       if (size === "100%") {
         const [legalSize, linkSize] = await page.evaluate(() => [".foot-legal", ".foot-links a"].map((selector) => parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize)));
         expect(legalSize, `${width}px`).toBeGreaterThanOrEqual(12);
-        expect(linkSize, `${width}px`).toBe(width < 680 ? 14 : 12.48);
+        expect(linkSize, `${width}px`).toBe(width < 680 ? 14 : 13.12);
       }
       const legalBox = await page.locator("footer .foot-legal").boundingBox();
       const linksBox = await page.locator("footer .foot-links").boundingBox();
