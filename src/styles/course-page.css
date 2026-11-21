@@ -2,12 +2,10 @@
    its facts, the numbered spine, the diagram, the teacher card and the need list. Each page's own rules live in its own
    sheet (ai-agents-101.css, course-agenda.css, consultancy.css, call.css); shared furniture lives in app.css. */
 
-/* Opening (Consultancy and the free call page): the title band on the dark stage; the introduction opens the daylight sheet
-   with the deciding facts on a lifted card beside it on wide screens and after it on narrow ones. The course pages put
-   their facts in the decision hero instead (decision-hero.css). */
+/* Opening: the title band and deciding facts sit on the dark stage (decision-hero.css); the introduction opens the daylight sheet below. */
 .course-opening {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); /* the mirror of --grid-sidebar: the intro leads, the facts card sits beside */
+  grid-template-columns: minmax(0, 1fr);
   column-gap: var(--column-gap);
   padding-block: clamp(40px, 5vw, 64px) clamp(48px, 5vw, 72px);
   align-items: start;
@@ -17,11 +15,8 @@
 .course-fit { border-left: var(--bw-spine) solid var(--accent); padding-left: 18px; }
 p + p.course-fit { margin-top: 1.4rem; }
 
-.course-run { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 18px 26px 24px; margin-top: 4px; }
 .run-facts { list-style: none; margin: 0; padding: 0; font: 400 var(--fact-size) / var(--lh-relaxed) var(--ff-note); }
 .run-facts li { padding-block: 6px; }
-/* On the facts card (not in the decision hero), each fact balances its own lines. */
-.course-run .run-facts li { text-wrap: balance; }
 
 /* What you'll do: a raised band with the steps on a numbered spine. */
 .course-do { background: var(--surface-raised); }
@@ -68,10 +63,8 @@ p + p.course-fit { margin-top: 1.4rem; }
 .book-facts { font-size: var(--raised-size); max-width: 40ch; }
 
 @media (max-width: 900px) {
-  .course-opening { grid-template-columns: minmax(0, 1fr); }
   .course-opening, .do-inner, .course-need { row-gap: 30px; }
   .course-opening { padding-block: 36px 52px; row-gap: 32px; }
-  .course-run { margin-top: 0; }
   .do-inner { padding-block: 50px 54px; }
   .trust-teacher { margin-top: 0; }
   .course-need { padding-block: 24px 60px; row-gap: 22px; }

@@ -31,7 +31,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
     <Fragment slot="facts">
       <li class="fact-price">{priced.consultancyRange}</li>
       <li>You get me, working with your team</li>
-      <li>Built so your team can run it without me afterwards</li>
+      <li class="fact-wide">Built so your team can run it without me afterwards</li>
       <li>It starts with a free 30-minute call</li>
     </Fragment>
     <Tracked event={EVENTS.bookCallLink} place="top"><a class="button run-action" href={call}>Book a free 30-minute call</a></Tracked>

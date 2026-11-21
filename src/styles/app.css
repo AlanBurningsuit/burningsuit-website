@@ -126,10 +126,10 @@ a:hover { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
 /* A card's accent: an ochre bar drawn inside the card and clipped to its rounded corners, along the top of a course card and
    down the left of a teacher or answer card. overflow: clip trims the bar to the radius but never the card's own shadow. */
 /* The accent is this bar alone: no border or inset shadow draws one (the :is() list's specificity outranks a page's own .course rule). */
-:is(.course, .trust-teacher, .teacher-origin, .hit-stuck .hit-prose) { position: relative; overflow: clip; border-top: 0; }
-:is(.course, .trust-teacher, .teacher-origin, .hit-stuck .hit-prose)::before { content: ""; position: absolute; background: var(--accent); pointer-events: none; }
+:is(.course, .trust-teacher, .teacher-origin, .teacher-note, .who-note, .hit-stuck .hit-prose) { position: relative; overflow: clip; border-top: 0; }
+:is(.course, .trust-teacher, .teacher-origin, .teacher-note, .who-note, .hit-stuck .hit-prose)::before { content: ""; position: absolute; background: var(--accent); pointer-events: none; }
 .course::before { inset: 0 0 auto; height: var(--bw-spine); }
-:is(.trust-teacher, .teacher-origin, .hit-stuck .hit-prose)::before { inset: 0 auto 0 0; width: var(--bw-spine); }
+:is(.trust-teacher, .teacher-origin, .teacher-note, .who-note, .hit-stuck .hit-prose)::before { inset: 0 auto 0 0; width: var(--bw-spine); }
 /* A daylight card answers the pointer and the keyboard: its edge warms and its shadow deepens (it also lifts, with motion). */
 .course:is(:hover, :focus-within), .work-entries li:is(:hover, :focus-within) { box-shadow: var(--lift-raised); }
 

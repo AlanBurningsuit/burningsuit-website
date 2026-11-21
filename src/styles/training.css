@@ -44,8 +44,7 @@
 
 /* Who's teaching: heading beside a lifted note with a clipped ochre left bar, the pattern Home's family note and the course pages' teacher card use, in the consultancy page's "Who does the work" proportions, without its photo. */
 .training-teacher { display: grid; grid-template-columns: var(--grid-sidebar); column-gap: var(--column-gap); padding-block: 32px 96px; align-items: start; }
-.teacher-note { position: relative; overflow: clip; background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 24px 28px; }
-.teacher-note::before { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--bw-spine); background: var(--accent); pointer-events: none; }
+.teacher-note { background: var(--surface-card); border-radius: var(--r); box-shadow: var(--lift); padding: 24px 28px; }
 .teacher-note p { max-width: 64ch; }
 .teacher-note .course-actions { margin-top: 12px; }
 

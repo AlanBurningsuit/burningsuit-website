@@ -212,13 +212,17 @@ for (const { route, label, action, price } of heroes) {
   });
 }
 
-test("the decision hero stays off the training chooser, Consultancy and the homepage", async ({ page }) => {
-  for (const route of ["/", "/training/", "/power-bi/", "/call/", "/training/how-i-train/"]) {
+test("the decision hero is on Consultancy and the free call page, and stays off Home, Training and How I train", async ({ page }) => {
+  for (const route of ["/power-bi/", "/call/"]) {
+    await page.goto(route);
+    await expect(page.locator(".dark.stage .title-band.decision-hero")).toHaveCount(1);
+    await expect(page.locator(".hero-facts")).toHaveCount(1);
+    await expect(page.locator(".course-run")).toHaveCount(0);
+  }
+  for (const route of ["/", "/training/", "/training/how-i-train/"]) {
     await page.goto(route);
     await expect(page.locator(".decision-hero, .hero-facts, .decision-opening")).toHaveCount(0);
   }
-  await page.goto("/power-bi/");
-  await expect(page.locator("section.course-run")).toHaveCount(1);
 });
 
 test("no price outside the hero's price items on course pages", async ({ page }) => {
