@@ -21,7 +21,7 @@ export const COURSE_RUN = Object.freeze({
   status: "open",
 });
 
-// DRAFT wording, awaiting Alan's approval before first use. Nothing renders it while the status is "open".
+// Approved wording for full and past runs (nothing renders it while the status is "open").
 export const RUN_STATUS_WORDING = Object.freeze({
   full: "This run is full.",
   past: "This run has finished.",
