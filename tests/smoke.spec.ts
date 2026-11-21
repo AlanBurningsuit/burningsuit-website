@@ -1,18 +1,24 @@
 import { test, expect } from "./analytics";
-import { builtPages, watchPage } from "./helpers";
+import { builtPages, chunks, watchPage } from "./helpers";
 
 // The cross-browser smoke subset, tagged @smoke: the WebKit project runs only these, and Chromium (which runs the full
 // suite) leaves them out. Keep it small: each page loads cleanly with its shell, and the two interactive parts work.
 const smoke = { tag: "@smoke" };
 const navigation = ["Training", "Consultancy", "Case studies", "About", "Contact"];
 
-for (const { route } of builtPages) {
-  test(`page loads with one h1, the masthead links and no console errors: ${route}`, smoke, async ({ page }) => {
+for (const [index, group] of chunks(builtPages, 4).entries()) {
+  test(`pages load with one h1, the masthead links and no console errors (group ${index + 1})`, smoke, async ({ page }) => {
+    test.slow();
     const watch = await watchPage(page);
-    expect((await page.goto(route))?.status()).toBe(200);
-    await expect(page.locator("h1")).toHaveCount(1);
-    await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link")).toHaveText(navigation);
-    watch.expectClean();
+    for (const { route } of group) {
+      watch.errors.length = 0;
+      watch.external.length = 0;
+      expect((await page.goto(route))?.status(), route).toBe(200);
+      await expect(page.locator("h1"), route).toHaveCount(1);
+      await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("link"), route).toHaveText(navigation);
+      expect(watch.errors, route).toEqual([]);
+      expect(watch.external, route).toEqual([]);
+    }
   });
 }
 

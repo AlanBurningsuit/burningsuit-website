@@ -1,5 +1,5 @@
 import { test, expect, otherScripts, tracker } from "./analytics";
-import { builtPages, expectIndexable, expectNoHorizontalScroll, watchPage } from "./helpers";
+import { builtPages, chunks, expectIndexable, expectNoHorizontalScroll, watchPage } from "./helpers";
 import { bespokeRoutes, pages, reserved404Routes } from "../src/config/compatibility.mjs";
 import { formActionSource } from "../src/config/enquiry.mjs";
 import { ANALYTICS } from "../src/config/analytics.mjs";
@@ -7,42 +7,48 @@ import { ANALYTICS } from "../src/config/analytics.mjs";
 const formRoutes = bespokeRoutes.filter((route) => !["about", "privacy", "work"].includes(route));
 const reserved = pages as Record<string, readonly string[]>;
 
-// Every page the build emits (redirect stubs aside), found in dist/ rather than listed by hand.
-for (const { route, indexed } of builtPages) {
-  test(`static, ${indexed ? "indexable" : "noindex"}, CSP-clean page with the site shell: ${route}`, async ({ page }) => {
+// Every page the build emits (redirect stubs aside), found in dist/ rather than listed by hand, batched across workers.
+for (const [index, group] of chunks(builtPages, 4).entries()) {
+  test(`static, CSP-clean pages with the site shell (group ${index + 1})`, async ({ page }) => {
+    test.slow();
     const watch = await watchPage(page);
-    const response = await page.goto(route);
-    expect(response?.status()).toBe(200);
-    await page.evaluate(() => document.fonts.ready);
-    await expect(page.locator("h1")).toHaveCount(1);
-    // The shell: skip link to main, masthead with the main navigation, footer.
-    await expect(page.locator('a.skip[href="#main"]')).toHaveText("Skip to content");
-    await expect(page.locator("main#main")).toHaveCount(1);
-    await expect(page.locator("header.masthead-band").getByRole("navigation", { name: "Main navigation" })).toHaveCount(1);
-    await expect(page.locator("footer.footer-band")).toHaveCount(1);
-    if (indexed) {
-      // Case studies and essays add an Article node to the identity graph.
-      await expectIndexable(page, { article: /^\/(work|writing|blog)\/./.test(route) });
-    } else {
-      await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
-      await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+    for (const { route, indexed } of group) {
+      watch.errors.length = 0;
+      watch.external.length = 0;
+      const response = await page.goto(route);
+      expect(response?.status(), route).toBe(200);
+      await page.evaluate(() => document.fonts.ready);
+      await expect(page.locator("h1"), route).toHaveCount(1);
+      // The shell: skip link to main, masthead with the main navigation, footer.
+      await expect(page.locator('a.skip[href="#main"]'), route).toHaveText("Skip to content");
+      await expect(page.locator("main#main"), route).toHaveCount(1);
+      await expect(page.locator("header.masthead-band").getByRole("navigation", { name: "Main navigation" }), route).toHaveCount(1);
+      await expect(page.locator("footer.footer-band"), route).toHaveCount(1);
+      if (indexed) {
+        // Case studies and essays add an Article node to the identity graph.
+        await expectIndexable(page, { article: /^\/(work|writing|blog)\/./.test(route) });
+      } else {
+        await expect(page.locator('meta[name="robots"]'), route).toHaveAttribute("content", /noindex/);
+        await expect(page.locator('link[rel="canonical"]'), route).toHaveCount(0);
+      }
+      const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
+      for (const directive of ["default-src 'none'", "script-src", "style-src", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp, route).toContain(directive);
+      // Every page carries the Umami tag, limited to the production domains; only /privacy/ adds its same-origin opt-out module.
+      await expect(page.locator(tracker), route).toHaveCount(1);
+      await expect(page.locator(tracker), route).toHaveAttribute("data-website-id", ANALYTICS.websiteId);
+      await expect(page.locator(tracker), route).toHaveAttribute("data-domains", ANALYTICS.domains);
+      await expect(page.locator(otherScripts), route).toHaveCount(route === "/privacy/" ? 1 : 0);
+      if (route === "/privacy/") await expect(page.locator(otherScripts)).toHaveAttribute("src", /^\/_astro\/[^/]+\.js$/);
+      // Reserved routes keep their anchors; of those, About, the free call page and the privacy notice link onward instead of carrying the form.
+      const path = route.replace(/^\/|\/$/g, "");
+      if (path in reserved) {
+        // Writing pages (the index, essays, articles and archive posts) end with the newsletter sign-up, their only form.
+        await expect(page.locator("form"), route).toHaveCount(formRoutes.includes(path) || path === "writing" || path.startsWith("writing/") || path.startsWith("blog/") ? 1 : 0);
+        for (const id of reserved[path]) await expect(page.locator(`[id="${id}"]`), `${route}#${id}`).toHaveCount(1);
+      }
+      expect(watch.errors, route).toEqual([]);
+      expect(watch.external, route).toEqual([]);
     }
-    const csp = await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content");
-    for (const directive of ["default-src 'none'", "script-src", "style-src", "font-src 'self'", `form-action ${formActionSource}`]) expect(csp).toContain(directive);
-    // Every page carries the Umami tag, limited to the production domains; only /privacy/ adds its same-origin opt-out module.
-    await expect(page.locator(tracker)).toHaveCount(1);
-    await expect(page.locator(tracker)).toHaveAttribute("data-website-id", ANALYTICS.websiteId);
-    await expect(page.locator(tracker)).toHaveAttribute("data-domains", ANALYTICS.domains);
-    await expect(page.locator(otherScripts)).toHaveCount(route === "/privacy/" ? 1 : 0);
-    if (route === "/privacy/") await expect(page.locator(otherScripts)).toHaveAttribute("src", /^\/_astro\/[^/]+\.js$/);
-    // Reserved routes keep their anchors; of those, About, the free call page and the privacy notice link onward instead of carrying the form.
-    const path = route.replace(/^\/|\/$/g, "");
-    if (path in reserved) {
-      // Writing pages (the index, essays, articles and archive posts) end with the newsletter sign-up, their only form.
-      await expect(page.locator("form")).toHaveCount(formRoutes.includes(path) || path === "writing" || path.startsWith("writing/") || path.startsWith("blog/") ? 1 : 0);
-      for (const id of reserved[path]) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
-    }
-    watch.expectClean();
   });
 }
 
@@ -87,12 +93,12 @@ test("content and the error route work without JavaScript", async ({ browser, ba
   await expect(page).toHaveURL(baseURL! + "/");
   await context.close();
 });
-for (const width of [320, 390, 768, 1280]) {
-  test(`no overflow at ${width}px, including enlarged text`, async ({ page }) => {
+test("no overflow from 320px to 1280px, including enlarged text", async ({ page }) => {
+  await page.goto("/404.html");
+  await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
+  for (const width of [320, 390, 768, 1280]) {
     await page.setViewportSize({ width, height: 720 });
-    await page.goto("/404.html");
-    await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
     await expectNoHorizontalScroll(page);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  });
-}
+  }
+});

@@ -35,13 +35,13 @@ for (const route of ["/", course]) {
     watch.expectClean();
   });
 
-  for (const width of [320, 390, 768, 1366]) {
-    test(`page reflows at ${width}px with enlarged text: ${route}`, async ({ page }) => {
+  test(`page reflows from 320px to 1366px with enlarged text: ${route}`, async ({ page }) => {
+    await page.goto(route);
+    for (const width of [320, 390, 768, 1366]) {
       await page.setViewportSize({ width, height: 768 });
-      await page.goto(route);
       await forEachTextSize(page);
-    });
-  }
+    }
+  });
 
   visualReview(route);
 }
@@ -325,54 +325,53 @@ test("enquiry form is a labelled plain POST with nothing preselected that valida
   await context.close();
 });
 
-// Every standing page's title carries one emphasised word, in the dark band's amber.
-test("each standing page's title has one amber emphasis", async ({ page }) => {
-  for (const route of ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/"]) {
-    await page.goto(route);
-    const em = page.locator("h1 .em");
-    await expect(em).toHaveCount(1);
-    const [color, amber] = await Promise.all([em.evaluate((el) => getComputedStyle(el).color), page.evaluate(() => { const probe = document.createElement("span"); probe.style.color = "var(--amber)"; document.body.append(probe); const c = getComputedStyle(probe).color; probe.remove(); return c; })]);
-    expect(color).toBe(amber);
-  }
-});
-
-test("every page but home and contact opens on the title band, and its body opens the daylight sheet", async ({ page }) => {
-  // Thirty-odd pages in one test: triple the default timeout so a busy machine doesn't fail it.
+// Site-wide stage, amber title emphasis and heading scale checked in one pass over the routes (one navigation per page).
+test("site-wide title band, daylight sheet, amber emphasis and heading scale stay consistent", async ({ page }) => {
   test.slow();
-  const routes = ["/training/", course, "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/privacy/", "/privacy/enquiries/", "/enquiry-received/", "/enquiry-error/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/writing/", "/blog/2019/04/7-secrets-of-the-matrix-visual/", "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/", "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/", "/blog/2019/05/find-top-or-bottom-n-percent-dax/", "/blog/2020/11/how-dax-treats-nulls-zeros/", "/blog/using-dynamic-values-smart-narrative-and-text-box/", "/blog/using-continuous-x-axis-column-charts-year-and-month-labels/", "/blog/2021/09/i-have-the-powerquery-using-power-query-to-call-rest-apis/", "/blog/filtering-using-dax-measures/", "/404.html"];
-  await page.setViewportSize({ width: 1366, height: 900 });
+  const amberRoutes = new Set(["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/"]);
+  const titleBandRoutes = new Set(["/training/", course, "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/privacy/", "/privacy/enquiries/", "/enquiry-received/", "/enquiry-error/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim/", "/writing/", "/blog/2019/04/7-secrets-of-the-matrix-visual/", "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/", "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/", "/blog/2019/05/find-top-or-bottom-n-percent-dax/", "/blog/2020/11/how-dax-treats-nulls-zeros/", "/blog/using-dynamic-values-smart-narrative-and-text-box/", "/blog/using-continuous-x-axis-column-charts-year-and-month-labels/", "/blog/2021/09/i-have-the-powerquery-using-power-query-to-call-rest-apis/", "/blog/filtering-using-dax-measures/", "/404.html"]);
+  const scaleRoutes = new Set(["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/contact/", "/privacy/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/writing/", "/blog/2019/04/7-secrets-of-the-matrix-visual/", "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/", "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/", "/blog/2019/05/find-top-or-bottom-n-percent-dax/", "/blog/2020/11/how-dax-treats-nulls-zeros/", "/blog/using-dynamic-values-smart-narrative-and-text-box/", "/blog/using-continuous-x-axis-column-charts-year-and-month-labels/", "/blog/2021/09/i-have-the-powerquery-using-power-query-to-call-rest-apis/", "/blog/filtering-using-dax-measures/"]);
+  const allRoutes = [...new Set([...amberRoutes, ...titleBandRoutes, ...scaleRoutes])];
+  const sizesByWidth: Record<number, Record<string, Set<number>>> = {
+    1366: { h1: new Set(), h2: new Set(), h3: new Set() },
+    390: { h1: new Set(), h2: new Set(), h3: new Set() },
+  };
   let edge: number | undefined;
-  for (const route of routes) {
-    await page.goto(route);
-    const h1 = page.locator(".title-band h1");
-    await expect(h1, route).toHaveCount(1);
-    await expect(page.locator("h1"), route).toHaveCount(1);
-    expect(await h1.evaluate((el) => !!el.closest(".dark.stage")), route).toBe(true);
-    // The band's next sibling stage is followed by daylight, not another dark band.
-    expect(await page.locator(".stage").first().evaluate((el) => el.nextElementSibling?.classList.contains("dark") ?? true), route).toBe(false);
-    // One left edge for every title.
-    const x = Math.round((await h1.boundingBox())!.x);
-    edge ??= x;
-    expect(Math.abs(x - edge), route).toBeLessThanOrEqual(1);
-    // Nothing on the daylight sheet keeps the dark grounds' cream text.
-    const cream = await page.evaluate(() => { const probe = document.createElement("span"); probe.style.color = "var(--fg)"; document.body.append(probe); const c = getComputedStyle(probe).color; probe.remove(); return c; });
-    const stray = await page.locator("main :is(h2, h3, p, li, dt, dd, a)").evaluateAll((els, c) => els.filter((el) => !el.closest(".dark") && getComputedStyle(el).color === c && (el as HTMLElement).offsetParent).map((el) => el.textContent!.trim().slice(0, 40)), cream);
-    expect(stray, route).toEqual([]);
-  }
-});
+  const readHeadings = () => page.locator("main :is(h1, h2, h3)").evaluateAll((els) => els.filter((el) => (el as HTMLElement).offsetParent && !el.closest(".home-title")).map((el) => [el.tagName.toLowerCase(), Math.round(parseFloat(getComputedStyle(el).fontSize) * 10) / 10] as const));
 
-test("one heading scale across the site: a title size, a section size, a note size, an item size and a card size", async ({ page }) => {
-  // Thirty-odd pages in one test: triple the default timeout so a busy machine doesn't fail it.
-  test.slow();
-  const routes = ["/", "/training/", course, "/training/power-bi-fundamentals/", "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/training/how-i-train/", "/power-bi/", "/about/", "/call/", "/contact/", "/privacy/", "/work/", "/work/carbon-footprint/", "/work/contact-centre/", "/work/dax-deep-dive/", "/work/individual-power-bi-coaching/", "/writing/we-are-all-middle-management-now/", "/writing/", "/blog/2019/04/7-secrets-of-the-matrix-visual/", "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/", "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/", "/blog/2019/05/find-top-or-bottom-n-percent-dax/", "/blog/2020/11/how-dax-treats-nulls-zeros/", "/blog/using-dynamic-values-smart-narrative-and-text-box/", "/blog/using-continuous-x-axis-column-charts-year-and-month-labels/", "/blog/2021/09/i-have-the-powerquery-using-power-query-to-call-rest-apis/", "/blog/filtering-using-dax-measures/"];
-  for (const width of [1366, 390]) {
-    await page.setViewportSize({ width, height: 900 });
-    const sizes: Record<string, Set<number>> = { h1: new Set(), h2: new Set(), h3: new Set() };
-    for (const route of routes) {
-      await page.goto(route);
-      const found = await page.locator("main :is(h1, h2, h3)").evaluateAll((els) => els.filter((el) => (el as HTMLElement).offsetParent && !el.closest(".home-title")).map((el) => [el.tagName.toLowerCase(), Math.round(parseFloat(getComputedStyle(el).fontSize) * 10) / 10] as const));
-      for (const [tag, size] of found) sizes[tag].add(size);
+  for (const route of allRoutes) {
+    await page.setViewportSize({ width: 1366, height: 900 });
+    await page.goto(route);
+    if (amberRoutes.has(route)) {
+      const em = page.locator("h1 .em");
+      await expect(em, route).toHaveCount(1);
+      const [color, amber] = await Promise.all([em.evaluate((el) => getComputedStyle(el).color), page.evaluate(() => { const probe = document.createElement("span"); probe.style.color = "var(--amber)"; document.body.append(probe); const c = getComputedStyle(probe).color; probe.remove(); return c; })]);
+      expect(color, route).toBe(amber);
     }
+    if (titleBandRoutes.has(route)) {
+      const h1 = page.locator(".title-band h1");
+      await expect(h1, route).toHaveCount(1);
+      await expect(page.locator("h1"), route).toHaveCount(1);
+      expect(await h1.evaluate((el) => !!el.closest(".dark.stage")), route).toBe(true);
+      // The band's next sibling stage is followed by daylight, not another dark band.
+      expect(await page.locator(".stage").first().evaluate((el) => el.nextElementSibling?.classList.contains("dark") ?? true), route).toBe(false);
+      // One left edge for every title.
+      const x = Math.round((await h1.boundingBox())!.x);
+      edge ??= x;
+      expect(Math.abs(x - edge), route).toBeLessThanOrEqual(1);
+      // Nothing on the daylight sheet keeps the dark grounds' cream text.
+      const cream = await page.evaluate(() => { const probe = document.createElement("span"); probe.style.color = "var(--fg)"; document.body.append(probe); const c = getComputedStyle(probe).color; probe.remove(); return c; });
+      const stray = await page.locator("main :is(h2, h3, p, li, dt, dd, a)").evaluateAll((els, c) => els.filter((el) => !el.closest(".dark") && getComputedStyle(el).color === c && (el as HTMLElement).offsetParent).map((el) => el.textContent!.trim().slice(0, 40)), cream);
+      expect(stray, route).toEqual([]);
+    }
+    if (scaleRoutes.has(route)) {
+      for (const [tag, size] of await readHeadings()) sizesByWidth[1366][tag].add(size);
+      await page.setViewportSize({ width: 390, height: 900 });
+      for (const [tag, size] of await readHeadings()) sizesByWidth[390][tag].add(size);
+    }
+  }
+  for (const width of [1366, 390]) {
+    const sizes = sizesByWidth[width];
     // Home's title is deliberately larger; every other title shares one size.
     expect([...sizes.h1], `h1 at ${width}`).toHaveLength(1);
     // Section headings plus the note heading; item headings plus the card title.

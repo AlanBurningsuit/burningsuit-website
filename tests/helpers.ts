@@ -42,6 +42,13 @@ export async function watchPage(page: Page, baseURL = test.info().project.use.ba
   };
 }
 
+/** Splits a list into up to `count` balanced round-robin chunks so per-route sweeps share one page per worker. */
+export function chunks<T>(items: readonly T[], count = 4): T[][] {
+  const groups = Array.from({ length: Math.min(count, items.length) }, () => [] as T[]);
+  items.forEach((item, index) => groups[index % groups.length].push(item));
+  return groups;
+}
+
 /** The bounding box of the element `selector` matches (strictly one). */
 export const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!;
 /** The bounding box of the first element `selector` matches. */

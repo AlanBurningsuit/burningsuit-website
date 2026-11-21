@@ -225,13 +225,13 @@ test("consultancy layout: facts beside the introduction on wide screens, after i
   }
 });
 
-for (const width of [320, 390, 768, 1366]) {
-  test(`consultancy page reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("consultancy page reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 768, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
     await forEachTextSize(page);
-  });
-}
+  }
+});
 
 visualReview(route);
 

@@ -275,16 +275,16 @@ test("fact separators never start or end a wrapped line", async ({ page }) => {
   }
 });
 
-for (const width of [320, 390, 768, 1024, 1366]) {
-  test(`training chooser reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("training chooser reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 768, 1024, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
     await forEachTextSize(page, async () => {
       // No element's content spills past its own box sideways.
       await expectNoSpills(page);
     });
-  });
-}
+  }
+});
 
 test("training chooser works from the keyboard without JavaScript", async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });

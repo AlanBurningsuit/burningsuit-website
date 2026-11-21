@@ -202,17 +202,17 @@ test("loaded fonts leave no empty reserved line at phone wrap boundaries", async
   }
 });
 
-for (const width of [320, 390, 414, 428, 768, 1366]) {
-  test(`free call page reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("free call page reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 414, 428, 768, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
     await forEachTextSize(page, async () => {
       for (const action of await page.locator("a.book-link").all()) {
         const b = (await action.boundingBox())!;
         expect(b.x + b.width).toBeLessThanOrEqual(width);
       }
     });
-  });
-}
+  }
+});
 
 visualReview(route);

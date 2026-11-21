@@ -144,20 +144,19 @@ for (const route of ["/work/", essay, archive]) {
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(3);
     await context.close();
   });
-  for (const width of [320, 390, 768, 1366]) {
-    test(`article/index reflow at ${width}px: ${route}`, async ({ page }) => {
+  test(`article/index reflow from 320px to 1366px: ${route}`, async ({ page }) => {
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    for (const width of [320, 390, 768, 1366]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto(route);
-      await page.evaluate(() => document.fonts.ready);
       await forEachTextSize(page, async () => {
-        for (const el of await page.locator("main p, main h1, main h2, main h3, main figure").all()) {
-          const box = (await el.boundingBox())!;
-          expect(box.x).toBeGreaterThanOrEqual(0);
-          expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
-        }
+        const overflow = await page.locator("main p, main h1, main h2, main h3, main figure").evaluateAll((els, limit) =>
+          els.map((el) => el.getBoundingClientRect()).filter((r) => r.width > 0 && (r.left < 0 || r.right > limit + 1)),
+        width);
+        expect(overflow, `${route} at ${width}px`).toEqual([]);
       });
-    });
-  }
+    }
+  });
   visualReview(route);
 }
 

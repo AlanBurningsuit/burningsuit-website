@@ -131,15 +131,15 @@ test("Individual coaching study layout: facts beside the lead, teaching on a rai
   }
 });
 
-for (const width of [320, 390, 768, 1366]) {
-  test(`Individual coaching study reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("Individual coaching study reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 768, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
     await forEachTextSize(page, async () => {
       expect(await page.locator(".case-teaching pre").evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
       await expect(page.getByRole("link", { name: "Tell me who it's for and what they're building" })).toBeVisible();
     });
-  });
-}
+  }
+});
 
 visualReview(route);

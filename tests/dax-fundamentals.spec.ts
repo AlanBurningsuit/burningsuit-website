@@ -195,16 +195,16 @@ test("the agenda's visible numbers run 01 to 05", async ({ page }) => {
   expect(await agendaNumbers(page)).toEqual(["01", "02", "03", "04", "05"]);
 });
 
-for (const width of [320, 390, 768, 1024, 1366]) {
-  test(`DAX fundamentals page reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("DAX fundamentals page reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  await page.evaluate(() => document.fonts.ready);
+  for (const width of [320, 390, 768, 1024, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
-    await page.evaluate(() => document.fonts.ready);
     await forEachTextSize(page, async () => {
       await expectNoSpills(page);
     });
-  });
-}
+  }
+});
 
 test("DAX fundamentals page works from the keyboard without JavaScript", async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });

@@ -28,26 +28,26 @@ const placements: Placement[] = [
 const formRoutes = ["/", "/training/", "/training/power-bi-fundamentals/", course101, "/training/dax-fundamentals/", "/training/dax-deep-dive/", "/power-bi/", "/contact/"];
 const routes = [...new Set([...placements.map(({ route }) => route), ...formRoutes, "/training/", course101])];
 
-for (const route of routes) {
-  test(`booking links and Send are marked for counting on ${route}`, async ({ page }) => {
+test("booking links and Send are marked for counting on every offer and form page", async ({ page }) => {
+  for (const route of routes) {
     await page.goto(route);
     const expected = placements.filter((placement) => placement.route === route);
     for (const { event, place, name, href } of expected) {
       const wrapper = page.locator(`span.tracked[data-umami-event="${event}"]${place ? `[data-umami-event-place="${place}"]` : ":not([data-umami-event-place])"}`);
-      await expect(wrapper).toHaveCount(1);
+      await expect(wrapper, route).toHaveCount(1);
       // The wrapper takes no part in layout, and holds the one link.
-      expect(await wrapper.evaluate((element) => getComputedStyle(element).display)).toBe("contents");
-      await expect(wrapper.locator("*")).toHaveCount(1);
-      await expect(wrapper.getByRole("link", { name, exact: true })).toHaveAttribute("href", href);
+      expect(await wrapper.evaluate((element) => getComputedStyle(element).display), route).toBe("contents");
+      await expect(wrapper.locator("*"), route).toHaveCount(1);
+      await expect(wrapper.getByRole("link", { name, exact: true }), route).toHaveAttribute("href", href);
     }
     const send = formRoutes.includes(route) ? 1 : 0;
-    await expect(page.locator("button[type=submit][data-umami-event]")).toHaveCount(send);
-    if (send) await expect(page.getByRole("button", { name: "Send", exact: true })).toHaveAttribute("data-umami-event", EVENTS.enquirySend);
+    await expect(page.locator("button[type=submit][data-umami-event]"), route).toHaveCount(send);
+    if (send) await expect(page.getByRole("button", { name: "Send", exact: true }), route).toHaveAttribute("data-umami-event", EVENTS.enquirySend);
     // Nothing else is counted, and no link carries the mark itself.
-    await expect(page.locator("[data-umami-event]")).toHaveCount(expected.length + send);
-    await expect(page.locator("a[data-umami-event]")).toHaveCount(0);
-  });
-}
+    await expect(page.locator("[data-umami-event]"), route).toHaveCount(expected.length + send);
+    await expect(page.locator("a[data-umami-event]"), route).toHaveCount(0);
+  }
+});
 
 test("a link after a counted link keeps its spacing", async ({ page }) => {
   // The wrapper sits between the two links, so sibling rules have to allow for it (app.css).

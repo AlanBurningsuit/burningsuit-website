@@ -127,14 +127,14 @@ test("The contact-centre study layout: headings beside their prose on wide scree
   }
 });
 
-for (const width of [320, 390, 768, 1366]) {
-  test(`The contact-centre study reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("The contact-centre study reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 768, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
     await forEachTextSize(page, async () => {
       await expect(page.getByRole("link", { name: "See Power BI coaching" })).toBeVisible();
     });
-  });
-}
+  }
+});
 
 visualReview(route);

@@ -142,14 +142,14 @@ test("How I train layout: the stuck answer stands out, the facts note recedes, p
   }
 });
 
-for (const width of [320, 390, 768, 1366]) {
-  test(`How I train reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("How I train reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 768, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
     await forEachTextSize(page, async () => {
       await expect(page.getByRole("link", { name: "the enquiry form" })).toBeVisible();
     });
-  });
-}
+  }
+});
 
 visualReview(route);

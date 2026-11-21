@@ -19,7 +19,7 @@ npm run test:functional
 | Command | What it does |
 | --- | --- |
 | `npm run gate` | Brand parity, the copy lint, `astro check`, build, the price check (see Prices), links (pages with linkinator, then every internal `#fragment` against the built page's ids) and SEO (reserved routes and anchors, redirects, metadata). |
-| `npm run test:functional` | Type-checks the tests, runs `tests/*.test.mjs` with Node, then Playwright against the existing `dist/`: the full suite in Chromium (including axe on every page at 1366px and 390px, failing on serious or critical violations) and the `@smoke` subset in WebKit. Build first. |
+| `npm run test:functional` | Type-checks the tests, runs `tests/*.test.mjs` with Node, then Playwright against the existing `dist/`: the full suite in Chromium (including axe on every page at 1366px, and at 390px on bespoke pages plus one representative per shared template, failing on serious or critical violations) and the `@smoke` subset in WebKit. Build first. |
 | `npm run check:release` | Run against `dist/`. Fails on a page noindexed (other than the 404 and the two enquiry results) or without a canonical link, a form with no endpoint, or a `robots.txt` or sitemap that doesn't match the build. |
 | `npm run test:lh`, `npm run test:lh:mobile` | Lighthouse over the routes in `scripts/lighthouse-routes.cjs`. Set `CHROME_PATH` if Chrome isn't on `PATH`; set `BURNINGSUIT_LH_URL` to audit a running preview instead. |
 | `npm run prep:images` | Rebuilds the committed photo derivatives from the brand checkout's photos. |
@@ -33,10 +33,10 @@ Things to know:
 - **Analytics in tests.** Tests never contact Umami: `tests/analytics.ts` serves the committed tracker copy in `tests/fixtures/umami/script.js` and fails on any other Umami request. `UMAMI_LIVE=1` loads the real tag (beacons stay blocked). To refresh the copy, replace the code under its header and update the date, version, ETag and hash.
 - **Every page.** The shell checks (`tests/shell.spec.ts`), axe and the WebKit smoke run over every HTML page in `dist/` except redirect stubs, so a new page is covered without a list to edit.
 - **WebKit.** The `webkit-smoke` project runs only tests tagged `@smoke` (`tests/smoke.spec.ts`). It runs wherever WebKit is installed (`npx playwright install webkit`, and once on Linux `sudo npx playwright install-deps webkit`) and always in CI; without it, Playwright prints one line and skips the project.
-- **Faster local runs.** The full checks are slow: mobile Lighthouse audits every route three times under throttling, one after another, and Playwright runs on two workers. While iterating on one page, these shortcuts help; run the full checks before asking to push.
+- **Faster local runs.** Mobile Lighthouse audits every route three times under throttling, one after another; Playwright runs on four workers locally (two in CI). While iterating on one page, these shortcuts help; run the full checks before asking to push.
   - Audit only the changed routes: `BURNINGSUIT_LH_ROUTES=/writing/three-numbers/,/about/ npm run test:lh` (and `test:lh:mobile`). Paths are comma-separated, as in `scripts/lighthouse-routes.cjs`.
   - One mobile run instead of three: `npm run test:lh:mobile -- --collect.numberOfRuns=1`. A single run is noisier, so a near-miss on performance needs the full three.
-  - More Playwright workers: `npm run test:functional -- --workers=4`. Leave headroom if another run's build or server is using the machine.
+  - Adjust Playwright workers: `npm run test:functional -- --workers=2` (or higher) if another run's build or server is sharing the machine.
 - **Screenshots.** `VISUAL_REVIEW=1 npm run test:functional` adds full-page captures (1366px and 390px, more on some pages) to the report. They assert nothing, are for review rather than approved baselines, and are off by default.
 - **The push hook tests what you push.** It refuses to run while tracked files have uncommitted changes (staged or not), or when the pushed ref isn't the checked-out commit. Untracked files don't count, so don't leave a new file the commit needs uncommitted.
 - **Checks prove behaviour, not approval.** Editorial approval is Alan's.

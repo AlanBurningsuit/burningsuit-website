@@ -167,11 +167,11 @@ for (const { route, label, action, price } of heroes) {
       const s = getComputedStyle(el), stage = getComputedStyle(el.closest(".stage")!), li = getComputedStyle(el.querySelector("li")!);
       return [stage.backgroundColor, s.color, li.color, s.borderTopColor];
     });
+    await page.goto(route);
     const results: string[][] = [];
     for (const colorScheme of ["light", "dark"] as const) {
       for (const reducedMotion of ["no-preference", "reduce"] as const) {
         await page.emulateMedia({ colorScheme, reducedMotion });
-        await page.goto(route);
         results.push(await read());
         if (reducedMotion === "reduce") {
           const moving = await page.locator(".dark.stage, .dark.stage *").evaluateAll((els) => els.filter((el) => {

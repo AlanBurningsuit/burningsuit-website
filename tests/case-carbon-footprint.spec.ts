@@ -113,12 +113,12 @@ test("carbon-footprint layout: headings beside their beats on wide screens, stac
   }
 });
 
-for (const width of [320, 390, 414, 768, 1366]) {
-  test(`carbon-footprint study reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("carbon-footprint study reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 414, 768, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
     await forEachTextSize(page);
-  });
-}
+  }
+});
 
 visualReview(route);

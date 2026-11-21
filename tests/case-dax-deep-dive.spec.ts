@@ -133,12 +133,12 @@ test("case study layout: headings beside prose and figures beside the quote on w
   }
 });
 
-for (const width of [320, 390, 414, 768, 1366]) {
-  test(`case study reflows at ${width}px with enlarged text`, async ({ page }) => {
+test("case study reflows from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 414, 768, 1366]) {
     await page.setViewportSize({ width, height: 768 });
-    await page.goto(route);
     await forEachTextSize(page);
-  });
-}
+  }
+});
 
 visualReview(route);

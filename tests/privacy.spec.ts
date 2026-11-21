@@ -148,37 +148,37 @@ test("if the opt-out script fails to load, the fallback line stays and no dead b
   await test.info().attach("privacy-module-failed", { body: await page.screenshot(), contentType: "image/png" });
 });
 
-for (const path of footerRoutes) {
-  test(`footer carries the company line on its own row: ${path}`, async ({ page }) => {
+test("footer carries the company line on its own row across the site", async ({ page }) => {
+  for (const path of footerRoutes) {
     await page.goto(path);
     const line = page.locator("footer .foot-legal");
-    await expect(line).toHaveText(legal);
+    await expect(line, path).toHaveText(legal);
     // Each separator stays with the segment before it.
-    expect(await line.textContent()).toBe(legal.replaceAll(" ·", " ·"));
-    await expect(page.locator("footer .foot-links a")).toHaveText([ENQUIRY.email, "Privacy", "Case studies", "Booking terms", "Writing", "LinkedIn"]);
-    await expect(page.locator("footer")).not.toContainText("West Sussex, England");
-  });
-}
+    expect(await line.textContent(), path).toBe(legal.replaceAll(" ·", " ·"));
+    await expect(page.locator("footer .foot-links a"), path).toHaveText([ENQUIRY.email, "Privacy", "Case studies", "Booking terms", "Writing", "LinkedIn"]);
+    await expect(page.locator("footer"), path).not.toContainText("West Sussex, England");
+  }
+});
 
-for (const width of [320, 390, 1366]) {
-  test(`privacy notice and footer reflow at ${width}px with enlarged text`, async ({ page }) => {
+test("privacy notice and footer reflow from 320px to 1366px with enlarged text", async ({ page }) => {
+  await page.goto(route);
+  for (const width of [320, 390, 1366]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto(route);
     await forEachTextSize(page, async (size) => {
       const footer = await page.locator("footer").boundingBox();
       if (size === "100%") {
         const [legalSize, linkSize] = await page.evaluate(() => [".foot-legal", ".foot-links a"].map((selector) => parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize)));
-        expect(legalSize).toBeGreaterThanOrEqual(12);
-        expect(linkSize).toBe(width < 680 ? 14 : 12.48);
+        expect(legalSize, `${width}px`).toBeGreaterThanOrEqual(12);
+        expect(linkSize, `${width}px`).toBe(width < 680 ? 14 : 12.48);
       }
       const legalBox = await page.locator("footer .foot-legal").boundingBox();
       const linksBox = await page.locator("footer .foot-links").boundingBox();
       // The company line spans the footer's content row and the links sit beneath it, not squeezed beside it.
-      expect(legalBox!.y + legalBox!.height).toBeLessThanOrEqual(linksBox!.y);
-      expect(legalBox!.x + legalBox!.width).toBeLessThanOrEqual(footer!.x + footer!.width);
+      expect(legalBox!.y + legalBox!.height, `${width}px`).toBeLessThanOrEqual(linksBox!.y);
+      expect(legalBox!.x + legalBox!.width, `${width}px`).toBeLessThanOrEqual(footer!.x + footer!.width);
     });
-  });
-}
+  }
+});
 
 test("on the production domain the tag counts a visit until the switch turns it off", async ({ browser, baseURL }) => {
   const context = await browser.newContext();
