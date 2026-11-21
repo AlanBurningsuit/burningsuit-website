@@ -1,5 +1,6 @@
 .article-opening { padding-block: clamp(28px, 4vw, 48px) 52px; }
 .title-band .eyebrow { margin: 0 0 14px; }
+.title-band .eyebrow a { display: inline-block; padding-block: 6px; margin-block: -6px; }
 .article-byline { margin-top: 0; color: var(--text-dim); font-size: .9rem; }
 .article-appearances { margin-top: 24px; color: var(--text-dim); font-size: .9rem; }
 .article-appearances p + p { margin-top: 4px; }

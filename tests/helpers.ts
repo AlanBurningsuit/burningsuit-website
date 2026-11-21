@@ -127,7 +127,7 @@ export function pageSchemaTypes(path: string): string[] {
     "/training/dax-fundamentals/": "Course",
     "/training/dax-deep-dive/": "Course",
   };
-  const nested = /^\/(training|work|privacy)\/[^/]+\/$/.test(route);
+  const nested = /^\/(training|work|privacy|writing)\/[^/]+\/$/.test(route);
   return [...(own[route] ? [own[route]] : []), ...(nested ? ["BreadcrumbList"] : [])];
 }
 

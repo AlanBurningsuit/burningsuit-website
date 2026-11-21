@@ -36,7 +36,7 @@ const {
 const siteUrl = Astro.site!.href;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const pageName = title.replace(/\s+[|–-]\s+burningsuit$/, "");
-// Breadcrumbs only below a section page that exists (Training, Work, Privacy); other paths have no built parent.
+// Breadcrumbs only below a section page that exists (Training, Work, Privacy, Writing); other paths have no built parent.
 const section = Astro.url.pathname.match(/^\/[^/]+\//)?.[0];
 const crumbs = section && BREADCRUMB_SECTIONS[section] && Astro.url.pathname.replace(/\/?$/, "/") !== section
   ? [breadcrumbNode(canonical, [{ name: "Home", url: siteUrl }, { name: BREADCRUMB_SECTIONS[section], url: new URL(section, siteUrl).href }, { name: pageName, url: canonical }])]

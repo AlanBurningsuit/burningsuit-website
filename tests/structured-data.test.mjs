@@ -93,7 +93,7 @@ test("breadcrumbs name their section pages by title and point only at indexed pa
     assert.equal(decodeHTML(html(section).match(/<title>([^<]*)<\/title>/)[1]), `${name} | burningsuit`);
   }
   const indexed = new Set(pages.map((page) => site + page.path));
-  const nested = pages.filter((page) => /^\/(training|work|privacy)\/[^/]+\/$/.test(page.path));
+  const nested = pages.filter((page) => /^\/(training|work|privacy|writing)\/[^/]+\/$/.test(page.path));
   assert(nested.length >= 10);
   for (const { path } of nested) {
     const crumbs = node(path, "BreadcrumbList").itemListElement;

@@ -37,4 +37,5 @@ export const BREADCRUMB_SECTIONS: Record<string, string> = {
   "/training/": "Power BI courses",
   "/work/": "Case studies",
   "/privacy/": "Privacy",
+  "/writing/": "Writing",
 };

@@ -93,7 +93,7 @@ for (const [route, kind, author] of [[essay, "essay", "Alan Harman-Box"], [archi
     }
     await expect(page.locator(otherScripts)).toHaveCount(0);
     // The essay leads on to the course it bears on; the archive post to the offers only.
-    expect(await page.locator(".article-related a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual([...(kind === "essay" ? ["/training/power-bi-with-ai-agents-101/"] : []), "/about/", "/training/", "/power-bi/"]);
+    expect(await page.locator(".article-related a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual([...(kind === "essay" ? ["/training/power-bi-with-ai-agents-101/"] : []), "/writing/", "/about/", "/training/", "/power-bi/"]);
   });
 }
 
@@ -140,8 +140,9 @@ for (const route of ["/work/", essay, archive]) {
     await page.keyboard.press("Enter");
     await expect(page.locator("main")).toBeFocused();
     await page.keyboard.press("Tab");
-    // The essay has no link in its prose, so its first stop is the newsletter sign-up's email field.
-    expect(await page.evaluate(() => document.activeElement?.tagName)).toBe(route === essay ? "INPUT" : "A");
+    // A writing page's first stop is the eyebrow's link back to the Writing index.
+    expect(await page.evaluate(() => document.activeElement?.tagName)).toBe("A");
+    if (route !== "/work/") expect(await page.evaluate(() => document.activeElement?.getAttribute("href"))).toBe("/writing/");
     expect(await page.evaluate(() => parseFloat(getComputedStyle(document.activeElement!).outlineWidth))).toBeGreaterThanOrEqual(3);
     await context.close();
   });

@@ -118,7 +118,7 @@ for (const post of posts) {
     await expectIndexable(page, { article: true });
     await expect(page).toHaveTitle(post.title);
     await expect(page.locator("h1")).toHaveText(post.heading);
-    await expect(page.locator(".title-band .eyebrow")).toHaveText("Archive");
+    await expect(page.locator(".title-band .eyebrow")).toHaveText("Writing · Archive");
     const author = post.author ?? "Alison Box";
     await expect(page.locator('meta[name="author"]')).toHaveAttribute("content", author);
     await expect(page.locator(".article-byline")).toHaveText(post.byline);
@@ -197,7 +197,7 @@ test("the three-numbers essay renders Alan's approved prose, dated, with its hea
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Power BI and Claude now build a dashboard on request. Why the work that made dashboards worth having still has to happen, and how to do it on purpose.");
   await expect(page.locator("h1")).toHaveText("Data democracy or data demagoguery?");
   await expect(page.locator("h1 .em")).toHaveText("demagoguery");
-  await expect(page.locator(".title-band .eyebrow")).toHaveText("Essay");
+  await expect(page.locator(".title-band .eyebrow")).toHaveText("Writing · Essay");
   await expect(page.locator(".title-band .standfirst")).toHaveText("When anyone can have a dashboard by teatime");
   await expect(page.locator(".article-byline")).toHaveText("Alan Harman-Box · 20 November 2026");
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
@@ -243,7 +243,7 @@ test("the MCP server article renders Alan's approved prose, its figure and its l
   await expect(page).toHaveTitle("The Power BI MCP server, explained | burningsuit");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "What Power BI's MCP servers do, why the agent already knows plenty without one, and when to bother setting one up.");
   await expect(page.locator("h1")).toHaveText("The Power BI MCP server, explained for people who don't code");
-  await expect(page.locator(".title-band .eyebrow")).toHaveText("Article");
+  await expect(page.locator(".title-band .eyebrow")).toHaveText("Writing · Article");
   await expect(page.locator("h1 .em")).toHaveText("explained");
   await expect(page.locator(".title-band .standfirst")).toHaveText("A Power BI MCP server gives an AI agent tools to work on your Power BI model directly: querying it and, with Microsoft's Authoring server, changing it. Here's what that means, and why you don't necessarily need one to start.");
   await expect(page.locator(".article-byline time")).toHaveAttribute("datetime", "2026-11-20");
@@ -278,7 +278,7 @@ test("the Power Query if statement article renders Alan's approved prose, code, 
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Use the Conditional column button or write if then else in M. How the Power Query if statement works in Power BI, with the common mistake that trips people up.");
   await expect(page.locator("h1")).toHaveText("How to write a Power Query if statement in Power BI");
   await expect(page.locator("h1 .em")).toHaveText("if statement");
-  await expect(page.locator(".title-band .eyebrow")).toHaveText("Article");
+  await expect(page.locator(".title-band .eyebrow")).toHaveText("Writing · Article");
   // The lead's backtick span is code on the page; no backticks reach the head (meta or JSON-LD) or the visible lead.
   await expect(page.locator(".title-band .standfirst code")).toHaveText(["if condition then result else result", "IF()"]);
   expect(await page.locator("head").innerHTML()).not.toContain("`");
