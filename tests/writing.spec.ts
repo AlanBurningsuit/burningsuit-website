@@ -5,7 +5,7 @@ import { visualReview, expectIndexable, expectNoHorizontalScroll } from "./helpe
 import { NEWSLETTER } from "../src/config/newsletter.mjs";
 import { redirects } from "../src/config/compatibility.mjs";
 
-// The Writing index and Alison Box's restored posts (approved copy: the ops repo's site/writing-restored-posts-copy.md).
+// The Writing index and Alison Box's restored posts (provenance: burningsuit-ops/evidence/restored-posts-sources.md).
 const essay = "/writing/we-are-all-middle-management-now/";
 const threeNumbers = "/writing/three-numbers/";
 const mcp = "/writing/the-power-bi-mcp-server-explained/";
@@ -15,7 +15,7 @@ const secrets = "/blog/2019/04/7-secrets-of-the-matrix-visual/";
 const eighth = "/blog/2020/10/the-8th-secret-of-the-matrix-visual-controlling-calculations-and-labels-on-subtotals/";
 const bins = "/blog/2020/01/categorising-measures-into-numeric-ranges-or-bins/";
 const topN = "/blog/2019/05/find-top-or-bottom-n-percent-dax/";
-// Five more restored posts, 20 Nov 2026 (source and removals: the ops repo's site/writing-restored-posts-2-copy.md).
+// Five more restored posts, 20 Nov 2026 (provenance: burningsuit-ops/evidence/restored-posts-sources.md).
 const nulls = "/blog/2020/11/how-dax-treats-nulls-zeros/";
 const narrative = "/blog/using-dynamic-values-smart-narrative-and-text-box/";
 const xAxis = "/blog/using-continuous-x-axis-column-charts-year-and-month-labels/";
@@ -191,7 +191,7 @@ test("DAX keeps its line breaks and indentation, and the corrected measure follo
 
 visualReview("/writing/");
 
-// Alan's essay as approved (the ops repo's site/writing-three-numbers-copy.md): the prose as built hashes to the approved
+// Alan's essay as approved: the prose as built hashes to the approved
 // text, its section headings are h2s, and it ends with the related links and the newsletter sign-up.
 test("the three-numbers essay renders Alan's approved prose, dated, with its headings and links", async ({ page }) => {
   const articleProse = JSON.parse(readFileSync(new URL("./fixtures/article-prose.json", import.meta.url), "utf8"))["three-numbers"] as { paragraphCount: number; sha256: string };

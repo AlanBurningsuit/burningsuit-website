@@ -12,8 +12,8 @@ The ops and brand repos are private siblings of this checkout (`../burningsuit-o
 | --- | --- |
 | Audience, offers, page jobs, navigation, routes, naming and open questions | `burningsuit-ops/site/current-brief.md` (its dated history is `site/decisions.md`) |
 | Course catalogue and scope | The course's Outline in `~/vaults/Mazarbul/Practice/Training/` (`Training.md` is the index) |
-| Approved page wording | The page's copy file in `burningsuit-ops/site/` (the brief's page table links each one) |
-| What copy must not say | `burningsuit-ops/brand/claims-ledger.md` |
+| Published page wording | Directly in `src/pages/` and `src/content/` (unpublished drafts in progress live in `burningsuit-ops/drafts/` and are deleted once shipped) |
+| What copy must not say, and client/author permissions | `burningsuit-ops/brand/claims-ledger.md` and `burningsuit-ops/brand/permissions.md` |
 | Legal details, URLs and Alan's background, to copy exactly | `burningsuit-ops/site/reference.md` |
 | Voice and vocabulary | `burningsuit-brand/voice/README.md` and `voice/lexicon.md`, applied by the `burningsuit-copy` skill |
 | Visual identity and shared tokens | `burningsuit-brand/README.md` and `brand.css` |

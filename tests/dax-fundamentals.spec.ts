@@ -4,7 +4,7 @@ import { ENQUIRY, formActionSource } from "../src/config/enquiry.mjs";
 import { redirects } from "../src/config/compatibility.mjs";
 import { copy, expectOnlyTrackedAmounts, expectNone } from "./prices";
 
-// Approved wording: ops site/dax-fundamentals-page-copy.md, candidate 6 (8 Nov 2026). Pinned on purpose: changing it needs Alan's approval.
+// Pinned on purpose: changing approved page wording needs Alan's approval.
 const route = "/training/dax-fundamentals/";
 const email = "mailto:alan@burningsuit.co.uk";
 // The decision hero's action comes first: it sits on the dark stage, above the introduction.

@@ -79,7 +79,7 @@ export function loadTrainingPrices({ file = resolve(process.cwd(), PRICES_FILE) 
 const rate = ({ onSite, online }) => `${onSite} on site or ${online} online`;
 
 /**
- * Approved price wording (ops site/records/training-prices-amendment-copy-2026-11-06.md), filled from the validated rates.
+ * Approved price wording, filled from the validated rates in src/config/training-prices.json.
  * @param {ReturnType<typeof loadTrainingPrices>} [prices]
  */
 export function trainingPriceCopy(prices = loadTrainingPrices()) {
@@ -104,9 +104,9 @@ export function trainingPriceCopy(prices = loadTrainingPrices()) {
     seatBookFacts: `${founding} a seat for this first run, the founding rate. Later runs are ${standard} a seat. VAT is added at checkout.`,
     // Fundamentals page (F1)
     fundamentalsDetail: `${rate(prices.fundamentals)}, per booking, ex VAT, UK travel included`,
-    // DAX deep dive page (ops site/dax-deep-dive-page-copy.md, the Fundamentals pattern)
+    // DAX deep dive page (the Fundamentals pattern)
     daxDeepDiveDetail: `${rate(prices.daxDeepDive)}, per booking, ex VAT, UK travel included`,
-    // DAX fundamentals page (ops site/dax-fundamentals-page-copy.md, the DAX deep dive pattern)
+    // DAX fundamentals page (the DAX deep dive pattern)
     daxFundamentalsDetail: `${rate(prices.daxFundamentals)}, per booking, ex VAT, UK travel included`,
     // Budget guidance (Alan, 8 Nov 2026): consultancy only. Coaching stays on request: it's too bespoke for a band.
     consultancyRange: `Usually a fixed price of ${prices.consultancy.from} to ${prices.consultancy.to}, ex VAT`,
