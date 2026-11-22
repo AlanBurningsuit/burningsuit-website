@@ -27,7 +27,7 @@ test("About stays static, private and CSP-clean, with no form or third-party req
 test("About keeps the approved wording, headings and anchors", async ({ page }) => {
   await page.goto(route);
   // Approved wording is pinned on purpose: changing it needs Alan's approval, then a deliberate edit to page and test together.
-  await expect(page.locator("h1")).toHaveText("Power BI and AI for everyone else.");
+  await expect(page.locator("h1")).toHaveText("Power BI and AI for everyone else");
   await expect(page.locator("h1 .em")).toHaveText("else");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["I start from what people can do", "The part that isn't really technical", "Where burningsuit comes from", "And the dog", "Where to start"]);
   await expect(page.locator("h3")).toHaveCount(0);
@@ -39,19 +39,19 @@ test("About keeps the approved wording, headings and anchors", async ({ page }) 
   }
 
   await expect(page.locator("main p")).toHaveText([
-    "I'm Alan Harman-Box, and burningsuit is me. There's a lot of noise about AI and Power BI at the moment, and most of it feels aimed at people who already spend their days talking about agents. I'm interested in everyone else: the people who just want to get their job done well, and would rather not turn into a nerd to do it. Which is fine by me. I'm more than happy to be the nerd in the room, and to explain things so that you don't have to become one.",
+    "I'm Alan Harman-Box, and burningsuit is me. There's a lot of noise about AI and Power BI at the moment, and most of it feels aimed at people who already spend their days talking about agents. I'm interested in everyone else: the people who just want to get their job done well, and would rather not turn into a nerd to do it, which is fine by me. I'm more than happy to be the nerd in the room, and to explain things so that you don't have to become one.",
     "I've got a fairly stubborn belief that, with the right instruction and a bit of encouragement, almost anyone can learn almost anything. So I won't turn up assuming you're behind, or that the people are the problem. If someone's finding Power BI hard, I'd sooner assume they're busy with the day job, a bit wary of the latest thing and short of someone to explain it, than assume they can't do it.",
     "I write and teach every burningsuit course myself. I also work alongside teams on their own reporting.",
     "I know the nuts and bolts of Power BI well, but that's not usually the thing that makes the difference. It's much more about whether people who are busy, and a bit sceptical, actually feel like having a go. And whether, by the end, you reckon I get how you work, rather than feeling someone turned up to tell you you've been doing it wrong. That's the part I care about getting right.",
-    "I've spent about five years working with organisations as they adopt Power BI and Fabric, and before that about a decade in software delivery. I've also given a talk called \"We're all middle management now\" at the Bristol and Manchester Power BI user groups and at DataSwindon, about being responsible for work you've handed off to something that can't be held responsible for it. The thing that's stuck with me through all of it is that this work mostly succeeds or fails on the people side, well before the technology comes into it.",
+    "I've worked with organisations adopting Power BI and Fabric since 2021, and before that spent about a decade in software delivery. I've also given a talk called \"We're all middle management now\" at the Bristol and Manchester Power BI user groups and at DataSwindon, about being responsible for work you've handed off to something that can't be held responsible for it. The thing that's stuck with me through all of it is that this work mostly succeeds or fails on the people side, well before the technology comes into it.",
     "burningsuit was my parents' Power BI training business. My mum and dad, Alison and Stuart, handed it over to me and they're properly retired now, so it's me. It's still a training business at heart. I teach Power BI and how to work with AI agents on it, with consultancy alongside, and the reason it exists hasn't changed.",
     "As my mum said, burningsuit was for \"everyone else\": people who just want to get a job done. That's still who it's for.",
     "Last thing: this is Zelda, who I'm told is Chief Morale Officer. She's no use at all with the DAX, but she's very good at making me get up and go outside now and then, which honestly does more for the work than you'd think.",
     "Find a course, or read about Power BI consultancy. You can also email me or use the enquiry form, and I'm on LinkedIn too.",
   ]);
-  // No inherited offer, unbuilt destination or invented signoff creeps back in.
+  // No inherited offer, company-age claim, unbuilt destination or invented signoff creeps back in.
   const text = await page.locator("main").innerText();
-  for (const absent of [/case stud/i, /free hour/i, /since \d{4}/i, /\[|\]/, /—/]) expect(text).not.toMatch(absent);
+  for (const absent of [/case stud/i, /free hour/i, /since 2006|twenty years/i, /\[|\]/, /—/]) expect(text).not.toMatch(absent);
 });
 
 test("each photo sits with its prose, framed, at its own aspect ratio, with metadata captions", async ({ page }) => {
@@ -98,10 +98,10 @@ test("About links: courses first, consultancy second, then email, the form and L
   await expect(page.getByRole("link", { name: "every burningsuit course" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: "work alongside teams on their own reporting" })).toHaveAttribute("href", "/power-bi/");
   await expect(page.getByRole("link", { name: "email me" })).toHaveAttribute("href", `mailto:${ENQUIRY.email}`);
-  await expect(page.getByRole("link", { name: "the enquiry form" })).toHaveAttribute("href", "/#contact");
+  await expect(page.getByRole("link", { name: "the enquiry form" })).toHaveAttribute("href", "/contact/");
   await expect(page.locator("main").getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", linkedin);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  expect(mainLinks).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  expect(mainLinks).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/contact/", linkedin]);
   await expect(page.getByRole("link", { name: "Find a course", exact: true })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: "Power BI consultancy", exact: true })).toHaveAttribute("href", "/power-bi/");
   // Profile aliases keep landing here; contact aliases now lead to the Contact page.
@@ -134,7 +134,7 @@ test("About works without JavaScript, from the keyboard and from a legacy alias"
     expect(ring.width).toBeGreaterThanOrEqual(3);
     expect(ring.visible).toBe(true);
   }
-  expect(reached).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/#contact", linkedin]);
+  expect(reached).toEqual(["/training/", "/power-bi/", "/writing/we-are-all-middle-management-now/", "/training/", "/power-bi/", `mailto:${ENQUIRY.email}`, "/contact/", linkedin]);
   await context.close();
 });
 

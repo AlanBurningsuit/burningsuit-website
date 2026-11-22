@@ -28,7 +28,7 @@ test("carbon-footprint study reads in the approved words and order", async ({ pa
   await expect(page.locator("h1 .em")).toHaveText("Carbon reporting");
 await expect(page.locator(".case-lead")).toHaveText("A UK university's sustainability team had the method behind their carbon reporting, and the corrections it needed, spread across spreadsheets. I built one model that does the sums their way and keeps its workings. We checked it together against their own totals, and I handed it over with the steps practised and written down.");
   await expect(page.locator(".case-facts dt")).toHaveText(["Format", "Who", "Length", "Material"]);
-  await expect(page.locator(".case-facts dd")).toHaveText(["Power BI consultancy", "A UK university's sustainability team", "Three months", "Their own carbon reporting method and totals"]);
+  await expect(page.locator(".case-facts dd")).toHaveText(["Power BI consultancy", "A UK university's sustainability team", "3 months", "Their own carbon reporting method and totals"]);
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Where they started", "Workings you can follow", "Checking it together", "Handing it over", "Does your reporting live in spreadsheets?"]);
   for (const [id, heading] of [["started", "Where they started"], ["workings", "Workings you can follow"], ["checking", "Checking it together"], ["handover", "Handing it over"]]) {
     await expect(page.locator(`section[aria-labelledby="${id}-title"] > h2#${id}-title`)).toHaveText(heading);

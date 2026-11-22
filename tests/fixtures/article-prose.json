@@ -1,7 +1,7 @@
 {
   "essay": {
     "paragraphCount": 23,
-    "sha256": "35fba54e1c9dc15ff3f19d0c1f9f46c4c672c56b46f5882fc9d1b8dceba0a8a5"
+    "sha256": "cd9842a971f580a69c02237de005f5f8814e84f94037acbaca4cbf74a696b3c3"
   },
   "archive": {
     "paragraphCount": 12,
@@ -9,11 +9,11 @@
   },
   "three-numbers": {
     "paragraphCount": 45,
-    "sha256": "659e616dc18ed0b975d0621d0667a2c023cc3ed35dd203655ad326d5f20037b5"
+    "sha256": "a1904f8a9382aba38e2561e56bfb6323312bfe2109e2c783fda5b5b686eacfe9"
   },
   "the-power-bi-mcp-server-explained": {
     "paragraphCount": 21,
-    "sha256": "50d5de3a5e788cfb7d4905750427743f49ec4559dc01da7db7ded9a48f414880"
+    "sha256": "2aeb6712e436c39c686398d43505e5fb646d6dd3e985fc374e833d5739431459"
   },
   "power-query-if-statement": {
     "paragraphCount": 21,

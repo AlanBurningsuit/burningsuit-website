@@ -49,7 +49,7 @@ test("case study tells the approved story in order, anonymously", async ({ page 
   await expect(panel.locator("img, svg, meter, progress, [role=img]")).toHaveCount(0);
   expect(await panel.evaluate((el) => [getComputedStyle(el).backgroundColor, getComputedStyle(el).boxShadow, getComputedStyle(el).borderLeftStyle])).toEqual(["rgba(0, 0, 0, 0)", "none", "solid"]);
   await expect(page.locator(".case-limits")).toHaveText("This shows how the two days ran and how people said they found them. It doesn't show what changed in their work afterwards.");
-  await expect(page.locator(".case-closing .raised-copy > p").first()).toHaveText("What the course covers today, with its length, delivery and group size, is on its own page.");
+  await expect(page.locator(".case-closing .raised-copy > p").first()).toHaveText("What the course covers today, with its length, delivery, group size and price, is on its own page.");
   const text = await page.locator("main").innerText();
   for (const absent of [/★|☆|⭐/, /\[|\]/, /—/, /[£$€]\s*\d/, /february|feb\b/i, /101/, /free call/i, /consultancy/i]) expect(text).not.toMatch(absent);
 });
@@ -59,10 +59,9 @@ test("the enquiry action and the route to the course page are ordinary links to 
   const ask = page.getByRole("link", { name: primary, exact: true });
   await expect(ask).toHaveAttribute("href", `${course}#contact`);
   await expect(ask).toHaveClass(/\bbutton\b/);
-  await expect(ask).toHaveAccessibleDescription("Name the course in your message.");
   // The ask closes the study as the one button on the shared dark closing band, so it is amber.
   expect(await ask.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgb(230, 152, 117)");
-  await expect(page.locator("#closing-hint")).toHaveText("Name the course in your message.");
+  await expect(page.locator("#closing-hint")).toHaveCount(0);
   await expect(page.getByRole("link", { name: secondary, exact: true })).toHaveAttribute("href", course);
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   expect(mainLinks).toEqual([`${course}#contact`, course]);

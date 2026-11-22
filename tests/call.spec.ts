@@ -39,10 +39,10 @@ test("free call page answers the visitor's questions in order, in the approved w
   await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`
     - list:
       - listitem:
-        - heading "On the call." [level=3]
+        - heading "On the call" [level=3]
         - paragraph
       - listitem:
-        - heading "Afterwards." [level=3]
+        - heading "Afterwards" [level=3]
         - paragraph
   `);
   expect(await page.locator(".call-steps").evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgba(0, 0, 0, 0)");

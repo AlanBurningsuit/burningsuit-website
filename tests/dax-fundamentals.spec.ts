@@ -62,7 +62,7 @@ test("DAX fundamentals page renders the approved wording and question order", as
   await expect(page.locator("h1 .em")).toHaveText("fundamentals");
   await expect(page.locator(".title-band .standfirst")).toHaveText("Building reports in Power BI, and ready to write your own measures?");
   const opening = page.locator(".course-intro > p:not(.standfirst):not(.course-fit)");
-  await expect(opening).toHaveText("Start writing DAX with a clear idea of what it's doing. A one-day course for people who build reports in Power BI and haven't written DAX yet. You'll learn why a measure returns the number it does, and when to use a measure instead of a calculated column.");
+  await expect(opening).toHaveText("Start writing DAX with a clear idea of what it's doing. This one-day course is for people who build reports in Power BI and haven't written DAX yet. You'll learn why a measure returns the number it does, and when to use a measure instead of a calculated column.");
   await expect(opening.locator("strong")).toHaveText("Start writing DAX with a clear idea of what it's doing.");
   const fit = page.locator(".course-fit");
   await expect(fit).toHaveText("If you haven't built a report yet, it's too early: start with Power BI fundamentals, or compare all the courses.");
@@ -114,12 +114,10 @@ test("DAX fundamentals page renders the approved wording and question order", as
       - listitem
   `);
 
-  // One teacher card below the spine, then the one proof line: no study link, quote, rating or count.
-  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
+  // One teacher card below the spine, carrying the one proof line: no study link, quote, rating or count.
+  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself. I've run this day for public-sector teams, and on public courses, since 2022.");
   await expect(page.locator(".trust-teacher a")).toHaveText(["How I train", "More about me"]);
   await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toHaveCount(1);
-  await expect(page.locator(".proof-line")).toHaveText("I've run this day for public-sector teams, and on public courses, since 2022.");
-  await expect(page.locator(".course-proof > *")).toHaveCount(1);
   await expect(page.locator("main blockquote, main .case-figures, .study-evidence")).toHaveCount(0);
 
   // What to arrange: one pointer line to How I train's private course terms; no list or keep paragraph.
@@ -131,7 +129,7 @@ test("DAX fundamentals page renders the approved wording and question order", as
   await expect(need.locator("ul, .keep, .need-note")).toHaveCount(0);
   await expect(page.locator(".to-confirm")).toHaveCount(0);
 
-  await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me you're interested in DAX fundamentals, how many people would come and roughly when.");
+  await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me how many people would come and roughly when you'd like to run DAX fundamentals.");
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
   const mainLinks = await page.locator("main a").evaluateAll((els) => els.map((el) => el.getAttribute("href")));
   expect(mainLinks).toEqual(links);
@@ -172,7 +170,7 @@ test("DAX fundamentals layout: facts and action in the decision hero, above the 
     intro = await box(page, ".course-intro"); facts = await box(page, ".hero-facts");
     expect(intro.y).toBeGreaterThanOrEqual(facts.y + facts.height);
     expect((await box(page, ".outcomes")).y).toBeGreaterThanOrEqual(intro.y + intro.height);
-    for (const selector of [".agenda-steps", ".need-list", ".run-facts", ".course-proof"]) {
+    for (const selector of [".agenda-steps", ".need-list", ".run-facts", ".trust-teacher"]) {
       for (const item of await page.locator(selector).all()) {
         const b = (await item.boundingBox())!;
         expect(b.x).toBeGreaterThanOrEqual(0);

@@ -32,7 +32,7 @@ test("Individual coaching study keeps the approved wording and heading hierarchy
   await expect(page.locator(".case-facts dd")).toHaveText([
     "Power BI coaching, one learner",
     "Someone already building Power BI reports",
-    "Eight weekly sessions, plus a recap",
+    "8 weekly sessions, plus a recap",
     "Example data shaped around his reporting, with homework between sessions; his live model in the final session",
   ]);
   await expect(page.locator("main p")).toHaveText([
@@ -52,7 +52,7 @@ test("Individual coaching study keeps the approved wording and heading hierarchy
     "At the end I sent him the reusable models, the sample data they run on, and the notes from every session, so the examples still work without me.",
     "In the final session he showed me his live model and named a problem in it himself: for each new calculation he had been building a new table, where a better-shaped model would let a measure do the work. When I asked what had changed most, he said modelling and DAX. That's probably not what he'd have picked at the start, and I think that's where the value is.",
     "This is my account of the coaching, with what he told me in the final session. It doesn't show what changed in his work afterwards.",
-    "Power BI coaching is for one to three people from one organisation, ideally one team. The offer is a two-hour session each week, online, or on site where it suits, with homework, for 4 to 8 weeks, to a syllabus written for you, on your own data or example data built to look like it. The eight sessions and recap above were this engagement's shape, not a fixed length. Price on request.",
+    "Power BI coaching is for 1 to 3 people from one organisation, for 4 to 8 weeks, on your own data or example data built to look like it. The 8 sessions and recap above were this engagement's shape, not a fixed length. Full format details are on the Training page; it is price on request.",
     "Tell me who it's for and what they're building",
   ]);
   await expect(page.locator(".case-teaching pre code")).toHaveText([

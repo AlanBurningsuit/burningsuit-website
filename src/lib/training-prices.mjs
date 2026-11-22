@@ -88,7 +88,7 @@ export function trainingPriceCopy(prices = loadTrainingPrices()) {
     // Home (H1, H2) and Training (T2, T3)
     homeFundamentals: `${rate(prices.fundamentals)}, per booking for up to 8 people, ex VAT, UK travel included`,
     // 101 seat wording (Alan, 8 Nov 2026): this run's price first, later runs second, and VAT added at checkout.
-    publicSeat: `${founding} a seat for this first run, then ${standard} for later runs. Plus VAT at checkout.`,
+    publicSeat: `${founding} a seat for this first run, then ${standard} for later runs. VAT is added at checkout.`,
     trainingFundamentals: `${rate(prices.fundamentals)}, ex VAT`,
     trainingIntro: "Private course prices are per booking, for up to 8 people, and include UK travel.",
     specialists: Object.freeze({

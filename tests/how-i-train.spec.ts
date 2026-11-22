@@ -34,11 +34,11 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
     "My courses are about understanding how Power BI works and putting it to use.",
     "Mostly, I explain and show you how something works, then you do it yourself on examples I've prepared for teaching. I want you to ask questions as we go. My aim is to make clear what each part is for before we get into how it works.",
     "I've made almost every mistake in Power BI worth making. If something isn't making sense, say so. I'll help you work out where it went wrong and build back up from there. I keep groups small so there's time to work through questions and help everyone follow what's happening.",
-    "Ask how an idea applies where you work, and I'll follow the question within what the course covers. If you'd like to learn on your own work over several weeks, that's what Power BI coaching is for. If there's something specific you'd like to get working with your own data, we can work together.",
+    "Ask how an idea applies where you work, and I'll follow the question within what the course covers. If you'd like to learn on your own work over several weeks, that's what Power BI coaching is for. If there's something specific you'd like to get working with your own data, Power BI consultancy is for working alongside your team on your own reports.",
     "I aim for explanations you can use again. When I recommend a way of doing something, I tell you what it helps with and when it matters, so you can make your own choice when a similar problem turns up. I also name things as we meet them, because knowing what something's called helps you ask better questions.",
     "I write and teach every course myself, for groups of up to 8 people.",
     "These terms apply to Power BI fundamentals, DAX fundamentals and the DAX deep dive.",
-    "Power BI with AI agents 101 has its own booking terms and its own list of what you'll need.",
+    "Power BI with AI agents 101 has its own booking terms and its own list of what you'll need for public runs. Private runs of the 101 and Power BI coaching are tailored to your team, so I send the terms when we agree the work.",
     "Compare all the courses, or start with Power BI fundamentals or Power BI with AI agents 101. If you've got a question about how I teach, email me or use the enquiry form. There's more about me too.",
   ]);
   // Every section is labelled by its own heading; nothing else is visible copy.
@@ -57,7 +57,7 @@ test("How I train keeps the approved wording and heading hierarchy", async ({ pa
     "On site: anywhere in the UK, with travel included. You use my training laptops. I provide the course materials and manage the Power BI Desktop version.",
     "Online: use your own computer with a version of Power BI Desktop released in the 3 months before the course. I provide the course materials.",
     "To take away: on site, the course materials. Online, the course materials and a recording of the session.",
-    "Your own data: the courses use examples I've prepared for teaching. For help with your own reports, we can work together.",
+    "Your own data: the courses use examples I've prepared for teaching. For help with your own reports, see Power BI consultancy.",
   ]);
   await expect(page.locator("#private-courses")).toHaveText("Private course terms");
   expect(await page.locator("#private-courses").evaluate((el) => el.closest("section")?.getAttribute("aria-labelledby"))).toBe("facts-title");
@@ -71,7 +71,7 @@ test("How I train links: coaching, consultancy, the courses, email, the Contact 
   for (const [name, href] of [
     ["almost every mistake in Power BI worth making", "/work/individual-power-bi-coaching/#rule-title"],
     ["Power BI coaching", "/training/#coaching"],
-    ["we can work together", "/power-bi/"],
+    ["Power BI consultancy", "/power-bi/"],
     ["all the courses", "/training/"],
     ["Power BI fundamentals", "/training/power-bi-fundamentals/"],
     ["Power BI with AI agents 101", "/training/power-bi-with-ai-agents-101/"],
@@ -81,8 +81,8 @@ test("How I train links: coaching, consultancy, the courses, email, the Contact 
     ["booking terms", "/training/power-bi-with-ai-agents-101/#book-title"],
     ["what you'll need", "/training/power-bi-with-ai-agents-101/#need-title"],
   ]) for (const link of await page.locator("main").getByRole("link", { name, exact: true }).all()) await expect(link).toHaveAttribute("href", href);
-  // "we can work together" appears twice, in the own-work answer and the private course terms; both lead to consultancy.
-  await expect(page.locator("main").getByRole("link", { name: "we can work together", exact: true })).toHaveCount(2);
+  // "Power BI consultancy" appears twice, in the own-work answer and the private course terms; both lead to consultancy.
+  await expect(page.locator("main").getByRole("link", { name: "Power BI consultancy", exact: true })).toHaveCount(2);
   expect(await page.locator("main a").evaluateAll((all) => all.map((link) => link.getAttribute("href")))).toEqual(links);
   expect(await page.locator("main a").evaluateAll((all) => all.some((link) => /#contact/.test(link.getAttribute("href") ?? "")))).toBe(false);
 });

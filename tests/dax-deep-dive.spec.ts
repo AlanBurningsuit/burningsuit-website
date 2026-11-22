@@ -48,7 +48,7 @@ test("DAX deep dive page renders the approved wording and question order", async
   await expect(page.locator("h1 .em")).toHaveText("deep dive");
   await expect(page.locator(".title-band .standfirst")).toHaveText("Already writing measures, but not always sure why they return what they do?");
   const opening = page.locator(".course-intro > p:not(.standfirst):not(.course-fit)");
-  await expect(opening).toHaveText("Write DAX you can explain, not just copy. A two-day course for people who already build reports in Power BI. You'll learn why your measures return the numbers they do, and how to make them return the ones you need.");
+  await expect(opening).toHaveText("Write DAX you can explain, not just copy. This two-day course is for people who already build reports in Power BI. You'll learn why your measures return the numbers they do, and how to make them return the ones you need.");
   await expect(opening.locator("strong")).toHaveText("Write DAX you can explain, not just copy.");
   const fit = page.locator(".course-fit");
   await expect(fit).toHaveText("You'll get most from it if you've already written a few measures. If you haven't built a report yet, it's too early: start with Power BI fundamentals, or compare all the courses.");
@@ -67,7 +67,7 @@ test("DAX deep dive page renders the approved wording and question order", async
   await expect(page.locator(".outcomes .need-list > li")).toHaveText([
     "Say why a measure returns the number it does: row context, filter context, and how a star schema (one table of events, such as sales, with lookup tables around it) shapes the filters.",
     "Write measures with iterators (SUMX and the others) instead of calculated columns.",
-    "Use CALCULATE with FILTER, ALL, ALLEXCEPT and ALLSELECTED, for example for percentage-of-total measures that respond to the slicers you want them to.",
+    "Use CALCULATE with FILTER, ALL, ALLEXCEPT and ALLSELECTED, for example, percentage-of-total measures that respond to the slicers you want them to.",
     "Rewrite long measures with variables, so they're easier to read and check.",
     "Write DAX queries in DAX query view to see and test table expressions, such as TOPN and VALUES.",
     "Use time intelligence on a valid date table: previous period, year to date, and change from one period to the next.",
@@ -86,19 +86,19 @@ test("DAX deep dive page renders the approved wording and question order", async
   await expect(page.locator(".agenda-steps").nth(1)).toHaveAttribute("start", "6");
   expect(await steps.nth(5).evaluate((li) => (li.parentElement as HTMLOListElement).start)).toBe(6);
   await expect(steps).toHaveText([
-    "Start from the model: fact tables, lookup tables and star schemas, and why DAX is easiest with a star schema. This isn't a data modelling course.",
-    "Columns and measures: how a DAX expression is built, RELATED, implicit measures, SUM, COUNTROWS and DISTINCTCOUNT.",
-    "Evaluation context: row context and filter context, why calculated columns are rarely needed, and iterators (SUMX and the others) that bring row context into a measure.",
-    `Reading the filter context: SELECTEDVALUE, and parameter tables that let report users switch what a measure shows. ${demonstrated}`,
-    "CALCULATE: simple true/false filters, then FILTER to add filters and ALL to remove them, for percentage-of-total measures.",
+    "What DAX works on: fact tables, lookup tables and star schemas, and why DAX is easiest with a star schema. This isn't a data modelling course.",
+    "Columns and measures: how a DAX formula is built, totals Power BI works out without a formula (implicit measures), measures with SUM, COUNTROWS and DISTINCTCOUNT, and RELATED to pull a value from a lookup table.",
+    "Which rows a calculation sees: row context and filter context, why calculated columns are rarely needed, and iterators (SUMX and the others) that work row by row inside a measure.",
+    `Measures that respond to slicers: SELECTEDVALUE to read a single choice, and parameter tables that let report readers switch what a measure shows. ${demonstrated}`,
+    "Changing the filters with CALCULATE: simple true/false filters, then FILTER to add filters and ALL to remove them, for percentage-of-total measures.",
     "More ways to remove filters: ALLEXCEPT and ALLSELECTED, and what a visual's total row is actually calculating.",
     `Blanks and zeros: why a filter for zero also picks up blanks. ${demonstrated}`,
-    "Variables: rewriting long measures so they're easier to read and check.",
+    "Variables: breaking complex measures into named steps so you can follow and debug them.",
     "Tables in DAX: ALL, FILTER, TOPN and VALUES as tables you can see and test in DAX query view.",
-    "Time intelligence: a valid date table with auto date/time turned off, then previous period, year to date and change from one period to the next.",
-    `Beyond the star schema: USERELATIONSHIP for inactive relationships, CROSSFILTER instead of two-way relationships, and dynamic titles with VALUES and CONCATENATEX. ${demonstrated}`,
+    "Time intelligence: setting up a valid date table with auto date/time turned off, then comparing periods, running year-to-date totals and measuring period-on-period change.",
+    `Beyond the star schema: switching to inactive relationships with USERELATIONSHIP, controlling filter direction with CROSSFILTER instead of two-way relationships, and building dynamic titles with VALUES and CONCATENATEX. ${demonstrated}`,
   ]);
-  await expect(steps.locator("strong")).toHaveText(["Start from the model:", "Columns and measures:", "Evaluation context:", "Reading the filter context:", "CALCULATE:", "More ways to remove filters:", "Blanks and zeros:", "Variables:", "Tables in DAX:", "Time intelligence:", "Beyond the star schema:"]);
+  await expect(steps.locator("strong")).toHaveText(["What DAX works on:", "Columns and measures:", "Which rows a calculation sees:", "Measures that respond to slicers:", "Changing the filters with CALCULATE:", "More ways to remove filters:", "Blanks and zeros:", "Variables:", "Tables in DAX:", "Time intelligence:", "Beyond the star schema:"]);
   // The demonstrated tag marks exactly the three demonstrated topics (items 04, 07 and 11), as a quiet label at the end of the item.
   const tagged = await steps.evaluateAll((items) => items.map((li, i) => (li.querySelector(".demo-tag") ? i + 1 : 0)).filter(Boolean));
   expect(tagged).toEqual([4, 7, 11]);
@@ -122,11 +122,10 @@ test("DAX deep dive page renders the approved wording and question order", async
       - listitem
   `);
 
-  // One teacher card below the spine, then the one proof line above the study link: no quote, rating or count.
-  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself.");
+  // One teacher card below the spine carrying the proof line, then the study link: no extra quote, rating or count.
+  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box, and I write and teach every course myself. I've run the DAX deep dive for teams since 2023.");
   await expect(page.locator(".trust-teacher a")).toHaveText(["How I train", "More about me"]);
   await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toHaveCount(1);
-  await expect(page.locator(".proof-line")).toHaveText("I've run the DAX deep dive for teams since 2023.");
   const study = page.locator(".course-proof .study-evidence");
   await expect(study.locator(".study-evidence-label")).toHaveText("Case study");
   await expect(study.getByRole("link")).toHaveText(["DAX deep dive for a local-authority team"]);
@@ -146,7 +145,7 @@ test("DAX deep dive page renders the approved wording and question order", async
   await expect(need.locator("ul, .keep, .need-note")).toHaveCount(0);
   await expect(page.locator(".to-confirm")).toHaveCount(0);
 
-  await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me you're interested in the DAX deep dive, how many people would come and roughly when.");
+  await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me how many people would come and roughly when you'd like to run the DAX deep dive.");
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
   const mainLinks = await page.locator("main a").evaluateAll((els) => els.map((el) => el.getAttribute("href")));
   expect(mainLinks).toEqual(links);

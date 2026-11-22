@@ -10,9 +10,9 @@ heading:
 lead: "Agentic development in Power BI, and what it costs"
 kicker: "Essay"
 summary: "Agentic development in Power BI: what an agent is, how far to trust its work, and what handing work to it costs."
-# First on the live site with main c9eb930 (17 Sep 2026); words last changed in e1bbe28 (9 Nov 2026, punctuation).
+# First on the live site with main c9eb930 (17 Sep 2026); words last changed 22 Nov 2026 (inline glosses and polish).
 datePublished: 2026-09-17
-dateModified: 2026-11-09
+dateModified: 2026-11-22
 givenAt:
   - event: "Bristol Power BI User Group"
     date: 2026-02-19
@@ -30,7 +30,7 @@ I want to talk about agentic development: how it works inside Power BI, and what
 
 <Chapter id="daniels-story" kicker="Daniel's story">
 
-Daniel is head of BI for a mid-size services company. His team of six includes some old hands and some very old hands: people with twenty-plus years in the organisation who know the data estate backwards, know where the bodies are buried, know why the financial director likes his reports a certain way. The reporting estate is almost as old as they are: SSRS and SSAS, with one Power BI semantic model to show for their modernisation efforts. They're not not trying; they're just permanently at capacity with business as usual.
+Daniel is head of BI for a mid-size services company. His team of six includes some old hands and some very old hands: people with twenty-plus years in the organisation who know the data estate backwards, know where the bodies are buried, know why the financial director likes his reports a certain way. The reporting estate is almost as old as they are: SSRS and SSAS, with one Power BI semantic model (the tables, relationships and calculations behind a report) to show for their modernisation efforts. They're not *not* trying; they're just permanently at capacity with business as usual.
 
 When the financial director asks for an Excel reporting pack to be automated into Power BI, the team can't take it: it's year end. So Daniel hands it to a contracting firm who know the financial system well. They deliver a lovely report pack; the financial director is delighted. A fortnight later he wants one metric changed: annualised rather than monthly. A small change, except Daniel's team have no idea how the report was built, and learning it would take a week or more alongside their day jobs. The director wants it this month. Back to the contractors: half a day, done.
 
@@ -44,7 +44,7 @@ Now replace "contractors" with "AI", and Daniel's whole operation with yourself.
 
 <Chapter id="what-an-agent-is" kicker="What an agent is">
 
-A chatbot generates each response from its context: everything said so far, plus a hidden system prompt telling it where it is and how to behave. An agent is that, plus a harness that gives the model tools. When the model emits a tool invocation ("read this file"), the harness runs it and pushes the result back into the context. That's the whole trick. Tools can act on the outside world, but the model only ever knows what the tool passes back. Everything in agentic development (CLAUDE.md files, MCP servers, the lot) is about getting the right material into context, or giving the agent tools to fetch more of it.
+A chatbot generates each response from its context: everything said so far, plus a hidden system prompt telling it where it is and how to behave. An agent is that, plus a harness that gives the model tools. When the model emits a tool invocation ("read this file"), the harness runs it and pushes the result back into the context. That's the whole trick. Tools can act on the outside world, but the model only ever knows what the tool passes back. Everything in agentic development (CLAUDE.md files, MCP servers that connect an agent to other software, the lot) is about getting the right material into context, or giving the agent tools to fetch more of it.
 
 <EssayFigure kind="agent" />
 
@@ -56,7 +56,7 @@ This matters for Power BI because of the .pbip format, which unwraps the old .pb
 
 I saved a blank report as .pbip and opened Claude Code in the folder (out of the box, no CLAUDE.md, no extra tools) with a few paragraphs asking it to invent a model, generate data, and add some charts. It wrote the files. Nobody told it what a .pbip is or how TMDL is structured; that knowledge came straight from training. When I opened Power BI it failed, but pasting each error back produced a fix, and after two rounds I had a working report built from nothing but prose. Eye-opening, if not useful: with no real scope, it invented everything.
 
-Then, in VS Code, I asked it to "add a measure for adjusted net position that accounts for all the data in the model". I had no idea what that meant. Neither did the agent, apparently, but it went ahead anyway. It wrote a measure that did… some stuff. Think of an agent as a very eager junior who believes you are a monster who reacts badly to clarifying questions. The fault was mine: an adjusted net position needs adjustments, and none existed in the model. Once I loaded an adjustments table and asked again, it wrote a measure that worked, and, unprompted, deleted its earlier nonsense.
+Then, in VS Code, I asked it to "add a measure for adjusted net position that accounts for all the data in the model". I had no idea what that meant. Neither did the agent, apparently, but it went ahead anyway. It wrote a measure that did... some stuff. Think of an agent as a very eager junior who believes you are a monster who reacts badly to clarifying questions. The fault was mine: an adjusted net position needs adjustments, and none existed in the model. Once I loaded an adjustments table and asked again, it wrote a measure that worked, and, unprompted, deleted its earlier nonsense.
 
 </Chapter>
 

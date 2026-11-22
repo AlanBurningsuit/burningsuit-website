@@ -32,7 +32,7 @@ test("Writing is an indexed list generated from the collection: articles, then t
   expect((await page.goto("/writing/"))?.status()).toBe(200);
   await expectIndexable(page);
   await expect(page).toHaveTitle("Writing | burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Articles on Power BI, DAX and AI from burningsuit, and an archive of older posts by Alison Box and Stuart Box.");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Articles on Power BI, DAX and AI by Alan Harman-Box, plus an archive of older burningsuit posts by Alison Box, Stuart Box and Alan.");
   await expect(page.locator("h1")).toHaveText("Writing");
   await expect(page.locator(".title-band .standfirst")).toHaveText("Articles on Power BI, DAX and AI, newest first. burningsuit's older posts are in the archive below.");
   const lists = page.locator(".writing-entries");

@@ -52,7 +52,7 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator('.nav-menu a[aria-current="page"]')).toHaveText("Power BI with AI agents 101");
   await expect(page.getByRole("heading", { level: 2 })).toHaveText(["What you'll do", "How you'll check its answers", "What you'll need", "Book a seat", "Not ready to book this date?"]);
   await expect(page.locator(".do-steps > li")).toHaveCount(4);
-  await expect(page.locator(".do-steps h3")).toHaveText(["Get your bearings.", "Understand a report you didn't build.", "Document its calculations.", "Build one new calculation and check it."]);
+  await expect(page.locator(".do-steps h3")).toHaveText(["Get your bearings", "Understand a report you didn't build", "Document its calculations", "Build one new calculation and check it"]);
   await expect(page.getByRole("heading", { level: 3, name: "Who's teaching" })).toBeVisible();
   await expect(page.locator(`time[datetime="${RUN.date}"]`)).toHaveText([RUN.longDate, RUN.longDate]);
   // Seat rates; the private course has no price item on this page.
@@ -74,16 +74,17 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   await expect(page.locator(".invoice a")).toHaveAttribute("href", "mailto:alan@burningsuit.co.uk");
   await expect(page.locator(".invoice")).toContainText("Invoices are due within 30 days.");
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
-  // The booking band repeats the setup line from the top of the page, so nobody pays before checking they can take part.
-  await expect(page.locator(".course-book .book-before")).toHaveText("Before you book: you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. See what you'll need.");
+  // The booking band reminds buyers of the setup list just above, so nobody pays before checking they can take part.
+  await expect(page.locator(".course-book .book-before")).toHaveText("Before you book: make sure your laptop, paid agent plan and IT permissions match what you'll need above.");
   await expect(page.locator(".booking-terms li").first()).toHaveText("Cancel up to 14 days before the course, by Wednesday 27 January 2027, for a full refund.");
+  await expect(page.locator(".booking-terms li").nth(2)).toHaveText("If we can't get your setup working before the day, you can move to a later run, send a colleague or have a full refund.");
   await expect(page.locator(".booking-terms li").nth(3)).toHaveText("If fewer than 4 people have booked by Friday 29 January 2027, the course moves once to a date in March. If you can't make the new date, you get a full refund.");
   await expect(page.locator(".booking-terms li").last()).toHaveText("If I have to cancel for any other reason, you get a full refund.");
   await expect(page.getByRole("link", { name: "How I train" })).toHaveAttribute("href", "/training/how-i-train/");
   const mainLinks = await page.locator("main a").evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   // The two Stripe booking links, in reading order beside each "Book a seat", plus the enquiry form's privacy and email fallback.
   const { SEAT_BOOKING_URL } = await import("../src/config/booking.mjs");
-  expect(mainLinks).toEqual(["#need-title", SEAT_BOOKING_URL, "#contact", "/training/how-i-train/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", ENQUIRY.privacyPath, "mailto:alan@burningsuit.co.uk"]);
+  expect(mainLinks).toEqual(["#need-title", SEAT_BOOKING_URL, "#contact", "/training/how-i-train/", "/about/", "/writing/we-are-all-middle-management-now/", "/privacy/#recordings", "#need-title", SEAT_BOOKING_URL, "mailto:alan@burningsuit.co.uk", ENQUIRY.privacyPath, "mailto:alan@burningsuit.co.uk"]);
 
   // The setup facts are settled (Alan, 7 Nov 2026): no open "to confirm" gaps remain.
   const needs = page.locator(".need-list > li");
@@ -99,21 +100,21 @@ test("the 101 follows the visitor questions, keeps booking closed and open setup
   // The deciding opening and trust sentences, and the step sequence as a list for assistive technology.
   await expect(page.locator(".title-band .standfirst")).toHaveText("Want to be ready for where Power BI is going?");
   await expect(page.locator(".course-fit")).toHaveText("If you've built a report in Power BI Desktop, even a simple one, you're ready. No coding or AI experience needed. If you already use coding agents on Power BI work every day, this covers ground you know.");
-  await expect(page.locator(".trust-check p")).toHaveText("An agent can sound sure of itself and still be wrong. You learn to check its work against numbers you can confirm, correct it with evidence and go back to a clean copy when you need to. Deciding whether an answer is right stays with you.");
-  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI. I've used coding agents on Power BI since before they could write DAX. Now they're better than me on a good day, so it's time to show other people how it's done, including how to check their work.");
+  await expect(page.locator(".trust-check p")).toHaveText("An agent can sound sure of itself and still produce a plausible-looking wrong number. Rather than taking its output on trust, we check its work against figures you can confirm in Power BI Desktop, and look at what makes a good check before you accept a change. Deciding whether an answer is right stays with you.");
+  await expect(page.locator(".trust-teacher p")).toHaveText("I'm Alan Harman-Box. I've worked with organisations adopting Power BI and Fabric since 2021, after about a decade in software delivery. I've used coding agents on Power BI since before they could write DAX. Now they're better than me on a good day, so it's time to show other people how it's done, including how to check their work.");
   await expect(page.locator(".do-steps")).toMatchAriaSnapshot(`
     - list:
       - listitem:
-        - heading "Get your bearings." [level=3]
+        - heading "Get your bearings" [level=3]
         - paragraph
       - listitem:
-        - heading "Understand a report you didn't build." [level=3]
+        - heading "Understand a report you didn't build" [level=3]
         - paragraph
       - listitem:
-        - heading "Document its calculations." [level=3]
+        - heading "Document its calculations" [level=3]
         - paragraph
       - listitem:
-        - heading "Build one new calculation and check it." [level=3]
+        - heading "Build one new calculation and check it" [level=3]
         - paragraph
   `);
   await expect(page.locator(".run-facts").getByRole("listitem")).toHaveCount(6);
@@ -236,7 +237,7 @@ test("homepage keeps the approved sections, order and starting points", async ({
   for (const { rowStart, shown } of await separators()) expect(shown).toBe(!rowStart);
   await expect(page.getByRole("link", { name: "Compare all courses" })).toHaveAttribute("href", "/training/");
   await expect(page.getByRole("link", { name: /^Tell me what you use Power BI for now/ })).toHaveAttribute("href", "#contact");
-  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Find your starting point", "Understanding that lasts", "Help with your own reporting", "Tell me what you're looking for."]);
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Find your starting point", "Understanding that lasts", "Help with your own reporting", "Tell me what you're looking for"]);
   await expect(page.getByRole("link", { name: "Book a free 30-minute call" })).toHaveAttribute("href", "/call/");
   await expect(page.getByRole("link", { name: "More about me" })).toHaveAttribute("href", "/about/");
   await expect(page.locator(".proof, .exercise")).toHaveCount(0);
@@ -288,7 +289,7 @@ test("enquiry form is a labelled plain POST with nothing preselected that valida
   await page.goto("/");
   await page.getByRole("link", { name: "Ask about dates" }).click();
   await expect(page).toHaveURL(baseURL! + "/#contact");
-  const form = page.getByRole("form", { name: "Tell me what you're looking for." });
+  const form = page.getByRole("form", { name: "Tell me what you're looking for" });
   await expect(form).toBeVisible();
   await expect(form).toHaveAttribute("method", "post");
   if (ENQUIRY.action) await expect(form).toHaveAttribute("action", ENQUIRY.action);

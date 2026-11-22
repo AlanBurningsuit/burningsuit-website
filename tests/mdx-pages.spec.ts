@@ -23,7 +23,12 @@ test("Work groups only the four active studies in the approved offer order", asy
   await expect(page.locator(".work-next a")).toHaveAttribute("href", "/contact/");
   await expect(page.locator('nav a[aria-current="page"]')).toHaveText("Case studies");
   expect(await page.locator(".work-entries a").evaluateAll(all => all.map(a => a.getAttribute("href")))).toEqual(studyPaths);
-  await expect(page.locator(".work-entries p")).toHaveText(["A local-authority team", "A contact-centre team lead", "An individual learner developing Power BI reporting", "A UK university's sustainability team"]);
+  await expect(page.locator(".work-entries p")).toHaveText([
+    "Two days of on-site DAX exercises across two groups, with a worked variables example afterwards.",
+    "Weekly sessions on her own reporting data so she could fix and extend her reports herself.",
+    "Modelling and DAX on example data shaped around his reporting, with homework between sessions.",
+    "A UK university's carbon reporting method brought out of spreadsheets into one checkable model.",
+  ]);
   await expect(page.locator(".work-entries h3")).toHaveText(["DAX deep dive for a local-authority team", "Coaching a contact-centre team lead", "Individual Power BI coaching", "Carbon reporting in a model the team can check"]);
   await expect(page.locator("nav a:not(.nav-menu a)")).toHaveText(["Training", "Consultancy", "Case studies", "About", "Contact"]);
   for (const path of reserved404Routes) await expect(page.locator(`a[href="/${path}/"]`)).toHaveCount(0);
@@ -129,6 +134,7 @@ test("archive retains month precision, original section anchors and fixed URL", 
   await expect(page.locator("time")).toHaveCount(1);
   await expect(page.locator("time")).toHaveAttribute("datetime", "2021-03");
   for (const id of pages["blog/2021/03/where-do-i-make-data-transformations-in-power-bi-roches-maxim"]) await expect(page.locator(`#${id}`)).toHaveCount(1);
+  expect(await page.locator(".archive-next a").evaluateAll((all) => all.map((a) => a.getAttribute("href")))).toEqual(["/training/power-bi-fundamentals/", "/training/"]);
   expect((await page.goto("/writing/roches-maxim/"))?.status()).toBe(404);
 });
 

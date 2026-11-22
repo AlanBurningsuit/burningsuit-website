@@ -16,7 +16,7 @@ import "../../styles/ai-agents-101.css";
 const { email } = ENQUIRY;
 // The private course has no price slot on this page; its email ask stays.
 const priced = trainingPriceCopy();
-const description = "A half-day live online course for people who look after Power BI reports: get an AI agent to explain a report you've never seen and note its calculations.";
+const description = "A half-day live online course for people who look after Power BI reports: use an AI agent to explain a report, document its calculations, and build and check a new one.";
 const seat = seatAction(RUN);
 // The run's dates come from src/config/course-run.mjs (tests/structured-data.test.mjs compares them with the page).
 const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI with AI agents 101", description, modes: [RUN.schemaMode], workload: "PT3H", maxPeople: RUN.maxPeople, run: RUN.schemaRun })];
@@ -53,10 +53,10 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       </div>
       <div class="do-body">
         <ol class="do-steps" role="list">
-          <li><h3>Get your bearings.</h3><p>You see what an agent is, how a Power BI report's files fit together and what to check before giving a tool access to work files. Then you point your agent (Claude Desktop, ChatGPT or GitHub Copilot) at the teaching report.</p></li>
-          <li><h3>Understand a report you didn't build.</h3><p>You ask the agent to explain the report: what each page shows, the tables behind it, how they connect, how the data is prepared and what each calculation does. Nothing changes yet.</p></li>
-          <li><h3>Document its calculations.</h3><p>You give the agent a short set of house rules, then have it add comments and descriptions to the existing calculations, so whoever opens the report next can see what each one does. You bring the changes back into Power BI Desktop and check them there.</p></li>
-          <li><h3>Build one new calculation and check it.</h3><p>You describe a new calculation and have the agent build it. Then you check its total, a filtered result and an awkward case. If an answer is wrong, you show the agent the evidence so it can put it right, and you can always go back to a clean copy.</p></li>
+          <li><h3>Get your bearings</h3><p>You see what an agent is, how a Power BI report's files fit together and what to check before giving a tool access to work files. Then you point your agent (Claude Desktop, ChatGPT or GitHub Copilot) at the teaching report.</p></li>
+          <li><h3>Understand a report you didn't build</h3><p>You ask the agent to explain the report: what each page shows, the tables behind it, how they connect, how the data is prepared and what each calculation does. Nothing changes yet.</p></li>
+          <li><h3>Document its calculations</h3><p>You give the agent a short set of house rules, then have it add comments and descriptions to the existing calculations, so whoever opens the report next can see what each one does. You bring the changes back into Power BI Desktop and check them there.</p></li>
+          <li><h3>Build one new calculation and check it</h3><p>You describe a new calculation and have the agent build it. Then you check its total, a filtered result and an awkward case. If an answer is wrong, you show the agent the evidence so it can put it right, and you can always go back to a clean copy.</p></li>
         </ol>
         <p class="do-next">We finish with where this goes next: tools that let an agent check its own work, and agents doing more of the building while you decide what's right.</p>
         {/* Reserved: one showcase line, held until that separately managed work supplies its wording and destination. */}
@@ -68,12 +68,13 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
   <section class="course-trust wrap" aria-labelledby="trust-title">
     <div class="trust-check">
       <h2 id="trust-title">How you'll check its answers</h2>
-      <p>An agent can sound sure of itself and still be wrong. You learn to check its work against numbers you can confirm, correct it with evidence and go back to a clean copy when you need to. Deciding whether an answer is right stays with you.</p>
+      <p>An agent can sound sure of itself and still produce a plausible-looking wrong number. Rather than taking its output on trust, we check its work against figures you can confirm in Power BI Desktop, and look at what makes a good check before you accept a change. Deciding whether an answer is right stays with you.</p>
     </div>
     <div class="trust-teacher">
       <h3>Who's teaching</h3>
-      <p>I'm Alan Harman-Box. I've spent about five years working with organisations as they adopt Power BI. I've used coding agents on Power BI since before they could write DAX. Now they're better than me on a good day, so it's time to show other people how it's done, including how to check their work.</p>
+      <p>I'm Alan Harman-Box. I've worked with organisations adopting Power BI and Fabric since 2021, after about a decade in software delivery. I've used coding agents on Power BI since before they could write DAX. Now they're better than me on a good day, so it's time to show other people how it's done, including how to check their work.</p>
       <a class="text-link" href="/training/how-i-train/">How I train</a>
+      <a class="text-link" href="/about/">More about me</a>
       <a class="text-link" href="/writing/we-are-all-middle-management-now/">Essay: We're all middle management now</a>
     </div>
   </section>
@@ -98,7 +99,7 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
       <div>
         <h2 id="book-title">Book a seat</h2>
         <p class="book-facts"><time datetime={RUN.date}>{RUN.longDate}</time>, {RUN.times}, {RUN.modeText}. {RUN.people}. {priced.seatBookFacts}</p>
-        <p class="book-before"><strong>Before you book:</strong> you'll need a Windows computer, a paid plan on Claude Desktop, ChatGPT or GitHub Copilot, and permission to install it. <a href="#need-title">See what you'll need</a>.</p>
+        <p class="book-before"><strong>Before you book:</strong> make sure your laptop, paid agent plan and IT permissions match <a href="#need-title">what you'll need above</a>.</p>
       </div>
       <div>
         <SeatBooking seat={seat} place="bottom" />
@@ -108,17 +109,17 @@ const schema = [courseNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.u
           <ul role="list">
             <li>Cancel up to {RUN.refundDays} days before the course, by <time datetime={RUN.refundBy.date}>{RUN.refundBy.long}</time>, for a full refund.</li>
             <li>Can't make it after that? Send a colleague in your place: tell me at least 24 hours before.</li>
-            <li>If your setup can't be got working before the day, you can move to a later run, send a colleague or have a full refund.</li>
+            <li>If we can't get your setup working before the day, you can move to a later run, send a colleague or have a full refund.</li>
             <li>If fewer than {RUN.minPeople} people have booked by <time datetime={RUN.minimumBy.date}>{RUN.minimumBy.long}</time>, the course moves once to a date in March. If you can't make the new date, you get a full refund.</li>
             <li>If I have to cancel for any other reason, you get a full refund.</li>
           </ul>
         </section>}
-        <p class="invoice">If your organisation needs an invoice or a purchase order, email <a href={`mailto:${email}`}>{email}</a> and I'll send an invoice instead. Invoices are due within 30 days.</p>
+        <p class="invoice">If your organisation needs an invoice or a purchase order, use the form below or email <a href={`mailto:${email}`}>{email}</a>. Invoices are due within 30 days.</p>
       </div>
     </div>
   </section>
 
-  <EnquiryForm>
+  <EnquiryForm hint="Tell me which applies: later dates, a private course, an invoice or PO, or an IT setup check.">
     <Fragment slot="heading">Not ready to book this date?</Fragment>
     Tell me if you'd like to hear about later runs, need a private course for your team, want an invoice or purchase order, or need to check whether your IT setup will work.
   </EnquiryForm>

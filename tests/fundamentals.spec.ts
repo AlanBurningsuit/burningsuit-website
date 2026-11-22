@@ -92,11 +92,12 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   const steps = page.locator(".agenda-steps > li");
   await expect(steps).toHaveCount(9);
   await expect(page.locator(".agenda-steps").nth(1)).toHaveAttribute("start", "5");
-  await expect(steps.locator("strong")).toHaveText(["Build a first report", "Make it useful to its reader:", "Get it in front of people:", "Prepare data you can use again", "Build a report page:", "Bring tables together:", "Meet DAX,", "Distribute and maintain it:", "Copilot in Power BI, briefly:"]);
+  await expect(steps.locator("strong")).toHaveText(["Build a first report:", "Make it useful to its reader:", "Get it in front of people:", "Prepare data you can use again:", "Build a report page:", "Bring tables together:", "Meet DAX:", "Distribute and maintain it:", "Copilot in Power BI, briefly:"]);
   await expect(steps.nth(2)).toContainText("publishing to the Power BI service, sharing, subscriptions, comments, dashboards and a second report from the published model. See publishing arrangements.");
   await expect(steps.nth(2).getByRole("link", { name: "publishing arrangements" })).toHaveAttribute("href", "#need-title");
+  await expect(steps.nth(3)).toHaveText("Prepare data you can use again: data types, cleaning, filtering, conditional columns (if-then-else logic), reshaping and refresh in Power Query.");
   // The learner's own measure stays conditional; Copilot is awareness only.
-  await expect(steps.nth(6)).toHaveText("Meet DAX, Power BI's formula language. I demonstrate a simple measure, a calculation responding to filters. You may write one, depending on the group's progress.");
+  await expect(steps.nth(6)).toHaveText("Meet DAX: Power BI's formula language. I demonstrate a simple measure, a calculation responding to filters. You may write one, depending on the group's progress.");
   await expect(steps.nth(8)).toHaveText("Copilot in Power BI, briefly: what it can help with, why access varies and what to check. No exercise depends on it.");
   await expect(page.locator(".agenda")).toMatchAriaSnapshot(`
     - heading /^Day 1/ [level=3]
@@ -132,13 +133,12 @@ test("Fundamentals page renders the approved wording, gaps and question order", 
   const needs = page.locator(".course-need:not(.outcomes) .need-list > li");
   await expect(needs).toHaveText([
     "On site licences: I provide and manage them.",
-    "Online licences: you arrange your own. A Power BI Pro licence is ideal, but most of the course works with a free licence.",
-    "Publishing practice depends on licences and access.",
+    "Online licences: you arrange your own. A Power BI Pro licence and workspace access are ideal so everyone can publish and share; with a free licence, most of the course still works and you watch the publishing and sharing steps instead.",
   ]);
   await expect(page.locator(".need-note, .keep")).toHaveCount(0);
   await expect(page.locator(".to-confirm")).toHaveCount(0);
 
-  await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me you're interested in Power BI fundamentals, how many people would come and roughly when.");
+  await expect(page.locator(".enquiry-intro p")).toHaveText("Tell me how many people would come and roughly when you'd like to run Power BI fundamentals.");
   await expect(page.locator("#contact .fallback")).toHaveText("Or email alan@burningsuit.co.uk.");
   const mainLinks = await page.locator("main a").evaluateAll((els) => els.map((el) => el.getAttribute("href")));
   expect(mainLinks).toEqual(links);

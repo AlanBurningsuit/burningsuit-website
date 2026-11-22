@@ -50,7 +50,7 @@ test("the approved wording is composed from the rates", () => {
   assert.equal(Object.keys(copy.specialists).length, 2, "two specialist courses are priced");
   assert.equal(copy.coachingRange, undefined, "coaching has no price band");
   assert.equal(copy.consultancyRange, `Usually a fixed price of ${kFrom} to ${kTo}, ex VAT`);
-  assert.equal(copy.publicSeat, `${founding} a seat for this first run, then ${seat} for later runs. Plus VAT at checkout.`);
+  assert.equal(copy.publicSeat, `${founding} a seat for this first run, then ${seat} for later runs. VAT is added at checkout.`);
   assert.deepEqual([...copy.seatFacts], [`${founding} a seat for this first run, the founding rate`, `${seat} a seat for later runs`, "VAT is added at checkout"]);
   assert.equal(copy.seatBookFacts, `${founding} a seat for this first run, the founding rate. Later runs are ${seat} a seat. VAT is added at checkout.`);
   assert.equal(copy.trainingIntro, "Private course prices are per booking, for up to 8 people, and include UK travel.");

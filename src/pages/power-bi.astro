@@ -17,7 +17,7 @@ import { trainingPriceCopy } from "../lib/training-prices.mjs";
 const call = "/call/";
 // The usual range comes from the tracked prices file.
 const priced = trainingPriceCopy();
-const summary = "Power BI consultancy in the UK, done with your team on your own data, models and reports, so the team can run it without me afterwards.";
+const summary = "Power BI consultancy in the UK: I work alongside your team on your own data, models and reports, so your team can run it without me afterwards.";
 // No price or range in structured data.
 const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.url.pathname, Astro.site).href, name: "Power BI consultancy", description: summary })];
 ---
@@ -38,7 +38,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
   <div class="course-opening decision-opening wrap">
     <section class="course-intro" aria-labelledby="page-title">
       <p>Training is great when all your team needs is understanding. Sometimes a team needs more than that: the reporting is already running, people rely on it, and it has become hard to change safely.</p>
-      <p>That's what my consultancy is for. I work with your team on your own Power BI: how the data gets in, the models, the reports and how they reach the people who use them. I explain as I go, in your words rather than mine. The aim is a team that understands what was built and can change it, not one that relies on yet another contractor.</p>
+      <p>That's what my consultancy is for. I work with your team on your own Power BI: how the data gets in, the models, the reports and how they reach the people who use them. I explain as I go, in plain English. The aim is a team that understands what was built and can change it, not one that relies on yet another contractor.</p>
       <p>Not sure whether your problem is too small, or too big, for me to take on? Bring that to a free 30-minute call.</p>
     </section>
   </div>
@@ -52,10 +52,10 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
       <ul class="need-list lead-list" role="list">
         <li><strong>Thinking through your reporting as a whole.</strong> We look at what it's for, what it takes to run it and which skills your team needs. Then we agree what to do first.</li>
         <li><strong>Owning the Power BI you've already got.</strong> It all rests on one person, or your experienced Power BI person has already left, or the reports have limped on for years and nobody is quite sure how they work. Or two reports disagree, and you can't tell which to trust. I go through the reports and models with you, find where the risks are and help your team take charge of the reporting.</li>
-        <li><strong>Building or moving something, together.</strong> That might be a new model or report your team can't build yet, or moving your reporting into Power BI. Either way, your team knows how it works before they rely on it. If you're moving to Microsoft Fabric (the wider data platform that Power BI is part of), I coach your team through its own migration. I don't do the Fabric migration work myself.</li>
-        <li><strong>Getting started with AI agents.</strong> I coach your team to use them on the Power BI you've got. <a href="#ai">More on that below</a>.</li>
+        <li><strong>Building or moving something, together.</strong> That might be a new model or report your team can't build yet, or moving your reporting into Power BI. Either way, your team knows how it works before they rely on it. If you're moving to Microsoft Fabric (the wider data platform that Power BI is part of), I guide your team through its own migration. I don't do the Fabric migration work myself.</li>
+        <li><strong>Getting started with AI agents.</strong> I help your team start using them on the Power BI you've got. <a href="#ai">More on that below</a>.</li>
       </ul>
-      <PullQuote quote="This has moved us on leaps and bounds… information just at our fingertips." cite="Team member, a city-centre museum and gallery" />
+      <PullQuote quote="This has moved us on leaps and bounds... information just at our fingertips." cite="Team member, a city-centre museum and gallery" />
       <p class="build-line">If you'd rather I simply built it for you, I can. Even then, I'll leave your team able to change it without calling me.</p>
       <p class="aside courses-line">Just need your team to understand Power BI? <a href="/training/">That's what the courses are for.</a> Want 1 to 3 people to learn on your own work? <a href="/training/#coaching">That's what Power BI coaching is for.</a></p>
       <StudyLinks studies={["carbon-footprint"]} />
@@ -80,10 +80,10 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
         <h2 id="runs-title">How the work runs</h2>
       </div>
       <ol class="do-steps" role="list">
-        <li><h3><a href={call}>The free call</a>.</h3><p>We talk through what's going on. Sometimes that's enough: I can point you to what to do next, or tell you if it isn't something I can help with.</p></li>
-        <li id="pricing"><h3>A price for the whole job.</h3><p>Every job is different, so I quote case by case, usually as a fixed price. Getting to know your Power BI properly is part of the work, so there's nothing separate to pay for first.</p></li>
-        <li><h3>The work, with your team.</h3><p>They do as much of it as they can, with me alongside. We work to the deadlines you actually have.</p></li>
-        <li><h3>Handover.</h3><p>Your team finishes knowing what we did and why, how to change it and what will happen when they do. You keep our notes and the session recordings, so there's something to fall back on. If you'd rather not be recorded, just say.</p></li>
+        <li><h3><a href={call}>The free call</a></h3><p>We talk through what's going on. Sometimes that's enough: I can point you to what to do next, or tell you if it isn't something I can help with.</p></li>
+        <li id="pricing"><h3>A price for the whole job</h3><p>Every job is different, so I quote case by case, usually as a fixed price. Getting to know your Power BI properly is part of the work, so there's nothing separate to pay for first.</p></li>
+        <li><h3>The work, with your team</h3><p>They do as much of it as they can, with me alongside. We work to the deadlines you actually have.</p></li>
+        <li><h3>Handover</h3><p>Your team finishes knowing what we did and why, how to change it and what will happen when they do. You keep our notes and the session recordings, so there's something to fall back on. If you'd rather not be recorded, just say.</p></li>
       </ol>
     </div>
   </section>
@@ -101,7 +101,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
         <li><strong>Strategic advice</strong> as your reporting changes.</li>
         <li><strong>Regular office hours,</strong> such as a monthly call in a fixed window, where your team brings whatever has come up.</li>
       </ul>
-      <p class="ongoing-price">{"It's priced on request."}</p>
+      <p class="ongoing-price">Price on request.</p>
     </div>
   </section>
 
@@ -113,7 +113,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
       </figure>
     </div>
     <div class="who-note">
-      <p>I'm Alan Harman-Box. The person you talk to on the free call is the person who does the work. I've spent about five years working with organisations as they adopt Power BI and Fabric, and about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway. Since 2022 I've done Power BI consultancy for 15 organisations, from a single scoping session to work that has run for more than three years.</p>
+      <p>I'm Alan Harman-Box. The person you talk to on the free call is the person who does the work. I've worked with organisations adopting Power BI and Fabric since 2021, and spent about a decade in software delivery before that. I also write and teach the burningsuit courses, so explaining Power BI as we go is what I do anyway. Since 2022 I've done Power BI consultancy for 15 organisations, from a single scoping session to work that has run for more than three years.</p>
       <a class="text-link" href="/about/">More about me</a>
     </div>
   </section>
@@ -130,7 +130,7 @@ const schema = [serviceNode({ siteUrl: Astro.site!.href, pageUrl: new URL(Astro.
     </div>
   </section>
 
-  <EnquiryForm>
+  <EnquiryForm hint="A line or two is enough: what's going on with your reports or models, and what you'd like to sort out.">
     <Fragment slot="heading">Prefer to write?</Fragment>
     A few lines on where you are and what you need is plenty.
   </EnquiryForm>

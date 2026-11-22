@@ -8,7 +8,7 @@ const mailto = `mailto:${ENQUIRY.email}`;
 const intro = [
   "I'm Alan Harman-Box. Send me a question about a course or your reports, or tell me what you're working on if you're unsure where to start. I'll reply by email within two working days.",
   `Email me at ${ENQUIRY.email}, or use the form.`,
-  "Rather talk it through? Book a free 30-minute call.",
+  "Got a problem with your own Power BI and rather talk it through? Book a free 30-minute call.",
 ];
 
 test("Contact is a real static page: private, CSP-clean, with Contact current", async ({ page, baseURL }) => {
@@ -18,7 +18,7 @@ test("Contact is a real static page: private, CSP-clean, with Contact current", 
   await expect(page).toHaveURL(baseURL! + route);
   await expect(page.locator('meta[http-equiv="refresh" i]')).toHaveCount(0);
   await expect(page).toHaveTitle("Contact Alan | burningsuit");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Ask Alan Harman-Box about a course, help with your own reports, or where to start. A short message is enough.");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", "Ask me about a Power BI or AI course, help with your own reports, or where to start. A short message is enough.");
   await expectIndexable(page);
   await expect(page.locator(`${otherScripts}, astro-island, main img`)).toHaveCount(0);
   expect(await page.locator('meta[http-equiv="Content-Security-Policy" i]').getAttribute("content")).toContain(`form-action ${formActionSource}`);
